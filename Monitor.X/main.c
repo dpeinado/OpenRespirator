@@ -41,7 +41,9 @@
     SOFTWARE.
 */
 
+#include <stdio.h>
 #include "mcc_generated_files/mcc.h"
+#include "monitor.h"
 
 /*
                          Main application
@@ -56,11 +58,13 @@ void main(void)
     // Use the following macros to:
 
     // Enable the Global Interrupts
-    //INTERRUPT_GlobalInterruptEnable();
+    INTERRUPT_GlobalInterruptEnable();
 
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
+    printf ("Hello world!!!\n");
+    
     while (1)
     {
         // Add your application code
