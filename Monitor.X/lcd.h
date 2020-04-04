@@ -12,7 +12,8 @@
 extern "C" {
 #endif
 
-
+void LCDInit (void);
+void LCDMessage(char *str);
 
 
 #ifdef	__cplusplus

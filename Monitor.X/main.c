@@ -44,6 +44,7 @@
 #include <stdio.h>
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
+#include "display.h"
 
 /*
                          Main application
@@ -64,6 +65,9 @@ void main(void)
     //INTERRUPT_GlobalInterruptDisable();
 
     printf ("Hello world!!!\n");
+    
+    InitDisplay();
+    
     
     while (1)
     {
