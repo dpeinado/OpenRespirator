@@ -14,6 +14,8 @@ extern "C" {
     
 #define ACAPT_N 1
 
+#define PRESSURE_MBAR(x) ((int16_t) 100*x)
+    
 typedef enum{
     MainPSensor=0,
     SndPSensor=1,

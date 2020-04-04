@@ -27194,7 +27194,7 @@ void ADCC_DefaultInterruptHandler(void);
 # 4 "aCapture.c" 2
 
 # 1 "./aCapture.h" 1
-# 17 "./aCapture.h"
+# 19 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
     SndPSensor=1,
@@ -27230,7 +27230,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
             break;
         default:
 
-           while(1);
+           LATAbits.LATA2 = 0;;printf("Fatal %d",1);
     }
 }
 
@@ -27240,14 +27240,14 @@ void adcCaptureIsr(void){
     uint16_t adcData;
 
     if (curASrc<1){
-        resultTblVal[curASrc]++;
-        if (resultTblVal[curASrc]== 0){
+        resultTblVal[curASrc]=resultTblVal[curASrc]+1;
+        if (resultTblVal[curASrc] == 0){
             resultTblVal[curASrc]=1;
         }
         resultTbl[curASrc]=ADCC_GetConversionResult();
     } else {
 
-        while(1);
+        LATAbits.LATA2 = 0;;printf("Fatal %d",1);
     }
 
 
@@ -27268,6 +27268,8 @@ void aCaptureInit(void){
 
     ADCC_StartConversion(adcGetCh(curASrc));
     ADCC_SetADIInterruptHandler(adcCaptureIsr);
+
+    PIE1bits.ADIE = 1;
 }
 
 
@@ -27287,7 +27289,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
 
     switch (sel){
         case MainPSensor:
-            if (lclRaw<mainPSensCal) {
+            if (lclRaw < mainPSensCal) {
                 lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/1);
             } else {
@@ -27297,6 +27299,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            while(1);
+            LATAbits.LATA2 = 0;;printf("Fatal %d",1);
     }
 }

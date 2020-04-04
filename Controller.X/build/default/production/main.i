@@ -27555,7 +27555,7 @@ void PMD_Initialize(void);
 # 45 "main.c" 2
 
 # 1 "./aCapture.h" 1
-# 17 "./aCapture.h"
+# 19 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
     SndPSensor=1,
@@ -27567,6 +27567,21 @@ void aCaptureInit(void);
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 # 46 "main.c" 2
 
+# 1 "./time.h" 1
+# 15 "./time.h"
+typedef uint16_t time_t;
+
+
+
+
+
+
+void timeInit(void);
+time_t timeGet(void);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+# 47 "main.c" 2
+
 
 void putch(char byte)
 {
@@ -27577,48 +27592,18 @@ void putch(char byte)
 
 
 
-
-
-uint16_t timeGet(void){
-    return TMR1_ReadTimer();
-}
-
-
-_Bool timeElapsedR(uint16_t *prevTime, uint16_t duration){
-    uint16_t intTime, intDur;
-    intTime = TMR1_ReadTimer();
-    intDur = intTime - *prevTime;
-    if (intDur < duration) {
-        return 0;
-    } else {
-        *prevTime = intTime;
-        return 1;
-    }
-}
-
-
-_Bool timeElapsed(uint16_t prevTime, uint16_t duration){
-    uint16_t intTime, intDur;
-    intTime = TMR1_ReadTimer();
-    intDur = intTime - prevTime;
-    if (intDur < duration) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-
-
-
+uint8_t BPM=10;
+uint8_t IP=24;
+uint8_t PEEP=10;
+# 69 "main.c"
 void main(void)
 {
     int16_t mainPressure;
-    uint16_t tstamp1;
+    time_t rCycleTime, rSubCycleTime, printTime;
+    _Bool initialSubState;
 
 
     SYSTEM_Initialize();
-
 
     PIE1bits.ADIE = 0;
 
@@ -27630,27 +27615,107 @@ void main(void)
 
 
 
-    TMR0_StartTimer();
-    TMR1_StartTimer();
     aCaptureInit();
+    timeInit();
 
-    LATAbits.LATA2=0;
-    tstamp1 = timeGet();
+    printf("PCTRL START\n");
 
+    rSubCycleTime = timeGet();
+    while (timeElapsedR(&rSubCycleTime, ((time_t) 50*1)));
+
+    if (1) {
+        time_t tstamp1;
+        tstamp1 = timeGet();
+        while (1) {
+            if (timeElapsedR(&tstamp1, ((time_t) 100*1))) {
+                if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                    printf("P %d  \r", mainPressure);
+                }
+
+
+                do { LATAbits.LATA2 = ~LATAbits.LATA2; } while(0);
+            }
+
+        }
+    }
+
+    rCycleTime = timeGet();
+    printTime = timeGet();
     while (1)
     {
-        if (aCaptGetResult(MainPSensor,&mainPressure)){
 
+        printf("\nIP\n");
 
+        LATAbits.LATA2 = 1;
+                ;
+        initialSubState = 1;
+        while (1) {
+            if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
 
-            printf("P %d  \r", mainPressure);
+                break;
+            } else {
+                if (initialSubState) {
+
+                    if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                        if (mainPressure > ((int16_t) 100*IP)) {
+                            LATAbits.LATA2 = 0;
+                            initialSubState = 0;
+                        }
+                    }
+                } else {
+                    if (LATAbits.LATA2) {
+                        if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                            LATAbits.LATA2 = 0;
+                        }
+                    } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                        if (mainPressure < ((int16_t) 100*IP)) {
+                            LATAbits.LATA2 = 1;
+                            rSubCycleTime = timeGet();
+                        }
+                    }
+                }
+            }
+
+            if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                printf("P %d\n",mainPressure);
+            }
         }
 
-        if (timeElapsedR(&tstamp1, ((uint16_t) (0.5*10000)))){
 
-            do { LATAbits.LATA2 = ~LATAbits.LATA2; } while(0);
-            printf("\nPrueba\n");
+        printf("\nEP\n");
+        rSubCycleTime = timeGet();
+        LATAbits.LATA2 = 0;
+                 ;
+        initialSubState = 1;
+        while(1){
+            if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))){
+
+                break;
+            } else {
+                if (initialSubState) {
+
+                    if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                        if (mainPressure < ((int16_t) 100*PEEP)) {
+                                    ;
+                            initialSubState = 0;
+                        }
+                    }
+                } else {
+                    if (LATAbits.LATA2) {
+                        if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                            LATAbits.LATA2 = 0;
+                        }
+                    } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                        if (mainPressure < ((int16_t) 100*PEEP)) {
+                            LATAbits.LATA2 = 1;
+                            rSubCycleTime = timeGet();
+                        }
+                    }
+                }
+            }
+            if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                printf("P %d\n",mainPressure);
+            }
         }
-
     }
 }

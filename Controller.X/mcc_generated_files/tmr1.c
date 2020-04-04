@@ -73,11 +73,11 @@ void TMR1_Initialize(void)
     //CS TMR0_Overflow; 
     T1CLK = 0x09;
 
-    //TMR1H 138; 
-    TMR1H = 0x8A;
+    //TMR1H 244; 
+    TMR1H = 0xF4;
 
-    //TMR1L 208; 
-    TMR1L = 0xD0;
+    //TMR1L 72; 
+    TMR1L = 0x48;
 
     // Clearing IF flag.
     PIR4bits.TMR1IF = 0;

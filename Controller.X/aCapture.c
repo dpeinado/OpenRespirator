@@ -35,8 +35,8 @@ void adcCaptureIsr(void){
     uint16_t adcData;
     
     if (curASrc<ACAPT_N){
-        resultTblVal[curASrc]++;
-        if (resultTblVal[curASrc]== 0){
+        resultTblVal[curASrc]=resultTblVal[curASrc]+1;
+        if (resultTblVal[curASrc] == 0){
             resultTblVal[curASrc]=1;
         }
         resultTbl[curASrc]=ADCC_GetConversionResult();
@@ -63,6 +63,8 @@ void aCaptureInit(void){
 
     ADCC_StartConversion(adcGetCh(curASrc));    
     ADCC_SetADIInterruptHandler(adcCaptureIsr);
+    // Enable ADC Irq.
+    PIE1bits.ADIE = 1;
 }
 
 // All results are 8 bit.
@@ -82,7 +84,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
     
     switch (sel){
         case MainPSensor:
-            if (lclRaw<mainPSensCal) {
+            if (lclRaw < mainPSensCal) {
                 lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/PSENS_K);
             } else {
