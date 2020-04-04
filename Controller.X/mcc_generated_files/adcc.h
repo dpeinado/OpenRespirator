@@ -88,7 +88,7 @@ typedef __uint24 uint24_t;
 
 typedef enum
 {
-    channel_ANA0 =  0x0,
+    channel_ANE2 =  0x22,
     channel_VSS =  0x3B,
     channel_Temp =  0x3C,
     channel_DAC1 =  0x3D,
@@ -829,7 +829,55 @@ uint8_t ADCC_GetConversionStageStatus(void);
 
 
 
+/**
+  @Summary
+    Implements ISR
 
+  @Description
+    This routine is used to set the callback for the ADI Interrupt.
+
+  @Returns
+    None
+
+  @Param
+    Callback Function to be called
+*/
+void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+
+/**
+  @Summary
+    Implements ISR
+
+  @Description
+    This routine is used to implement the ISR for the interrupt-driven
+    implementations.
+
+  @Returns
+    None
+
+  @Param
+    None
+*/
+void ADCC_ISR(void);
+
+
+/**
+  @Summary
+    Default ADCC Interrupt Handler
+
+  @Description
+    This is the default Interrupt Handler function
+
+  @Preconditions
+    Initialize  the ADCC module with interrupt before calling this isr.
+
+  @Param
+    None
+
+  @Returns
+    None
+*/
+void ADCC_DefaultInterruptHandler(void);
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     }

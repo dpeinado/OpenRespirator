@@ -43,26 +43,94 @@
 
 #include "mcc_generated_files/mcc.h"
 
+void putch(char byte)
+{
+    while (!UART1_is_tx_ready());
+    UART1_Write(byte);
+}
+
+#define TIME_MS(time) ((uint16_t) time*10)
+#define TIME_S(time) ((uint16_t) (time*10000))
+
+// TIME function. Maintains global time. Resolution 0.1ms. Span about 6s. 
+uint16_t timeGet(void){
+    return TMR1_ReadTimer();
+}
+
+// Checks if time has finish and refresh tstamp.
+bool timeElapsedR(uint16_t *prevTime, uint16_t duration){
+    uint16_t intTime, intDur;
+    intTime = TMR1_ReadTimer();
+    intDur = intTime - *prevTime;
+    if (intDur < duration) {
+        return false;
+    } else {
+        *prevTime = intTime;
+        return true;
+    }
+}
+
+// Only checks if time hasfinished.
+bool timeElapsed(uint16_t prevTime, uint16_t duration){
+    uint16_t intTime, intDur;
+    intTime = TMR1_ReadTimer();
+    intDur = intTime - prevTime;
+    if (intDur < duration) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// Analog capture.
+
+
+// Pressure sensor.
+int16_t mainPSensCal = 11925;
+
+uint16_t readPressure
+
+
 /*
                          Main application
  */
 void main(void)
 {
+    int16_t adcCaptRst;
+    int16_t tstamp1;
+    
     // Initialize the device
     SYSTEM_Initialize();
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
     // Use the following macros to:
-
-    // Enable the Global Interrupts
-    //INTERRUPT_GlobalInterruptEnable();
-
+    INTERRUPT_GlobalInterruptEnable();
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
+    // Initialize.
+    TMR0_StartTimer();
+    TMR1_StartTimer();
+    IO_RA2_LAT=0;
+    tstamp1 = timeGet();
+    
+    
+    ADCC_StartConversion(channel_ANE2);
     while (1)
     {
+        if (ADCC_IsConversionDone()){
+            adcCaptRst=ADCC_GetConversionResult();
+            ADCC_StartConversion(channel_ANE2);
+            printf("Data");
+            printf("Dat %d\n", adcCaptRst);
+        }
+
+        if (timeElapsedR(&tstamp1, TIME_S(0.5))){
+            // DORDBG. SET RA2 TO 1.
+            IO_RA2_Toggle();
+            printf("Prueba\n");
+        }
         // Add your application code
     }
 }

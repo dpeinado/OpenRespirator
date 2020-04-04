@@ -188,8 +188,8 @@ void I2C1_Initialize()
     I2C1CON1 = 0x80;
     //ACNT disabled; GCEN disabled; FME disabled; ABD enabled; SDAHT 300 ns hold time; BFRET 8 I2C Clock pulses; 
     I2C1CON2 = 0x18;
-    //CLK Fosc/4; 
-    I2C1CLK = 0x00;
+    //CLK MFINTOSC; 
+    I2C1CLK = 0x03;
     //CNTIF 0; ACKTIF 0; WRIF 0; ADRIF 0; PCIF 0; RSCIF 0; SCIF 0; 
     I2C1PIR = 0x00;
     //CNTIE disabled; ACKTIE disabled; WRIE disabled; ADRIE disabled; PCIE disabled; RSCIE disabled; SCIE disabled; 
