@@ -27377,6 +27377,13 @@ void (*I2C1_InterruptHandler)(void);
 void I2C1_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "./mcc_generated_files/mcc.h" 2
 
+# 1 "./mcc_generated_files/fvr.h" 1
+# 93 "./mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "./mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
+# 57 "./mcc_generated_files/mcc.h" 2
+
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
 typedef uint16_t adc_result_t;
@@ -27446,13 +27453,12 @@ _Bool ADCC_HasErrorCrossedUpperThreshold(void);
 _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 828 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
-# 57 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/fvr.h" 1
-# 93 "./mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "./mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
+# 845 "./mcc_generated_files/adcc.h"
+void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+# 861 "./mcc_generated_files/adcc.h"
+void ADCC_ISR(void);
+# 880 "./mcc_generated_files/adcc.h"
+void ADCC_DefaultInterruptHandler(void);
 # 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr1.h" 1
@@ -27545,12 +27551,29 @@ void OSCILLATOR_Initialize(void);
 void PMD_Initialize(void);
 # 44 "main.c" 2
 
+# 1 "./ORespGlobal.h" 1
+# 45 "main.c" 2
+
+# 1 "./aCapture.h" 1
+# 17 "./aCapture.h"
+typedef enum{
+    MainPSensor=0,
+    SndPSensor=1,
+    TempSensor=2
+} aSrcTyp;
+
+void aCaptureInit(void);
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+# 46 "main.c" 2
+
 
 void putch(char byte)
 {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
+
 
 
 
@@ -27590,11 +27613,14 @@ _Bool timeElapsed(uint16_t prevTime, uint16_t duration){
 
 void main(void)
 {
-    int16_t adcCaptRst;
-    int16_t tstamp1;
+    int16_t mainPressure;
+    uint16_t tstamp1;
 
 
     SYSTEM_Initialize();
+
+
+    PIE1bits.ADIE = 0;
 
 
 
@@ -27606,24 +27632,24 @@ void main(void)
 
     TMR0_StartTimer();
     TMR1_StartTimer();
+    aCaptureInit();
+
     LATAbits.LATA2=0;
     tstamp1 = timeGet();
 
-
-    ADCC_StartConversion(channel_ANE2);
     while (1)
     {
-        if (ADCC_IsConversionDone()){
-            adcCaptRst=ADCC_GetConversionResult();
-            ADCC_StartConversion(channel_ANE2);
-            printf("Data");
-            printf("Dat %d\n", adcCaptRst);
+        if (aCaptGetResult(MainPSensor,&mainPressure)){
+
+
+
+            printf("P %d  \r", mainPressure);
         }
 
         if (timeElapsedR(&tstamp1, ((uint16_t) (0.5*10000)))){
 
             do { LATAbits.LATA2 = ~LATAbits.LATA2; } while(0);
-            printf("Prueba\n");
+            printf("\nPrueba\n");
         }
 
     }

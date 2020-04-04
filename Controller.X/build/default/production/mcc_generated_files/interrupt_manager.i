@@ -27378,6 +27378,13 @@ void (*I2C1_InterruptHandler)(void);
 void I2C1_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "mcc_generated_files/mcc.h" 2
 
+# 1 "mcc_generated_files/fvr.h" 1
+# 93 "mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
+# 57 "mcc_generated_files/mcc.h" 2
+
 # 1 "mcc_generated_files/adcc.h" 1
 # 72 "mcc_generated_files/adcc.h"
 typedef uint16_t adc_result_t;
@@ -27447,13 +27454,12 @@ _Bool ADCC_HasErrorCrossedUpperThreshold(void);
 _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 828 "mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
-# 57 "mcc_generated_files/mcc.h" 2
-
-# 1 "mcc_generated_files/fvr.h" 1
-# 93 "mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
+# 845 "mcc_generated_files/adcc.h"
+void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+# 861 "mcc_generated_files/adcc.h"
+void ADCC_ISR(void);
+# 880 "mcc_generated_files/adcc.h"
+void ADCC_DefaultInterruptHandler(void);
 # 58 "mcc_generated_files/mcc.h" 2
 
 # 1 "mcc_generated_files/tmr1.h" 1
@@ -27575,6 +27581,10 @@ void __attribute__((picinterrupt(("")))) INTERRUPT_InterruptManager (void)
     else if(PIE3bits.I2C1TXIE == 1 && PIR3bits.I2C1TXIF == 1)
     {
         I2C1_InterruptHandler();
+    }
+    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    {
+        ADCC_ISR();
     }
     else
     {

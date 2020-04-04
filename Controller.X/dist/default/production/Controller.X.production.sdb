@@ -17,7 +17,7 @@ I2C1_RESTART_WRITE 3
 I2C1_CONTINUE 4
 I2C1_RESET_LINK 5
 ]
-"113 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+"120 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
 [e E16053 . `uc
 channel_ANE2 34
 channel_VSS 59
@@ -70,8 +70,20 @@ I2C1_DATA_NACK 3
 I2C1_TIMEOUT 4
 I2C1_NULL 5
 ]
-"110 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
-[e E16465 . `uc
+"119 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
+[e E16576 . `uc
+MainPSensor 0
+SndPSensor 1
+TempSensor 2
+]
+"8 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\aCapture.c
+[e E16102 . `uc
+MainPSensor 0
+SndPSensor 1
+TempSensor 2
+]
+"21
+[e E16053 . `uc
 channel_ANE2 34
 channel_VSS 59
 channel_Temp 60
@@ -79,6 +91,14 @@ channel_DAC1 61
 channel_FVR_Buffer1 62
 channel_FVR_Buffer2 63
 ]
+[v _adcGetCh adcGetCh `(E16053  1 e 1 0 ]
+[v i2_adcGetCh adcGetCh `(E16053  1 e 1 0 ]
+"32
+[v _adcCaptureIsr adcCaptureIsr `(v  1 e 1 0 ]
+"57
+[v _aCaptureInit aCaptureInit `(v  1 e 1 0 ]
+"69
+[v _aCaptGetResult aCaptGetResult `(a  1 e 1 0 ]
 "1 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c99\common\abs.c
 [v _abs abs `(i  1 e 2 0 ]
 "9 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c99\common\aodiv.c
@@ -125,22 +145,27 @@ channel_FVR_Buffer2 63
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "91 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c99\common\Umul64.c
 [v ___omul __omul `(uo  1 e 8 0 ]
-"46 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
+"48 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
 [v _putch putch `(v  1 e 1 0 ]
-"56
+"59
 [v _timeGet timeGet `(us  1 e 2 0 ]
-"61
+"64
 [v _timeElapsedR timeElapsedR `(a  1 e 1 0 ]
-"88
+"91
 [v _main main `(v  1 e 1 0 ]
-"62 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+"63 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
 [v _ADCC_Initialize ADCC_Initialize `(v  1 e 1 0 ]
-"113
+"120
 [v _ADCC_StartConversion ADCC_StartConversion `(v  1 e 1 0 ]
-"125
-[v _ADCC_IsConversionDone ADCC_IsConversionDone `(a  1 e 1 0 ]
-"131
+[v i2_ADCC_StartConversion ADCC_StartConversion `(v  1 e 1 0 ]
+"138
 [v _ADCC_GetConversionResult ADCC_GetConversionResult `(us  1 e 2 0 ]
+"306
+[v _ADCC_ISR ADCC_ISR `(v  1 e 1 0 ]
+"315
+[v _ADCC_SetADIInterruptHandler ADCC_SetADIInterruptHandler `(v  1 e 1 0 ]
+"319
+[v _ADCC_DefaultInterruptHandler ADCC_DefaultInterruptHandler `(v  1 e 1 0 ]
 "142 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/examples/i2c1_master_example.c
 [v _rd1RegCompleteHandler rd1RegCompleteHandler `(E358  1 s 1 rd1RegCompleteHandler ]
 "149
@@ -323,7 +348,34 @@ channel_FVR_Buffer2 63
 [v _I2C1_InterruptHandler I2C1_InterruptHandler `*.37(v  1 e 2 0 ]
 "477 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X/mcc_generated_files/uart1.h
 [v _UART1_TxInterruptHandler UART1_TxInterruptHandler `*.37(v  1 e 2 0 ]
-[s S1079 . 1 `uc 1 DMA1SCNTIE 1 0 :1:0 
+"8 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\aCapture.c
+[v _curASrc curASrc `E16102  1 e 1 0 ]
+"16
+[v _resultTbl resultTbl `[1]us  1 e 2 0 ]
+"18
+[v _resultTblVal resultTblVal `[1]uc  1 e 1 0 ]
+[s S221 . 1 `uc 1 INT0IE 1 0 :1:0 
+`uc 1 ZCDIE 1 0 :1:1 
+`uc 1 ADIE 1 0 :1:2 
+`uc 1 ADTIE 1 0 :1:3 
+`uc 1 C1IE 1 0 :1:4 
+`uc 1 SMT1IE 1 0 :1:5 
+`uc 1 SMT1PRAIE 1 0 :1:6 
+`uc 1 SMT1PWAIE 1 0 :1:7 
+]
+"3502 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
+[s S230 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TX1IE 1 0 :1:4 
+`uc 1 RC1IE 1 0 :1:5 
+`uc 1 . 1 0 :1:6 
+`uc 1 PSPIE 1 0 :1:7 
+]
+[s S236 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TXIE 1 0 :1:4 
+]
+[u S239 . 1 `S221 1 . 1 0 `S230 1 . 1 0 `S236 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES239  1 e 1 @14737 ]
+[s S1201 . 1 `uc 1 DMA1SCNTIE 1 0 :1:0 
 `uc 1 DMA1DCNTIE 1 0 :1:1 
 `uc 1 DMA1ORIE 1 0 :1:2 
 `uc 1 DMA1AIE 1 0 :1:3 
@@ -332,13 +384,13 @@ channel_FVR_Buffer2 63
 `uc 1 SPI1IE 1 0 :1:6 
 `uc 1 I2C1RXIE 1 0 :1:7 
 ]
-"3588 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
-[s S1088 . 1 `uc 1 . 1 0 :6:0 
+"3588
+[s S1210 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 CMIE 1 0 :1:6 
 ]
-[u S1091 . 1 `S1079 1 . 1 0 `S1088 1 . 1 0 ]
-[v _PIE2bits PIE2bits `VES1091  1 e 1 @14738 ]
-[s S1034 . 1 `uc 1 I2C1TXIE 1 0 :1:0 
+[u S1213 . 1 `S1201 1 . 1 0 `S1210 1 . 1 0 ]
+[v _PIE2bits PIE2bits `VES1213  1 e 1 @14738 ]
+[s S1156 . 1 `uc 1 I2C1TXIE 1 0 :1:0 
 `uc 1 I2C1IE 1 0 :1:1 
 `uc 1 I2C1EIE 1 0 :1:2 
 `uc 1 U1RXIE 1 0 :1:3 
@@ -348,20 +400,41 @@ channel_FVR_Buffer2 63
 `uc 1 TMR0IE 1 0 :1:7 
 ]
 "3668
-[s S1043 . 1 `uc 1 RXB0IE 1 0 :1:0 
+[s S1165 . 1 `uc 1 RXB0IE 1 0 :1:0 
 `uc 1 RXB1IE 1 0 :1:1 
 `uc 1 TXB0IE 1 0 :1:2 
 `uc 1 TXB1IE 1 0 :1:3 
 `uc 1 TXB2IE 1 0 :1:4 
 ]
-[s S1049 . 1 `uc 1 . 1 0 :1:0 
+[s S1171 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 RXBNIE 1 0 :1:1 
 `uc 1 . 1 0 :2:2 
 `uc 1 TXBNIE 1 0 :1:4 
 ]
-[u S1054 . 1 `S1034 1 . 1 0 `S1043 1 . 1 0 `S1049 1 . 1 0 ]
-[v _PIE3bits PIE3bits `VES1054  1 e 1 @14739 ]
-[s S1179 . 1 `uc 1 DMA1SCNTIF 1 0 :1:0 
+[u S1176 . 1 `S1156 1 . 1 0 `S1165 1 . 1 0 `S1171 1 . 1 0 ]
+[v _PIE3bits PIE3bits `VES1176  1 e 1 @14739 ]
+[s S180 . 1 `uc 1 INT0IF 1 0 :1:0 
+`uc 1 ZCDIF 1 0 :1:1 
+`uc 1 ADIF 1 0 :1:2 
+`uc 1 ADTIF 1 0 :1:3 
+`uc 1 C1IF 1 0 :1:4 
+`uc 1 SMT1IF 1 0 :1:5 
+`uc 1 SMT1PRAIF 1 0 :1:6 
+`uc 1 SMT1PWAIF 1 0 :1:7 
+]
+"4155
+[s S189 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TX1IF 1 0 :1:4 
+`uc 1 RC1IF 1 0 :1:5 
+`uc 1 . 1 0 :1:6 
+`uc 1 PSPIF 1 0 :1:7 
+]
+[s S195 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 TXIF 1 0 :1:4 
+]
+[u S198 . 1 `S180 1 . 1 0 `S189 1 . 1 0 `S195 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES198  1 e 1 @14753 ]
+[s S1301 . 1 `uc 1 DMA1SCNTIF 1 0 :1:0 
 `uc 1 DMA1DCNTIF 1 0 :1:1 
 `uc 1 DMA1ORIF 1 0 :1:2 
 `uc 1 DMA1AIF 1 0 :1:3 
@@ -371,12 +444,12 @@ channel_FVR_Buffer2 63
 `uc 1 I2C1RXIF 1 0 :1:7 
 ]
 "4241
-[s S1188 . 1 `uc 1 . 1 0 :6:0 
+[s S1310 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 CMIF 1 0 :1:6 
 ]
-[u S1191 . 1 `S1179 1 . 1 0 `S1188 1 . 1 0 ]
-[v _PIR2bits PIR2bits `VES1191  1 e 1 @14754 ]
-[s S1147 . 1 `uc 1 I2C1TXIF 1 0 :1:0 
+[u S1313 . 1 `S1301 1 . 1 0 `S1310 1 . 1 0 ]
+[v _PIR2bits PIR2bits `VES1313  1 e 1 @14754 ]
+[s S1269 . 1 `uc 1 I2C1TXIF 1 0 :1:0 
 `uc 1 I2C1IF 1 0 :1:1 
 `uc 1 I2C1EIF 1 0 :1:2 
 `uc 1 U1RXIF 1 0 :1:3 
@@ -386,14 +459,14 @@ channel_FVR_Buffer2 63
 `uc 1 TMR0IF 1 0 :1:7 
 ]
 "4314
-[s S1156 . 1 `uc 1 . 1 0 :1:0 
+[s S1278 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 RXBNIF 1 0 :1:1 
 `uc 1 . 1 0 :2:2 
 `uc 1 TXBNIF 1 0 :1:4 
 ]
-[u S1161 . 1 `S1147 1 . 1 0 `S1156 1 . 1 0 ]
-[v _PIR3bits PIR3bits `VES1161  1 e 1 @14755 ]
-[s S1899 . 1 `uc 1 TMR1IF 1 0 :1:0 
+[u S1283 . 1 `S1269 1 . 1 0 `S1278 1 . 1 0 ]
+[v _PIR3bits PIR3bits `VES1283  1 e 1 @14755 ]
+[s S2064 . 1 `uc 1 TMR1IF 1 0 :1:0 
 `uc 1 TMR1GIF 1 0 :1:1 
 `uc 1 TMR2IF 1 0 :1:2 
 `uc 1 CCP1IF 1 0 :1:3 
@@ -403,8 +476,8 @@ channel_FVR_Buffer2 63
 `uc 1 CLC1IF 1 0 :1:7 
 ]
 "4386
-[u S1908 . 1 `S1899 1 . 1 0 ]
-[v _PIR4bits PIR4bits `VES1908  1 e 1 @14756 ]
+[u S2073 . 1 `S2064 1 . 1 0 ]
+[v _PIR4bits PIR4bits `VES2073  1 e 1 @14756 ]
 "4686
 [v _PMD0 PMD0 `VEuc  1 e 1 @14784 ]
 "4763
@@ -513,7 +586,7 @@ channel_FVR_Buffer2 63
 [v _I2C1CNT I2C1CNT `VEuc  1 e 1 @15724 ]
 "25027
 [v _I2C1CON0 I2C1CON0 `VEuc  1 e 1 @15731 ]
-[s S882 . 1 `uc 1 MODE 1 0 :3:0 
+[s S1004 . 1 `uc 1 MODE 1 0 :3:0 
 `uc 1 MDR 1 0 :1:3 
 `uc 1 CSTR 1 0 :1:4 
 `uc 1 S 1 0 :1:5 
@@ -521,17 +594,17 @@ channel_FVR_Buffer2 63
 `uc 1 EN 1 0 :1:7 
 ]
 "25049
-[s S889 . 1 `uc 1 MODE0 1 0 :1:0 
+[s S1011 . 1 `uc 1 MODE0 1 0 :1:0 
 `uc 1 MODE1 1 0 :1:1 
 `uc 1 MODE2 1 0 :1:2 
 `uc 1 . 1 0 :4:3 
 `uc 1 I2CEN 1 0 :1:7 
 ]
-[u S895 . 1 `S882 1 . 1 0 `S889 1 . 1 0 ]
-[v _I2C1CON0bits I2C1CON0bits `VES895  1 e 1 @15731 ]
+[u S1017 . 1 `S1004 1 . 1 0 `S1011 1 . 1 0 ]
+[v _I2C1CON0bits I2C1CON0bits `VES1017  1 e 1 @15731 ]
 "25104
 [v _I2C1CON1 I2C1CON1 `VEuc  1 e 1 @15732 ]
-[s S937 . 1 `uc 1 CSD 1 0 :1:0 
+[s S1059 . 1 `uc 1 CSD 1 0 :1:0 
 `uc 1 TXU 1 0 :1:1 
 `uc 1 RXO 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -541,13 +614,13 @@ channel_FVR_Buffer2 63
 `uc 1 ACKCNT 1 0 :1:7 
 ]
 "25121
-[u S946 . 1 `S937 1 . 1 0 ]
-[v _I2C1CON1bits I2C1CON1bits `VES946  1 e 1 @15732 ]
+[u S1068 . 1 `S1059 1 . 1 0 ]
+[v _I2C1CON1bits I2C1CON1bits `VES1068  1 e 1 @15732 ]
 "25161
 [v _I2C1CON2 I2C1CON2 `VEuc  1 e 1 @15733 ]
 "25237
 [v _I2C1ERR I2C1ERR `VEuc  1 e 1 @15734 ]
-[s S958 . 1 `uc 1 NACKIE 1 0 :1:0 
+[s S1080 . 1 `uc 1 NACKIE 1 0 :1:0 
 `uc 1 BCLIE 1 0 :1:1 
 `uc 1 BTOIE 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -556,7 +629,7 @@ channel_FVR_Buffer2 63
 `uc 1 BTOIF 1 0 :1:6 
 ]
 "25262
-[s S966 . 1 `uc 1 NACK1IE 1 0 :1:0 
+[s S1088 . 1 `uc 1 NACK1IE 1 0 :1:0 
 `uc 1 BCL1IE 1 0 :1:1 
 `uc 1 BTO1IE 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -564,9 +637,9 @@ channel_FVR_Buffer2 63
 `uc 1 BCL1IF 1 0 :1:5 
 `uc 1 BTO1IF 1 0 :1:6 
 ]
-[u S974 . 1 `S958 1 . 1 0 `S966 1 . 1 0 ]
-[v _I2C1ERRbits I2C1ERRbits `VES974  1 e 1 @15734 ]
-[s S914 . 1 `uc 1 RXBF 1 0 :1:0 
+[u S1096 . 1 `S1080 1 . 1 0 `S1088 1 . 1 0 ]
+[v _I2C1ERRbits I2C1ERRbits `VES1096  1 e 1 @15734 ]
+[s S1036 . 1 `uc 1 RXBF 1 0 :1:0 
 `uc 1 . 1 0 :1:1 
 `uc 1 CLRBF 1 0 :1:2 
 `uc 1 RXRE 1 0 :1:3 
@@ -576,11 +649,11 @@ channel_FVR_Buffer2 63
 `uc 1 TXWE 1 0 :1:7 
 ]
 "25434
-[u S923 . 1 `S914 1 . 1 0 ]
-[v _I2C1STAT1bits I2C1STAT1bits `VES923  1 e 1 @15736 ]
+[u S1045 . 1 `S1036 1 . 1 0 ]
+[v _I2C1STAT1bits I2C1STAT1bits `VES1045  1 e 1 @15736 ]
 "25464
 [v _I2C1PIR I2C1PIR `VEuc  1 e 1 @15737 ]
-[s S994 . 1 `uc 1 SCIF 1 0 :1:0 
+[s S1116 . 1 `uc 1 SCIF 1 0 :1:0 
 `uc 1 RSCIF 1 0 :1:1 
 `uc 1 PCIF 1 0 :1:2 
 `uc 1 ADRIF 1 0 :1:3 
@@ -590,7 +663,7 @@ channel_FVR_Buffer2 63
 `uc 1 CNTIF 1 0 :1:7 
 ]
 "25491
-[s S1003 . 1 `uc 1 SC1IF 1 0 :1:0 
+[s S1125 . 1 `uc 1 SC1IF 1 0 :1:0 
 `uc 1 RSC1IF 1 0 :1:1 
 `uc 1 PC1IF 1 0 :1:2 
 `uc 1 ADR1IF 1 0 :1:3 
@@ -599,11 +672,11 @@ channel_FVR_Buffer2 63
 `uc 1 ACKT1IF 1 0 :1:6 
 `uc 1 CNT1IF 1 0 :1:7 
 ]
-[u S1012 . 1 `S994 1 . 1 0 `S1003 1 . 1 0 ]
-[v _I2C1PIRbits I2C1PIRbits `VES1012  1 e 1 @15737 ]
+[u S1134 . 1 `S1116 1 . 1 0 `S1125 1 . 1 0 ]
+[v _I2C1PIRbits I2C1PIRbits `VES1134  1 e 1 @15737 ]
 "25566
 [v _I2C1PIE I2C1PIE `VEuc  1 e 1 @15738 ]
-[s S1107 . 1 `uc 1 SCIE 1 0 :1:0 
+[s S1229 . 1 `uc 1 SCIE 1 0 :1:0 
 `uc 1 RSCIE 1 0 :1:1 
 `uc 1 PCIE 1 0 :1:2 
 `uc 1 ADRIE 1 0 :1:3 
@@ -613,7 +686,7 @@ channel_FVR_Buffer2 63
 `uc 1 CNTIE 1 0 :1:7 
 ]
 "25593
-[s S1116 . 1 `uc 1 SC1IE 1 0 :1:0 
+[s S1238 . 1 `uc 1 SC1IE 1 0 :1:0 
 `uc 1 RSC1IE 1 0 :1:1 
 `uc 1 PC1IE 1 0 :1:2 
 `uc 1 ADR1IE 1 0 :1:3 
@@ -622,8 +695,8 @@ channel_FVR_Buffer2 63
 `uc 1 ACKT1IE 1 0 :1:6 
 `uc 1 CNT1IE 1 0 :1:7 
 ]
-[u S1125 . 1 `S1107 1 . 1 0 `S1116 1 . 1 0 ]
-[v _I2C1PIEbits I2C1PIEbits `VES1125  1 e 1 @15738 ]
+[u S1247 . 1 `S1229 1 . 1 0 `S1238 1 . 1 0 ]
+[v _I2C1PIEbits I2C1PIEbits `VES1247  1 e 1 @15738 ]
 "25668
 [v _I2C1CLK I2C1CLK `VEuc  1 e 1 @15739 ]
 "26758
@@ -658,7 +731,7 @@ channel_FVR_Buffer2 63
 [v _U1UIR U1UIR `VEuc  1 e 1 @15864 ]
 "27586
 [v _U1ERRIR U1ERRIR `VEuc  1 e 1 @15865 ]
-[s S1693 . 1 `uc 1 TXCIF 1 0 :1:0 
+[s S1858 . 1 `uc 1 TXCIF 1 0 :1:0 
 `uc 1 RXFOIF 1 0 :1:1 
 `uc 1 RXBKIF 1 0 :1:2 
 `uc 1 FERIF 1 0 :1:3 
@@ -668,7 +741,7 @@ channel_FVR_Buffer2 63
 `uc 1 TXMTIF 1 0 :1:7 
 ]
 "27613
-[s S1702 . 1 `uc 1 U1TXCIF 1 0 :1:0 
+[s S1867 . 1 `uc 1 U1TXCIF 1 0 :1:0 
 `uc 1 U1RXFOIF 1 0 :1:1 
 `uc 1 U1RXBKIF 1 0 :1:2 
 `uc 1 U1FERIF 1 0 :1:3 
@@ -677,13 +750,13 @@ channel_FVR_Buffer2 63
 `uc 1 U1PERIF 1 0 :1:6 
 `uc 1 U1TXMTIF 1 0 :1:7 
 ]
-[u S1711 . 1 `S1693 1 . 1 0 `S1702 1 . 1 0 ]
-[v _U1ERRIRbits U1ERRIRbits `VES1711  1 e 1 @15865 ]
+[u S1876 . 1 `S1858 1 . 1 0 `S1867 1 . 1 0 ]
+[v _U1ERRIRbits U1ERRIRbits `VES1876  1 e 1 @15865 ]
 "27698
 [v _U1ERRIE U1ERRIE `VEuc  1 e 1 @15866 ]
 "28477
 [v _FVRCON FVRCON `VEuc  1 e 1 @16065 ]
-[s S2059 . 1 `uc 1 ADFVR 1 0 :2:0 
+[s S2224 . 1 `uc 1 ADFVR 1 0 :2:0 
 `uc 1 CDAFVR 1 0 :2:2 
 `uc 1 TSRNG 1 0 :1:4 
 `uc 1 TSEN 1 0 :1:5 
@@ -691,7 +764,7 @@ channel_FVR_Buffer2 63
 `uc 1 EN 1 0 :1:7 
 ]
 "28501
-[s S2066 . 1 `uc 1 ADFVR0 1 0 :1:0 
+[s S2231 . 1 `uc 1 ADFVR0 1 0 :1:0 
 `uc 1 ADFVR1 1 0 :1:1 
 `uc 1 CDAFVR0 1 0 :1:2 
 `uc 1 CDAFVR1 1 0 :1:3 
@@ -699,8 +772,8 @@ channel_FVR_Buffer2 63
 `uc 1 FVRRDY 1 0 :1:6 
 `uc 1 FVREN 1 0 :1:7 
 ]
-[u S2074 . 1 `S2059 1 . 1 0 `S2066 1 . 1 0 ]
-[v _FVRCONbits FVRCONbits `VES2074  1 e 1 @16065 ]
+[u S2239 . 1 `S2224 1 . 1 0 `S2231 1 . 1 0 ]
+[v _FVRCONbits FVRCONbits `VES2239  1 e 1 @16065 ]
 "28856
 [v _ADLTHL ADLTHL `VEuc  1 e 1 @16094 ]
 "28984
@@ -753,7 +826,7 @@ channel_FVR_Buffer2 63
 [v _ADPREH ADPREH `VEuc  1 e 1 @16119 ]
 "31981
 [v _ADCON0 ADCON0 `VEuc  1 e 1 @16120 ]
-[s S186 . 1 `uc 1 GO 1 0 :1:0 
+[s S279 . 1 `uc 1 GO 1 0 :1:0 
 `uc 1 . 1 0 :1:1 
 `uc 1 FM 1 0 :2:2 
 `uc 1 CS 1 0 :1:4 
@@ -762,7 +835,7 @@ channel_FVR_Buffer2 63
 `uc 1 ON 1 0 :1:7 
 ]
 "32023
-[s S194 . 1 `uc 1 ADGO 1 0 :1:0 
+[s S287 . 1 `uc 1 ADGO 1 0 :1:0 
 `uc 1 . 1 0 :1:1 
 `uc 1 ADFM 1 0 :2:2 
 `uc 1 ADCS 1 0 :1:4 
@@ -770,50 +843,50 @@ channel_FVR_Buffer2 63
 `uc 1 ADCONT 1 0 :1:6 
 `uc 1 ADON 1 0 :1:7 
 ]
-[s S202 . 1 `uc 1 DONE 1 0 :1:0 
+[s S295 . 1 `uc 1 DONE 1 0 :1:0 
 `uc 1 . 1 0 :1:1 
 `uc 1 FM0 1 0 :1:2 
 ]
-[s S206 . 1 `uc 1 GO_NOT_DONE 1 0 :1:0 
+[s S299 . 1 `uc 1 GO_NOT_DONE 1 0 :1:0 
 ]
-[s S208 . 1 `uc 1 GO_nDONE 1 0 :1:0 
+[s S301 . 1 `uc 1 GO_nDONE 1 0 :1:0 
 `uc 1 . 1 0 :1:1 
 `uc 1 ADFM0 1 0 :1:2 
 ]
-[s S212 . 1 `uc 1 . 1 0 :7:0 
+[s S305 . 1 `uc 1 . 1 0 :7:0 
 `uc 1 ADCAL 1 0 :1:7 
 ]
-[u S215 . 1 `S186 1 . 1 0 `S194 1 . 1 0 `S202 1 . 1 0 `S206 1 . 1 0 `S208 1 . 1 0 `S212 1 . 1 0 ]
-[v _ADCON0bits ADCON0bits `VES215  1 e 1 @16120 ]
+[u S308 . 1 `S279 1 . 1 0 `S287 1 . 1 0 `S295 1 . 1 0 `S299 1 . 1 0 `S301 1 . 1 0 `S305 1 . 1 0 ]
+[v _ADCON0bits ADCON0bits `VES308  1 e 1 @16120 ]
 "32108
 [v _ADCON1 ADCON1 `VEuc  1 e 1 @16121 ]
-[s S448 . 1 `uc 1 DSEN 1 0 :1:0 
+[s S541 . 1 `uc 1 DSEN 1 0 :1:0 
 `uc 1 . 1 0 :4:1 
 `uc 1 GPOL 1 0 :1:5 
 `uc 1 IPEN 1 0 :1:6 
 `uc 1 PPOL 1 0 :1:7 
 ]
 "32133
-[s S454 . 1 `uc 1 ADDSEN 1 0 :1:0 
+[s S547 . 1 `uc 1 ADDSEN 1 0 :1:0 
 `uc 1 . 1 0 :4:1 
 `uc 1 ADGPOL 1 0 :1:5 
 `uc 1 ADIPEN 1 0 :1:6 
 `uc 1 ADPPOL 1 0 :1:7 
 ]
-[s S460 . 1 `uc 1 . 1 0 :5:0 
+[s S553 . 1 `uc 1 . 1 0 :5:0 
 `uc 1 VCFG11 1 0 :1:5 
 ]
-[u S463 . 1 `S448 1 . 1 0 `S454 1 . 1 0 `S460 1 . 1 0 ]
-[v _ADCON1bits ADCON1bits `VES463  1 e 1 @16121 ]
+[u S556 . 1 `S541 1 . 1 0 `S547 1 . 1 0 `S553 1 . 1 0 ]
+[v _ADCON1bits ADCON1bits `VES556  1 e 1 @16121 ]
 "32183
 [v _ADCON2 ADCON2 `VEuc  1 e 1 @16122 ]
-[s S309 . 1 `uc 1 MODE 1 0 :3:0 
+[s S402 . 1 `uc 1 MODE 1 0 :3:0 
 `uc 1 ACLR 1 0 :1:3 
 `uc 1 CRS 1 0 :3:4 
 `uc 1 PSIS 1 0 :1:7 
 ]
 "32231
-[s S314 . 1 `uc 1 ADMD0 1 0 :1:0 
+[s S407 . 1 `uc 1 ADMD0 1 0 :1:0 
 `uc 1 ADMD1 1 0 :1:1 
 `uc 1 ADMD2 1 0 :1:2 
 `uc 1 ADACLR 1 0 :1:3 
@@ -822,11 +895,11 @@ channel_FVR_Buffer2 63
 `uc 1 ADCRS2 1 0 :1:6 
 `uc 1 ADPSIS 1 0 :1:7 
 ]
-[s S323 . 1 `uc 1 ADMD 1 0 :3:0 
+[s S416 . 1 `uc 1 ADMD 1 0 :3:0 
 `uc 1 . 1 0 :1:3 
 `uc 1 ADCRS 1 0 :3:4 
 ]
-[s S327 . 1 `uc 1 MODE0 1 0 :1:0 
+[s S420 . 1 `uc 1 MODE0 1 0 :1:0 
 `uc 1 MODE1 1 0 :1:1 
 `uc 1 MODE2 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -834,24 +907,24 @@ channel_FVR_Buffer2 63
 `uc 1 CRS1 1 0 :1:5 
 `uc 1 CRS2 1 0 :1:6 
 ]
-[s S335 . 1 `uc 1 MD 1 0 :3:0 
+[s S428 . 1 `uc 1 MD 1 0 :3:0 
 ]
-[s S337 . 1 `uc 1 MD0 1 0 :1:0 
+[s S430 . 1 `uc 1 MD0 1 0 :1:0 
 `uc 1 MD1 1 0 :1:1 
 `uc 1 MD2 1 0 :1:2 
 ]
-[s S341 . 1 `uc 1 ADMODE 1 0 :3:0 
+[s S434 . 1 `uc 1 ADMODE 1 0 :3:0 
 ]
-[u S343 . 1 `S309 1 . 1 0 `S314 1 . 1 0 `S323 1 . 1 0 `S327 1 . 1 0 `S335 1 . 1 0 `S337 1 . 1 0 `S341 1 . 1 0 ]
-[v _ADCON2bits ADCON2bits `VES343  1 e 1 @16122 ]
+[u S436 . 1 `S402 1 . 1 0 `S407 1 . 1 0 `S416 1 . 1 0 `S420 1 . 1 0 `S428 1 . 1 0 `S430 1 . 1 0 `S434 1 . 1 0 ]
+[v _ADCON2bits ADCON2bits `VES436  1 e 1 @16122 ]
 "32361
 [v _ADCON3 ADCON3 `VEuc  1 e 1 @16123 ]
-[s S254 . 1 `uc 1 TMD 1 0 :3:0 
+[s S347 . 1 `uc 1 TMD 1 0 :3:0 
 `uc 1 SOI 1 0 :1:3 
 `uc 1 CALC 1 0 :3:4 
 ]
 "32396
-[s S258 . 1 `uc 1 ADTMD0 1 0 :1:0 
+[s S351 . 1 `uc 1 ADTMD0 1 0 :1:0 
 `uc 1 ADTMD1 1 0 :1:1 
 `uc 1 ADTMD2 1 0 :1:2 
 `uc 1 ADSOI 1 0 :1:3 
@@ -859,11 +932,11 @@ channel_FVR_Buffer2 63
 `uc 1 ADCALC1 1 0 :1:5 
 `uc 1 ADCALC2 1 0 :1:6 
 ]
-[s S266 . 1 `uc 1 ADTMD 1 0 :3:0 
+[s S359 . 1 `uc 1 ADTMD 1 0 :3:0 
 `uc 1 . 1 0 :1:3 
 `uc 1 ADCALC 1 0 :3:4 
 ]
-[s S270 . 1 `uc 1 TMD0 1 0 :1:0 
+[s S363 . 1 `uc 1 TMD0 1 0 :1:0 
 `uc 1 TMD1 1 0 :1:1 
 `uc 1 TMD2 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -871,11 +944,11 @@ channel_FVR_Buffer2 63
 `uc 1 CALC1 1 0 :1:5 
 `uc 1 CALC2 1 0 :1:6 
 ]
-[u S278 . 1 `S254 1 . 1 0 `S258 1 . 1 0 `S266 1 . 1 0 `S270 1 . 1 0 ]
-[v _ADCON3bits ADCON3bits `VES278  1 e 1 @16123 ]
+[u S371 . 1 `S347 1 . 1 0 `S351 1 . 1 0 `S359 1 . 1 0 `S363 1 . 1 0 ]
+[v _ADCON3bits ADCON3bits `VES371  1 e 1 @16123 ]
 "32491
 [v _ADSTAT ADSTAT `VEuc  1 e 1 @16124 ]
-[s S388 . 1 `uc 1 STAT 1 0 :3:0 
+[s S481 . 1 `uc 1 STAT 1 0 :3:0 
 `uc 1 . 1 0 :1:3 
 `uc 1 MATH 1 0 :1:4 
 `uc 1 LTHR 1 0 :1:5 
@@ -883,7 +956,7 @@ channel_FVR_Buffer2 63
 `uc 1 OV 1 0 :1:7 
 ]
 "32526
-[s S395 . 1 `uc 1 ADSTAT0 1 0 :1:0 
+[s S488 . 1 `uc 1 ADSTAT0 1 0 :1:0 
 `uc 1 ADSTAT1 1 0 :1:1 
 `uc 1 ADSTAT2 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -892,16 +965,16 @@ channel_FVR_Buffer2 63
 `uc 1 ADUTHR 1 0 :1:6 
 `uc 1 ADAOV 1 0 :1:7 
 ]
-[s S404 . 1 `uc 1 ADSTAT 1 0 :3:0 
+[s S497 . 1 `uc 1 ADSTAT 1 0 :3:0 
 `uc 1 . 1 0 :4:3 
 `uc 1 ADOV 1 0 :1:7 
 ]
-[s S408 . 1 `uc 1 STAT0 1 0 :1:0 
+[s S501 . 1 `uc 1 STAT0 1 0 :1:0 
 `uc 1 STAT1 1 0 :1:1 
 `uc 1 STAT2 1 0 :1:2 
 ]
-[u S412 . 1 `S388 1 . 1 0 `S395 1 . 1 0 `S404 1 . 1 0 `S408 1 . 1 0 ]
-[v _ADSTATbits ADSTATbits `VES412  1 e 1 @16124 ]
+[u S505 . 1 `S481 1 . 1 0 `S488 1 . 1 0 `S497 1 . 1 0 `S501 1 . 1 0 ]
+[v _ADSTATbits ADSTATbits `VES505  1 e 1 @16124 ]
 "32616
 [v _ADREF ADREF `VEuc  1 e 1 @16125 ]
 "32698
@@ -914,14 +987,14 @@ channel_FVR_Buffer2 63
 [v _TMR1H TMR1H `VEuc  1 e 1 @16305 ]
 "44358
 [v _T1CON T1CON `VEuc  1 e 1 @16306 ]
-[s S1921 . 1 `uc 1 ON 1 0 :1:0 
+[s S2086 . 1 `uc 1 ON 1 0 :1:0 
 `uc 1 RD16 1 0 :1:1 
 `uc 1 NOT_SYNC 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
 `uc 1 CKPS 1 0 :2:4 
 ]
 "44394
-[s S1927 . 1 `uc 1 TMR1ON 1 0 :1:0 
+[s S2092 . 1 `uc 1 TMR1ON 1 0 :1:0 
 `uc 1 T1RD16 1 0 :1:1 
 `uc 1 NOT_T1SYNC 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -929,22 +1002,22 @@ channel_FVR_Buffer2 63
 `uc 1 T1CKPS1 1 0 :1:5 
 ]
 "44394
-[s S1934 . 1 `uc 1 . 1 0 :4:0 
+[s S2099 . 1 `uc 1 . 1 0 :4:0 
 `uc 1 CKPS0 1 0 :1:4 
 `uc 1 CKPS1 1 0 :1:5 
 ]
 "44394
-[s S1938 . 1 `uc 1 . 1 0 :1:0 
+[s S2103 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 RD161 1 0 :1:1 
 ]
 "44394
-[u S1941 . 1 `S1921 1 . 1 0 `S1927 1 . 1 0 `S1934 1 . 1 0 `S1938 1 . 1 0 ]
+[u S2106 . 1 `S2086 1 . 1 0 `S2092 1 . 1 0 `S2099 1 . 1 0 `S2103 1 . 1 0 ]
 "44394
 "44394
-[v _T1CONbits T1CONbits `VES1941  1 e 1 @16306 ]
+[v _T1CONbits T1CONbits `VES2106  1 e 1 @16306 ]
 "44548
 [v _T1GCON T1GCON `VEuc  1 e 1 @16307 ]
-[s S1967 . 1 `uc 1 . 1 0 :2:0 
+[s S2132 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 GVAL 1 0 :1:2 
 `uc 1 GGO 1 0 :1:3 
 `uc 1 GSPM 1 0 :1:4 
@@ -953,7 +1026,7 @@ channel_FVR_Buffer2 63
 `uc 1 GE 1 0 :1:7 
 ]
 "44586
-[s S1975 . 1 `uc 1 . 1 0 :2:0 
+[s S2140 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 T1GVAL 1 0 :1:2 
 `uc 1 T1GGO 1 0 :1:3 
 `uc 1 T1GSPM 1 0 :1:4 
@@ -962,18 +1035,18 @@ channel_FVR_Buffer2 63
 `uc 1 T1GE 1 0 :1:7 
 ]
 "44586
-[s S1983 . 1 `uc 1 . 1 0 :3:0 
+[s S2148 . 1 `uc 1 . 1 0 :3:0 
 `uc 1 NOT_DONE 1 0 :1:3 
 ]
 "44586
-[s S1986 . 1 `uc 1 . 1 0 :3:0 
+[s S2151 . 1 `uc 1 . 1 0 :3:0 
 `uc 1 NOT_T1DONE 1 0 :1:3 
 ]
 "44586
-[u S1989 . 1 `S1967 1 . 1 0 `S1975 1 . 1 0 `S1983 1 . 1 0 `S1986 1 . 1 0 ]
+[u S2154 . 1 `S2132 1 . 1 0 `S2140 1 . 1 0 `S2148 1 . 1 0 `S2151 1 . 1 0 ]
 "44586
 "44586
-[v _T1GCONbits T1GCONbits `VES1989  1 e 1 @16307 ]
+[v _T1GCONbits T1GCONbits `VES2154  1 e 1 @16307 ]
 "44762
 [v _T1GATE T1GATE `VEuc  1 e 1 @16308 ]
 "44928
@@ -984,36 +1057,36 @@ channel_FVR_Buffer2 63
 [v _TMR0H TMR0H `VEuc  1 e 1 @16311 ]
 "45486
 [v _T0CON0 T0CON0 `VEuc  1 e 1 @16312 ]
-[s S2248 . 1 `uc 1 OUTPS 1 0 :4:0 
+[s S2436 . 1 `uc 1 OUTPS 1 0 :4:0 
 `uc 1 MD16 1 0 :1:4 
 `uc 1 OUT 1 0 :1:5 
 `uc 1 . 1 0 :1:6 
 `uc 1 EN 1 0 :1:7 
 ]
 "45514
-[s S2254 . 1 `uc 1 T0OUTPS 1 0 :4:0 
+[s S2442 . 1 `uc 1 T0OUTPS 1 0 :4:0 
 `uc 1 T0MD16 1 0 :1:4 
 `uc 1 T0OUT 1 0 :1:5 
 `uc 1 . 1 0 :1:6 
 `uc 1 T0EN 1 0 :1:7 
 ]
 "45514
-[s S2260 . 1 `uc 1 OUTPS0 1 0 :1:0 
+[s S2448 . 1 `uc 1 OUTPS0 1 0 :1:0 
 `uc 1 OUTPS1 1 0 :1:1 
 `uc 1 OUTPS2 1 0 :1:2 
 `uc 1 OUTPS3 1 0 :1:3 
 `uc 1 T016BIT 1 0 :1:4 
 ]
 "45514
-[u S2266 . 1 `S2248 1 . 1 0 `S2254 1 . 1 0 `S2260 1 . 1 0 ]
+[u S2454 . 1 `S2436 1 . 1 0 `S2442 1 . 1 0 `S2448 1 . 1 0 ]
 "45514
 "45514
-[v _T0CON0bits T0CON0bits `VES2266  1 e 1 @16312 ]
+[v _T0CON0bits T0CON0bits `VES2454  1 e 1 @16312 ]
 "45584
 [v _T0CON1 T0CON1 `VEuc  1 e 1 @16313 ]
 "45726
 [v _LATA LATA `VEuc  1 e 1 @16314 ]
-[s S2128 . 1 `uc 1 LATA0 1 0 :1:0 
+[s S2320 . 1 `uc 1 LATA0 1 0 :1:0 
 `uc 1 LATA1 1 0 :1:1 
 `uc 1 LATA2 1 0 :1:2 
 `uc 1 LATA3 1 0 :1:3 
@@ -1023,7 +1096,7 @@ channel_FVR_Buffer2 63
 `uc 1 LATA7 1 0 :1:7 
 ]
 "45753
-[s S2137 . 1 `uc 1 LA0 1 0 :1:0 
+[s S2329 . 1 `uc 1 LA0 1 0 :1:0 
 `uc 1 LA1 1 0 :1:1 
 `uc 1 LA2 1 0 :1:2 
 `uc 1 LA3 1 0 :1:3 
@@ -1033,10 +1106,10 @@ channel_FVR_Buffer2 63
 `uc 1 LA7 1 0 :1:7 
 ]
 "45753
-[u S2146 . 1 `S2128 1 . 1 0 `S2137 1 . 1 0 ]
+[u S2338 . 1 `S2320 1 . 1 0 `S2329 1 . 1 0 ]
 "45753
 "45753
-[v _LATAbits LATAbits `VES2146  1 e 1 @16314 ]
+[v _LATAbits LATAbits `VES2338  1 e 1 @16314 ]
 "45838
 [v _LATB LATB `VEuc  1 e 1 @16315 ]
 "45950
@@ -1055,7 +1128,7 @@ channel_FVR_Buffer2 63
 [v _TRISD TRISD `VEuc  1 e 1 @16325 ]
 "46474
 [v _TRISE TRISE `VEuc  1 e 1 @16326 ]
-[s S1465 . 1 `uc 1 INT0EDG 1 0 :1:0 
+[s S1582 . 1 `uc 1 INT0EDG 1 0 :1:0 
 `uc 1 INT1EDG 1 0 :1:1 
 `uc 1 INT2EDG 1 0 :1:2 
 `uc 1 . 1 0 :2:3 
@@ -1064,14 +1137,14 @@ channel_FVR_Buffer2 63
 `uc 1 GIE 1 0 :1:7 
 ]
 "46955
-[s S1473 . 1 `uc 1 . 1 0 :7:0 
+[s S1590 . 1 `uc 1 . 1 0 :7:0 
 `uc 1 GIEH 1 0 :1:7 
 ]
 "46955
-[u S1476 . 1 `S1465 1 . 1 0 `S1473 1 . 1 0 ]
+[u S1593 . 1 `S1582 1 . 1 0 `S1590 1 . 1 0 ]
 "46955
 "46955
-[v _INTCON0bits INTCON0bits `VES1476  1 e 1 @16338 ]
+[v _INTCON0bits INTCON0bits `VES1593  1 e 1 @16338 ]
 "55 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c99\common\doprnt.c
 [v _flags flags `i  1 s 2 flags ]
 [v _prec prec `i  1 s 2 prec ]
@@ -1080,15 +1153,17 @@ channel_FVR_Buffer2 63
 [v _dbuf dbuf `[32]uc  1 s 32 dbuf ]
 "69
 [v _nout nout `i  1 s 2 nout ]
+"57 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+[v _ADCC_ADI_InterruptHandler ADCC_ADI_InterruptHandler `*.37(v  1 e 2 0 ]
 "159 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/i2c1_master.c
 [v _fsmStateTable fsmStateTable `C[19]*.37(E16447  1 e 38 0 ]
-[s S665 . 36 `[6]*.37(E358 1 callbackTable 12 0 `[6]*.39v 1 callbackPayload 12 12 `us 1 time_out 2 24 `us 1 time_out_value 2 26 `uc 1 address 1 28 `*.39uc 1 data_ptr 2 29 `ui 1 data_length 2 31 `E16447 1 state 1 33 `E353 1 error 1 34 `uc 1 addressNackCheck 1 35 :2:0 
+[s S787 . 36 `[6]*.37(E358 1 callbackTable 12 0 `[6]*.39v 1 callbackPayload 12 12 `us 1 time_out 2 24 `us 1 time_out_value 2 26 `uc 1 address 1 28 `*.39uc 1 data_ptr 2 29 `ui 1 data_length 2 31 `E16447 1 state 1 33 `E353 1 error 1 34 `uc 1 addressNackCheck 1 35 :2:0 
 `uc 1 busy 1 35 :1:2 
 `uc 1 inUse 1 35 :1:3 
 `uc 1 bufferFree 1 35 :1:4 
 ]
 "181
-[v _I2C1_Status I2C1_Status `S665  1 e 36 0 ]
+[v _I2C1_Status I2C1_Status `S787  1 e 36 0 ]
 "57 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/tmr1.c
 [v _timer1ReloadVal timer1ReloadVal `VEus  1 e 2 0 ]
 "63 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/uart1.c
@@ -1099,44 +1174,44 @@ channel_FVR_Buffer2 63
 [v _uart1TxBuffer uart1TxBuffer `VE[8]uc  1 s 8 uart1TxBuffer ]
 "66
 [v _uart1TxBufferRemaining uart1TxBufferRemaining `VEuc  1 e 1 0 ]
-[s S1584 . 1 `uc 1 perr 1 0 :1:0 
+[s S1749 . 1 `uc 1 perr 1 0 :1:0 
 `uc 1 ferr 1 0 :1:1 
 `uc 1 oerr 1 0 :1:2 
 `uc 1 reserved 1 0 :5:3 
 ]
 "68
-[u S1589 . 1 `S1584 1 . 1 0 `uc 1 status 1 0 ]
-[v _uart1RxLastError uart1RxLastError `VES1589  1 s 1 uart1RxLastError ]
+[u S1754 . 1 `S1749 1 . 1 0 `uc 1 status 1 0 ]
+[v _uart1RxLastError uart1RxLastError `VES1754  1 s 1 uart1RxLastError ]
 "73
 [v _UART1_FramingErrorHandler UART1_FramingErrorHandler `*.37(v  1 e 2 0 ]
 "74
 [v _UART1_OverrunErrorHandler UART1_OverrunErrorHandler `*.37(v  1 e 2 0 ]
 "75
 [v _UART1_ErrorHandler UART1_ErrorHandler `*.37(v  1 e 2 0 ]
-"88 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
+"91 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
 [v _main main `(v  1 e 1 0 ]
 {
-"91
-[v main@tstamp1 tstamp1 `s  1 a 2 74 ]
-"90
-[v main@adcCaptRst adcCaptRst `s  1 a 2 72 ]
-"127
+"93
+[v main@mainPressure mainPressure `s  1 a 2 2 ]
+"94
+[v main@tstamp1 tstamp1 `us  1 a 2 0 ]
+"133
 } 0
-"56
+"59
 [v _timeGet timeGet `(us  1 e 2 0 ]
 {
-"58
-} 0
 "61
+} 0
+"64
 [v _timeElapsedR timeElapsedR `(a  1 e 1 0 ]
 {
-"62
+"65
 [v timeElapsedR@intTime intTime `us  1 a 2 39 ]
 [v timeElapsedR@intDur intDur `us  1 a 2 37 ]
-"61
+"64
 [v timeElapsedR@prevTime prevTime `*.39us  1 p 2 31 ]
 [v timeElapsedR@duration duration `us  1 p 2 33 ]
-"71
+"74
 } 0
 "104 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/tmr1.c
 [v _TMR1_ReadTimer TMR1_ReadTimer `(us  1 e 2 0 ]
@@ -1163,9 +1238,9 @@ channel_FVR_Buffer2 63
 {
 "1371
 [v vfprintf@cfmt cfmt `*.32uc  1 a 2 62 ]
-[s S2304 _IO_FILE 0 ]
+[s S2548 _IO_FILE 0 ]
 "1368
-[v vfprintf@fp fp `*.2S2304  1 p 2 56 ]
+[v vfprintf@fp fp `*.2S2548  1 p 2 56 ]
 [v vfprintf@fmt fmt `*.32Cuc  1 p 2 58 ]
 [v vfprintf@ap ap `*.39*.39v  1 p 2 60 ]
 "1382
@@ -1175,9 +1250,9 @@ channel_FVR_Buffer2 63
 {
 "674
 [v vfpfcnvrt@ll ll `o  1 a 8 48 ]
-[s S2304 _IO_FILE 0 ]
+[s S2548 _IO_FILE 0 ]
 "670
-[v vfpfcnvrt@fp fp `*.2S2304  1 p 2 40 ]
+[v vfpfcnvrt@fp fp `*.2S2548  1 p 2 40 ]
 [v vfpfcnvrt@fmt fmt `*.39*.32uc  1 p 2 42 ]
 [v vfpfcnvrt@ap ap `*.39*.39v  1 p 2 44 ]
 "1365
@@ -1192,9 +1267,9 @@ channel_FVR_Buffer2 63
 [v dtoa@s s `i  1 a 2 28 ]
 [v dtoa@w w `i  1 a 2 26 ]
 [v dtoa@p p `i  1 a 2 24 ]
-[s S2304 _IO_FILE 0 ]
+[s S2548 _IO_FILE 0 ]
 "274
-[v dtoa@fp fp `*.2S2304  1 p 2 4 ]
+[v dtoa@fp fp `*.2S2548  1 p 2 4 ]
 [v dtoa@d d `o  1 p 8 6 ]
 "315
 } 0
@@ -1204,9 +1279,9 @@ channel_FVR_Buffer2 63
 "74
 [v pad@w w `i  1 a 2 2 ]
 [v pad@i i `i  1 a 2 0 ]
-[s S2304 _IO_FILE 0 ]
+[s S2548 _IO_FILE 0 ]
 "72
-[v pad@fp fp `*.2S2304  1 p 2 41 ]
+[v pad@fp fp `*.2S2548  1 p 2 41 ]
 [v pad@buf buf `*.39uc  1 p 2 43 ]
 [v pad@p p `i  1 p 2 45 ]
 "95
@@ -1229,25 +1304,25 @@ channel_FVR_Buffer2 63
 [v fputs@c c `uc  1 a 1 38 ]
 "8
 [v fputs@s s `*.39Cuc  1 p 2 34 ]
-[s S2812 _IO_FILE 6 `*.2uc 1 buffer 2 0 `i 1 count 2 2 `i 1 limit 2 4 ]
-[v fputs@fp fp `*.2S2812  1 p 2 36 ]
+[s S3056 _IO_FILE 6 `*.2uc 1 buffer 2 0 `i 1 count 2 2 `i 1 limit 2 4 ]
+[v fputs@fp fp `*.2S3056  1 p 2 36 ]
 "19
 } 0
 "8 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c99\common\nf_fputc.c
 [v _fputc fputc `(i  1 e 2 0 ]
 {
 [v fputc@c c `i  1 p 2 25 ]
-[s S2812 _IO_FILE 6 `*.2uc 1 buffer 2 0 `i 1 count 2 2 `i 1 limit 2 4 ]
-[v fputc@fp fp `*.2S2812  1 p 2 27 ]
+[s S3056 _IO_FILE 6 `*.2uc 1 buffer 2 0 `i 1 count 2 2 `i 1 limit 2 4 ]
+[v fputc@fp fp `*.2S3056  1 p 2 27 ]
 "21
 } 0
-"46 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
+"48 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\main.c
 [v _putch putch `(v  1 e 1 0 ]
 {
 [v putch@byte byte `uc  1 a 1 wreg ]
 [v putch@byte byte `uc  1 a 1 wreg ]
 [v putch@byte byte `uc  1 a 1 24 ]
-"50
+"52
 } 0
 "152 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/uart1.c
 [v _UART1_is_tx_ready UART1_is_tx_ready `(a  1 e 1 0 ]
@@ -1291,6 +1366,45 @@ channel_FVR_Buffer2 63
 [v ___aodiv@dividend dividend `o  1 p 8 23 ]
 [v ___aodiv@divisor divisor `o  1 p 8 31 ]
 "43
+} 0
+"57 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\aCapture.c
+[v _aCaptureInit aCaptureInit `(v  1 e 1 0 ]
+{
+"58
+[v aCaptureInit@idx idx `i  1 a 2 26 ]
+"66
+} 0
+"21
+[v _adcGetCh adcGetCh `(E16053  1 e 1 0 ]
+{
+[v adcGetCh@sel sel `E16102  1 a 1 wreg ]
+[v adcGetCh@sel sel `E16102  1 a 1 wreg ]
+[v adcGetCh@sel sel `E16102  1 a 1 25 ]
+"30
+} 0
+"120 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+[v _ADCC_StartConversion ADCC_StartConversion `(v  1 e 1 0 ]
+{
+[v ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
+[v ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
+"123
+[v ADCC_StartConversion@channel channel `E16053  1 a 1 23 ]
+"130
+} 0
+"69 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\aCapture.c
+[v _aCaptGetResult aCaptGetResult `(a  1 e 1 0 ]
+{
+[v aCaptGetResult@sel sel `E16102  1 a 1 wreg ]
+"70
+[v aCaptGetResult@lclRaw lclRaw `us  1 a 2 29 ]
+"71
+[v aCaptGetResult@lclValid lclValid `uc  1 a 1 27 ]
+"69
+[v aCaptGetResult@sel sel `E16102  1 a 1 wreg ]
+[v aCaptGetResult@outVal outVal `*.39s  1 p 2 23 ]
+"74
+[v aCaptGetResult@sel sel `E16102  1 a 1 28 ]
+"97
 } 0
 "92 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/tmr1.c
 [v _TMR1_StartTimer TMR1_StartTimer `(v  1 e 1 0 ]
@@ -1376,34 +1490,21 @@ channel_FVR_Buffer2 63
 {
 "62
 } 0
-"62 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+"63 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
 [v _ADCC_Initialize ADCC_Initialize `(v  1 e 1 0 ]
 {
-"111
+"118
 } 0
-"113
-[v _ADCC_StartConversion ADCC_StartConversion `(v  1 e 1 0 ]
+"315
+[v _ADCC_SetADIInterruptHandler ADCC_SetADIInterruptHandler `(v  1 e 1 0 ]
 {
-[v ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
-[v ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
-"116
-[v ADCC_StartConversion@channel channel `E16053  1 a 1 23 ]
-"123
-} 0
-"125
-[v _ADCC_IsConversionDone ADCC_IsConversionDone `(a  1 e 1 0 ]
-{
-"129
-} 0
-"131
-[v _ADCC_GetConversionResult ADCC_GetConversionResult `(us  1 e 2 0 ]
-{
-"135
+[v ADCC_SetADIInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 23 ]
+"317
 } 0
 "58 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/interrupt_manager.c
 [v _INTERRUPT_InterruptManager INTERRUPT_InterruptManager `IIH(v  1 e 1 0 ]
 {
-"85
+"89
 } 0
 "217 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/uart1.c
 [v _UART1_Transmit_ISR UART1_Transmit_ISR `(v  1 e 1 0 ]
@@ -1699,4 +1800,41 @@ channel_FVR_Buffer2 63
 [v _I2C1_MasterClearCountFlag I2C1_MasterClearCountFlag `T(v  1 s 1 I2C1_MasterClearCountFlag ]
 {
 "769
+} 0
+"306 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+[v _ADCC_ISR ADCC_ISR `(v  1 e 1 0 ]
+{
+"313
+} 0
+"319
+[v _ADCC_DefaultInterruptHandler ADCC_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"322
+} 0
+"32 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\aCapture.c
+[v _adcCaptureIsr adcCaptureIsr `(v  1 e 1 0 ]
+{
+"54
+} 0
+"21
+[v i2_adcGetCh adcGetCh `(E16053  1 e 1 0 ]
+{
+[v i2adcGetCh@sel sel `E16102  1 a 1 wreg ]
+[v i2adcGetCh@sel sel `E16102  1 a 1 wreg ]
+[v i2adcGetCh@sel sel `E16102  1 a 1 2 ]
+"30
+} 0
+"120 C:\Users\David\MPLABXProjects\OpenRespirator\Controller.X\mcc_generated_files/adcc.c
+[v i2_ADCC_StartConversion ADCC_StartConversion `(v  1 e 1 0 ]
+{
+[v i2ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
+[v i2ADCC_StartConversion@channel channel `E16053  1 a 1 wreg ]
+"123
+[v i2ADCC_StartConversion@channel channel `E16053  1 a 1 0 ]
+"130
+} 0
+"138
+[v _ADCC_GetConversionResult ADCC_GetConversionResult `(us  1 e 2 0 ]
+{
+"142
 } 0

@@ -42,6 +42,8 @@
 */
 
 #include "mcc_generated_files/mcc.h"
+#include "ORespGlobal.h"
+#include "aCapture.h"
 
 void putch(char byte)
 {
@@ -49,6 +51,7 @@ void putch(char byte)
     UART1_Write(byte);
 }
 
+// TODO: ENSURE USE WITH TIME ABOVE 1/2 COUNT GIVES ERROR.
 #define TIME_MS(time) ((uint16_t) time*10)
 #define TIME_S(time) ((uint16_t) (time*10000))
 
@@ -82,26 +85,20 @@ bool timeElapsed(uint16_t prevTime, uint16_t duration){
     }
 }
 
-// Analog capture.
-
-
-// Pressure sensor.
-int16_t mainPSensCal = 11925;
-
-uint16_t readPressure
-
-
 /*
                          Main application
  */
 void main(void)
 {
-    int16_t adcCaptRst;
-    int16_t tstamp1;
+    int16_t mainPressure;
+    uint16_t tstamp1;
     
     // Initialize the device
     SYSTEM_Initialize();
 
+    // Disable ADC Irq.
+    PIE1bits.ADIE = 0;
+    
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
     // Use the following macros to:
@@ -112,24 +109,24 @@ void main(void)
     // Initialize.
     TMR0_StartTimer();
     TMR1_StartTimer();
+    aCaptureInit();
+    
     IO_RA2_LAT=0;
     tstamp1 = timeGet();
     
-    
-    ADCC_StartConversion(channel_ANE2);
     while (1)
     {
-        if (ADCC_IsConversionDone()){
-            adcCaptRst=ADCC_GetConversionResult();
-            ADCC_StartConversion(channel_ANE2);
-            printf("Data");
-            printf("Dat %d\n", adcCaptRst);
+        if (aCaptGetResult(MainPSensor,&mainPressure)){
+//        if (ADCC_IsConversionDone()){
+//            adcCaptRst=ADCC_GetConversionResult();
+//            ADCC_StartConversion(channel_ANE2);
+            printf("P %d  \r", mainPressure);
         }
 
         if (timeElapsedR(&tstamp1, TIME_S(0.5))){
             // DORDBG. SET RA2 TO 1.
             IO_RA2_Toggle();
-            printf("Prueba\n");
+            printf("\nPrueba\n");
         }
         // Add your application code
     }
