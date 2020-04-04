@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "mcc_generated_files/mcc.h"
+#include "mcc.h"
 #include "monitor.h"
 
 void InitializePressure (void) {
