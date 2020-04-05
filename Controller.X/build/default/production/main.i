@@ -27624,6 +27624,7 @@ void main(void)
     while (timeElapsedR(&rSubCycleTime, ((time_t) 50*1)));
 
     if (1) {
+
         time_t tstamp1;
         tstamp1 = timeGet();
         while (1) {
@@ -27637,84 +27638,84 @@ void main(void)
             }
 
         }
-    }
+    } else {
 
-    rCycleTime = timeGet();
-    printTime = timeGet();
-    while (1)
-    {
-
-        printf("\nIP\n");
-
-        LATAbits.LATA2 = 1;
-                ;
-        initialSubState = 1;
+        rCycleTime = timeGet();
+        printTime = timeGet();
         while (1) {
-            if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
 
-                break;
-            } else {
-                if (initialSubState) {
+            printf("\nIP\n");
 
-                    if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                        if (mainPressure > ((int16_t) 100*IP)) {
-                            LATAbits.LATA2 = 0;
-                            initialSubState = 0;
-                        }
-                    }
+            LATAbits.LATA2 = 1;
+                    ;
+            initialSubState = 1;
+            while (1) {
+                if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
+
+                    break;
                 } else {
-                    if (LATAbits.LATA2) {
-                        if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
-                            LATAbits.LATA2 = 0;
+                    if (initialSubState) {
+
+                        if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                            if (mainPressure > ((int16_t) 100*IP)) {
+                                LATAbits.LATA2 = 0;
+                                initialSubState = 0;
+                            }
                         }
-                    } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                        if (mainPressure < ((int16_t) 100*IP)) {
-                            LATAbits.LATA2 = 1;
-                            rSubCycleTime = timeGet();
+                    } else {
+                        if (LATAbits.LATA2) {
+                            if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                                LATAbits.LATA2 = 0;
+                            }
+                        } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                            if (mainPressure < ((int16_t) 100*IP)) {
+                                LATAbits.LATA2 = 1;
+                                rSubCycleTime = timeGet();
+                            }
                         }
                     }
                 }
+
+                if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                    printf("P %d\n", mainPressure);
+                }
             }
 
-            if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                printf("P %d\n",mainPressure);
-            }
-        }
 
+            printf("\nEP\n");
+            rSubCycleTime = timeGet();
+            LATAbits.LATA2 = 0;
+                     ;
+            initialSubState = 1;
+            while (1) {
+                if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))) {
 
-        printf("\nEP\n");
-        rSubCycleTime = timeGet();
-        LATAbits.LATA2 = 0;
-                 ;
-        initialSubState = 1;
-        while(1){
-            if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))){
-
-                break;
-            } else {
-                if (initialSubState) {
-
-                    if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                        if (mainPressure < ((int16_t) 100*PEEP)) {
-                                    ;
-                            initialSubState = 0;
-                        }
-                    }
+                    break;
                 } else {
-                    if (LATAbits.LATA2) {
-                        if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
-                            LATAbits.LATA2 = 0;
+                    if (initialSubState) {
+
+                        if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                            if (mainPressure < ((int16_t) 100*PEEP)) {
+                                        ;
+                                initialSubState = 0;
+                            }
                         }
-                    } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                        if (mainPressure < ((int16_t) 100*PEEP)) {
-                            LATAbits.LATA2 = 1;
-                            rSubCycleTime = timeGet();
+                    } else {
+                        if (LATAbits.LATA2) {
+                            if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                                LATAbits.LATA2 = 0;
+                            }
+                        } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
+                            if (mainPressure < ((int16_t) 100*PEEP)) {
+                                LATAbits.LATA2 = 1;
+                                rSubCycleTime = timeGet();
+                            }
                         }
                     }
                 }
-            }
-            if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                printf("P %d\n",mainPressure);
+                if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                    printf("P %d\n", mainPressure);
+                }
             }
         }
     }
