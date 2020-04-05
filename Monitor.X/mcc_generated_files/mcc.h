@@ -55,6 +55,9 @@
 #include "interrupt_manager.h"
 #include "i2c1_slave.h"
 #include "adcc.h"
+#include "tmr4.h"
+#include "pwm6.h"
+#include "tmr2.h"
 #include "uart1.h"
 
 

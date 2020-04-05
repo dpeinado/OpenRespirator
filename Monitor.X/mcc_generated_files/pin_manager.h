@@ -293,25 +293,17 @@
 #define RC4_SetAnalogMode()         do { ANSELCbits.ANSELC4 = 1; } while(0)
 #define RC4_SetDigitalMode()        do { ANSELCbits.ANSELC4 = 0; } while(0)
 
-// get/set IO_RD4 aliases
-#define IO_RD4_TRIS                 TRISDbits.TRISD4
-#define IO_RD4_LAT                  LATDbits.LATD4
-#define IO_RD4_PORT                 PORTDbits.RD4
-#define IO_RD4_WPU                  WPUDbits.WPUD4
-#define IO_RD4_OD                   ODCONDbits.ODCD4
-#define IO_RD4_ANS                  ANSELDbits.ANSELD4
-#define IO_RD4_SetHigh()            do { LATDbits.LATD4 = 1; } while(0)
-#define IO_RD4_SetLow()             do { LATDbits.LATD4 = 0; } while(0)
-#define IO_RD4_Toggle()             do { LATDbits.LATD4 = ~LATDbits.LATD4; } while(0)
-#define IO_RD4_GetValue()           PORTDbits.RD4
-#define IO_RD4_SetDigitalInput()    do { TRISDbits.TRISD4 = 1; } while(0)
-#define IO_RD4_SetDigitalOutput()   do { TRISDbits.TRISD4 = 0; } while(0)
-#define IO_RD4_SetPullup()          do { WPUDbits.WPUD4 = 1; } while(0)
-#define IO_RD4_ResetPullup()        do { WPUDbits.WPUD4 = 0; } while(0)
-#define IO_RD4_SetPushPull()        do { ODCONDbits.ODCD4 = 0; } while(0)
-#define IO_RD4_SetOpenDrain()       do { ODCONDbits.ODCD4 = 1; } while(0)
-#define IO_RD4_SetAnalogMode()      do { ANSELDbits.ANSELD4 = 1; } while(0)
-#define IO_RD4_SetDigitalMode()     do { ANSELDbits.ANSELD4 = 0; } while(0)
+// get/set RD4 procedures
+#define RD4_SetHigh()            do { LATDbits.LATD4 = 1; } while(0)
+#define RD4_SetLow()             do { LATDbits.LATD4 = 0; } while(0)
+#define RD4_Toggle()             do { LATDbits.LATD4 = ~LATDbits.LATD4; } while(0)
+#define RD4_GetValue()              PORTDbits.RD4
+#define RD4_SetDigitalInput()    do { TRISDbits.TRISD4 = 1; } while(0)
+#define RD4_SetDigitalOutput()   do { TRISDbits.TRISD4 = 0; } while(0)
+#define RD4_SetPullup()             do { WPUDbits.WPUD4 = 1; } while(0)
+#define RD4_ResetPullup()           do { WPUDbits.WPUD4 = 0; } while(0)
+#define RD4_SetAnalogMode()         do { ANSELDbits.ANSELD4 = 1; } while(0)
+#define RD4_SetDigitalMode()        do { ANSELDbits.ANSELD4 = 0; } while(0)
 
 // get/set IO_RD5 aliases
 #define IO_RD5_TRIS                 TRISDbits.TRISD5
