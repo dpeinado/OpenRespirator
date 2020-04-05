@@ -2353,10 +2353,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 10 `i `uc
 ]
 "59
-[; ;main.c: 59: uint8_t IP=24;
+[; ;main.c: 59: uint8_t IP=27;
 [v _IP `uc ~T0 @X0 1 e ]
 [i _IP
--> -> 24 `i `uc
+-> -> 27 `i `uc
 ]
 "60
 [; ;main.c: 60: uint8_t PEEP=10;
@@ -2413,8 +2413,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ != -> ( _timeElapsedR (2 , &U _rSubCycleTime -> * -> -> -> 50 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2239  ]
 [e :U 2240 ]
 "96
-[; ;main.c: 96:     if (1) {
-[e $ ! != -> 1 `i -> 0 `i 2241  ]
+[; ;main.c: 96:     if (0) {
+[e $ ! != -> 0 `i -> 0 `i 2241  ]
 {
 "98
 [; ;main.c: 98:         time_t tstamp1;
@@ -2480,6 +2480,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "119
 [; ;main.c: 119:             LATAbits.LATA2 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+"120
+[; ;main.c: 120:             LATAbits.LATA3 = 1;
+[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 "121
 [; ;main.c: 121:             initialSubState = 1;
 [e = _initialSubState -> -> 1 `i `a ]
@@ -2586,7 +2589,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2268  ]
 {
 "150
-[; ;main.c: 150:                     printf("P %d\n", mainPressure);
+[; ;main.c: 150:                     printf("P %d\r", mainPressure);
 [e ( _printf , (. :s 4C -> _mainPressure `i ]
 "151
 [; ;main.c: 151:                 }
@@ -2607,6 +2610,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "157
 [; ;main.c: 157:             LATAbits.LATA2 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"158
+[; ;main.c: 158:             LATAbits.LATA3 = 0;
+[e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 "159
 [; ;main.c: 159:             initialSubState = 1;
 [e = _initialSubState -> -> 1 `i `a ]
@@ -2639,6 +2645,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 168:                             if (mainPressure < ((int16_t) 100*PEEP)) {
 [e $ ! < -> _mainPressure `i * -> -> -> 100 `i `s `i -> _PEEP `i 2276  ]
 {
+"169
+[; ;main.c: 169:                                 LATAbits.LATA3 = 1;
+[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 "170
 [; ;main.c: 170:                                 initialSubState = 0;
 [e = _initialSubState -> -> 0 `i `a ]
@@ -2710,7 +2719,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2283  ]
 {
 "187
-[; ;main.c: 187:                     printf("P %d\n", mainPressure);
+[; ;main.c: 187:                     printf("P %d\r", mainPressure);
 [e ( _printf , (. :s 6C -> _mainPressure `i ]
 "188
 [; ;main.c: 188:                 }
@@ -2737,9 +2746,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :UE 2237 ]
 }
 [p f _printf 8388736 ]
+[a 4C 80 32 37 100 13 0 ]
+[a 6C 80 32 37 100 13 0 ]
 [a 2C 80 32 37 100 32 32 13 0 ]
-[a 4C 80 32 37 100 10 0 ]
-[a 6C 80 32 37 100 10 0 ]
 [a 1C 80 67 84 82 76 32 83 84 65 82 84 10 0 ]
 [a 3C 10 73 80 10 0 ]
 [a 5C 10 69 80 10 0 ]

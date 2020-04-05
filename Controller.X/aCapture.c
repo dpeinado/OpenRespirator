@@ -38,8 +38,15 @@ void adcCaptureIsr(void){
         resultTblVal[curASrc]=resultTblVal[curASrc]+1;
         if (resultTblVal[curASrc] == 0){
             resultTblVal[curASrc]=1;
+            // IIR 1/2.
+            resultTbl[curASrc]=(resultTbl[curASrc] + ADCC_GetConversionResult())>>1;
+        } else {
+            resultTbl[curASrc]=ADCC_GetConversionResult();
+            resultTblVal[curASrc]++;
+            if (resultTblVal[curASrc]==0){
+                resultTblVal[curASrc]=1;                
+            }
         }
-        resultTbl[curASrc]=ADCC_GetConversionResult();
     } else {
         // ERROR.
         ERROR_CONDITION(1);

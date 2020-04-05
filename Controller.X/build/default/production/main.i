@@ -27593,7 +27593,7 @@ void putch(char byte)
 
 
 uint8_t BPM=10;
-uint8_t IP=24;
+uint8_t IP=27;
 uint8_t PEEP=10;
 # 69 "main.c"
 void main(void)
@@ -27623,7 +27623,7 @@ void main(void)
     rSubCycleTime = timeGet();
     while (timeElapsedR(&rSubCycleTime, ((time_t) 50*1)));
 
-    if (1) {
+    if (0) {
 
         time_t tstamp1;
         tstamp1 = timeGet();
@@ -27647,7 +27647,7 @@ void main(void)
             printf("\nIP\n");
 
             LATAbits.LATA2 = 1;
-                    ;
+            LATAbits.LATA3 = 1;
             initialSubState = 1;
             while (1) {
                 if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
@@ -27677,7 +27677,7 @@ void main(void)
                 }
 
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\n", mainPressure);
+                    printf("P %d\r", mainPressure);
                 }
             }
 
@@ -27685,7 +27685,7 @@ void main(void)
             printf("\nEP\n");
             rSubCycleTime = timeGet();
             LATAbits.LATA2 = 0;
-                     ;
+            LATAbits.LATA3 = 0;
             initialSubState = 1;
             while (1) {
                 if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))) {
@@ -27696,7 +27696,7 @@ void main(void)
 
                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
                             if (mainPressure < ((int16_t) 100*PEEP)) {
-                                        ;
+                                LATAbits.LATA3 = 1;
                                 initialSubState = 0;
                             }
                         }
@@ -27714,7 +27714,7 @@ void main(void)
                     }
                 }
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\n", mainPressure);
+                    printf("P %d\r", mainPressure);
                 }
             }
         }

@@ -27230,7 +27230,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
             break;
         default:
 
-           LATAbits.LATA2 = 0;;printf("Fatal %d",1);
+           LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
     }
 }
 
@@ -27243,11 +27243,18 @@ void adcCaptureIsr(void){
         resultTblVal[curASrc]=resultTblVal[curASrc]+1;
         if (resultTblVal[curASrc] == 0){
             resultTblVal[curASrc]=1;
+
+            resultTbl[curASrc]=(resultTbl[curASrc] + ADCC_GetConversionResult())>>1;
+        } else {
+            resultTbl[curASrc]=ADCC_GetConversionResult();
+            resultTblVal[curASrc]++;
+            if (resultTblVal[curASrc]==0){
+                resultTblVal[curASrc]=1;
+            }
         }
-        resultTbl[curASrc]=ADCC_GetConversionResult();
     } else {
 
-        LATAbits.LATA2 = 0;;printf("Fatal %d",1);
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
     }
 
 
@@ -27299,6 +27306,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            LATAbits.LATA2 = 0;;printf("Fatal %d",1);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
     }
 }

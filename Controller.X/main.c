@@ -56,7 +56,7 @@ void putch(char byte)
 // User parameters.
 ///////////////////
 uint8_t BPM=10;
-uint8_t IP=24;
+uint8_t IP=27;
 uint8_t PEEP=10;
 
 #define PCTIME TIME_MS(50)
@@ -93,7 +93,7 @@ void main(void)
     rSubCycleTime = timeGet();
     while (timeElapsedR(&rSubCycleTime, TIME_MS(50)));
 
-    if (1) {
+    if (0) {
         // Code with constant on-off to debug pressure sensor noise.
         time_t tstamp1;
         tstamp1 = timeGet();
@@ -147,7 +147,7 @@ void main(void)
                 }
 
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
-                    printf("P %d\n", mainPressure);
+                    printf("P %d\r", mainPressure);
                 }
             }
 
@@ -184,7 +184,7 @@ void main(void)
                     }
                 }
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
-                    printf("P %d\n", mainPressure);
+                    printf("P %d\r", mainPressure);
                 }
             }
         }
