@@ -1,14 +1,14 @@
 # OpenRespirator
-Software & Hardware for Open Respirator Project
+Software & Hardware for Open Respirator Project <br>
 
-HW and system dodumentation are in the Doc directory
+HW and system dodumentation are in the Doc directory <br>
 
-The system design is done by: Frede Jensen
-Project coordination: Enrique Ramirez and Ramon Ruiz (Ennomotive)
-Hardware & Software: David Ortiz, Rubén Perez de Aranda and Carlos Pardo
-Collaborators: Intersurgical & Vithas Sanidad
-  Ignacio Narvaez
-  Sara Rodriguez
-  Bill Barners
-  Mike Hinton
-Sponsors: 
+## Contributors
+- The system design is done by: Frede Jensen <br>
+- Project coordination: Enrique Ramirez and Ramon Ruiz (Ennomotive) <br>
+- Hardware & Software: David Ortiz, Rubén Perez de Aranda and Carlos Pardo <br>
+- Collaborators: 
+- - Intersurgical: Sara Rodriguez, Bill Barners, Mike Hinton <br>
+- - Vithas Sanidad : Ignacio Narvaez <br>
+  
+## Sponsors: <br>
