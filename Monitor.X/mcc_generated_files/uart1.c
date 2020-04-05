@@ -53,7 +53,7 @@
 /**
   Section: Macro Declarations
 */
-#define UART1_TX_BUFFER_SIZE 8
+#define UART1_TX_BUFFER_SIZE 64
 #define UART1_RX_BUFFER_SIZE 8
 
 /**
@@ -219,6 +219,16 @@ void UART1_Write(uint8_t txData)
         uart1TxBufferRemaining--;
     }
     PIE3bits.U1TXIE = 1;
+}
+
+char getch(void)
+{
+    return UART1_Read();
+}
+
+void putch(char txData)
+{
+    UART1_Write(txData);
 }
 
 

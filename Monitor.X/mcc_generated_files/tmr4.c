@@ -68,14 +68,14 @@ void TMR4_Initialize(void)
     // T4CS LFINTOSC; 
     T4CLKCON = 0x04;
 
-    // T4PSYNC Not Synchronized; T4MODE Software control; T4CKPOL Rising Edge; T4CKSYNC Not Synchronized; 
-    T4HLT = 0x00;
+    // T4PSYNC Not Synchronized; T4MODE Software control One shot; T4CKPOL Rising Edge; T4CKSYNC Not Synchronized; 
+    T4HLT = 0x08;
 
     // T4RSEL T4CKIPPS pin; 
     T4RST = 0x00;
 
-    // PR4 255; 
-    T4PR = 0xFF;
+    // PR4 241; 
+    T4PR = 0x17; // 0xF1
 
     // TMR4 0; 
     T4TMR = 0x00;
@@ -89,8 +89,8 @@ void TMR4_Initialize(void)
     // Set Default Interrupt Handler
     TMR4_SetInterruptHandler(TMR4_DefaultInterruptHandler);
 
-    // T4CKPS 1:128; T4OUTPS 1:16; TMR4ON on; 
-    T4CON = 0xFF;
+    // T4CKPS 1:128; T4OUTPS 1:1; TMR4ON on; 
+    T4CON = 0xF0; // 0xF0
 }
 
 void TMR4_ModeSet(TMR4_HLT_MODE mode)

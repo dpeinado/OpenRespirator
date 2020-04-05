@@ -12,8 +12,20 @@
 extern "C" {
 #endif
 
-void muteAlarm(void);
-void histAlarm(void);
+
+
+// --------------------- BUZZER ALARM STATE
+#define ALARM_NONE 0
+#define ALARM_LOW  1 // E 200ms LOW 200ms C 200ms LOW 16s
+#define ALARM_MED  2 // C 200ms LOW 200ms A 200ms LOW 200ms F 200ms LOW 8s
+#define ALARM_HIGH 4 // C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 1s
+                     // ... C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 4s
+
+void AlarmInit(void);
+void AlarmSet(uint8_t);
+void AlarmClear();
+void MuteAlarm(void);
+void HistAlarm(void);
 
 
 #ifdef	__cplusplus

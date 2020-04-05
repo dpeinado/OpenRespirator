@@ -46,6 +46,8 @@
 #include "monitor.h"
 #include "display.h"
 #include "buttons.h"
+#include "alarm.h"
+#include "buzzer.h"
 
 /*
                          Main application
@@ -65,9 +67,10 @@ void main(void)
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
-    printf ("Hello world!!!\n");
+    printf ("Hello world!!!\r\n");
     
     InitDisplay();
+    AlarmInit();
     
     // Interrupt driven tasks:
     //  + ADC acquisition
@@ -77,12 +80,28 @@ void main(void)
     while (1)
     {
         // Add your application code
-        MonitorPressureTask();          // Update input information from pressure sensor
-        InputTargetsTask();             // Update targets from Controller via I2C
-        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
-        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
+//        MonitorPressureTask();          // Update input information from pressure sensor
+//        InputTargetsTask();             // Update targets from Controller via I2C
+//        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
+//        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
         ButtonTask();                   // Read user inputs
-        UpdateDisplayTask();            // Update display
+//        UpdateDisplayTask();            // Update display
+        char ch = getch();
+        if (ch=='a') BuzzerTest('A');
+        if (ch=='b') BuzzerTest('B');
+        if (ch=='c') BuzzerTest('C');
+        if (ch=='d') BuzzerTest('D');
+        if (ch=='e') BuzzerTest('E');
+        if (ch=='f') BuzzerTest('F');
+        if (ch=='o') BuzzerTest('O');
+        if (ch=='1') AlarmSet(ALARM_LOW);
+        if (ch=='2') AlarmSet(ALARM_MED);
+        if (ch=='3') AlarmSet(ALARM_HIGH);
+        if (ch=='0') AlarmSet(ALARM_NONE);
+        if (ch) {
+            putch(ch);
+            //putch('\n');
+        }
     }
 }
 /**
