@@ -27,7 +27,10 @@ uint8_t GetPressure_kpa (void) {
 uint16_t GetPressure_pa (void) {
     
     adc_result_t adc = ADCC_GetConversionResult();
-    uint24_t mv = ( adc * 5000 )/ 4096;  // Move from 12 bits to 5V range
+    printf("ADC: %d ", adc);
+    uint32_t mv = adc;
+    mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
+    printf("V: %d mV ", mv);
     uint16_t p = mv - 1000 ; // remove offset of 1V
     return p;
 }

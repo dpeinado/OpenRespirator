@@ -71,6 +71,7 @@ void main(void)
     
     InitDisplay();
     AlarmInit();
+    InitializePressure();
     
     // Interrupt driven tasks:
     //  + ADC acquisition
@@ -98,6 +99,8 @@ void main(void)
         if (ch=='2') AlarmSet(ALARM_MED);
         if (ch=='3') AlarmSet(ALARM_HIGH);
         if (ch=='0') AlarmSet(ALARM_NONE);
+        if (ch=='l') printf("ADC: %d %03X \r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult());
+        if (ch=='p') printf("Pressure: %d Pa\r\n", GetPressure_pa());
         if (ch) {
             putch(ch);
             //putch('\n');
