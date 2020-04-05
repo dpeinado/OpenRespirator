@@ -11,8 +11,8 @@ uint8_t histButton=0;
 void ButtonTask(void) {
     muteButton = PORTDbits.RD6 | (muteButton << 1);
     histButton = PORTDbits.RD5 | (histButton << 1);
-    if (muteButton & PUSHMASK == PUSHMASK) muteAlarm();
-    if (histButton & PUSHMASK == PUSHMASK) histAlarm();   
+    if ((muteButton & PUSHMASK) == PUSHMASK) muteAlarm();
+    if ((histButton & PUSHMASK) == PUSHMASK) histAlarm();   
 }
 
 void SetAlarmLED(void) {

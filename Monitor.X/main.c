@@ -45,6 +45,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
 #include "display.h"
+#include "buttons.h"
 
 /*
                          Main application
@@ -68,10 +69,20 @@ void main(void)
     
     InitDisplay();
     
+    // Interrupt driven tasks:
+    //  + ADC acquisition
+    //  + I2C reception
+    //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
     
     while (1)
     {
         // Add your application code
+        MonitorPressureTask();          // Update input information from pressure sensor
+        InputTargetsTask();             // Update targets from Controller via I2C
+        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
+        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
+        ButtonTask();                   // Read user inputs
+        UpdateDisplayTask();            // Update display
     }
 }
 /**

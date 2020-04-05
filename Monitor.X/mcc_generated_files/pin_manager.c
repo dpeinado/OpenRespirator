@@ -136,6 +136,7 @@ void PIN_MANAGER_Initialize(void)
 	
     I2C1SDAPPS = 0x14;   //RC4->I2C1:SDA1;    
     RC3PPS = 0x21;   //RC3->I2C1:SCL1;    
+    RD4PPS = 0x0E;   //RD4->PWM6:PWM6;    
     RC1PPS = 0x13;   //RC1->UART1:TX1;    
     RC4PPS = 0x22;   //RC4->I2C1:SDA1;    
     U1RXPPS = 0x10;   //RC0->UART1:RX1;    
