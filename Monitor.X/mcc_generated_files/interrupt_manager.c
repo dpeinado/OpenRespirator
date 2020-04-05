@@ -82,6 +82,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C1_InterruptHandler();
     }
+    else if(PIE8bits.TMR5IE == 1 && PIR8bits.TMR5IF == 1)
+    {
+        TMR5_ISR();
+    }
     else if(PIE7bits.TMR4IE == 1 && PIR7bits.TMR4IF == 1)
     {
         TMR4_ISR();

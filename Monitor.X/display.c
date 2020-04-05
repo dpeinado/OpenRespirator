@@ -20,10 +20,10 @@ void ValueDisplay(int TR, float tdi, float tde) {
     sprintf(msg, "%2d%% %1.2f %1.2f", TR, tdi, tde);
     LCDMessage(msg);
 }
-void AlarmDisplay(int idx, unsigned char alarm) {
+void AlarmDisplay(int idx, char *alarm) {
     char msg[16];
     
     
-    sprintf(msg, "%2d %13s", idx, alarm);
+    sprintf(msg, "%1d %14s", idx, alarm);
     LCDMessage(msg);
 }

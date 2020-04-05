@@ -45,7 +45,7 @@ void BuzzerSet(uint8_t state) {
     BuzzerTask();
 }
 
-void BuzzerClear() {
+void BuzzerClear(void) {
     alarmState = ALARM_NONE;
     BuzzerOff();
     TMR4_Stop();

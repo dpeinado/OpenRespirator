@@ -74,8 +74,8 @@ void TMR4_Initialize(void)
     // T4RSEL T4CKIPPS pin; 
     T4RST = 0x00;
 
-    // PR4 241; 
-    T4PR = 0x17; // 0xF1
+    // PR4 23; 
+    T4PR = 0x17;
 
     // TMR4 0; 
     T4TMR = 0x00;
@@ -90,7 +90,7 @@ void TMR4_Initialize(void)
     TMR4_SetInterruptHandler(TMR4_DefaultInterruptHandler);
 
     // T4CKPS 1:128; T4OUTPS 1:1; TMR4ON on; 
-    T4CON = 0xF0; // 0xF0
+    T4CON = 0xF0;
 }
 
 void TMR4_ModeSet(TMR4_HLT_MODE mode)

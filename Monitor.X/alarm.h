@@ -23,7 +23,7 @@ extern "C" {
 
 void AlarmInit(void);
 void AlarmSet(uint8_t);
-void AlarmClear();
+void AlarmClear(uint8_t);
 void MuteAlarm(void);
 void HistAlarm(void);
 
