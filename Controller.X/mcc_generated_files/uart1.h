@@ -400,47 +400,6 @@ void UART1_Write(uint8_t txData);
 */     
 void UART1_Transmit_ISR(void);
 
-/**
-  @Summary
-    Maintains the driver's receiver state machine and implements its ISR
-
-  @Description
-    This routine is used to maintain the driver's internal receiver state
-    machine.This interrupt service routine is called when the state of the
-    receiver needs to be maintained in a non polled manner.
-
-  @Preconditions
-    UART1_Initialize() function should have been called
-    for the ISR to execute correctly.
-
-  @Param
-    None
-
-  @Returns
-    None
-*/       
-void UART1_Receive_ISR(void);
-
-/**
-  @Summary
-    Maintains the driver's receiver state machine
-
-  @Description
-    This routine is called by the receive state routine and is used to maintain 
-    the driver's internal receiver state machine. It should be called by a custom
-    ISR to maintain normal behavior
-
-  @Preconditions
-    UART1_Initialize() function should have been called
-    for the ISR to execute correctly.
-
-  @Param
-    None
-
-  @Returns
-    None
-*/
-void UART1_RxDataHandler(void);
 
 /**
   @Summary
@@ -498,23 +457,6 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 
 
 
-/**
-  @Summary
-    UART1 Receive Interrupt Handler
-
-  @Description
-    This is a pointer to the function that will be called upon UART1 receive interrupt
-
-  @Preconditions
-    Initialize  the UART1 module with receive interrupt enabled
-
-  @Param
-    None
-
-  @Returns
-    None
-*/
-void (*UART1_RxInterruptHandler)(void);
 
 /**
   @Summary
@@ -536,23 +478,6 @@ void (*UART1_TxInterruptHandler)(void);
 
 
 
-/**
-  @Summary
-    Set UART1 Receive Interrupt Handler
-
-  @Description
-    This API sets the function to be called upon UART1 receive interrupt
-
-  @Preconditions
-    Initialize  the UART1 module with receive interrupt enabled before calling this API
-
-  @Param
-    Address of function to be set as receive interrupt handler
-
-  @Returns
-    None
-*/
-void UART1_SetRxInterruptHandler(void (* InterruptHandler)(void));
 
 /**
   @Summary

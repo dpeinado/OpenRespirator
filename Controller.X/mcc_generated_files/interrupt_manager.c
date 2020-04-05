@@ -58,7 +58,11 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE3bits.I2C1EIE == 1 && PIR3bits.I2C1EIF == 1)
+    if(PIE3bits.U1TXIE == 1 && PIR3bits.U1TXIF == 1)
+    {
+        UART1_TxInterruptHandler();
+    }
+    else if(PIE3bits.I2C1EIE == 1 && PIR3bits.I2C1EIF == 1)
     {
         I2C1_InterruptHandler();
     }
@@ -74,13 +78,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C1_InterruptHandler();
     }
-    else if(PIE3bits.U1TXIE == 1 && PIR3bits.U1TXIF == 1)
+    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
     {
-        UART1_TxInterruptHandler();
-    }
-    else if(PIE3bits.U1RXIE == 1 && PIR3bits.U1RXIF == 1)
-    {
-        UART1_RxInterruptHandler();
+        ADCC_ISR();
     }
     else
     {

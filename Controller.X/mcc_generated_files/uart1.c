@@ -65,11 +65,6 @@ static volatile uint8_t uart1TxTail = 0;
 static volatile uint8_t uart1TxBuffer[UART1_TX_BUFFER_SIZE];
 volatile uint8_t uart1TxBufferRemaining;
 
-static volatile uint8_t uart1RxHead = 0;
-static volatile uint8_t uart1RxTail = 0;
-static volatile uint8_t uart1RxBuffer[UART1_RX_BUFFER_SIZE];
-static volatile uart1_status_t uart1RxStatusBuffer[UART1_RX_BUFFER_SIZE];
-volatile uint8_t uart1RxCount;
 static volatile uart1_status_t uart1RxLastError;
 
 /**
@@ -86,8 +81,6 @@ void UART1_DefaultErrorHandler(void);
 void UART1_Initialize(void)
 {
     // Disable interrupts before changing states
-    PIE3bits.U1RXIE = 0;
-    UART1_SetRxInterruptHandler(UART1_Receive_ISR);
     PIE3bits.U1TXIE = 0;
     UART1_SetTxInterruptHandler(UART1_Transmit_ISR);
 
@@ -120,11 +113,11 @@ void UART1_Initialize(void)
     // TXPOL not inverted; FLO off; C0EN Checksum Mode 0; RXPOL not inverted; RUNOVF RX input shifter stops all activity; STP Transmit 1Stop bit, receiver verifies first Stop bit; 
     U1CON2 = 0x00;
 
-    // BRGL 160; 
-    U1BRGL = 0xA0;
+    // BRGL 103; 
+    U1BRGL = 0x67;
 
-    // BRGH 1; 
-    U1BRGH = 0x01;
+    // BRGH 0; 
+    U1BRGH = 0x00;
 
     // STPMD in middle of first Stop bit; TXWRE No error; 
     U1FIFO = 0x00;
@@ -149,17 +142,11 @@ void UART1_Initialize(void)
     uart1TxHead = 0;
     uart1TxTail = 0;
     uart1TxBufferRemaining = sizeof(uart1TxBuffer);
-    uart1RxHead = 0;
-    uart1RxTail = 0;
-    uart1RxCount = 0;
-
-    // enable receive interrupt
-    PIE3bits.U1RXIE = 1;
 }
 
 bool UART1_is_rx_ready(void)
 {
-    return (uart1RxCount ? true : false);
+    return (bool)(PIR3bits.U1RXIF);
 }
 
 bool UART1_is_tx_ready(void)
@@ -178,24 +165,27 @@ uart1_status_t UART1_get_last_status(void){
 
 uint8_t UART1_Read(void)
 {
-    uint8_t readValue  = 0;
-    
-    while(0 == uart1RxCount)
+    while(!PIR3bits.U1RXIF)
     {
     }
 
-    uart1RxLastError = uart1RxStatusBuffer[uart1RxTail];
+    uart1RxLastError.status = 0;
 
-    readValue = uart1RxBuffer[uart1RxTail++];
-   	if(sizeof(uart1RxBuffer) <= uart1RxTail)
-    {
-        uart1RxTail = 0;
+    if(U1ERRIRbits.FERIF){
+        uart1RxLastError.ferr = 1;
+        UART1_FramingErrorHandler();
     }
-    PIE3bits.U1RXIE = 0;
-    uart1RxCount--;
-    PIE3bits.U1RXIE = 1;
 
-    return readValue;
+    if(U1ERRIRbits.RXFOIF){
+        uart1RxLastError.oerr = 1;
+        UART1_OverrunErrorHandler();
+    }
+
+    if(uart1RxLastError.status){
+        UART1_ErrorHandler();
+    }
+
+    return U1RXB;
 }
 
 void UART1_Write(uint8_t txData)
@@ -224,7 +214,6 @@ void UART1_Write(uint8_t txData)
 
 
 
-
 void UART1_Transmit_ISR(void)
 {
     // use this default transmit interrupt handler code
@@ -245,46 +234,12 @@ void UART1_Transmit_ISR(void)
     // or set custom function using UART1_SetTxInterruptHandler()
 }
 
-void UART1_Receive_ISR(void)
-{
-    // use this default receive interrupt handler code
-    uart1RxStatusBuffer[uart1RxHead].status = 0;
-
-    if(U1ERRIRbits.FERIF){
-        uart1RxStatusBuffer[uart1RxHead].ferr = 1;
-        UART1_FramingErrorHandler();
-    }
-    
-    if(U1ERRIRbits.RXFOIF){
-        uart1RxStatusBuffer[uart1RxHead].oerr = 1;
-        UART1_OverrunErrorHandler();
-    }
-    
-    if(uart1RxStatusBuffer[uart1RxHead].status){
-        UART1_ErrorHandler();
-    } else {
-        UART1_RxDataHandler();
-    }
-
-    // or set custom function using UART1_SetRxInterruptHandler()
-}
-
-void UART1_RxDataHandler(void){
-    // use this default receive interrupt handler code
-    uart1RxBuffer[uart1RxHead++] = U1RXB;
-    if(sizeof(uart1RxBuffer) <= uart1RxHead)
-    {
-        uart1RxHead = 0;
-    }
-    uart1RxCount++;
-}
 
 void UART1_DefaultFramingErrorHandler(void){}
 
 void UART1_DefaultOverrunErrorHandler(void){}
 
 void UART1_DefaultErrorHandler(void){
-    UART1_RxDataHandler();
 }
 
 void UART1_SetFramingErrorHandler(void (* interruptHandler)(void)){
@@ -301,9 +256,6 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void)){
 
 
 
-void UART1_SetRxInterruptHandler(void (* InterruptHandler)(void)){
-    UART1_RxInterruptHandler = InterruptHandler;
-}
 
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void)){
     UART1_TxInterruptHandler = InterruptHandler;
