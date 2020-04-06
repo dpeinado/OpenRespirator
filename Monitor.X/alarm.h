@@ -22,11 +22,11 @@ extern "C" {
                      // ... C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 4s
 
 void AlarmInit(void);
-void AlarmSet(uint8_t);
-void AlarmClear(uint8_t);
+
 void MuteAlarm(void);
 void HistAlarm(void);
 
+void TestAlarm(int);
 
 #ifdef	__cplusplus
 }

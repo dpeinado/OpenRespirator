@@ -6,8 +6,7 @@
 #include "alarm.h"
 #include "display.h"
 #include "buzzer.h"
-
-#define NUM_ALARMS 10
+#include "buttons.h"
 
 bool BatteryFailAlarm(void);
 bool MonitorFailAlarm(void);
@@ -45,6 +44,11 @@ struct alarm alarmData[] = {
     {"No Power Supply ", ALARM_LOW,  NoPowerSupplyAlarm}
 };
 
+#define NUM_ALARMS sizeof(alarmData)/sizeof(a)
+
+// testAlarm
+int testAlarm[NUM_ALARMS];
+
 // Alarms at the same time
 int alarms[NUM_ALARMS];
 
@@ -67,18 +71,38 @@ void MuteAlarm(void) {
 #define DISPLAY_ALARM  1
 #define DISPLAY_HIST   2
 
+void TestAlarm(int id) {
+    testAlarm[id] = !testAlarm[id];
+    printf("\r\nTest Alarm: ");
+    for (int i=0; i<NUM_ALARMS; i++) 
+    {
+        if (testAlarm[i]) putchar('0'+i); else putchar('.');
+    }
+    printf("\r\n");
+}
+
+void AlarmSet(uint8_t id) {
+    alarms[id] = 1;
+}
+
+void AlarmClear(uint8_t id){
+    alarms[id] = 0;
+}
 
 int HigherAlarm(void) {
-    int max=0;
+    int max=-1;
     for (int i=0; i<NUM_ALARMS; i++) {
-        if (alarms[i]!=-1 && alarmData[alarms[i]].type>alarmData[alarms[max]].type) max = i;
+        if (alarms[i]) {
+            if (max<0) max = i;
+            else if (alarmData[i].type>alarmData[max].type) max = i;
+        }
     }
     return max;
 }
 
 bool AnyAlarm(void) {
     for (int i=0; i<NUM_ALARMS; i++) {
-        if (alarms[i]!=-1) return true;
+        if (alarms[i]) return true;
     }
     return false;
 }
@@ -88,48 +112,75 @@ void AlarmUpdateLCD(void) {
     
     if (histSec) {
         displayStatus = DISPLAY_HIST;
-        AlarmDisplay(hist, alarmData[alarms[hist]].name);
+        AlarmDisplay(alarmData[hist].type, alarmData[hist].name);
+        SetAlarmLED();
     } else {
-        if (displayStatus==DISPLAY_ALARM)
+        if (displayStatus==DISPLAY_ALARM && AnyAlarm())
         {
             int id;
             id = HigherAlarm();
-            AlarmDisplay(id,alarmData[alarms[id]].name);
-            displayStatus = DISPLAY_NORMAL;
+            AlarmDisplay(alarmData[id].type,alarmData[id].name);
+            SetAlarmLED();
+            displayStatus = DISPLAY_NORMAL;           
         } else {
             // Display Parameters TBD
             // MonitorUpdateLCD();
             ValueDisplay(0,0.0,0.0);
+            ClearAlarmLED();
             if (AnyAlarm()) displayStatus = DISPLAY_ALARM;
         }
     }
 }
 
 void HistAlarm(void) {
+    TMR5_StopTimer();
     int i;
-    if (histSec ==0 ) {
-    for (i=0; i<NUM_ALARMS; i++) {
-        if (alarms[i]!=-1) break;
-    }
-    if (i == NUM_ALARMS) return;
-    histSec=5;
-    hist=0;
-    } else {
-        histSec=5; 
-        hist++;
-        if (hist==NUM_ALARMS) hist=0;
-        for (i=hist; i<NUM_ALARMS; i++) {
-            if (alarms[i]!=-1) break;
+    // First Push
+    if (histSec == 0 ) {
+        // Find first alarm
+        for (i=0; i<NUM_ALARMS; i++) {
+            if (alarms[i]) break;
         }
-        if (i == NUM_ALARMS) hist--; else hist = i;
+        // No alarm
+        if (i == NUM_ALARMS) {
+            TMR5_StartTimer();
+            return;
+        }
+        histSec = 5;
+        hist=i;
+    } else {
+        // Following push
+        // Find next
+        for (i=hist+1; i<NUM_ALARMS; i++) {
+            if (alarms[i]) break;
+        }
+        // If no more, start again
+        if (i>=NUM_ALARMS) {
+            // Find first alarm
+            for (i=0; i<NUM_ALARMS; i++) {
+                if (alarms[i]) break;
+            }
+            // No alarm
+            if (i >= NUM_ALARMS) {
+                histSec = 0;
+                TMR5_StartTimer();
+                return;
+            }
+        }
+        // Else assign alarm to hist
+        histSec = 5;
+        hist = i;
     }
+    // Display Alarm in LCD
     AlarmUpdateLCD();
+    TMR5_StartTimer();
 }
 
 void AlarmCheckTask(void) {
+    static int current = 0;
     // Check each alarm and set or clear it needed
-    for (int id=0; id<sizeof(alarmData)/sizeof(a); id++) {
-        if (alarmData[id].func()) {
+    for (int id=0; id<NUM_ALARMS; id++) {
+        if (alarmData[id].func() || testAlarm[id]) {
             AlarmSet(id);
         } else {
             AlarmClear(id);
@@ -137,30 +188,24 @@ void AlarmCheckTask(void) {
     }
     // Update LCD
     AlarmUpdateLCD();
-    // Update Buzzer
-    if (muteSec==0) BuzzerSet(alarmData[alarms[HigherAlarm()]].type);
-}
-
-
-void AlarmSet(uint8_t id) {
-    for (int i=0; i<NUM_ALARMS; i++) {
-        if (alarms[i]==-1) {
-            alarms[i] = id;
-            break;
+    
+    if (AnyAlarm()) {
+        int type = alarmData[HigherAlarm()].type;
+        if (type!=current) {
+            current = type; 
+            // Update Buzzer
+            if (muteSec==0) BuzzerSet(type);
         }
+    } else {
+        current = 0;
+        BuzzerClear();
     }
 }
 
-void AlarmClear(uint8_t id){
-    for (int i=0; i<NUM_ALARMS; i++) {
-        if (alarms[i]==id) {
-            alarms[i] = -1;
-            break;
-        }
-    }
-}
+
 
 void AlarmHandler(void) {
+    //printf("AH\r\n");
     if (muteSec) muteSec--;
     if (histSec) histSec--;
     AlarmCheckTask();    
@@ -168,9 +213,13 @@ void AlarmHandler(void) {
 
 void AlarmInit() {
     BuzzerInit();
-    for (int i=0; i<NUM_ALARMS; i++) alarms[i] = -1;
-    TMR5_StartTimer();
+    for (int i=0; i<NUM_ALARMS; i++) {
+        alarms[i] = 0;
+        testAlarm[i] =0;
+    }
+    
     TMR5_SetInterruptHandler(AlarmHandler);
+    TMR5_StartTimer();
 }
 
 bool BatteryFailAlarm(void) {

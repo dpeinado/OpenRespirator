@@ -55,6 +55,7 @@ void LCDMessage(char *str) {
         LCDWriteChar(str[i]);
     }
     LCDWriteCmd(0x02);      // Return home
+    printf("\rLCD: %s", str);
 }
 
 void LCDWriteChar(char chr)

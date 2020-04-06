@@ -6,6 +6,8 @@
 
 
 #include "lcd.h"
+#include "alarm.h"
+
 
 void InitDisplay(void) {
     LCDInit();
@@ -20,10 +22,10 @@ void ValueDisplay(int TR, float tdi, float tde) {
     sprintf(msg, "%2d%% %1.2f %1.2f", TR, tdi, tde);
     LCDMessage(msg);
 }
-void AlarmDisplay(int idx, char *alarm) {
+void AlarmDisplay(int type, char *alarm) {
     char msg[16];
+    char t = (type==ALARM_HIGH) ? 'H' : ((type==ALARM_MED) ? 'M' : 'L');
     
-    
-    sprintf(msg, "%1d %14s", idx, alarm);
+    sprintf(msg, "%c %14s", t, alarm);
     LCDMessage(msg);
 }

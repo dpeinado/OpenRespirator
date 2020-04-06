@@ -52,13 +52,12 @@ void BuzzerClear(void) {
 }
 
 void BuzzerHandler( void) {
-    printf("BH\r\n");
+//    printf("BH\r\n");
     BuzzerOff();
     BuzzerTask();
 }
-void BuzzerTestHandler( void) {
-    
-    printf("BTH\r\n");
+void BuzzerTestHandler( void) {    
+//    printf("BTH\r\n");
     BuzzerOff();
 }
 
