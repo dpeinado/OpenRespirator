@@ -27122,6 +27122,8 @@ typedef __uint24 uint24_t;
 # 89 "mcc_generated_files/adcc.h"
 typedef enum
 {
+    channel_ANE0 = 0x20,
+    channel_ANE1 = 0x21,
     channel_ANE2 = 0x22,
     channel_VSS = 0x3B,
     channel_Temp = 0x3C,
@@ -27129,65 +27131,65 @@ typedef enum
     channel_FVR_Buffer1 = 0x3E,
     channel_FVR_Buffer2 = 0x3F
 } adcc_channel_t;
-# 131 "mcc_generated_files/adcc.h"
+# 133 "mcc_generated_files/adcc.h"
 void ADCC_Initialize(void);
-# 160 "mcc_generated_files/adcc.h"
+# 162 "mcc_generated_files/adcc.h"
 void ADCC_StartConversion(adcc_channel_t channel);
-# 190 "mcc_generated_files/adcc.h"
+# 192 "mcc_generated_files/adcc.h"
 _Bool ADCC_IsConversionDone();
-# 222 "mcc_generated_files/adcc.h"
+# 224 "mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetConversionResult(void);
-# 253 "mcc_generated_files/adcc.h"
+# 255 "mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
-# 278 "mcc_generated_files/adcc.h"
+# 280 "mcc_generated_files/adcc.h"
 void ADCC_StopConversion(void);
-# 305 "mcc_generated_files/adcc.h"
+# 307 "mcc_generated_files/adcc.h"
 void ADCC_SetStopOnInterrupt(void);
-# 330 "mcc_generated_files/adcc.h"
+# 332 "mcc_generated_files/adcc.h"
 void ADCC_DischargeSampleCapacitor(void);
-# 356 "mcc_generated_files/adcc.h"
+# 358 "mcc_generated_files/adcc.h"
 void ADCC_LoadAcquisitionRegister(uint16_t);
-# 382 "mcc_generated_files/adcc.h"
+# 384 "mcc_generated_files/adcc.h"
 void ADCC_SetPrechargeTime(uint16_t);
-# 407 "mcc_generated_files/adcc.h"
+# 409 "mcc_generated_files/adcc.h"
 void ADCC_SetRepeatCount(uint8_t);
-# 435 "mcc_generated_files/adcc.h"
+# 437 "mcc_generated_files/adcc.h"
 uint8_t ADCC_GetCurrentCountofConversions(void);
-# 459 "mcc_generated_files/adcc.h"
+# 461 "mcc_generated_files/adcc.h"
 void ADCC_ClearAccumulator(void);
-# 484 "mcc_generated_files/adcc.h"
+# 486 "mcc_generated_files/adcc.h"
 uint24_t ADCC_GetAccumulatorValue(void);
-# 512 "mcc_generated_files/adcc.h"
+# 514 "mcc_generated_files/adcc.h"
 _Bool ADCC_HasAccumulatorOverflowed(void);
-# 537 "mcc_generated_files/adcc.h"
+# 539 "mcc_generated_files/adcc.h"
 uint16_t ADCC_GetFilterValue(void);
-# 565 "mcc_generated_files/adcc.h"
+# 567 "mcc_generated_files/adcc.h"
 uint16_t ADCC_GetPreviousResult(void);
-# 591 "mcc_generated_files/adcc.h"
+# 593 "mcc_generated_files/adcc.h"
 void ADCC_DefineSetPoint(uint16_t);
-# 617 "mcc_generated_files/adcc.h"
+# 619 "mcc_generated_files/adcc.h"
 void ADCC_SetUpperThreshold(uint16_t);
-# 643 "mcc_generated_files/adcc.h"
+# 645 "mcc_generated_files/adcc.h"
 void ADCC_SetLowerThreshold(uint16_t);
-# 670 "mcc_generated_files/adcc.h"
+# 672 "mcc_generated_files/adcc.h"
 uint16_t ADCC_GetErrorCalculation(void);
-# 697 "mcc_generated_files/adcc.h"
+# 699 "mcc_generated_files/adcc.h"
 void ADCC_EnableDoubleSampling(void);
-# 721 "mcc_generated_files/adcc.h"
+# 723 "mcc_generated_files/adcc.h"
 void ADCC_EnableContinuousConversion(void);
-# 745 "mcc_generated_files/adcc.h"
+# 747 "mcc_generated_files/adcc.h"
 void ADCC_DisableContinuousConversion(void);
-# 773 "mcc_generated_files/adcc.h"
+# 775 "mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedUpperThreshold(void);
-# 801 "mcc_generated_files/adcc.h"
+# 803 "mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedLowerThreshold(void);
-# 828 "mcc_generated_files/adcc.h"
+# 830 "mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
-# 845 "mcc_generated_files/adcc.h"
+# 847 "mcc_generated_files/adcc.h"
 void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
-# 861 "mcc_generated_files/adcc.h"
+# 863 "mcc_generated_files/adcc.h"
 void ADCC_ISR(void);
-# 880 "mcc_generated_files/adcc.h"
+# 882 "mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 52 "mcc_generated_files/adcc.c" 2
 
@@ -27219,7 +27221,7 @@ void ADCC_Initialize(void)
 
     ADACCU = 0x00;
 
-    ADRPT = 0x00;
+    ADRPT = 0x20;
 
     ADPCH = 0x00;
 
@@ -27229,13 +27231,13 @@ void ADCC_Initialize(void)
 
     ADCAP = 0x00;
 
-    ADPREL = 0x04;
+    ADPREL = 0x00;
 
     ADPREH = 0x00;
 
     ADCON1 = 0x00;
 
-    ADCON2 = 0x00;
+    ADCON2 = 0x50;
 
     ADCON3 = 0x20;
 
@@ -27245,7 +27247,7 @@ void ADCC_Initialize(void)
 
     ADACT = 0x00;
 
-    ADCLK = 0x1B;
+    ADCLK = 0x17;
 
     ADCON0 = 0x84;
 

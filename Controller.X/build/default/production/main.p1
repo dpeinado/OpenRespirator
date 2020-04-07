@@ -1,6 +1,6 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [v F16458 `(v ~T0 @X0 0 tf ]
-[v F16568 `(v ~T0 @X0 0 tf ]
+[v F16570 `(v ~T0 @X0 0 tf ]
 "211 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 211: _Bool UART1_is_tx_ready(void);
 [v _UART1_is_tx_ready `(a ~T0 @X0 0 ef ]
@@ -45,8 +45,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "46955
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 46955: extern volatile INTCON0bits_t INTCON0bits __attribute__((address(0x3FD2)));
 [v _INTCON0bits `VS2121 ~T0 @X0 0 e@16338 ]
-"25 ./aCapture.h
-[; ;./aCapture.h: 25: void aCaptureInit(void);
+"31 ./aCapture.h
+[; ;./aCapture.h: 31: void aCaptureInit(void);
 [v _aCaptureInit `(v ~T0 @X0 0 ef ]
 "22 ./time.h
 [; ;./time.h: 22: void timeInit(void);
@@ -61,11 +61,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _timeElapsedR `(a ~T0 @X0 0 ef2`*us`us ]
 "102 main.c
 [; ;main.c: 102:                 if (aCaptGetResult(MainPSensor, &mainPressure)) {
-[c E16576 0 1 2 .. ]
-[n E16576 . MainPSensor SndPSensor TempSensor  ]
-"27 ./aCapture.h
-[; ;./aCapture.h: 27: _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
-[v _aCaptGetResult `(a ~T0 @X0 0 ef2`E16576`*s ]
+[c E16578 0 1 2 3 4 5 .. ]
+[n E16578 . MainPSensor AuxPSensor MicSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
+"33 ./aCapture.h
+[; ;./aCapture.h: 33: _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+[v _aCaptGetResult `(a ~T0 @X0 0 ef2`E16578`*s ]
 "45732 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 45732:     struct {
 [s S2073 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -2318,7 +2318,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _I2C1_InterruptHandler `*F16458 ~T0 @X0 1 e ]
 "477 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
-[v _UART1_TxInterruptHandler `*F16568 ~T0 @X0 1 e ]
+[v _UART1_TxInterruptHandler `*F16570 ~T0 @X0 1 e ]
 "49 main.c
 [; ;main.c: 49: void putch(char byte)
 [v _putch `(v ~T0 @X0 1 ef1`uc ]
@@ -2353,10 +2353,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 10 `i `uc
 ]
 "59
-[; ;main.c: 59: uint8_t IP=27;
+[; ;main.c: 59: uint8_t IP=33;
 [v _IP `uc ~T0 @X0 1 e ]
 [i _IP
--> -> 27 `i `uc
+-> -> 33 `i `uc
 ]
 "60
 [; ;main.c: 60: uint8_t PEEP=10;
@@ -2432,7 +2432,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "102
 [; ;main.c: 102:                 if (aCaptGetResult(MainPSensor, &mainPressure)) {
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16576 0 &U _mainPressure `i -> 0 `i 2246  ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16578 0 &U _mainPressure `i -> 0 `i 2246  ]
 {
 "103
 [; ;main.c: 103:                     printf("P %d  \r", mainPressure);
@@ -2491,8 +2491,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2255 ]
 {
 "123
-[; ;main.c: 123:                 if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime -> * / * -> -> 2 `i `d .60.0 -> * -> 3 `i -> _BPM `i `d -> -> 1000 `i `d `us `i -> 0 `i 2257  ]
+[; ;main.c: 123:                 if (timeElapsedR(&rCycleTime, ((time_t) ((1*60.0)/(3*BPM)*1000)))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime -> * / * -> -> 1 `i `d .60.0 -> * -> 3 `i -> _BPM `i `d -> -> 1000 `i `d `us `i -> 0 `i 2257  ]
 {
 "125
 [; ;main.c: 125:                     break;
@@ -2509,11 +2509,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "129
 [; ;main.c: 129:                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16576 0 &U _mainPressure `i -> 0 `i 2260  ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16578 0 &U _mainPressure `i -> 0 `i 2260  ]
 {
 "130
-[; ;main.c: 130:                             if (mainPressure > ((int16_t) 100*IP)) {
-[e $ ! > -> _mainPressure `i * -> -> -> 100 `i `s `i -> _IP `i 2261  ]
+[; ;main.c: 130:                             if (mainPressure > ((int16_t) 4*45*IP)) {
+[e $ ! > -> _mainPressure `i * * -> -> -> 4 `i `s `i -> 45 `i -> _IP `i 2261  ]
 {
 "131
 [; ;main.c: 131:                                 LATAbits.LATA2 = 0;
@@ -2555,11 +2555,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2265  ]
 [e :U 2263 ]
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16576 0 &U _mainPressure `i -> 0 `i 2266  ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16578 0 &U _mainPressure `i -> 0 `i 2266  ]
 {
 "141
-[; ;main.c: 141:                             if (mainPressure < ((int16_t) 100*IP)) {
-[e $ ! < -> _mainPressure `i * -> -> -> 100 `i `s `i -> _IP `i 2267  ]
+[; ;main.c: 141:                             if (mainPressure < ((int16_t) 4*45*IP)) {
+[e $ ! < -> _mainPressure `i * * -> -> -> 4 `i `s `i -> 45 `i -> _IP `i 2267  ]
 {
 "142
 [; ;main.c: 142:                                 LATAbits.LATA2 = 1;
@@ -2621,8 +2621,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2270 ]
 {
 "161
-[; ;main.c: 161:                 if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime -> - -> -> * / .60.0 -> -> _BPM `i `d -> -> 1000 `i `d `us `ui -> -> * / * -> -> 2 `i `d .60.0 -> * -> 3 `i -> _BPM `i `d -> -> 1000 `i `d `us `ui `us `i -> 0 `i 2272  ]
+[; ;main.c: 161:                 if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((1*60.0)/(3*BPM)*1000))))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime -> - -> -> * / .60.0 -> -> _BPM `i `d -> -> 1000 `i `d `us `ui -> -> * / * -> -> 1 `i `d .60.0 -> * -> 3 `i -> _BPM `i `d -> -> 1000 `i `d `us `ui `us `i -> 0 `i 2272  ]
 {
 "163
 [; ;main.c: 163:                     break;
@@ -2639,11 +2639,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "167
 [; ;main.c: 167:                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16576 0 &U _mainPressure `i -> 0 `i 2275  ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16578 0 &U _mainPressure `i -> 0 `i 2275  ]
 {
 "168
-[; ;main.c: 168:                             if (mainPressure < ((int16_t) 100*PEEP)) {
-[e $ ! < -> _mainPressure `i * -> -> -> 100 `i `s `i -> _PEEP `i 2276  ]
+[; ;main.c: 168:                             if (mainPressure < ((int16_t) 4*45*PEEP)) {
+[e $ ! < -> _mainPressure `i * * -> -> -> 4 `i `s `i -> 45 `i -> _PEEP `i 2276  ]
 {
 "169
 [; ;main.c: 169:                                 LATAbits.LATA3 = 1;
@@ -2685,11 +2685,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2280  ]
 [e :U 2278 ]
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16576 0 &U _mainPressure `i -> 0 `i 2281  ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16578 0 &U _mainPressure `i -> 0 `i 2281  ]
 {
 "179
-[; ;main.c: 179:                             if (mainPressure < ((int16_t) 100*PEEP)) {
-[e $ ! < -> _mainPressure `i * -> -> -> 100 `i `s `i -> _PEEP `i 2282  ]
+[; ;main.c: 179:                             if (mainPressure < ((int16_t) 4*45*PEEP)) {
+[e $ ! < -> _mainPressure `i * * -> -> -> 4 `i `s `i -> 45 `i -> _PEEP `i 2282  ]
 {
 "180
 [; ;main.c: 180:                                 LATAbits.LATA2 = 1;

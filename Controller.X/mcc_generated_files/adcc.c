@@ -77,8 +77,8 @@ void ADCC_Initialize(void)
     ADSTPTH = 0x00;
     // ADACC 0; 
     ADACCU = 0x00;
-    // ADRPT 0; 
-    ADRPT = 0x00;
+    // ADRPT 32; 
+    ADRPT = 0x20;
     // ADPCH ANA0; 
     ADPCH = 0x00;
     // ADACQ 1; 
@@ -87,14 +87,14 @@ void ADCC_Initialize(void)
     ADACQH = 0x00;
     // ADCAP Additional uC disabled; 
     ADCAP = 0x00;
-    // ADPRE 4; 
-    ADPREL = 0x04;
+    // ADPRE 0; 
+    ADPREL = 0x00;
     // ADPRE 0; 
     ADPREH = 0x00;
     // ADDSEN disabled; ADGPOL digital_low; ADIPEN disabled; ADPPOL Vss; 
     ADCON1 = 0x00;
-    // ADCRS 0; ADMD Basic_mode; ADACLR disabled; ADPSIS RES; 
-    ADCON2 = 0x00;
+    // ADCRS 5; ADMD Basic_mode; ADACLR disabled; ADPSIS RES; 
+    ADCON2 = 0x50;
     // ADCALC Actual result vs filtered value; ADTMD disabled; ADSOI ADGO not cleared; 
     ADCON3 = 0x20;
     // ADMATH registers not updated; 
@@ -103,8 +103,8 @@ void ADCC_Initialize(void)
     ADREF = 0x03;
     // ADACT disabled; 
     ADACT = 0x00;
-    // ADCS FOSC/56; 
-    ADCLK = 0x1B;
+    // ADCS FOSC/48; 
+    ADCLK = 0x17;
     // ADGO stop; ADFM right; ADON enabled; ADCS FOSC/ADCLK; ADCONT disabled; 
     ADCON0 = 0x84;
     

@@ -433,6 +433,46 @@
 #define IO_RD7_SetAnalogMode()      do { ANSELDbits.ANSELD7 = 1; } while(0)
 #define IO_RD7_SetDigitalMode()     do { ANSELDbits.ANSELD7 = 0; } while(0)
 
+// get/set channel_ANE0 aliases
+#define channel_ANE0_TRIS                 TRISEbits.TRISE0
+#define channel_ANE0_LAT                  LATEbits.LATE0
+#define channel_ANE0_PORT                 PORTEbits.RE0
+#define channel_ANE0_WPU                  WPUEbits.WPUE0
+#define channel_ANE0_OD                   ODCONEbits.ODCE0
+#define channel_ANE0_ANS                  ANSELEbits.ANSELE0
+#define channel_ANE0_SetHigh()            do { LATEbits.LATE0 = 1; } while(0)
+#define channel_ANE0_SetLow()             do { LATEbits.LATE0 = 0; } while(0)
+#define channel_ANE0_Toggle()             do { LATEbits.LATE0 = ~LATEbits.LATE0; } while(0)
+#define channel_ANE0_GetValue()           PORTEbits.RE0
+#define channel_ANE0_SetDigitalInput()    do { TRISEbits.TRISE0 = 1; } while(0)
+#define channel_ANE0_SetDigitalOutput()   do { TRISEbits.TRISE0 = 0; } while(0)
+#define channel_ANE0_SetPullup()          do { WPUEbits.WPUE0 = 1; } while(0)
+#define channel_ANE0_ResetPullup()        do { WPUEbits.WPUE0 = 0; } while(0)
+#define channel_ANE0_SetPushPull()        do { ODCONEbits.ODCE0 = 0; } while(0)
+#define channel_ANE0_SetOpenDrain()       do { ODCONEbits.ODCE0 = 1; } while(0)
+#define channel_ANE0_SetAnalogMode()      do { ANSELEbits.ANSELE0 = 1; } while(0)
+#define channel_ANE0_SetDigitalMode()     do { ANSELEbits.ANSELE0 = 0; } while(0)
+
+// get/set channel_ANE1 aliases
+#define channel_ANE1_TRIS                 TRISEbits.TRISE1
+#define channel_ANE1_LAT                  LATEbits.LATE1
+#define channel_ANE1_PORT                 PORTEbits.RE1
+#define channel_ANE1_WPU                  WPUEbits.WPUE1
+#define channel_ANE1_OD                   ODCONEbits.ODCE1
+#define channel_ANE1_ANS                  ANSELEbits.ANSELE1
+#define channel_ANE1_SetHigh()            do { LATEbits.LATE1 = 1; } while(0)
+#define channel_ANE1_SetLow()             do { LATEbits.LATE1 = 0; } while(0)
+#define channel_ANE1_Toggle()             do { LATEbits.LATE1 = ~LATEbits.LATE1; } while(0)
+#define channel_ANE1_GetValue()           PORTEbits.RE1
+#define channel_ANE1_SetDigitalInput()    do { TRISEbits.TRISE1 = 1; } while(0)
+#define channel_ANE1_SetDigitalOutput()   do { TRISEbits.TRISE1 = 0; } while(0)
+#define channel_ANE1_SetPullup()          do { WPUEbits.WPUE1 = 1; } while(0)
+#define channel_ANE1_ResetPullup()        do { WPUEbits.WPUE1 = 0; } while(0)
+#define channel_ANE1_SetPushPull()        do { ODCONEbits.ODCE1 = 0; } while(0)
+#define channel_ANE1_SetOpenDrain()       do { ODCONEbits.ODCE1 = 1; } while(0)
+#define channel_ANE1_SetAnalogMode()      do { ANSELEbits.ANSELE1 = 1; } while(0)
+#define channel_ANE1_SetDigitalMode()     do { ANSELEbits.ANSELE1 = 0; } while(0)
+
 // get/set channel_ANE2 aliases
 #define channel_ANE2_TRIS                 TRISEbits.TRISE2
 #define channel_ANE2_LAT                  LATEbits.LATE2

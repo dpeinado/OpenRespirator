@@ -56,12 +56,12 @@ void putch(char byte)
 // User parameters.
 ///////////////////
 uint8_t BPM=10;
-uint8_t IP=27;
+uint8_t IP=33;
 uint8_t PEEP=10;
 
 #define PCTIME TIME_MS(50)
 // Internal parameters.
-#define IDURATION TIME_S((2*60.0)/(3*BPM))
+#define IDURATION TIME_S((1*60.0)/(3*BPM))
 #define EDURATION (TIME_S((60.0/BPM))-IDURATION)
 ///////////////////
 ///////////////////
@@ -127,7 +127,7 @@ void main(void)
                     if (initialSubState) {
                         // Inhale.
                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure > PRESSURE_MBAR(IP)) {
+                            if (mainPressure > MPRESSURE_MBAR(IP)) {
                                 CLOSE_SV2;
                                 initialSubState = 0;
                             }
@@ -138,7 +138,7 @@ void main(void)
                                 CLOSE_SV2;
                             }
                         } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < PRESSURE_MBAR(IP)) {
+                            if (mainPressure < MPRESSURE_MBAR(IP)) {
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
                             }
@@ -165,7 +165,7 @@ void main(void)
                     if (initialSubState) {
                         // Exhale.
                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < PRESSURE_MBAR(PEEP)) {
+                            if (mainPressure < MPRESSURE_MBAR(PEEP)) {
                                 OPEN_SV3;
                                 initialSubState = 0;
                             }
@@ -176,7 +176,7 @@ void main(void)
                                 CLOSE_SV2;
                             }
                         } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < PRESSURE_MBAR(PEEP)) {
+                            if (mainPressure < MPRESSURE_MBAR(PEEP)) {
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
                             }
