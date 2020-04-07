@@ -15,9 +15,8 @@ extern "C" {
 #define ACAPT_N 3
 #define ATOT_N 6
     
-// Captures are converted from 12 to 14 bits by IIR filter 1/4,3/4, increasing resolution, for all captures.
-#define MPRESSURE_MBAR(x) ((int16_t) 4*45*x)
-#define APRESSURE_MBAR(x) ((int16_t) 4*100*x)
+#define MPRESSURE_MBAR(x) ((int16_t) 45*x)
+#define APRESSURE_MBAR(x) ((int16_t) 100*x)
     
 typedef enum{
     MainPSensor=0,

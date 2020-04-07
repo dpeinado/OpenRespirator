@@ -27456,10 +27456,10 @@ _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 830 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
 # 847 "./mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 # 863 "./mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 882 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 58 "./mcc_generated_files/mcc.h" 2
 
@@ -27557,7 +27557,7 @@ void PMD_Initialize(void);
 # 45 "main.c" 2
 
 # 1 "./aCapture.h" 1
-# 22 "./aCapture.h"
+# 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
@@ -27611,6 +27611,7 @@ void main(void)
     SYSTEM_Initialize();
 
     PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
 
 
 
@@ -27635,7 +27636,7 @@ void main(void)
         while (1) {
             if (timeElapsedR(&tstamp1, ((time_t) 100*1))) {
                 if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                    printf("P %d  \r", mainPressure);
+                    printf("P %d  \r", mainPressure/((int16_t) 45*1));
                 }
 
 
@@ -27662,7 +27663,7 @@ void main(void)
                     if (initialSubState) {
 
                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure > ((int16_t) 4*45*IP)) {
+                            if (mainPressure > ((int16_t) 45*IP)) {
                                 LATAbits.LATA2 = 0;
                                 initialSubState = 0;
                             }
@@ -27673,7 +27674,7 @@ void main(void)
                                 LATAbits.LATA2 = 0;
                             }
                         } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 4*45*IP)) {
+                            if (mainPressure < ((int16_t) 45*IP)) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
                             }
@@ -27682,7 +27683,10 @@ void main(void)
                 }
 
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\r", mainPressure);
+                    int16_t pinst,pavg;
+                    aCaptGetResult(MainPSensor, &pinst);
+                    aCaptGetResult(Flt3PSensor, &pavg);
+                    printf("P %d. %d - %d\n", mainPressure/((int16_t) 45*1),pinst/((int16_t) 45*1),(pinst-pavg)/((int16_t) 45*1));
                 }
             }
 
@@ -27700,7 +27704,7 @@ void main(void)
                     if (initialSubState) {
 
                         if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 4*45*PEEP)) {
+                            if (mainPressure < ((int16_t) 45*PEEP)) {
                                 LATAbits.LATA3 = 1;
                                 initialSubState = 0;
                             }
@@ -27711,7 +27715,7 @@ void main(void)
                                 LATAbits.LATA2 = 0;
                             }
                         } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 4*45*PEEP)) {
+                            if (mainPressure < ((int16_t) 45*PEEP)) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
                             }
@@ -27719,7 +27723,11 @@ void main(void)
                     }
                 }
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\r", mainPressure);
+                    int16_t pinst,pavg;
+                    aCaptGetResult(MainPSensor, &pinst);
+                    aCaptGetResult(Flt3PSensor, &pavg);
+
+                    printf("P %d. %d - %d\n", mainPressure,pinst,pavg);
                 }
             }
         }

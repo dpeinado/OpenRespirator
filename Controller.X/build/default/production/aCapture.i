@@ -27188,15 +27188,15 @@ _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 830 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
 # 847 "./mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 # 863 "./mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 882 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 4 "aCapture.c" 2
 
 # 1 "./aCapture.h" 1
-# 22 "./aCapture.h"
+# 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
@@ -27220,11 +27220,12 @@ aSrcTyp curASrc;
 
 
 
-int16_t mainPSensCal = 780;
+
+int16_t mainPSensCal = 0;
 
 
 
-uint16_t resultTbl[6];
+uint32_t resultTbl[6];
 
 uint8_t resultTblVal[6];
 
@@ -27249,10 +27250,11 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
 void adcCaptureIsr(void){
 
 
-    uint16_t adcData;
+    uint32_t adcData;
     aSrcTyp adcSel;
 
-    adcData = ADCC_GetConversionResult();
+    adcData = ADCC_GetFilterValue();
+
     adcSel=curASrc;
 
 
@@ -27265,7 +27267,7 @@ void adcCaptureIsr(void){
 
     if (adcSel<3){
 
-        resultTbl[adcSel]=(3*resultTbl[adcSel] + 4*adcData)>>2;
+        resultTbl[adcSel]=adcData;
 
         resultTblVal[adcSel]++;
         if (resultTblVal[adcSel]==0){
@@ -27274,9 +27276,14 @@ void adcCaptureIsr(void){
 
         if (adcSel == MainPSensor) {
 
-            resultTbl[Flt1PSensor]=(3*resultTbl[Flt1PSensor]+adcData)>>2;
-            resultTbl[Flt2PSensor]=(7*resultTbl[Flt2PSensor]+adcData)>>3;
-            resultTbl[Flt3PSensor]=(15*resultTbl[Flt3PSensor]+adcData)>>4;
+
+            resultTbl[Flt1PSensor]=(31*resultTbl[Flt1PSensor]+32*adcData)>>5;
+
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
+
+
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
+
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
@@ -27296,29 +27303,47 @@ void aCaptureInit(void){
     for (idx=0;idx<3;idx++)
         resultTblVal[idx]=0;
 
-    ADCC_StartConversion(adcGetCh(curASrc));
-    ADCC_SetADIInterruptHandler(adcCaptureIsr);
+    ADCC_SetADTIInterruptHandler(adcCaptureIsr);
 
-    PIE1bits.ADIE = 1;
+
+    ADCC_StartConversion(adcGetCh(curASrc));
+
+    PIE1bits.ADTIE = 1;
 }
 
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
-    uint16_t lclRaw;
+    uint32_t lclRaw;
     uint8_t lclValid;
 
 
-    PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
     lclRaw=resultTbl[sel];
     lclValid=resultTblVal[sel];
-    PIE1bits.ADIE = 1;
+    PIE1bits.ADTIE = 1;
 
     if (lclValid == 0) {
         return 0;
     }
 
+
+
+    switch (sel){
+        case Flt3PSensor:
+            lclRaw=lclRaw>>9;
+            break;
+        case Flt2PSensor:
+            lclRaw=lclRaw>>6;
+            break;
+        case Flt1PSensor:
+            lclRaw=lclRaw>>5;
+    }
+
     switch (sel){
         case MainPSensor:
+        case Flt1PSensor:
+        case Flt2PSensor:
+        case Flt3PSensor:
             if (lclRaw < mainPSensCal) {
                 lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/1);
@@ -27329,6 +27354,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
     }
 }

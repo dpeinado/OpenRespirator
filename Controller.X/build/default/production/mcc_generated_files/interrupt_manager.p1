@@ -121,8 +121,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 4155: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x39A1)));
 [v _PIR1bits `VS183 ~T0 @X0 0 e@14753 ]
 "863 mcc_generated_files/adcc.h
-[; ;mcc_generated_files/adcc.h: 863: void ADCC_ISR(void);
-[v _ADCC_ISR `(v ~T0 @X0 0 ef ]
+[; ;mcc_generated_files/adcc.h: 863: void ADCC_ThresholdISR(void);
+[v _ADCC_ThresholdISR `(v ~T0 @X0 0 ef ]
 "250 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 250: __asm("STATUS_CSHAD equ 03880h");
 [; <" STATUS_CSHAD equ 03880h ;# ">
@@ -2455,15 +2455,15 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2244  ]
 "81
-[; ;mcc_generated_files/interrupt_manager.c: 81:     else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+[; ;mcc_generated_files/interrupt_manager.c: 81:     else if(PIE1bits.ADTIE == 1 && PIR1bits.ADTIF == 1)
 [e :U 2243 ]
-[e $ ! && == -> . . _PIE1bits 0 2 `i -> 1 `i == -> . . _PIR1bits 0 2 `i -> 1 `i 2245  ]
+[e $ ! && == -> . . _PIE1bits 0 3 `i -> 1 `i == -> . . _PIR1bits 0 3 `i -> 1 `i 2245  ]
 "82
 [; ;mcc_generated_files/interrupt_manager.c: 82:     {
 {
 "83
-[; ;mcc_generated_files/interrupt_manager.c: 83:         ADCC_ISR();
-[e ( _ADCC_ISR ..  ]
+[; ;mcc_generated_files/interrupt_manager.c: 83:         ADCC_ThresholdISR();
+[e ( _ADCC_ThresholdISR ..  ]
 "84
 [; ;mcc_generated_files/interrupt_manager.c: 84:     }
 }

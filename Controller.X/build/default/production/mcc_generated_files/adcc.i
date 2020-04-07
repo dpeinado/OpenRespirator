@@ -27186,10 +27186,10 @@ _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 830 "mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
 # 847 "mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 # 863 "mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 882 "mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 52 "mcc_generated_files/adcc.c" 2
 
@@ -27197,7 +27197,7 @@ void ADCC_DefaultInterruptHandler(void);
 
 
 
-void (*ADCC_ADI_InterruptHandler)(void);
+void (*ADCC_ADTI_InterruptHandler)(void);
 
 
 
@@ -27207,13 +27207,13 @@ void ADCC_Initialize(void)
 {
 
 
-    ADLTHL = 0x00;
+    ADLTHL = 0xFF;
 
-    ADLTHH = 0x00;
+    ADLTHH = 0x7F;
 
     ADUTHL = 0x00;
 
-    ADUTHH = 0x00;
+    ADUTHH = 0x80;
 
     ADSTPTL = 0x00;
 
@@ -27225,7 +27225,7 @@ void ADCC_Initialize(void)
 
     ADPCH = 0x00;
 
-    ADACQL = 0x01;
+    ADACQL = 0x80;
 
     ADACQH = 0x00;
 
@@ -27237,9 +27237,9 @@ void ADCC_Initialize(void)
 
     ADCON1 = 0x00;
 
-    ADCON2 = 0x50;
+    ADCON2 = 0x53;
 
-    ADCON3 = 0x20;
+    ADCON3 = 0x27;
 
     ADSTAT = 0x00;
 
@@ -27252,12 +27252,12 @@ void ADCC_Initialize(void)
     ADCON0 = 0x84;
 
 
-    PIR1bits.ADIF = 0;
 
-    PIE1bits.ADIE = 1;
+    PIR1bits.ADTIF = 0;
 
-    ADCC_SetADIInterruptHandler(ADCC_DefaultInterruptHandler);
+    PIE1bits.ADTIE = 1;
 
+    ADCC_SetADTIInterruptHandler(ADCC_DefaultInterruptHandler);
 }
 
 void ADCC_StartConversion(adcc_channel_t channel)
@@ -27446,19 +27446,19 @@ uint8_t ADCC_GetConversionStageStatus(void)
     return ADSTATbits.ADSTAT;
 }
 
-void ADCC_ISR(void)
+
+void ADCC_ThresholdISR(void)
 {
 
-    PIR1bits.ADIF = 0;
+    PIR1bits.ADTIF = 0;
 
-    if (ADCC_ADI_InterruptHandler)
-            ADCC_ADI_InterruptHandler();
+    if (ADCC_ADTI_InterruptHandler)
+        ADCC_ADTI_InterruptHandler();
 }
 
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void)){
-    ADCC_ADI_InterruptHandler = InterruptHandler;
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void)){
+    ADCC_ADTI_InterruptHandler = InterruptHandler;
 }
-
 void ADCC_DefaultInterruptHandler(void){
 
 

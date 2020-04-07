@@ -27456,10 +27456,10 @@ _Bool ADCC_HasErrorCrossedLowerThreshold(void);
 # 830 "mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
 # 847 "mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 # 863 "mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 882 "mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 58 "mcc_generated_files/mcc.h" 2
 

@@ -76,6 +76,7 @@ void main(void)
     SYSTEM_Initialize();
     // Disable ADC irq.
     PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
@@ -100,7 +101,7 @@ void main(void)
         while (1) {
             if (timeElapsedR(&tstamp1, TIME_MS(100))) {
                 if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                    printf("P %d  \r", mainPressure);
+                    printf("P %d  \r", mainPressure/MPRESSURE_MBAR(1));
                 }
 
                 // DORDBG. SET RA2 TO 1.
@@ -147,7 +148,10 @@ void main(void)
                 }
 
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
-                    printf("P %d\r", mainPressure);
+                    int16_t pinst,pavg;
+                    aCaptGetResult(MainPSensor, &pinst);
+                    aCaptGetResult(Flt3PSensor, &pavg);
+                    printf("P %d. %d - %d\n", mainPressure/MPRESSURE_MBAR(1),pinst/MPRESSURE_MBAR(1),(pinst-pavg)/MPRESSURE_MBAR(1));
                 }
             }
 
@@ -184,7 +188,11 @@ void main(void)
                     }
                 }
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
-                    printf("P %d\r", mainPressure);
+                    int16_t pinst,pavg;
+                    aCaptGetResult(MainPSensor, &pinst);
+                    aCaptGetResult(Flt3PSensor, &pavg);
+           //         printf("P %d. %d - %d\n", mainPressure/MPRESSURE_MBAR(1),pinst/MPRESSURE_MBAR(1),(pinst-pavg)/MPRESSURE_MBAR(1));
+                    printf("P %d. %d - %d\n", mainPressure,pinst,pavg);
                 }
             }
         }

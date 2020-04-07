@@ -9,12 +9,13 @@ aSrcTyp curASrc;
 
 // Variables store results in raw format, conversion is done only on call to get result.
 // Pressure sensor.
-// MPXV5004G
-int16_t mainPSensCal = 780;
+// MPXV5010
+//int16_t mainPSensCal = 190;
+int16_t mainPSensCal = 0;
 #define PSENS_K 1
 // Currently sample every channel at 27.5KHz.
 
-uint16_t resultTbl[ATOT_N];
+uint32_t resultTbl[ATOT_N];
 
 uint8_t  resultTblVal[ATOT_N]; // 0, no value. >1, value valid, plus indication of value change.
 
@@ -39,10 +40,11 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
 void adcCaptureIsr(void){
     // Store processed, captured data. Launch next capture.
     // Processed data is only 8 bits.
-    uint16_t adcData;
+    uint32_t adcData;
     aSrcTyp adcSel;
-    
-    adcData = ADCC_GetConversionResult();
+
+    adcData = ADCC_GetFilterValue();
+//    adcData = ADCC_GetConversionResult();
     adcSel=curASrc;
     
     // Next capture.
@@ -55,7 +57,7 @@ void adcCaptureIsr(void){
     // Process current capture.
     if (adcSel<ACAPT_N){
         // IIR 1/4, output with 2 decimal bits.
-        resultTbl[adcSel]=(3*resultTbl[adcSel] + 4*adcData)>>2;
+        resultTbl[adcSel]=adcData;
 
         resultTblVal[adcSel]++;
         if (resultTblVal[adcSel]==0){
@@ -64,9 +66,14 @@ void adcCaptureIsr(void){
         
         if (adcSel == MainPSensor) {
             // Compute also the other filters.
-            resultTbl[Flt1PSensor]=(3*resultTbl[Flt1PSensor]+adcData)>>2;
-            resultTbl[Flt2PSensor]=(7*resultTbl[Flt2PSensor]+adcData)>>3;
-            resultTbl[Flt3PSensor]=(15*resultTbl[Flt3PSensor]+adcData)>>4;
+            // LPI with about 32ms Tau.
+            resultTbl[Flt1PSensor]=(31*resultTbl[Flt1PSensor]+32*adcData)>>5;
+            // LPI with about 64ms Tau.
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
+            // LPI with about 2 seconds Tau. Must fit in 32 bit, full precision not possible on 32 bit.
+            // Only loose 2 bits, not relevant for this.
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
+            
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
@@ -86,29 +93,47 @@ void aCaptureInit(void){
     for (idx=0;idx<ACAPT_N;idx++)
         resultTblVal[idx]=0;
 
+    ADCC_SetADTIInterruptHandler(adcCaptureIsr);
+//    ADCC_SetADIInterruptHandler(adcCaptureIsr);
+
     ADCC_StartConversion(adcGetCh(curASrc));    
-    ADCC_SetADIInterruptHandler(adcCaptureIsr);
     // Enable ADC Irq.
-    PIE1bits.ADIE = 1;
+    PIE1bits.ADTIE = 1;
 }
 
 // All results are 8 bit.
 bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
-    uint16_t lclRaw;
+    uint32_t lclRaw;
     uint8_t lclValid;
     
     // Get value from table.
-    PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
     lclRaw=resultTbl[sel];
     lclValid=resultTblVal[sel];
-    PIE1bits.ADIE = 1;
+    PIE1bits.ADTIE = 1;
     
     if (lclValid == 0) {
         return false;
     }
     
+    // Scale.
+    
+    switch (sel){
+        case Flt3PSensor:
+            lclRaw=lclRaw>>9;
+            break;
+        case Flt2PSensor:
+            lclRaw=lclRaw>>6;
+            break;
+        case Flt1PSensor:
+            lclRaw=lclRaw>>5;
+    }
+    
     switch (sel){
         case MainPSensor:
+        case Flt1PSensor:
+        case Flt2PSensor:
+        case Flt3PSensor:
             if (lclRaw < mainPSensCal) {
                 lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/PSENS_K);
@@ -119,7 +144,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return true;
         default:
             // ERROR.
-            ERROR_CONDITION(1);
+            ERROR_CONDITION(10);
     }
 }
 
