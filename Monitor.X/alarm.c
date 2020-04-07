@@ -125,7 +125,7 @@ void AlarmUpdateLCD(void) {
         } else {
             // Display Parameters TBD
             // MonitorUpdateLCD();
-            ValueDisplay(0,0.0,0.0);
+            ValueDisplay();
             ClearAlarmLED();
             if (AnyAlarm()) displayStatus = DISPLAY_ALARM;
         }
@@ -195,6 +195,7 @@ void AlarmCheckTask(void) {
             current = type; 
             // Update Buzzer
             if (muteSec==0) BuzzerSet(type);
+            else current = 0;
         }
     } else {
         current = 0;

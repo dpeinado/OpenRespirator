@@ -7,19 +7,25 @@
 
 #include "lcd.h"
 #include "alarm.h"
+#include "monitor.h"
 
 
 void InitDisplay(void) {
     LCDInit();
 }
 
-void ValueDisplay(int TR, float tdi, float tde) {
+void ValueDisplay() {
     char msg[16];
+    
+    int TR =0;
     
     if (TR>100) TR=100;
     if (TR<0)   TR=0;
     
-    sprintf(msg, "%2d%% %1.2f %1.2f", TR, tdi, tde);
+    uint32_t tdi = GetTdi();
+    uint32_t tde = GetTde();
+    
+    sprintf(msg, "%2d%% %lu %lu", TR, tdi, tde);
     LCDMessage(msg);
 }
 void AlarmDisplay(int type, char *alarm) {

@@ -48,6 +48,7 @@
 #include "buttons.h"
 #include "alarm.h"
 #include "buzzer.h"
+#include "tick.h"
 
 /*
                          Main application
@@ -73,6 +74,7 @@ void main(void)
     InitDisplay();
     AlarmInit();
     InitializePressure();
+    tick_init();
     
     // Interrupt driven tasks:
     //  + ADC acquisition
@@ -82,7 +84,7 @@ void main(void)
     while (1)
     {
         // Add your application code
-//        MonitorPressureTask();          // Update input information from pressure sensor
+        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
 //        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
 //        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
@@ -110,8 +112,8 @@ void main(void)
         if (ch=='8') TestAlarm(8);
         if (ch=='9') TestAlarm(9);
 
-        if (ch=='l') printf("ADC: %d %03X \r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult());
-        if (ch=='p') printf("Pressure: %d Pa\r\n", GetPressure_pa());
+        if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
+        if (ch=='p') printf("\r\nPressure: %d Pa\r\n", GetPressure_pa());
         if (ch) {
             //putch(ch);
             //putch('\n');

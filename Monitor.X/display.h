@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void InitDisplay(void);
-void ValueDisplay(int TR, float tdi, float tde);
+void ValueDisplay();
 void AlarmDisplay(int idx, char *alarm);
 
 
