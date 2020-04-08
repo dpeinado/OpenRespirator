@@ -27221,7 +27221,7 @@ void ADCC_Initialize(void)
 
     ADACCU = 0x00;
 
-    ADRPT = 0x20;
+    ADRPT = 0x10;
 
     ADPCH = 0x00;
 
@@ -27237,7 +27237,7 @@ void ADCC_Initialize(void)
 
     ADCON1 = 0x00;
 
-    ADCON2 = 0x53;
+    ADCON2 = 0x43;
 
     ADCON3 = 0x27;
 
@@ -27247,7 +27247,7 @@ void ADCC_Initialize(void)
 
     ADACT = 0x00;
 
-    ADCLK = 0x17;
+    ADCLK = 0x25;
 
     ADCON0 = 0x84;
 

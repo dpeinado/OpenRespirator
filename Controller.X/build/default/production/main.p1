@@ -2599,11 +2599,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 152:                     aCaptGetResult(MainPSensor, &pinst);
 [e ( _aCaptGetResult (2 , . `E16578 0 &U _pinst ]
 "153
-[; ;main.c: 153:                     aCaptGetResult(Flt3PSensor, &pavg);
-[e ( _aCaptGetResult (2 , . `E16578 5 &U _pavg ]
+[; ;main.c: 153:                     aCaptGetResult(Flt1PSensor, &pavg);
+[e ( _aCaptGetResult (2 , . `E16578 3 &U _pavg ]
 "154
-[; ;main.c: 154:                     printf("P %d. %d - %d\n", mainPressure/((int16_t) 45*1),pinst/((int16_t) 45*1),(pinst-pavg)/((int16_t) 45*1));
-[e ( _printf , , , (. :s 4C / -> _mainPressure `i * -> -> -> 45 `i `s `i -> 1 `i / -> _pinst `i * -> -> -> 45 `i `s `i -> 1 `i / - -> _pinst `i -> _pavg `i * -> -> -> 45 `i `s `i -> 1 `i ]
+[; ;main.c: 154:                     printf("P %d. %d - %d - %d\n", (10*mainPressure)/((int16_t) 45*1),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1));
+[e ( _printf , , , , (. :s 4C / * -> 10 `i -> _mainPressure `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i -> _pinst `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i - * -> 2 `i -> _pinst `i -> _pavg `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i - -> _pinst `i -> _pavg `i * -> -> -> 45 `i `s `i -> 1 `i ]
 "155
 [; ;main.c: 155:                 }
 }
@@ -2739,39 +2739,39 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 192:                     aCaptGetResult(MainPSensor, &pinst);
 [e ( _aCaptGetResult (2 , . `E16578 0 &U _pinst ]
 "193
-[; ;main.c: 193:                     aCaptGetResult(Flt3PSensor, &pavg);
-[e ( _aCaptGetResult (2 , . `E16578 5 &U _pavg ]
+[; ;main.c: 193:                     aCaptGetResult(Flt1PSensor, &pavg);
+[e ( _aCaptGetResult (2 , . `E16578 3 &U _pavg ]
+"194
+[; ;main.c: 194:                     printf("P %d. %d - %d - %d\n", (10*mainPressure)/((int16_t) 45*1),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1));
+[e ( _printf , , , , (. :s 6C / * -> 10 `i -> _mainPressure `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i -> _pinst `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i - * -> 2 `i -> _pinst `i -> _pavg `i * -> -> -> 45 `i `s `i -> 1 `i / * -> 10 `i - -> _pinst `i -> _pavg `i * -> -> -> 45 `i `s `i -> 1 `i ]
 "195
-[; ;main.c: 195:                     printf("P %d. %d - %d\n", mainPressure,pinst,pavg);
-[e ( _printf , , , (. :s 6C -> _mainPressure `i -> _pinst `i -> _pavg `i ]
-"196
-[; ;main.c: 196:                 }
+[; ;main.c: 195:                 }
 }
 [e :U 2283 ]
-"197
-[; ;main.c: 197:             }
+"196
+[; ;main.c: 196:             }
 }
 [e :U 2269 ]
 [e $U 2270  ]
 [e :U 2271 ]
-"198
-[; ;main.c: 198:         }
+"197
+[; ;main.c: 197:         }
 }
 [e :U 2251 ]
 [e $U 2252  ]
 [e :U 2253 ]
-"199
-[; ;main.c: 199:     }
+"198
+[; ;main.c: 198:     }
 }
 [e :U 2250 ]
-"200
-[; ;main.c: 200: }
+"199
+[; ;main.c: 199: }
 [e :UE 2237 ]
 }
 [p f _printf 8388736 ]
 [a 2C 80 32 37 100 32 32 13 0 ]
-[a 4C 80 32 37 100 46 32 37 100 32 45 32 37 100 10 0 ]
-[a 6C 80 32 37 100 46 32 37 100 32 45 32 37 100 10 0 ]
+[a 4C 80 32 37 100 46 32 37 100 32 45 32 37 100 32 45 32 37 100 10 0 ]
+[a 6C 80 32 37 100 46 32 37 100 32 45 32 37 100 32 45 32 37 100 10 0 ]
 [a 1C 80 67 84 82 76 32 83 84 65 82 84 10 0 ]
 [a 3C 10 73 80 10 0 ]
 [a 5C 10 69 80 10 0 ]

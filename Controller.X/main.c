@@ -150,8 +150,8 @@ void main(void)
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
                     int16_t pinst,pavg;
                     aCaptGetResult(MainPSensor, &pinst);
-                    aCaptGetResult(Flt3PSensor, &pavg);
-                    printf("P %d. %d - %d\n", mainPressure/MPRESSURE_MBAR(1),pinst/MPRESSURE_MBAR(1),(pinst-pavg)/MPRESSURE_MBAR(1));
+                    aCaptGetResult(Flt1PSensor, &pavg);
+                    printf("P %d. %d - %d - %d\n", (10*mainPressure)/MPRESSURE_MBAR(1),(10*pinst)/MPRESSURE_MBAR(1),(10*(2*pinst-pavg))/MPRESSURE_MBAR(1),(10*(pinst-pavg))/MPRESSURE_MBAR(1));
                 }
             }
 
@@ -190,9 +190,8 @@ void main(void)
                 if (timeElapsedR(&printTime, TIME_MS(20))) {
                     int16_t pinst,pavg;
                     aCaptGetResult(MainPSensor, &pinst);
-                    aCaptGetResult(Flt3PSensor, &pavg);
-           //         printf("P %d. %d - %d\n", mainPressure/MPRESSURE_MBAR(1),pinst/MPRESSURE_MBAR(1),(pinst-pavg)/MPRESSURE_MBAR(1));
-                    printf("P %d. %d - %d\n", mainPressure,pinst,pavg);
+                    aCaptGetResult(Flt1PSensor, &pavg);
+                    printf("P %d. %d - %d - %d\n", (10*mainPressure)/MPRESSURE_MBAR(1),(10*pinst)/MPRESSURE_MBAR(1),(10*(2*pinst-pavg))/MPRESSURE_MBAR(1),(10*(pinst-pavg))/MPRESSURE_MBAR(1));
                 }
             }
         }

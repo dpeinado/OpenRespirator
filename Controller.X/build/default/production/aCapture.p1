@@ -3,8 +3,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 8: aSrcTyp curASrc;
 [c E16104 0 1 2 3 4 5 .. ]
 [n E16104 . MainPSensor AuxPSensor MicSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
-"23
-[; ;aCapture.c: 23: adcc_channel_t adcGetCh(aSrcTyp sel){
+"22
+[; ;aCapture.c: 22: adcc_channel_t adcGetCh(aSrcTyp sel){
 [c E16053 32 33 34 59 60 61 62 63 .. ]
 [n E16053 . channel_ANE0 channel_ANE1 channel_ANE2 channel_VSS channel_Temp channel_DAC1 channel_FVR_Buffer1 channel_FVR_Buffer2  ]
 "45732 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
@@ -22,8 +22,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "45753
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 45753: extern volatile LATAbits_t LATAbits __attribute__((address(0x3FBA)));
 [v _LATAbits `VS2072 ~T0 @X0 0 e@16314 ]
-"36 aCapture.c
-[; ;aCapture.c: 36:            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+"35 aCapture.c
+[; ;aCapture.c: 35:            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
 [v _printf `(i ~T0 @X0 0 e? ]
 "539 ./mcc_generated_files/adcc.h
 [; ;./mcc_generated_files/adcc.h: 539: uint16_t ADCC_GetFilterValue(void);
@@ -2289,69 +2289,69 @@ Version 4.0 HI-TECH Software Intermediate Code
 "8 aCapture.c
 [; ;aCapture.c: 8: aSrcTyp curASrc;
 [v _curASrc `E16104 ~T0 @X0 1 e ]
-"14
-[; ;aCapture.c: 14: int16_t mainPSensCal = 0;
+"13
+[; ;aCapture.c: 13: int16_t mainPSensCal = 190;
 [v _mainPSensCal `s ~T0 @X0 1 e ]
 [i _mainPSensCal
--> -> 0 `i `s
+-> -> 190 `i `s
 ]
-"18
-[; ;aCapture.c: 18: uint32_t resultTbl[6];
+"17
+[; ;aCapture.c: 17: uint32_t resultTbl[6];
 [v _resultTbl `ul ~T0 @X0 -> 6 `i e ]
-"20
-[; ;aCapture.c: 20: uint8_t resultTblVal[6];
+"19
+[; ;aCapture.c: 19: uint8_t resultTblVal[6];
 [v _resultTblVal `uc ~T0 @X0 -> 6 `i e ]
-"23
-[; ;aCapture.c: 23: adcc_channel_t adcGetCh(aSrcTyp sel){
+"22
+[; ;aCapture.c: 22: adcc_channel_t adcGetCh(aSrcTyp sel){
 [v _adcGetCh `(E16053 ~T0 @X0 1 ef1`E16104 ]
 {
 [e :U _adcGetCh ]
 [v _sel `E16104 ~T0 @X0 1 r1 ]
 [f ]
-"24
-[; ;aCapture.c: 24:     switch (sel){
+"23
+[; ;aCapture.c: 23:     switch (sel){
 [e $U 2231  ]
 {
-"25
-[; ;aCapture.c: 25:         case MainPSensor:
+"24
+[; ;aCapture.c: 24:         case MainPSensor:
 [e :U 2232 ]
-"26
-[; ;aCapture.c: 26:             return channel_ANE1;
+"25
+[; ;aCapture.c: 25:             return channel_ANE1;
 [e ) . `E16053 1 ]
 [e $UE 2229  ]
-"27
-[; ;aCapture.c: 27:             break;
+"26
+[; ;aCapture.c: 26:             break;
 [e $U 2230  ]
-"28
-[; ;aCapture.c: 28:         case AuxPSensor:
+"27
+[; ;aCapture.c: 27:         case AuxPSensor:
 [e :U 2233 ]
-"29
-[; ;aCapture.c: 29:             return channel_ANE2;
+"28
+[; ;aCapture.c: 28:             return channel_ANE2;
 [e ) . `E16053 2 ]
 [e $UE 2229  ]
-"30
-[; ;aCapture.c: 30:             break;
+"29
+[; ;aCapture.c: 29:             break;
 [e $U 2230  ]
-"31
-[; ;aCapture.c: 31:         case MicSensor:
+"30
+[; ;aCapture.c: 30:         case MicSensor:
 [e :U 2234 ]
-"32
-[; ;aCapture.c: 32:             return channel_ANE0;
+"31
+[; ;aCapture.c: 31:             return channel_ANE0;
 [e ) . `E16053 0 ]
 [e $UE 2229  ]
-"33
-[; ;aCapture.c: 33:             break;
+"32
+[; ;aCapture.c: 32:             break;
 [e $U 2230  ]
-"34
-[; ;aCapture.c: 34:         default:
+"33
+[; ;aCapture.c: 33:         default:
 [e :U 2235 ]
-"36
-[; ;aCapture.c: 36:            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+"35
+[; ;aCapture.c: 35:            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 [e ( _printf , :s 1C -> 1 `i ]
-"37
-[; ;aCapture.c: 37:     }
+"36
+[; ;aCapture.c: 36:     }
 }
 [e $U 2230  ]
 [e :U 2231 ]
@@ -2360,218 +2360,218 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> . `E16104 2 `ui 2234
  2235 ]
 [e :U 2230 ]
-"38
-[; ;aCapture.c: 38: }
+"37
+[; ;aCapture.c: 37: }
 [e :UE 2229 ]
 }
-"40
-[; ;aCapture.c: 40: void adcCaptureIsr(void){
+"39
+[; ;aCapture.c: 39: void adcCaptureIsr(void){
 [v _adcCaptureIsr `(v ~T0 @X0 1 ef ]
 {
 [e :U _adcCaptureIsr ]
 [f ]
-"43
-[; ;aCapture.c: 43:     uint32_t adcData;
+"42
+[; ;aCapture.c: 42:     uint32_t adcData;
 [v _adcData `ul ~T0 @X0 1 a ]
-"44
-[; ;aCapture.c: 44:     aSrcTyp adcSel;
+"43
+[; ;aCapture.c: 43:     aSrcTyp adcSel;
 [v _adcSel `E16104 ~T0 @X0 1 a ]
-"46
-[; ;aCapture.c: 46:     adcData = ADCC_GetFilterValue();
+"45
+[; ;aCapture.c: 45:     adcData = ADCC_GetFilterValue();
 [e = _adcData -> ( _ADCC_GetFilterValue ..  `ul ]
-"48
-[; ;aCapture.c: 48:     adcSel=curASrc;
+"47
+[; ;aCapture.c: 47:     adcSel=curASrc;
 [e = _adcSel _curASrc ]
-"51
-[; ;aCapture.c: 51:     curASrc++;
+"50
+[; ;aCapture.c: 50:     curASrc++;
 [e ++ _curASrc -> -> 1 `i `E16104 ]
-"52
-[; ;aCapture.c: 52:     if (curASrc==3){
+"51
+[; ;aCapture.c: 51:     if (curASrc==3){
 [e $ ! == -> _curASrc `ui -> -> 3 `i `ui 2237  ]
 {
-"53
-[; ;aCapture.c: 53:         curASrc=0;
+"52
+[; ;aCapture.c: 52:         curASrc=0;
 [e = _curASrc -> -> 0 `i `E16104 ]
-"54
-[; ;aCapture.c: 54:     }
+"53
+[; ;aCapture.c: 53:     }
 }
 [e :U 2237 ]
-"55
-[; ;aCapture.c: 55:     ADCC_StartConversion(adcGetCh(curASrc));
+"54
+[; ;aCapture.c: 54:     ADCC_StartConversion(adcGetCh(curASrc));
 [e ( _ADCC_StartConversion (1 ( _adcGetCh (1 _curASrc ]
-"58
-[; ;aCapture.c: 58:     if (adcSel<3){
+"57
+[; ;aCapture.c: 57:     if (adcSel<3){
 [e $ ! < -> _adcSel `ui -> -> 3 `i `ui 2238  ]
 {
-"60
-[; ;aCapture.c: 60:         resultTbl[adcSel]=adcData;
+"59
+[; ;aCapture.c: 59:         resultTbl[adcSel]=adcData;
 [e = *U + &U _resultTbl * -> _adcSel `ux -> -> # *U &U _resultTbl `ui `ux _adcData ]
-"62
-[; ;aCapture.c: 62:         resultTblVal[adcSel]++;
+"61
+[; ;aCapture.c: 61:         resultTblVal[adcSel]++;
 [e ++ *U + &U _resultTblVal * -> _adcSel `ux -> -> # *U &U _resultTblVal `ui `ux -> -> 1 `i `uc ]
-"63
-[; ;aCapture.c: 63:         if (resultTblVal[adcSel]==0){
+"62
+[; ;aCapture.c: 62:         if (resultTblVal[adcSel]==0){
 [e $ ! == -> *U + &U _resultTblVal * -> _adcSel `ux -> -> # *U &U _resultTblVal `ui `ux `i -> 0 `i 2239  ]
 {
-"64
-[; ;aCapture.c: 64:             resultTblVal[adcSel]=1;
+"63
+[; ;aCapture.c: 63:             resultTblVal[adcSel]=1;
 [e = *U + &U _resultTblVal * -> _adcSel `ux -> -> # *U &U _resultTblVal `ui `ux -> -> 1 `i `uc ]
-"65
-[; ;aCapture.c: 65:         }
+"64
+[; ;aCapture.c: 64:         }
 }
 [e :U 2239 ]
-"67
-[; ;aCapture.c: 67:         if (adcSel == MainPSensor) {
+"66
+[; ;aCapture.c: 66:         if (adcSel == MainPSensor) {
 [e $ ! == -> _adcSel `ui -> . `E16104 0 `ui 2240  ]
 {
-"70
-[; ;aCapture.c: 70:             resultTbl[Flt1PSensor]=(31*resultTbl[Flt1PSensor]+32*adcData)>>5;
-[e = *U + &U _resultTbl * -> . `E16104 3 `ux -> -> # *U &U _resultTbl `ui `ux >> + * -> -> -> 31 `i `l `ul *U + &U _resultTbl * -> . `E16104 3 `ux -> -> # *U &U _resultTbl `ui `ux * -> -> -> 32 `i `l `ul _adcData -> 5 `i ]
-"72
-[; ;aCapture.c: 72:             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
+"69
+[; ;aCapture.c: 69:             resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
+[e = *U + &U _resultTbl * -> . `E16104 3 `ux -> -> # *U &U _resultTbl `ui `ux >> + * -> -> -> 15 `i `l `ul *U + &U _resultTbl * -> . `E16104 3 `ux -> -> # *U &U _resultTbl `ui `ux * -> -> -> 16 `i `l `ul _adcData -> 4 `i ]
+"71
+[; ;aCapture.c: 71:             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
 [e = *U + &U _resultTbl * -> . `E16104 4 `ux -> -> # *U &U _resultTbl `ui `ux >> + * -> -> -> 63 `i `l `ul *U + &U _resultTbl * -> . `E16104 4 `ux -> -> # *U &U _resultTbl `ui `ux * -> -> -> 64 `i `l `ul _adcData -> 6 `i ]
-"75
-[; ;aCapture.c: 75:             resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
+"74
+[; ;aCapture.c: 74:             resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
 [e = *U + &U _resultTbl * -> . `E16104 5 `ux -> -> # *U &U _resultTbl `ui `ux >> + * -> -> -> 1023 `i `l `ul *U + &U _resultTbl * -> . `E16104 5 `ux -> -> # *U &U _resultTbl `ui `ux * -> -> -> 512 `i `l `ul _adcData -> 10 `i ]
-"77
-[; ;aCapture.c: 77:             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
+"76
+[; ;aCapture.c: 76:             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
 [e = *U + &U _resultTblVal * -> . `E16104 3 `ux -> -> # *U &U _resultTblVal `ui `ux *U + &U _resultTblVal * -> . `E16104 0 `ux -> -> # *U &U _resultTblVal `ui `ux ]
-"78
-[; ;aCapture.c: 78:             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
+"77
+[; ;aCapture.c: 77:             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
 [e = *U + &U _resultTblVal * -> . `E16104 4 `ux -> -> # *U &U _resultTblVal `ui `ux *U + &U _resultTblVal * -> . `E16104 0 `ux -> -> # *U &U _resultTblVal `ui `ux ]
-"79
-[; ;aCapture.c: 79:             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
+"78
+[; ;aCapture.c: 78:             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
 [e = *U + &U _resultTblVal * -> . `E16104 5 `ux -> -> # *U &U _resultTblVal `ui `ux *U + &U _resultTblVal * -> . `E16104 0 `ux -> -> # *U &U _resultTblVal `ui `ux ]
-"80
-[; ;aCapture.c: 80:         }
+"79
+[; ;aCapture.c: 79:         }
 }
 [e :U 2240 ]
-"82
-[; ;aCapture.c: 82:     } else {
+"81
+[; ;aCapture.c: 81:     } else {
 }
 [e $U 2241  ]
 [e :U 2238 ]
 {
-"84
-[; ;aCapture.c: 84:         LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+"83
+[; ;aCapture.c: 83:         LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 [e ( _printf , :s 2C -> 1 `i ]
-"85
-[; ;aCapture.c: 85:     }
+"84
+[; ;aCapture.c: 84:     }
 }
 [e :U 2241 ]
-"86
-[; ;aCapture.c: 86: }
+"85
+[; ;aCapture.c: 85: }
 [e :UE 2236 ]
 }
-"89
-[; ;aCapture.c: 89: void aCaptureInit(void){
+"88
+[; ;aCapture.c: 88: void aCaptureInit(void){
 [v _aCaptureInit `(v ~T0 @X0 1 ef ]
 {
 [e :U _aCaptureInit ]
 [f ]
-"90
-[; ;aCapture.c: 90:     int idx;
+"89
+[; ;aCapture.c: 89:     int idx;
 [v _idx `i ~T0 @X0 1 a ]
-"91
-[; ;aCapture.c: 91:     curASrc=MainPSensor;
+"90
+[; ;aCapture.c: 90:     curASrc=MainPSensor;
 [e = _curASrc . `E16104 0 ]
-"93
-[; ;aCapture.c: 93:     for (idx=0;idx<3;idx++)
+"92
+[; ;aCapture.c: 92:     for (idx=0;idx<3;idx++)
 {
 [e = _idx -> 0 `i ]
 [e $ < _idx -> 3 `i 2243  ]
 [e $U 2244  ]
 [e :U 2243 ]
-"94
-[; ;aCapture.c: 94:         resultTblVal[idx]=0;
+"93
+[; ;aCapture.c: 93:         resultTblVal[idx]=0;
 [e = *U + &U _resultTblVal * -> -> _idx `ui `ux -> -> # *U &U _resultTblVal `ui `ux -> -> 0 `i `uc ]
 [e ++ _idx -> 1 `i ]
 [e $ < _idx -> 3 `i 2243  ]
 [e :U 2244 ]
 }
-"96
-[; ;aCapture.c: 96:     ADCC_SetADTIInterruptHandler(adcCaptureIsr);
+"95
+[; ;aCapture.c: 95:     ADCC_SetADTIInterruptHandler(adcCaptureIsr);
 [e ( _ADCC_SetADTIInterruptHandler (1 &U _adcCaptureIsr ]
-"99
-[; ;aCapture.c: 99:     ADCC_StartConversion(adcGetCh(curASrc));
+"98
+[; ;aCapture.c: 98:     ADCC_StartConversion(adcGetCh(curASrc));
 [e ( _ADCC_StartConversion (1 ( _adcGetCh (1 _curASrc ]
-"101
-[; ;aCapture.c: 101:     PIE1bits.ADTIE = 1;
+"100
+[; ;aCapture.c: 100:     PIE1bits.ADTIE = 1;
 [e = . . _PIE1bits 0 3 -> -> 1 `i `uc ]
-"102
-[; ;aCapture.c: 102: }
+"101
+[; ;aCapture.c: 101: }
 [e :UE 2242 ]
 }
-"105
-[; ;aCapture.c: 105: _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
+"104
+[; ;aCapture.c: 104: _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
 [v _aCaptGetResult `(a ~T0 @X0 1 ef2`E16104`*s ]
 {
 [e :U _aCaptGetResult ]
 [v _sel `E16104 ~T0 @X0 1 r1 ]
 [v _outVal `*s ~T0 @X0 1 r2 ]
 [f ]
-"106
-[; ;aCapture.c: 106:     uint32_t lclRaw;
+"105
+[; ;aCapture.c: 105:     uint32_t lclRaw;
 [v _lclRaw `ul ~T0 @X0 1 a ]
-"107
-[; ;aCapture.c: 107:     uint8_t lclValid;
+"106
+[; ;aCapture.c: 106:     uint8_t lclValid;
 [v _lclValid `uc ~T0 @X0 1 a ]
-"110
-[; ;aCapture.c: 110:     PIE1bits.ADTIE = 0;
+"109
+[; ;aCapture.c: 109:     PIE1bits.ADTIE = 0;
 [e = . . _PIE1bits 0 3 -> -> 0 `i `uc ]
-"111
-[; ;aCapture.c: 111:     lclRaw=resultTbl[sel];
+"110
+[; ;aCapture.c: 110:     lclRaw=resultTbl[sel];
 [e = _lclRaw *U + &U _resultTbl * -> _sel `ux -> -> # *U &U _resultTbl `ui `ux ]
-"112
-[; ;aCapture.c: 112:     lclValid=resultTblVal[sel];
+"111
+[; ;aCapture.c: 111:     lclValid=resultTblVal[sel];
 [e = _lclValid *U + &U _resultTblVal * -> _sel `ux -> -> # *U &U _resultTblVal `ui `ux ]
-"113
-[; ;aCapture.c: 113:     PIE1bits.ADTIE = 1;
+"112
+[; ;aCapture.c: 112:     PIE1bits.ADTIE = 1;
 [e = . . _PIE1bits 0 3 -> -> 1 `i `uc ]
-"115
-[; ;aCapture.c: 115:     if (lclValid == 0) {
+"114
+[; ;aCapture.c: 114:     if (lclValid == 0) {
 [e $ ! == -> _lclValid `i -> 0 `i 2247  ]
 {
-"116
-[; ;aCapture.c: 116:         return 0;
+"115
+[; ;aCapture.c: 115:         return 0;
 [e ) -> -> 0 `i `a ]
 [e $UE 2246  ]
-"117
-[; ;aCapture.c: 117:     }
+"116
+[; ;aCapture.c: 116:     }
 }
 [e :U 2247 ]
-"121
-[; ;aCapture.c: 121:     switch (sel){
+"120
+[; ;aCapture.c: 120:     switch (sel){
 [e $U 2249  ]
 {
-"122
-[; ;aCapture.c: 122:         case Flt3PSensor:
+"121
+[; ;aCapture.c: 121:         case Flt3PSensor:
 [e :U 2250 ]
-"123
-[; ;aCapture.c: 123:             lclRaw=lclRaw>>9;
+"122
+[; ;aCapture.c: 122:             lclRaw=lclRaw>>9;
 [e = _lclRaw >> _lclRaw -> 9 `i ]
+"123
+[; ;aCapture.c: 123:             break;
+[e $U 2248  ]
 "124
-[; ;aCapture.c: 124:             break;
-[e $U 2248  ]
-"125
-[; ;aCapture.c: 125:         case Flt2PSensor:
+[; ;aCapture.c: 124:         case Flt2PSensor:
 [e :U 2251 ]
-"126
-[; ;aCapture.c: 126:             lclRaw=lclRaw>>6;
+"125
+[; ;aCapture.c: 125:             lclRaw=lclRaw>>6;
 [e = _lclRaw >> _lclRaw -> 6 `i ]
-"127
-[; ;aCapture.c: 127:             break;
+"126
+[; ;aCapture.c: 126:             break;
 [e $U 2248  ]
-"128
-[; ;aCapture.c: 128:         case Flt1PSensor:
+"127
+[; ;aCapture.c: 127:         case Flt1PSensor:
 [e :U 2252 ]
+"128
+[; ;aCapture.c: 128:             lclRaw=lclRaw>>4;
+[e = _lclRaw >> _lclRaw -> 4 `i ]
 "129
-[; ;aCapture.c: 129:             lclRaw=lclRaw>>5;
-[e = _lclRaw >> _lclRaw -> 5 `i ]
-"130
-[; ;aCapture.c: 130:     }
+[; ;aCapture.c: 129:     }
 }
 [e $U 2248  ]
 [e :U 2249 ]
@@ -2580,62 +2580,62 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> . `E16104 3 `ui 2252
  2248 ]
 [e :U 2248 ]
-"132
-[; ;aCapture.c: 132:     switch (sel){
+"131
+[; ;aCapture.c: 131:     switch (sel){
 [e $U 2254  ]
 {
-"133
-[; ;aCapture.c: 133:         case MainPSensor:
+"132
+[; ;aCapture.c: 132:         case MainPSensor:
 [e :U 2255 ]
-"134
-[; ;aCapture.c: 134:         case Flt1PSensor:
+"133
+[; ;aCapture.c: 133:         case Flt1PSensor:
 [e :U 2256 ]
-"135
-[; ;aCapture.c: 135:         case Flt2PSensor:
+"134
+[; ;aCapture.c: 134:         case Flt2PSensor:
 [e :U 2257 ]
-"136
-[; ;aCapture.c: 136:         case Flt3PSensor:
+"135
+[; ;aCapture.c: 135:         case Flt3PSensor:
 [e :U 2258 ]
-"137
-[; ;aCapture.c: 137:             if (lclRaw < mainPSensCal) {
+"136
+[; ;aCapture.c: 136:             if (lclRaw < mainPSensCal) {
 [e $ ! < _lclRaw -> -> _mainPSensCal `l `ul 2259  ]
 {
-"138
-[; ;aCapture.c: 138:                 lclRaw = mainPSensCal-lclRaw;
+"137
+[; ;aCapture.c: 137:                 lclRaw = mainPSensCal-lclRaw;
 [e = _lclRaw - -> -> _mainPSensCal `l `ul _lclRaw ]
-"139
-[; ;aCapture.c: 139:                 *outVal = - (lclRaw/1);
+"138
+[; ;aCapture.c: 138:                 *outVal = - (lclRaw/1);
 [e = *U _outVal -> -U / _lclRaw -> -> -> 1 `i `l `ul `s ]
-"140
-[; ;aCapture.c: 140:             } else {
+"139
+[; ;aCapture.c: 139:             } else {
 }
 [e $U 2260  ]
 [e :U 2259 ]
 {
-"141
-[; ;aCapture.c: 141:                 lclRaw = lclRaw - mainPSensCal;
+"140
+[; ;aCapture.c: 140:                 lclRaw = lclRaw - mainPSensCal;
 [e = _lclRaw - _lclRaw -> -> _mainPSensCal `l `ul ]
-"142
-[; ;aCapture.c: 142:                 *outVal=(lclRaw/1);
+"141
+[; ;aCapture.c: 141:                 *outVal=(lclRaw/1);
 [e = *U _outVal -> / _lclRaw -> -> -> 1 `i `l `ul `s ]
-"143
-[; ;aCapture.c: 143:             }
+"142
+[; ;aCapture.c: 142:             }
 }
 [e :U 2260 ]
-"144
-[; ;aCapture.c: 144:             return 1;
+"143
+[; ;aCapture.c: 143:             return 1;
 [e ) -> -> 1 `i `a ]
 [e $UE 2246  ]
-"145
-[; ;aCapture.c: 145:         default:
+"144
+[; ;aCapture.c: 144:         default:
 [e :U 2261 ]
-"147
-[; ;aCapture.c: 147:             LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+"146
+[; ;aCapture.c: 146:             LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 [e ( _printf , :s 3C -> 10 `i ]
-"148
-[; ;aCapture.c: 148:     }
+"147
+[; ;aCapture.c: 147:     }
 }
 [e $U 2253  ]
 [e :U 2254 ]
@@ -2645,8 +2645,8 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> . `E16104 5 `ui 2258
  2261 ]
 [e :U 2253 ]
-"149
-[; ;aCapture.c: 149: }
+"148
+[; ;aCapture.c: 148: }
 [e :UE 2246 ]
 }
 [a 1C 70 97 116 97 108 32 37 100 0 ]

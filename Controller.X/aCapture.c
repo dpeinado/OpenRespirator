@@ -10,8 +10,7 @@ aSrcTyp curASrc;
 // Variables store results in raw format, conversion is done only on call to get result.
 // Pressure sensor.
 // MPXV5010
-//int16_t mainPSensCal = 190;
-int16_t mainPSensCal = 0;
+int16_t mainPSensCal = 190;
 #define PSENS_K 1
 // Currently sample every channel at 27.5KHz.
 
@@ -67,7 +66,7 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
             // Compute also the other filters.
             // LPI with about 32ms Tau.
-            resultTbl[Flt1PSensor]=(31*resultTbl[Flt1PSensor]+32*adcData)>>5;
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
             // LPI with about 64ms Tau.
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
             // LPI with about 2 seconds Tau. Must fit in 32 bit, full precision not possible on 32 bit.
@@ -126,7 +125,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             lclRaw=lclRaw>>6;
             break;
         case Flt1PSensor:
-            lclRaw=lclRaw>>5;
+            lclRaw=lclRaw>>4;
     }
     
     switch (sel){

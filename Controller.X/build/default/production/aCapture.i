@@ -27220,8 +27220,7 @@ aSrcTyp curASrc;
 
 
 
-
-int16_t mainPSensCal = 0;
+int16_t mainPSensCal = 190;
 
 
 
@@ -27277,7 +27276,7 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
 
 
-            resultTbl[Flt1PSensor]=(31*resultTbl[Flt1PSensor]+32*adcData)>>5;
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
 
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
 
@@ -27336,7 +27335,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             lclRaw=lclRaw>>6;
             break;
         case Flt1PSensor:
-            lclRaw=lclRaw>>5;
+            lclRaw=lclRaw>>4;
     }
 
     switch (sel){
