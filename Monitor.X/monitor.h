@@ -25,6 +25,7 @@ void SetSV1 (bool);
 // Output values
 uint32_t GetTdi(void);
 uint32_t GetTde(void);
+int GetMonitorState(void);
 
 
 #ifdef	__cplusplus

@@ -1,6 +1,8 @@
 
 
 #include <xc.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -24,6 +26,7 @@ uint32_t tt1, tt2, tt3, tt4, tdi, tde;
 
 uint32_t GetTde(void) { return tde; }
 uint32_t GetTdi(void) { return tdi; }
+int GetMonitorState(void) { return state; }
 
 void MonitorPressureTask(void) {
     uint8_t pr;
@@ -47,6 +50,7 @@ void MonitorPressureTask(void) {
                 tt2 = tt;
                 next = STATE_HIGH;
                 tdi = tt2-tt1;
+                printf("\r\nTDI: %lu\r\n", tdi);
             }
             break;
         case STATE_HIGH:
@@ -55,6 +59,7 @@ void MonitorPressureTask(void) {
                 tt4 = tt;
                 next = STATE_LOW;
                 tde = tt4-tt3;
+                printf("\r\nTDE: %lu\r\n", tde);
             }
             break;
         default:
@@ -88,11 +93,12 @@ uint8_t GetPressure_kpa (void) {
 uint16_t GetPressure_pa (void) {
     
     adc_result_t adc = ADCC_GetConversionResult();
-    printf("ADC: %d ", adc);
+    //printf("ADC: %d ", adc);
     uint32_t mv = adc;
     mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
-    printf("V: %d mV ", mv);
-    uint16_t p = mv - 1000 - adcOffset; // remove offset of 1V
+    //printf("V: %d mV ", mv);
+    int16_t p = mv - 1000 - adcOffset; // remove offset of 1V
+    if (p<0) p=0;
     return p;
 }
 

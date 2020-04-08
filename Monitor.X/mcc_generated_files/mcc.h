@@ -60,6 +60,7 @@
 #include "tmr2.h"
 #include "tmr0.h"
 #include "adcc.h"
+#include "dac1.h"
 #include "uart1.h"
 
 

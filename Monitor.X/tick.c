@@ -17,6 +17,7 @@
 #include <xc.h>
 #include <stdint.h>
 #include "tick.h"
+#include "buttons.h"
 #include "mcc_generated_files/mcc.h"
 
 /* Internal counter for timer interrupts */
@@ -47,6 +48,7 @@ uint32_t tick_get_slow()
 void tick_update()
 {
 		tickcnt++;
+        ToggleAlarmLED();
 }
 
 static void tick_read_internal()

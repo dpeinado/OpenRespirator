@@ -25,7 +25,7 @@ void ValueDisplay() {
     uint32_t tdi = GetTdi();
     uint32_t tde = GetTde();
     
-    sprintf(msg, "%2d%% %lu %lu", TR, tdi, tde);
+    sprintf(msg, "%c %d %2d%% %lu %lu", GetMonitorState() + '0', GetPressure_mbar(), TR, tdi, tde);
     LCDMessage(msg);
 }
 void AlarmDisplay(int type, char *alarm) {

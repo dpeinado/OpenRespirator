@@ -22,3 +22,7 @@ void SetAlarmLED(void) {
 void ClearAlarmLED(void) {
     PORTDbits.RD7 = 0;
 }
+
+void ToggleAlarmLED(void) {
+    PORTDbits.RD7 = !PORTDbits.RD7;
+}

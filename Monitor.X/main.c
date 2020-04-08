@@ -69,7 +69,7 @@ void main(void)
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
-    printf ("Hello world!!!\r\n New version \r\n");
+    printf ("\033c Hello world!!!\r\n New version \r\n");
     
     InitDisplay();
     AlarmInit();
@@ -84,40 +84,45 @@ void main(void)
     while (1)
     {
         // Add your application code
-        MonitorPressureTask();          // Update input information from pressure sensor
+//        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
 //        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
 //        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
-        ButtonTask();                   // Read user inputs
+//        ButtonTask();                   // Read user inputs
 //        UpdateDisplayTask();            // Update display
-        char ch = getch();
-        if (ch=='a') BuzzerTest('A');
-        if (ch=='b') BuzzerTest('B');
-        if (ch=='c') BuzzerTest('C');
-        if (ch=='d') BuzzerTest('D');
-        if (ch=='e') BuzzerTest('E');
-        if (ch=='f') BuzzerTest('F');
-        if (ch=='o') BuzzerTest('O');
-        if (ch=='h') HistAlarm();
-        if (ch=='m') MuteAlarm();
         
-        if (ch=='0') TestAlarm(0);
-        if (ch=='1') TestAlarm(1);
-        if (ch=='2') TestAlarm(2);
-        if (ch=='3') TestAlarm(3);
-        if (ch=='4') TestAlarm(4);
-        if (ch=='5') TestAlarm(5);
-        if (ch=='6') TestAlarm(6);
-        if (ch=='7') TestAlarm(7);
-        if (ch=='8') TestAlarm(8);
-        if (ch=='9') TestAlarm(9);
+        if (UART1_is_rx_ready())
+        {
+            char ch = getch();
+            if (ch=='a') BuzzerTest('A');
+            if (ch=='b') BuzzerTest('B');
+            if (ch=='c') BuzzerTest('C');
+            if (ch=='d') BuzzerTest('D');
+            if (ch=='e') BuzzerTest('E');
+            if (ch=='f') BuzzerTest('F');
+            if (ch=='o') BuzzerTest('O');
+            if (ch=='h') HistAlarm();
+            if (ch=='m') MuteAlarm();
 
-        if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
-        if (ch=='p') printf("\r\nPressure: %d Pa\r\n", GetPressure_pa());
-        if (ch) {
-            //putch(ch);
-            //putch('\n');
+            if (ch=='0') TestAlarm(0);
+            if (ch=='1') TestAlarm(1);
+            if (ch=='2') TestAlarm(2);
+            if (ch=='3') TestAlarm(3);
+            if (ch=='4') TestAlarm(4);
+            if (ch=='5') TestAlarm(5);
+            if (ch=='6') TestAlarm(6);
+            if (ch=='7') TestAlarm(7);
+            if (ch=='8') TestAlarm(8);
+            if (ch=='9') TestAlarm(9);
+
+            if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
+            if (ch=='p') printf("\r\nPressure: %d Pa\r\n", GetPressure_pa());
+            if (ch) {
+                //putch(ch);
+                //putch('\n');
+            }
         }
+        _delay(100);
     }
 }
 /**
