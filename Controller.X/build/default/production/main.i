@@ -27614,11 +27614,11 @@ __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, in
 
 void main(void)
 {
-    int16_t pInst, pNext, pAvgShort;
+    int16_t pInst, pNext, pAvgShort, pExpCloseSV3, pExpMin, pExpPlat;
     time_t rCycleTime, rSubCycleTime, rValveActionTime, printTime;
     time_t rSV2ValveDelay;
     time_t rValveDelayStart, rTimeTmp;
-    _Bool initialSubState, valveDelayActive;
+    _Bool initialSubState, valveDelayActive, expUSCheck;
 
 
     SYSTEM_Initialize();
@@ -27734,7 +27734,7 @@ void main(void)
                     int16_t pinst,pavg;
                     aCaptGetResult(MainPSensor, &pinst);
                     aCaptGetResult(Flt1PSensor, &pavg);
-                    printf("T %d - Pu %d Pi %d Pf %d Pd %d. R %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/((int16_t) 45*1),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1), rSV2ValveDelay);
+                    printf("T %d - Pi %d Pf %d Pd %d. R %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1), rSV2ValveDelay);
                 }
             }
 
@@ -27763,6 +27763,9 @@ void main(void)
                                 LATAbits.LATA3 = 1;
                                 initialSubState = 0;
                                 rValveActionTime = timeGet();
+                                pExpCloseSV3=pInst;
+                                pExpMin = pInst;
+                                expUSCheck = 1;
                                 printf("PEI end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,rValveActionTime),(10*pInst)/((int16_t) 45*1), (10*pNext)/((int16_t) 45*1));
                             }
                         }
@@ -27775,11 +27778,24 @@ void main(void)
                                 printf("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/((int16_t) 45*1));
                             }
                         } else if (aCaptGetResult(MainPSensor, &pInst)) {
+                            if (expUSCheck) {
+
+                                if (pInst < pExpMin) {
+                                    pExpMin = pInst;
+                                }
+                                if (timeElapsed(rValveActionTime, 32*rSV2ValveDelay/16)){
+
+                                    aCaptGetResult(Flt1PSensor, &pAvgShort);
+                                    pExpPlat=pAvgShort;
+                                    expUSCheck=0;
+                                }
+                            }
 
                             if (timeElapsed(rValveActionTime, 32*rSV2ValveDelay/16) && (pInst < ((int16_t) 45*PEEP))) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
                                 printf("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1));
+                            } else {
                             }
                         }
                     }
@@ -27788,7 +27804,7 @@ void main(void)
                     int16_t pinst,pavg;
                     aCaptGetResult(MainPSensor, &pinst);
                     aCaptGetResult(Flt1PSensor, &pavg);
-                    printf("T %d - Pu %d Pi %d Pf %d Pd %d.\n", timeDiff(rValveDelayStart,timeGet()), (10*pInst)/((int16_t) 45*1),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1));
+                    printf("T %d - Pi %d Pf %d Pd %d.\n", timeDiff(rValveDelayStart,timeGet()), (10*pInst)/((int16_t) 45*1),(10*pinst)/((int16_t) 45*1),(10*(2*pinst-pavg))/((int16_t) 45*1),(10*(pinst-pavg))/((int16_t) 45*1));
                 }
             }
         }

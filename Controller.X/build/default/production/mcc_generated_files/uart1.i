@@ -27161,7 +27161,7 @@ void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
 # 63 "mcc_generated_files/uart1.c"
 static volatile uint8_t uart1TxHead = 0;
 static volatile uint8_t uart1TxTail = 0;
-static volatile uint8_t uart1TxBuffer[32];
+static volatile uint8_t uart1TxBuffer[64];
 volatile uint8_t uart1TxBufferRemaining;
 
 static volatile uart1_status_t uart1RxLastError;
@@ -27213,7 +27213,7 @@ void UART1_Initialize(void)
     U1CON2 = 0x00;
 
 
-    U1BRGL = 0x8A;
+    U1BRGL = 0x22;
 
 
     U1BRGH = 0x00;
