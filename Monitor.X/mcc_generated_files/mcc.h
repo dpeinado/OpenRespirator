@@ -56,6 +56,7 @@
 #include "i2c1_slave.h"
 #include "tmr5.h"
 #include "tmr4.h"
+#include "tmr1.h"
 #include "pwm6.h"
 #include "tmr2.h"
 #include "tmr0.h"
