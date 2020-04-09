@@ -16,6 +16,7 @@ void ClearAlarmLED(void);
 void SetAlarmLED(void);
 void ButtonTask(void);
 void ToggleAlarmLED(void);
+void ButtonInit(void);
 
 
 

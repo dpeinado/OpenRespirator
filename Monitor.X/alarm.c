@@ -118,6 +118,7 @@ void AlarmUpdateLCD(void) {
         if (displayStatus==DISPLAY_ALARM && AnyAlarm())
         {
             int id;
+            SetAlarmLED();
             id = HigherAlarm();
             AlarmDisplay(alarmData[id].type,alarmData[id].name);
             SetAlarmLED();

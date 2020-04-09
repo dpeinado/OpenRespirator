@@ -48,7 +48,7 @@ uint32_t tick_get_slow()
 void tick_update()
 {
 		tickcnt++;
-        ToggleAlarmLED();
+
 }
 
 static void tick_read_internal()

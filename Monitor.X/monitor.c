@@ -8,6 +8,7 @@
 
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
+#include "buttons.h"
 #include "tick.h"
 
 int adcOffset;
@@ -43,8 +44,10 @@ void MonitorPressureTask(void) {
     uint32_t tt;
     uint16_t temp;
     
+ //   ToggleAlarmLED();
+    
     pr = GetPressure_mbar();
-    tt = tick_get_slow();
+    tt = tick_get();
     count ++;
     prFastBuffer[count%25]=pr;
     temp = 0;
@@ -56,7 +59,7 @@ void MonitorPressureTask(void) {
         for (int i=0; i<25; i++) temp +=prSlowBuffer[i];
         prSlow = temp/25;
     }
-    if (count==40*25*25) count =0;
+    if (count>=40*25) count =0;
     
     
     switch (state) {

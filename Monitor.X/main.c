@@ -75,6 +75,7 @@ void main(void)
     AlarmInit();
     InitializePressure();
     tick_init();
+    ButtonInit();
     
     // Interrupt driven tasks:
     //  + ADC acquisition
@@ -84,12 +85,10 @@ void main(void)
     while (1)
     {
         // Add your application code
-//        MonitorPressureTask();          // Update input information from pressure sensor
+        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
 //        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
-//        AlarmsDetectionTask();          // Compare Parameters with target and generate alarms
-//        ButtonTask();                   // Read user inputs
-//        UpdateDisplayTask();            // Update display
+
         
         if (UART1_is_rx_ready())
         {
@@ -122,7 +121,7 @@ void main(void)
                 //putch('\n');
             }
         }
-        _delay(100);
+        _delay(10);
     }
 }
 /**
