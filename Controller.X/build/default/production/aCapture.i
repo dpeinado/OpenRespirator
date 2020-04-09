@@ -27124,6 +27124,8 @@ typedef __uint24 uint24_t;
 # 89 "./mcc_generated_files/adcc.h"
 typedef enum
 {
+    channel_ANE0 = 0x20,
+    channel_ANE1 = 0x21,
     channel_ANE2 = 0x22,
     channel_VSS = 0x3B,
     channel_Temp = 0x3C,
@@ -27131,74 +27133,78 @@ typedef enum
     channel_FVR_Buffer1 = 0x3E,
     channel_FVR_Buffer2 = 0x3F
 } adcc_channel_t;
-# 131 "./mcc_generated_files/adcc.h"
+# 133 "./mcc_generated_files/adcc.h"
 void ADCC_Initialize(void);
-# 160 "./mcc_generated_files/adcc.h"
+# 162 "./mcc_generated_files/adcc.h"
 void ADCC_StartConversion(adcc_channel_t channel);
-# 190 "./mcc_generated_files/adcc.h"
+# 192 "./mcc_generated_files/adcc.h"
 _Bool ADCC_IsConversionDone();
-# 222 "./mcc_generated_files/adcc.h"
+# 224 "./mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetConversionResult(void);
-# 253 "./mcc_generated_files/adcc.h"
+# 255 "./mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
-# 278 "./mcc_generated_files/adcc.h"
+# 280 "./mcc_generated_files/adcc.h"
 void ADCC_StopConversion(void);
-# 305 "./mcc_generated_files/adcc.h"
+# 307 "./mcc_generated_files/adcc.h"
 void ADCC_SetStopOnInterrupt(void);
-# 330 "./mcc_generated_files/adcc.h"
+# 332 "./mcc_generated_files/adcc.h"
 void ADCC_DischargeSampleCapacitor(void);
-# 356 "./mcc_generated_files/adcc.h"
+# 358 "./mcc_generated_files/adcc.h"
 void ADCC_LoadAcquisitionRegister(uint16_t);
-# 382 "./mcc_generated_files/adcc.h"
+# 384 "./mcc_generated_files/adcc.h"
 void ADCC_SetPrechargeTime(uint16_t);
-# 407 "./mcc_generated_files/adcc.h"
+# 409 "./mcc_generated_files/adcc.h"
 void ADCC_SetRepeatCount(uint8_t);
-# 435 "./mcc_generated_files/adcc.h"
+# 437 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetCurrentCountofConversions(void);
-# 459 "./mcc_generated_files/adcc.h"
+# 461 "./mcc_generated_files/adcc.h"
 void ADCC_ClearAccumulator(void);
-# 484 "./mcc_generated_files/adcc.h"
+# 486 "./mcc_generated_files/adcc.h"
 uint24_t ADCC_GetAccumulatorValue(void);
-# 512 "./mcc_generated_files/adcc.h"
+# 514 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasAccumulatorOverflowed(void);
-# 537 "./mcc_generated_files/adcc.h"
+# 539 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetFilterValue(void);
-# 565 "./mcc_generated_files/adcc.h"
+# 567 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetPreviousResult(void);
-# 591 "./mcc_generated_files/adcc.h"
+# 593 "./mcc_generated_files/adcc.h"
 void ADCC_DefineSetPoint(uint16_t);
-# 617 "./mcc_generated_files/adcc.h"
+# 619 "./mcc_generated_files/adcc.h"
 void ADCC_SetUpperThreshold(uint16_t);
-# 643 "./mcc_generated_files/adcc.h"
+# 645 "./mcc_generated_files/adcc.h"
 void ADCC_SetLowerThreshold(uint16_t);
-# 670 "./mcc_generated_files/adcc.h"
+# 672 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetErrorCalculation(void);
-# 697 "./mcc_generated_files/adcc.h"
+# 699 "./mcc_generated_files/adcc.h"
 void ADCC_EnableDoubleSampling(void);
-# 721 "./mcc_generated_files/adcc.h"
+# 723 "./mcc_generated_files/adcc.h"
 void ADCC_EnableContinuousConversion(void);
-# 745 "./mcc_generated_files/adcc.h"
+# 747 "./mcc_generated_files/adcc.h"
 void ADCC_DisableContinuousConversion(void);
-# 773 "./mcc_generated_files/adcc.h"
+# 775 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedUpperThreshold(void);
-# 801 "./mcc_generated_files/adcc.h"
+# 803 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedLowerThreshold(void);
-# 828 "./mcc_generated_files/adcc.h"
+# 830 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
-# 845 "./mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
-# 861 "./mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 880 "./mcc_generated_files/adcc.h"
+# 847 "./mcc_generated_files/adcc.h"
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
+# 863 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 4 "aCapture.c" 2
 
 # 1 "./aCapture.h" 1
-# 19 "./aCapture.h"
+# 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
-    SndPSensor=1,
-    TempSensor=2
+    AuxPSensor=1,
+    MicSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
 } aSrcTyp;
 
 void aCaptureInit(void);
@@ -27215,47 +27221,81 @@ aSrcTyp curASrc;
 
 
 
-int16_t mainPSensCal = 1190;
+int16_t mainPSensCal = 190;
 
 
-uint16_t resultTbl[1];
 
-uint8_t resultTblVal[1];
+uint32_t resultTbl[7];
+
+uint8_t resultTblVal[7];
 
 
 adcc_channel_t adcGetCh(aSrcTyp sel){
     switch (sel){
         case MainPSensor:
+            return channel_ANE1;
+            break;
+        case AuxPSensor:
             return channel_ANE2;
+            break;
+        case MicSensor:
+            return channel_ANE0;
             break;
         default:
 
-           LATAbits.LATA2 = 0;;printf("Fatal %d",1);
+           LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
     }
 }
 
 void adcCaptureIsr(void){
 
 
-    uint16_t adcData;
+    uint32_t adcData;
+    aSrcTyp adcSel;
 
-    if (curASrc<1){
-        resultTblVal[curASrc]=resultTblVal[curASrc]+1;
-        if (resultTblVal[curASrc] == 0){
-            resultTblVal[curASrc]=1;
-        }
-        resultTbl[curASrc]=ADCC_GetConversionResult();
-    } else {
+    adcData = ADCC_GetFilterValue();
 
-        LATAbits.LATA2 = 0;;printf("Fatal %d",1);
-    }
+    adcSel=curASrc;
 
 
     curASrc++;
-    if (curASrc==1){
+    if (curASrc==3){
         curASrc=0;
     }
     ADCC_StartConversion(adcGetCh(curASrc));
+
+
+    if (adcSel<3){
+
+        resultTbl[adcSel]=adcData;
+
+        resultTblVal[adcSel]++;
+        if (resultTblVal[adcSel]==0){
+            resultTblVal[adcSel]=1;
+        }
+
+        if (adcSel == MainPSensor) {
+
+
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+4*adcData)>>2;
+
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
+
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
+
+
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
+
+            resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
+        }
+
+    } else {
+
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+    }
 }
 
 
@@ -27263,32 +27303,55 @@ void aCaptureInit(void){
     int idx;
     curASrc=MainPSensor;
 
-    for (idx=0;idx<1;idx++)
+    for (idx=0;idx<3;idx++)
         resultTblVal[idx]=0;
 
-    ADCC_StartConversion(adcGetCh(curASrc));
-    ADCC_SetADIInterruptHandler(adcCaptureIsr);
+    ADCC_SetADTIInterruptHandler(adcCaptureIsr);
 
-    PIE1bits.ADIE = 1;
+
+    ADCC_StartConversion(adcGetCh(curASrc));
+
+    PIE1bits.ADTIE = 1;
 }
 
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
-    uint16_t lclRaw;
+    uint32_t lclRaw;
     uint8_t lclValid;
 
 
-    PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
     lclRaw=resultTbl[sel];
     lclValid=resultTblVal[sel];
-    PIE1bits.ADIE = 1;
+    PIE1bits.ADTIE = 1;
 
     if (lclValid == 0) {
         return 0;
     }
 
+
+
+    switch (sel){
+        case Flt3PSensor:
+            lclRaw=lclRaw>>9;
+            break;
+        case Flt2PSensor:
+            lclRaw=lclRaw>>6;
+            break;
+        case Flt1PSensor:
+            lclRaw=lclRaw>>4;
+            break;
+        case Flt0PSensor:
+            lclRaw=lclRaw>>2;
+            break;
+    }
+
     switch (sel){
         case MainPSensor:
+        case Flt0PSensor:
+        case Flt1PSensor:
+        case Flt2PSensor:
+        case Flt3PSensor:
             if (lclRaw < mainPSensCal) {
                 lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/1);
@@ -27299,6 +27362,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            LATAbits.LATA2 = 0;;printf("Fatal %d",1);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
     }
 }

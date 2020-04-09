@@ -12,14 +12,20 @@
 extern "C" {
 #endif
     
-#define ACAPT_N 1
-
-#define PRESSURE_MBAR(x) ((int16_t) 100*x)
+#define ACAPT_N 3
+#define ATOT_N 7
+    
+#define MPRESSURE_MBAR(x) ((int16_t) 45*x)
+#define APRESSURE_MBAR(x) ((int16_t) 100*x)
     
 typedef enum{
     MainPSensor=0,
-    SndPSensor=1,
-    TempSensor=2
+    AuxPSensor=1,
+    MicSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
 } aSrcTyp;
 
 void aCaptureInit(void);

@@ -17,9 +17,9 @@ extern "C" {
 #define CLOSE_SV2 LATAbits.LATA2 = 0
 
 // TBD.
-#define SV3ISOPEN 0
-#define OPEN_SV3 
-#define CLOSE_SV3 
+#define SV3ISOPEN LATAbits.LATA3
+#define OPEN_SV3 LATAbits.LATA3 = 1
+#define CLOSE_SV3 LATAbits.LATA3 = 0
 
     
 #define DEBUG

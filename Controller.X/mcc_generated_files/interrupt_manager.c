@@ -78,9 +78,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C1_InterruptHandler();
     }
-    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    else if(PIE1bits.ADTIE == 1 && PIR1bits.ADTIF == 1)
     {
-        ADCC_ISR();
+        ADCC_ThresholdISR();
     }
     else
     {

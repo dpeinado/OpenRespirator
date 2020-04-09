@@ -27032,9 +27032,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 466 "./mcc_generated_files/pin_manager.h"
+# 506 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 478 "./mcc_generated_files/pin_manager.h"
+# 518 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27392,6 +27392,8 @@ typedef __uint24 uint24_t;
 # 89 "./mcc_generated_files/adcc.h"
 typedef enum
 {
+    channel_ANE0 = 0x20,
+    channel_ANE1 = 0x21,
     channel_ANE2 = 0x22,
     channel_VSS = 0x3B,
     channel_Temp = 0x3C,
@@ -27399,65 +27401,65 @@ typedef enum
     channel_FVR_Buffer1 = 0x3E,
     channel_FVR_Buffer2 = 0x3F
 } adcc_channel_t;
-# 131 "./mcc_generated_files/adcc.h"
+# 133 "./mcc_generated_files/adcc.h"
 void ADCC_Initialize(void);
-# 160 "./mcc_generated_files/adcc.h"
+# 162 "./mcc_generated_files/adcc.h"
 void ADCC_StartConversion(adcc_channel_t channel);
-# 190 "./mcc_generated_files/adcc.h"
+# 192 "./mcc_generated_files/adcc.h"
 _Bool ADCC_IsConversionDone();
-# 222 "./mcc_generated_files/adcc.h"
+# 224 "./mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetConversionResult(void);
-# 253 "./mcc_generated_files/adcc.h"
+# 255 "./mcc_generated_files/adcc.h"
 adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
-# 278 "./mcc_generated_files/adcc.h"
+# 280 "./mcc_generated_files/adcc.h"
 void ADCC_StopConversion(void);
-# 305 "./mcc_generated_files/adcc.h"
+# 307 "./mcc_generated_files/adcc.h"
 void ADCC_SetStopOnInterrupt(void);
-# 330 "./mcc_generated_files/adcc.h"
+# 332 "./mcc_generated_files/adcc.h"
 void ADCC_DischargeSampleCapacitor(void);
-# 356 "./mcc_generated_files/adcc.h"
+# 358 "./mcc_generated_files/adcc.h"
 void ADCC_LoadAcquisitionRegister(uint16_t);
-# 382 "./mcc_generated_files/adcc.h"
+# 384 "./mcc_generated_files/adcc.h"
 void ADCC_SetPrechargeTime(uint16_t);
-# 407 "./mcc_generated_files/adcc.h"
+# 409 "./mcc_generated_files/adcc.h"
 void ADCC_SetRepeatCount(uint8_t);
-# 435 "./mcc_generated_files/adcc.h"
+# 437 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetCurrentCountofConversions(void);
-# 459 "./mcc_generated_files/adcc.h"
+# 461 "./mcc_generated_files/adcc.h"
 void ADCC_ClearAccumulator(void);
-# 484 "./mcc_generated_files/adcc.h"
+# 486 "./mcc_generated_files/adcc.h"
 uint24_t ADCC_GetAccumulatorValue(void);
-# 512 "./mcc_generated_files/adcc.h"
+# 514 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasAccumulatorOverflowed(void);
-# 537 "./mcc_generated_files/adcc.h"
+# 539 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetFilterValue(void);
-# 565 "./mcc_generated_files/adcc.h"
+# 567 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetPreviousResult(void);
-# 591 "./mcc_generated_files/adcc.h"
+# 593 "./mcc_generated_files/adcc.h"
 void ADCC_DefineSetPoint(uint16_t);
-# 617 "./mcc_generated_files/adcc.h"
+# 619 "./mcc_generated_files/adcc.h"
 void ADCC_SetUpperThreshold(uint16_t);
-# 643 "./mcc_generated_files/adcc.h"
+# 645 "./mcc_generated_files/adcc.h"
 void ADCC_SetLowerThreshold(uint16_t);
-# 670 "./mcc_generated_files/adcc.h"
+# 672 "./mcc_generated_files/adcc.h"
 uint16_t ADCC_GetErrorCalculation(void);
-# 697 "./mcc_generated_files/adcc.h"
+# 699 "./mcc_generated_files/adcc.h"
 void ADCC_EnableDoubleSampling(void);
-# 721 "./mcc_generated_files/adcc.h"
+# 723 "./mcc_generated_files/adcc.h"
 void ADCC_EnableContinuousConversion(void);
-# 745 "./mcc_generated_files/adcc.h"
+# 747 "./mcc_generated_files/adcc.h"
 void ADCC_DisableContinuousConversion(void);
-# 773 "./mcc_generated_files/adcc.h"
+# 775 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedUpperThreshold(void);
-# 801 "./mcc_generated_files/adcc.h"
+# 803 "./mcc_generated_files/adcc.h"
 _Bool ADCC_HasErrorCrossedLowerThreshold(void);
-# 828 "./mcc_generated_files/adcc.h"
+# 830 "./mcc_generated_files/adcc.h"
 uint8_t ADCC_GetConversionStageStatus(void);
-# 845 "./mcc_generated_files/adcc.h"
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
-# 861 "./mcc_generated_files/adcc.h"
-void ADCC_ISR(void);
-# 880 "./mcc_generated_files/adcc.h"
+# 847 "./mcc_generated_files/adcc.h"
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
+# 863 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
 # 58 "./mcc_generated_files/mcc.h" 2
 
@@ -27555,11 +27557,15 @@ void PMD_Initialize(void);
 # 45 "main.c" 2
 
 # 1 "./aCapture.h" 1
-# 19 "./aCapture.h"
+# 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
-    SndPSensor=1,
-    TempSensor=2
+    AuxPSensor=1,
+    MicSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
 } aSrcTyp;
 
 void aCaptureInit(void);
@@ -27578,6 +27584,8 @@ typedef uint16_t time_t;
 
 void timeInit(void);
 time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 # 47 "main.c" 2
@@ -27593,19 +27601,32 @@ void putch(char byte)
 
 
 uint8_t BPM=10;
-uint8_t IP=24;
+uint8_t IP=30;
 uint8_t PEEP=10;
-# 69 "main.c"
+# 76 "main.c"
+__attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
+    int32_t intLVal;
+
+
+    intLVal = (delay*256)/(((time_t) 20*1));
+    intLVal = (intLVal * (pInst - pAvgShort))/256;
+    return pInst + ((uint16_t) intLVal);
+}
+
 void main(void)
 {
-    int16_t mainPressure;
-    time_t rCycleTime, rSubCycleTime, printTime;
-    _Bool initialSubState;
+    int16_t pInst, pNext, pAvgShort, pAvgUShort, pExpCloseSV3, pExpMin, pExpPlat, pExpOS;
+    int16_t pTmp;
+    time_t rCycleTime, rSubCycleTime, rValveActionTime, printTime;
+    time_t rSV2ValveDelay;
+    time_t rValveDelayStart, rTimeTmp;
+    _Bool initialSubState, valveDelayActive, expUSCheck;
 
 
     SYSTEM_Initialize();
 
     PIE1bits.ADIE = 0;
+    PIE1bits.ADTIE = 0;
 
 
 
@@ -27623,14 +27644,20 @@ void main(void)
     rSubCycleTime = timeGet();
     while (timeElapsedR(&rSubCycleTime, ((time_t) 50*1)));
 
-    if (1) {
+
+    rSV2ValveDelay = 0;
+    valveDelayActive = 0;
+    rSV2ValveDelay = 0;
+    pExpOS = 0;
+
+            if (0) {
 
         time_t tstamp1;
         tstamp1 = timeGet();
         while (1) {
             if (timeElapsedR(&tstamp1, ((time_t) 100*1))) {
-                if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                    printf("P %d  \r", mainPressure);
+                if (aCaptGetResult(MainPSensor, &pInst)) {
+                    printf("P %d  \r", pInst/((int16_t) 45*1));
                 }
 
 
@@ -27644,77 +27671,181 @@ void main(void)
         printTime = timeGet();
         while (1) {
 
+
+
             printf("\nIP\n");
 
             LATAbits.LATA2 = 1;
-                    ;
+            LATAbits.LATA3 = 1;
             initialSubState = 1;
+            rValveDelayStart=timeGet();
+            valveDelayActive = 1;
+
             while (1) {
-                if (timeElapsedR(&rCycleTime, ((time_t) ((2*60.0)/(3*BPM)*1000)))) {
+                if (timeElapsedR(&rCycleTime, ((time_t) ((1*60.0)/(3*BPM)*1000)))) {
 
                     break;
                 } else {
                     if (initialSubState) {
 
-                        if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure > ((int16_t) 100*IP)) {
+                        if (aCaptGetResult(MainPSensor, &pInst)) {
+
+
+                            aCaptGetResult(Flt1PSensor, &pAvgShort);
+                            pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+                            if ((pNext > ((int16_t) 45*IP)) || (pInst > ((int16_t) 45*IP))) {
                                 LATAbits.LATA2 = 0;
                                 initialSubState = 0;
+                                rValveActionTime = timeGet();
+                                printf("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/((int16_t) 45*1), (10*pNext)/((int16_t) 45*1));
+                            }
+                            if (valveDelayActive) {
+
+
+                                if (pInst > (pAvgShort + ((int16_t) 45*1))) {
+                                    valveDelayActive = 0;
+
+                                    rTimeTmp = timeDiff(rValveDelayStart, timeGet());
+                                  if (rTimeTmp < ((time_t) 100*1)) {
+
+                                        rSV2ValveDelay = rTimeTmp;
+                                    } else {
+
+
+                                    }
+                                }
                             }
                         }
                     } else {
                         if (LATAbits.LATA2) {
-                            if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                            if (timeElapsedR(&rSubCycleTime, ((time_t) 25*1))) {
                                 LATAbits.LATA2 = 0;
+                                rValveActionTime = timeGet();
+                                aCaptGetResult(MainPSensor, &pInst);
+                                printf("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart,rValveActionTime),(10*pInst)/((int16_t) 45*1));
                             }
-                        } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 100*IP)) {
+                        } else if ((aCaptGetResult(MainPSensor, &pInst))) {
+
+                            if (timeElapsed(rValveActionTime, 20*rSV2ValveDelay/16) && (pInst < ((int16_t) 45*IP))) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
+                                printf("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1));
                             }
                         }
                     }
                 }
 
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\n", mainPressure);
+                    aCaptGetResult(MainPSensor, &pInst);
+                    aCaptGetResult(Flt1PSensor, &pAvgShort);
+                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+                    printf("PI T %d - Pi %d Pn %d Pd %d. R %d\n",
+                            timeDiff(rValveDelayStart,timeGet()),
+                            (10*pInst)/((int16_t) 45*1),
+                            (10*(pNext))/((int16_t) 45*1),
+                            (10*(pInst-pAvgShort))/((int16_t) 45*1),
+                            rSV2ValveDelay);
                 }
             }
+
+
 
 
             printf("\nEP\n");
             rSubCycleTime = timeGet();
             LATAbits.LATA2 = 0;
-                     ;
+            LATAbits.LATA3 = 0;
             initialSubState = 1;
+            valveDelayActive = 0;
             while (1) {
-                if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((2*60.0)/(3*BPM)*1000))))) {
+                if (timeElapsedR(&rCycleTime, (((time_t) ((60.0/BPM)*1000))-((time_t) ((1*60.0)/(3*BPM)*1000))))) {
 
                     break;
                 } else {
                     if (initialSubState) {
 
-                        if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 100*PEEP)) {
-                                        ;
-                                initialSubState = 0;
+                        if (aCaptGetResult(MainPSensor, &pInst)) {
+                            if (0) {
+
+
+                                aCaptGetResult(Flt1PSensor, &pAvgShort);
+                                pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+                                if ((pNext < ((int16_t) 45*PEEP)) || (pInst < ((int16_t) 45*PEEP))) {
+                                    LATAbits.LATA3 = 1;
+                                    initialSubState = 0;
+                                    rValveActionTime = timeGet();
+                                    pExpCloseSV3=pInst;
+                                   pExpMin = pInst;
+                                    expUSCheck = 1;
+                                    printf("PEI end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,rValveActionTime),(10*pInst)/((int16_t) 45*1), (10*pNext)/((int16_t) 45*1));
+                                }
+                            } else {
+
+
+
+                                pTmp = ((int16_t) 45*PEEP) - pExpOS;
+                                if (pTmp <= ((int16_t) 45*3)){
+                                    pTmp=((int16_t) 45*3);
+                                }
+                                if (pInst < pTmp) {
+                                    LATAbits.LATA3 = 1;
+                                    initialSubState = 0;
+                                    rValveActionTime = timeGet();
+                                    pExpCloseSV3=pInst;
+                                    pExpMin = pInst;
+                                    expUSCheck = 1;
+                                    printf("PEI end T %d - Pi %d OS %d\n",
+                                            timeDiff(rValveDelayStart,rValveActionTime),
+                                            (10*pInst)/((int16_t) 45*1),
+                                            (10*pExpOS)/((int16_t) 45*1));
+                                }
                             }
                         }
                     } else {
                         if (LATAbits.LATA2) {
-                            if (timeElapsedR(&rSubCycleTime, ((time_t) 50*1))) {
+                            if (timeElapsedR(&rSubCycleTime, ((time_t) 25*1))) {
                                 LATAbits.LATA2 = 0;
+                                rValveActionTime = timeGet();
+                                aCaptGetResult(MainPSensor, &pInst);
+                                printf("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/((int16_t) 45*1));
                             }
-                        } else if (aCaptGetResult(MainPSensor, &mainPressure)) {
-                            if (mainPressure < ((int16_t) 100*PEEP)) {
+                        } else if (aCaptGetResult(MainPSensor, &pInst)) {
+                            if (expUSCheck) {
+
+                                if (pInst < pExpMin) {
+                                    pExpMin = pInst;
+                                }
+                                if (timeElapsed(rValveActionTime, ((time_t) 60*1))){
+
+                                    aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                                    pExpPlat=pAvgUShort;
+
+                                    pTmp = pExpPlat - pExpCloseSV3;
+                                    pExpOS = (pExpOS + pTmp)/2;
+                                    expUSCheck=0;
+                                }
+                            }
+
+                            if ((!expUSCheck) && timeElapsed(rValveActionTime, 32*rSV2ValveDelay/16) && (pInst < ((int16_t) 45*PEEP))) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
+                                printf("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1));
+                            } else {
                             }
                         }
                     }
                 }
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-                    printf("P %d\n", mainPressure);
+                    aCaptGetResult(MainPSensor, &pInst);
+                    aCaptGetResult(Flt1PSensor, &pAvgShort);
+                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+                    printf("PE T %d - Pi %d Pn %d Pd %d. Pep %d diff %d\n",
+                            timeDiff(rValveDelayStart,timeGet()),
+                            (10*pInst)/((int16_t) 45*1),
+                            (10*(pNext))/((int16_t) 45*1),
+                            (10*(pInst-pAvgShort))/((int16_t) 45*1),
+                            (10*pExpPlat)/((int16_t) 45*1),
+                            (10*(pExpPlat-pExpCloseSV3))/((int16_t) 45*1));
                 }
             }
         }
