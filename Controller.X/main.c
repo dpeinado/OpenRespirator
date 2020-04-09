@@ -46,11 +46,19 @@
 #include "aCapture.h"
 #include "time.h"
 
+#ifdef DEBUG
 void putch(char byte)
 {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
+#endif
+
+#ifdef DEBUG
+# define DEBUG_PRINT(x) printf x
+#else
+# define DEBUG_PRINT(x) do {} while (0)
+#endif
 
 ///////////////////
 // User parameters.
@@ -61,10 +69,12 @@ uint8_t PEEP=10;
 
 // CONTROLLER INTERNAL PARAMETERS.
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
-#define PEEPCTRLMIN 3
+#define PEEPCTRLMIN   MPRESSURE_MBAR(3)
+// Minimum actuation time of the valve has a big effect on pressure, so avoid acting too soon.
+#define FINECTRLHIST  MPRESSURE_MBAR(3)
 
 #define PRINTTIME TIME_MS(20)
-#define PCTIME TIME_MS(25)
+#define SV2OTIME TIME_MS(15)
 // Internal parameters.
 #define IDURATION TIME_S((1*60.0)/(3*BPM))
 #define EDURATION (TIME_S((60.0/BPM))-IDURATION)
@@ -84,12 +94,17 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
 
 void main(void)
 {
-    int16_t pInst, pNext, pAvgShort, pAvgUShort, pExpCloseSV3, pExpMin, pExpPlat, pExpOS;
+#ifdef DEBUG
+    time_t printTime;
+#endif
+    
+    int16_t pInst, pNext, pAvgShort, pAvgUShort;
+    int16_t pValveActuation, pPlateau, pExpOS, pInspOS;      // Variables for overshoot measurement.
     int16_t pTmp;
-    time_t rCycleTime, rSubCycleTime, rValveActionTime, printTime;
+    time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
     time_t rSV2ValveDelay;
     time_t rValveDelayStart, rTimeTmp;
-    bool initialSubState, valveDelayActive, expUSCheck;
+    bool initialSubState, valveDelayCheck, OSCheck;
     
     // Initialize the device
     SYSTEM_Initialize();
@@ -108,47 +123,53 @@ void main(void)
     aCaptureInit();
     timeInit();
 
-    printf("PCTRL START\n");
+    DEBUG_PRINT(("PCTRL START\n"));
     // First wait for startup. 50ms.
     rSubCycleTime = timeGet();
     while (timeElapsedR(&rSubCycleTime, TIME_MS(50)));
     
-    // Init control variables.
-    rSV2ValveDelay = 0;
-    valveDelayActive = false;
-    rSV2ValveDelay = 0;
+    // Init all control variables.
+    rSV2ValveDelay = 20; 
+    valveDelayCheck = false;
+    OSCheck = false;
     pExpOS = 0;
+    pInspOS = 0;
     
-            if (0) {
+    if (0) {
         // Code with constant on-off to debug pressure sensor noise.
         time_t tstamp1;
         tstamp1 = timeGet();
         while (1) {
             if (timeElapsedR(&tstamp1, TIME_MS(100))) {
                 if (aCaptGetResult(MainPSensor, &pInst)) {
-                    printf("P %d  \r", pInst/MPRESSURE_MBAR(1));
+                    DEBUG_PRINT(("P %d  \r", pInst/MPRESSURE_MBAR(1)));
                 }
 
                 // DORDBG. SET RA2 TO 1.
                 IO_RA2_Toggle();
             }
-            // Add your application code
         }
     } else {
         // Normal code. 
         rCycleTime = timeGet();
+#ifdef DEBUG
         printTime = timeGet();
+#endif
         while (1) {
             /////////////////////////////////////////////
             // Inspiration part of the cycle.
             /////////////////////////////////////////////
-            printf("\nIP\n");
+            DEBUG_PRINT(("\nIP\n"));
+
             // Set valves initial values.
             OPEN_SV2;
             OPEN_SV3;
+
+            // Init variables for new cycle.
             initialSubState = true;
+            valveDelayCheck = true;
+            OSCheck = false;
             rValveDelayStart=timeGet();
-            valveDelayActive = true;
 
             while (1) {
                 if (timeElapsedR(&rCycleTime, IDURATION)) {
@@ -159,20 +180,34 @@ void main(void)
                         // Inhale.
                         if (aCaptGetResult(MainPSensor, &pInst)) {
                             // Two checks. Instantaneous pressure > IP, OR Prediction of pressure at activation time of valve > IP.
+                            // Moreover consider also OS even with those settings
+                            if ((pInspOS < MPRESSURE_MBAR(5)) && (pInspOS > MPRESSURE_MBAR(-5))) {
+                                pTmp = MPRESSURE_MBAR(IP) - pInspOS;
+                            } else {
+                                pTmp = MPRESSURE_MBAR(IP);
+                            }
+
                             // Pressure prediction computed by presPredict function.
                             aCaptGetResult(Flt1PSensor, &pAvgShort);
                             pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                            if ((pNext > MPRESSURE_MBAR(IP)) || (pInst > MPRESSURE_MBAR(IP))) {
+                            if ((pNext > pTmp) || (pInst > pTmp)) {
                                 CLOSE_SV2;
                                 initialSubState = false;
-                                rValveActionTime = timeGet();
-                                printf("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/MPRESSURE_MBAR(1), (10*pNext)/MPRESSURE_MBAR(1));
+                                rValveAcuationTstamp = timeGet();
+                                // Here two possibilities exist:
+                                // Do like in EP, calculate overshoot respect to instantaneous pressure, and apply to it.
+                                // In this case, no need to compute pressure prediction.
+                                // The other option is to compute OS over pressure prediction, and apply also over the prediction.
+                                // The theoretical advantage of the second case is that the OS calculated will be smaller, so it will be less sensitive to the changing conditions.
+                                pValveActuation=pNext;
+                                OSCheck = true;
+                                DEBUG_PRINT(("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/MPRESSURE_MBAR(1), (10*pNext)/MPRESSURE_MBAR(1)));
                             }
-                            if (valveDelayActive) {
+                            if (valveDelayCheck) {
                                 // Measure response time of valve.
                                 // When detect a change of 1mBar on pInst-pAvgShort.
                                 if (pInst > (pAvgShort + MPRESSURE_MBAR(1))) {
-                                    valveDelayActive = false;
+                                    valveDelayCheck = false;
                                     // Minimum reached. Store response time.
                                     rTimeTmp = timeDiff(rValveDelayStart, timeGet());
                                   if (rTimeTmp < TIME_MS(100)) {
@@ -187,45 +222,60 @@ void main(void)
                         }
                     } else {
                         if (SV2ISOPEN) {
-                            if (timeElapsedR(&rSubCycleTime, PCTIME)) {
+                            if (timeElapsedR(&rSubCycleTime, SV2OTIME)) {
                                 CLOSE_SV2;
-                                rValveActionTime = timeGet();
+                                rValveAcuationTstamp = timeGet();
                                 aCaptGetResult(MainPSensor, &pInst);
-                                printf("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart,rValveActionTime),(10*pInst)/MPRESSURE_MBAR(1));
+                                DEBUG_PRINT(("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart,rValveAcuationTstamp),(10*pInst)/MPRESSURE_MBAR(1)));
                             }
                         } else if ((aCaptGetResult(MainPSensor, &pInst))) {
-                            // Meassure only after delay of valve actuation has elapsed, increased by 25%.
-                            if (timeElapsed(rValveActionTime, 20*rSV2ValveDelay/16) && (pInst < MPRESSURE_MBAR(IP))) {
+                            if (OSCheck) {
+                                if (timeElapsed(rValveAcuationTstamp, TIME_MS(60))){
+                                    // Take averaged pressure measurement as mean value.
+                                    aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                                    pPlateau=pAvgUShort;
+                                    // Filtered pExpOS.
+                                    pTmp = pPlateau - pValveActuation;
+                                    pInspOS =  (pInspOS + pTmp)/2;
+                                    OSCheck=false;
+                                }
+                            }
+                            // Meassure only after delay of valve actuation has elapsed, x2.
+                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (MPRESSURE_MBAR(IP)-FINECTRLHIST))) {
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
-                                printf("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1));
+                                DEBUG_PRINT(("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1)));
                             }
                         }
                     }
                 }
 
+#ifdef DEBUG
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    printf("PI T %d - Pi %d Pn %d Pd %d. R %d\n", 
+                    DEBUG_PRINT(("PI T %d - Pi %d Pn %d Pd %d. R %d Pip %d OS %d\n", 
                             timeDiff(rValveDelayStart,timeGet()),
                             (10*pInst)/MPRESSURE_MBAR(1),
                             (10*(pNext))/MPRESSURE_MBAR(1),
                             (10*(pInst-pAvgShort))/MPRESSURE_MBAR(1), 
-                            rSV2ValveDelay);
+                            rSV2ValveDelay,
+                            (10*pPlateau)/MPRESSURE_MBAR(1),
+                            (10*pInspOS)/MPRESSURE_MBAR(1)));
                 }
+#endif
             }
 
             /////////////////////////////////////////////
             // Expiration part of the cycle.
             /////////////////////////////////////////////
-            printf("\nEP\n");
+            DEBUG_PRINT(("\nEP\n"));
             rSubCycleTime = timeGet();
             CLOSE_SV2;
             CLOSE_SV3;
             initialSubState = true;
-            valveDelayActive = false;
+            valveDelayCheck = false;
             while (1) {
                 if (timeElapsedR(&rCycleTime, EDURATION)) {
                     // Goto next.
@@ -242,80 +292,75 @@ void main(void)
                                 if ((pNext < MPRESSURE_MBAR(PEEP)) || (pInst < MPRESSURE_MBAR(PEEP))) {
                                     OPEN_SV3;
                                     initialSubState = 0;
-                                    rValveActionTime = timeGet();
-                                    pExpCloseSV3=pInst;
-                                   pExpMin = pInst;
-                                    expUSCheck = true;
-                                    printf("PEI end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,rValveActionTime),(10*pInst)/MPRESSURE_MBAR(1), (10*pNext)/MPRESSURE_MBAR(1));
+                                    rValveAcuationTstamp = timeGet();
+                                    pValveActuation=pInst;
+                                    OSCheck = true;
+                                    DEBUG_PRINT(("PEI end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,rValveAcuationTstamp),(10*pInst)/MPRESSURE_MBAR(1), (10*pNext)/MPRESSURE_MBAR(1)));
                                 }
                             } else {
                                 // Compensation of pre-measured difference between plateu pressure and pressure at closing of valve.
                                 // Due to overshoot after OPEN of SV3.
                                 // Ensure comparison value is never 0.
                                 pTmp = MPRESSURE_MBAR(PEEP) - pExpOS;
-                                if (pTmp <= MPRESSURE_MBAR(PEEPCTRLMIN)){
-                                    pTmp=MPRESSURE_MBAR(PEEPCTRLMIN);
+                                if (pTmp <= PEEPCTRLMIN){
+                                    pTmp=PEEPCTRLMIN;
                                 }
                                 if (pInst < pTmp) {
                                     OPEN_SV3;
                                     initialSubState = 0;
-                                    rValveActionTime = timeGet();
-                                    pExpCloseSV3=pInst;
-                                    pExpMin = pInst;
-                                    expUSCheck = true;
-                                    printf("PEI end T %d - Pi %d OS %d\n", 
-                                            timeDiff(rValveDelayStart,rValveActionTime),
+                                    rValveAcuationTstamp = timeGet();
+                                    pValveActuation=pInst;
+                                    OSCheck = true;
+                                    DEBUG_PRINT(("PEI end T %d - Pi %d OS %d\n", 
+                                            timeDiff(rValveDelayStart,rValveAcuationTstamp),
                                             (10*pInst)/MPRESSURE_MBAR(1), 
-                                            (10*pExpOS)/MPRESSURE_MBAR(1));
+                                            (10*pExpOS)/MPRESSURE_MBAR(1)));
                                 }                                
                             }
                         }
                     } else {
                         if (SV2ISOPEN) {
-                            if (timeElapsedR(&rSubCycleTime, PCTIME)) {
+                            if (timeElapsedR(&rSubCycleTime, SV2OTIME)) {
                                 CLOSE_SV2;
-                                rValveActionTime = timeGet();
+                                rValveAcuationTstamp = timeGet();
                                 aCaptGetResult(MainPSensor, &pInst);
-                                printf("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/MPRESSURE_MBAR(1));
+                                DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/MPRESSURE_MBAR(1)));
                             }
                         } else if (aCaptGetResult(MainPSensor, &pInst)) {
-                            if (expUSCheck) {
-                                // Check minimum value reached by pressure.
-                                if (pInst < pExpMin) {
-                                    pExpMin = pInst;
-                                }
-                                if (timeElapsed(rValveActionTime, TIME_MS(60))){
+                            if (OSCheck) {
+                                if (timeElapsed(rValveAcuationTstamp, TIME_MS(60))){
                                     // Take averaged pressure measurement as mean value.
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
-                                    pExpPlat=pAvgUShort;
+                                    pPlateau=pAvgUShort;
                                     // Filtered pExpOS.
-                                    pTmp = pExpPlat - pExpCloseSV3;
+                                    pTmp = pPlateau - pValveActuation;
                                     pExpOS =  (pExpOS + pTmp)/2;
-                                    expUSCheck=false;
+                                    OSCheck=false;
                                 }
                             }
                             // Meassure only after delay of valve actuation has elapsed, x2.
-                            if ((!expUSCheck) && timeElapsed(rValveActionTime, 32*rSV2ValveDelay/16) && (pInst < MPRESSURE_MBAR(PEEP))) {
+                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (MPRESSURE_MBAR(PEEP)-FINECTRLHIST))) {
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
-                                printf("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1));
-                            } else {
+                                DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1)));
                             }
                         }
                     }
                 }
+#ifdef DEBUG
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    printf("PE T %d - Pi %d Pn %d Pd %d. Pep %d diff %d\n", 
+                    DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. Pep %d OS %d\n", 
                             timeDiff(rValveDelayStart,timeGet()), 
                             (10*pInst)/MPRESSURE_MBAR(1),
                             (10*(pNext))/MPRESSURE_MBAR(1),
                             (10*(pInst-pAvgShort))/MPRESSURE_MBAR(1),
-                            (10*pExpPlat)/MPRESSURE_MBAR(1),
-                            (10*(pExpPlat-pExpCloseSV3))/MPRESSURE_MBAR(1));
+                            (10*pPlateau)/MPRESSURE_MBAR(1),
+                            (10*pExpOS)/MPRESSURE_MBAR(1)));
                 }
+#endif
             }
         }
     }
