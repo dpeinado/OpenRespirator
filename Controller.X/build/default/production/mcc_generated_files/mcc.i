@@ -27578,7 +27578,7 @@ void OSCILLATOR_Initialize(void)
 
     OSCEN = 0x00;
 
-    OSCFRQ = 0x07;
+    OSCFRQ = 0x08;
 
     OSCTUNE = 0x00;
 }

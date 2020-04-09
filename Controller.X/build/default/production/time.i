@@ -165,6 +165,8 @@ typedef uint16_t time_t;
 
 void timeInit(void);
 time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 # 3 "time.c" 2
@@ -178,6 +180,18 @@ void timeInit(void){
 
 time_t timeGet(void){
     return TMR1_ReadTimer();
+}
+
+
+time_t timeDiff(time_t startT, time_t endT){
+    time_t intDur;
+
+    intDur = endT - startT;
+    if (intDur>0x8000){
+
+        intDur = startT-endT;
+    }
+    return intDur;
 }
 
 

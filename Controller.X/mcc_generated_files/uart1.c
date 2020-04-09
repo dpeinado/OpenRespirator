@@ -53,8 +53,8 @@
 /**
   Section: Macro Declarations
 */
-#define UART1_TX_BUFFER_SIZE 8
-#define UART1_RX_BUFFER_SIZE 8
+#define UART1_TX_BUFFER_SIZE 32
+#define UART1_RX_BUFFER_SIZE 32
 
 /**
   Section: Global Variables
@@ -113,8 +113,8 @@ void UART1_Initialize(void)
     // TXPOL not inverted; FLO off; C0EN Checksum Mode 0; RXPOL not inverted; RUNOVF RX input shifter stops all activity; STP Transmit 1Stop bit, receiver verifies first Stop bit; 
     U1CON2 = 0x00;
 
-    // BRGL 103; 
-    U1BRGL = 0x67;
+    // BRGL 138; 
+    U1BRGL = 0x8A;
 
     // BRGH 0; 
     U1BRGH = 0x00;

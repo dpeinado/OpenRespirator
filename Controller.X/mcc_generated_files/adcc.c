@@ -103,8 +103,8 @@ void ADCC_Initialize(void)
     ADREF = 0x03;
     // ADACT disabled; 
     ADACT = 0x00;
-    // ADCS FOSC/76; 
-    ADCLK = 0x25;
+    // ADCS FOSC/104; 
+    ADCLK = 0x33;
     // ADGO stop; ADFM right; ADON enabled; ADCS FOSC/ADCLK; ADCONT disabled; 
     ADCON0 = 0x84;
     
