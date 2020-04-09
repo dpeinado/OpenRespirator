@@ -27201,9 +27201,10 @@ typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
     MicSensor=2,
-    Flt1PSensor=3,
-    Flt2PSensor=4,
-    Flt3PSensor=5,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
 } aSrcTyp;
 
 void aCaptureInit(void);
@@ -27224,9 +27225,9 @@ int16_t mainPSensCal = 190;
 
 
 
-uint32_t resultTbl[6];
+uint32_t resultTbl[7];
 
-uint8_t resultTblVal[6];
+uint8_t resultTblVal[7];
 
 
 adcc_channel_t adcGetCh(aSrcTyp sel){
@@ -27276,6 +27277,8 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
 
 
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+4*adcData)>>2;
+
             resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
 
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
@@ -27283,6 +27286,7 @@ void adcCaptureIsr(void){
 
             resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
 
+            resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
@@ -27336,10 +27340,15 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             break;
         case Flt1PSensor:
             lclRaw=lclRaw>>4;
+            break;
+        case Flt0PSensor:
+            lclRaw=lclRaw>>2;
+            break;
     }
 
     switch (sel){
         case MainPSensor:
+        case Flt0PSensor:
         case Flt1PSensor:
         case Flt2PSensor:
         case Flt3PSensor:

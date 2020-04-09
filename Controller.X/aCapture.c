@@ -65,7 +65,9 @@ void adcCaptureIsr(void){
         
         if (adcSel == MainPSensor) {
             // Compute also the other filters.
-            // LPI with about 32ms Tau.
+            // LPI with about 4ms Tau.
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+4*adcData)>>2;
+            // LPI with about 16ms Tau.
             resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
             // LPI with about 64ms Tau.
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
@@ -73,6 +75,7 @@ void adcCaptureIsr(void){
             // Only loose 2 bits, not relevant for this.
             resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
             
+            resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
@@ -126,10 +129,15 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             break;
         case Flt1PSensor:
             lclRaw=lclRaw>>4;
+            break;
+        case Flt0PSensor:
+            lclRaw=lclRaw>>2;
+            break;
     }
     
     switch (sel){
         case MainPSensor:
+        case Flt0PSensor:
         case Flt1PSensor:
         case Flt2PSensor:
         case Flt3PSensor:
