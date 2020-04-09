@@ -18,7 +18,7 @@ void BuzzerTest(char);
 void BuzzerOn(uint8_t period);
 void BuzzerOff(void);
 void BuzzerSet(uint8_t state);
-void BuzzerClear();
+void BuzzerClear(void);
 
 
 #ifdef	__cplusplus

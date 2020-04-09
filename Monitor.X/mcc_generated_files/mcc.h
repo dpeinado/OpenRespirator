@@ -54,10 +54,13 @@
 #include <conio.h>
 #include "interrupt_manager.h"
 #include "i2c1_slave.h"
-#include "adcc.h"
+#include "tmr5.h"
 #include "tmr4.h"
 #include "pwm6.h"
 #include "tmr2.h"
+#include "tmr0.h"
+#include "adcc.h"
+#include "dac1.h"
 #include "uart1.h"
 
 

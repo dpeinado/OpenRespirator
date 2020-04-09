@@ -45,20 +45,19 @@ void BuzzerSet(uint8_t state) {
     BuzzerTask();
 }
 
-void BuzzerClear() {
+void BuzzerClear(void) {
     alarmState = ALARM_NONE;
     BuzzerOff();
     TMR4_Stop();
 }
 
 void BuzzerHandler( void) {
-    printf("BH\r\n");
+//    printf("BH\r\n");
     BuzzerOff();
     BuzzerTask();
 }
-void BuzzerTestHandler( void) {
-    
-    printf("BTH\r\n");
+void BuzzerTestHandler( void) {    
+//    printf("BTH\r\n");
     BuzzerOff();
 }
 

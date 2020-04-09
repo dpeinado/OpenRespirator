@@ -18,6 +18,8 @@ void LCDWrite4(uint8_t data);
 
 
 void LCDInit (void) {
+    DAC1_SetOutput(31);
+    
     _delay(LCD_DLY*200);   // 15 ms after power up
     _delay(LCD_DLY*200);
     _delay(LCD_DLY*200);
@@ -55,6 +57,7 @@ void LCDMessage(char *str) {
         LCDWriteChar(str[i]);
     }
     LCDWriteCmd(0x02);      // Return home
+    printf("\rLCD: %s", str);
 }
 
 void LCDWriteChar(char chr)

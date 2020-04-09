@@ -66,6 +66,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         UART1_RxInterruptHandler();
     }
+    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
+    {
+        TMR0_ISR();
+    }
     else if(PIE3bits.I2C1EIE == 1 && PIR3bits.I2C1EIF == 1)
     {
         I2C1_InterruptHandler();
@@ -81,6 +85,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     else if(PIE3bits.I2C1TXIE == 1 && PIR3bits.I2C1TXIF == 1)
     {
         I2C1_InterruptHandler();
+    }
+    else if(PIE8bits.TMR5IE == 1 && PIR8bits.TMR5IF == 1)
+    {
+        TMR5_ISR();
     }
     else if(PIE7bits.TMR4IE == 1 && PIR7bits.TMR4IF == 1)
     {

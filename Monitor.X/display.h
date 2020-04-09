@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
 void InitDisplay(void);
-void ValueDisplay(int TR, float tdi, float tde);
-void AlarmDisplay(int idx, unsigned char alarm);
+void ValueDisplay();
+void AlarmDisplay(int idx, char *alarm);
 
 
 
