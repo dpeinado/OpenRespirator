@@ -28015,6 +28015,7 @@ void main(void)
 
                                 pValveActuation=pNext;
                                 OSCheck = 1;
+                                pPlateau=0;
                                 printf ("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/((int16_t) 45*1), (10*pNext)/((int16_t) 45*1));
                             }
                             if (valveDelayCheck) {
@@ -28044,10 +28045,13 @@ void main(void)
                             }
                         } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                             if (OSCheck) {
-                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 60*1))){
 
-                                    aCaptGetResult(Flt0PSensor, &pAvgUShort);
-                                    pPlateau=pAvgUShort;
+                                aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                                if (pPlateau<pAvgUShort) {
+                                    pPlateau = pAvgUShort;
+                                }
+
+                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 60*1))){
 
                                     pTmp = pPlateau - pValveActuation;
                                     pInspOS = (pInspOS + pTmp)/2;
@@ -28070,7 +28074,7 @@ void main(void)
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
-# 305 "main.c"
+# 309 "main.c"
                 }
 
             }

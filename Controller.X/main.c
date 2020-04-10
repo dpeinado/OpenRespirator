@@ -239,6 +239,7 @@ void main(void)
                                 // The theoretical advantage of the second case is that the OS calculated will be smaller, so it will be less sensitive to the changing conditions.
                                 pValveActuation=pNext;
                                 OSCheck = true;
+                                pPlateau=0;
                                 DEBUG_PRINT(("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart,timeGet()),(10*pInst)/MPRESSURE_MBAR(1), (10*pNext)/MPRESSURE_MBAR(1)));
                             }
                             if (valveDelayCheck) {
@@ -268,10 +269,13 @@ void main(void)
                             }
                         } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                             if (OSCheck) {
+                                // Keep tracking of pressure, take as plateau max value of pressure during 60ms after valve closing.
+                                aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                                if (pPlateau<pAvgUShort) {
+                                    pPlateau = pAvgUShort;
+                                }
+                                
                                 if (timeElapsed(rValveAcuationTstamp, TIME_MS(60))){
-                                    // Take averaged pressure measurement as mean value.
-                                    aCaptGetResult(Flt0PSensor, &pAvgUShort);
-                                    pPlateau=pAvgUShort;
                                     // Filtered pExpOS.
                                     pTmp = pPlateau - pValveActuation;
                                     pInspOS =  (pInspOS + pTmp)/2;
