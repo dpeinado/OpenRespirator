@@ -22,10 +22,21 @@ void ValueDisplay() {
     if (TR>100) TR=100;
     if (TR<0)   TR=0;
     
-    uint32_t tdi = GetTdi();
-    uint32_t tde = GetTde();
+    uint16_t tdi = GetTdi();
+    uint16_t tde = GetTde();
+    uint16_t ti = GetTi();
+    uint16_t te = GetTe();
+    uint16_t bp = GetBp();
+    uint8_t pi = GetPi();
+    uint8_t pe = GetPe();
+    uint8_t etdi = tdi/1000;
+    uint8_t dtdi = (tdi-((uint16_t) etdi)*1000)/10;
+    uint8_t etde = tde/1000;
+    uint8_t dtde = (tde-((uint16_t) etde)*1000)/10;
     
-    sprintf(msg, "%c %d %2d%% %lu %lu", GetMonitorState() + '0', GetPressure_mbar(), TR, tdi, tde);
+    sprintf(msg, "%2d%% %d.%02d %d.%02d - %d/%d  %u:%u/%u ms       ", TR, etdi,dtdi, etde, dtde, pi, pe, bp, ti, te);
+    //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
+   
     LCDMessage(msg);
 }
 void AlarmDisplay(int type, char *alarm) {
