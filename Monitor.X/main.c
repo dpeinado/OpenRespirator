@@ -74,7 +74,7 @@ void main(void)
     InitDisplay();
     AlarmInit();
     InitializePressure();
-    tick_init();
+    //tick_init();
     ButtonInit();
     
     // Interrupt driven tasks:
@@ -85,7 +85,7 @@ void main(void)
     while (1)
     {
         // Add your application code
-        MonitorPressureTask();          // Update input information from pressure sensor
+//        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
 //        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
 
@@ -115,7 +115,7 @@ void main(void)
             if (ch=='9') TestAlarm(9);
 
             if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
-            if (ch=='p') printf("\r\nPressure: %d Pa\r\n", GetPressure_pa());
+            if (ch=='p') MonitorDump();
             if (ch) {
                 //putch(ch);
                 //putch('\n');

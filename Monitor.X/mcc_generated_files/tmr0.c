@@ -68,13 +68,13 @@ void TMR0_Initialize(void)
     // Set TMR0 to the options selected in the User Interface
 
     // T0CS FOSC/4; T0CKPS 1:4; T0ASYNC synchronised; 
-    T0CON1 = 0x42;
+    T0CON1 = 0x42; //0x42
 
     // TMR0H 252; 
-    TMR0H = 0xFC;
+    TMR0H = 0xF8; // 0xFC
 
     // TMR0L 24; 
-    TMR0L = 0x18;
+    TMR0L = 0x30; // 0x18
 
     // Load TMR0 value to the 16-bit reload variable
     timer0ReloadVal16bit = (TMR0H << 8) | TMR0L;

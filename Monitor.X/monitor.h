@@ -15,16 +15,24 @@ extern "C" {
 // Pressure functions
 void InitializePressure (void);
 uint8_t GetPressure_mbar (void);
+uint8_t GetPressure_mbar02 (void); // 20 ubar units
 uint8_t GetPressure_kpa (void);
 uint16_t GetPressure_pa (void);
 void MonitorPressureTask(void);
+void MonitorDump(void);
 
 // Solenoid functions
 void SetSV1 (bool);
 
 // Output values
-uint32_t GetTdi(void);
-uint32_t GetTde(void);
+uint16_t GetTdi(void);
+uint16_t GetTde(void);
+uint16_t GetTi(void);
+uint16_t GetTe(void);
+uint16_t GetBp(void);
+
+uint8_t GetPi(void);
+uint8_t GetPe(void);
 int GetMonitorState(void);
 
 
