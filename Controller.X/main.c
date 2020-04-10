@@ -106,7 +106,6 @@ void main(void)
     
     int16_t pInst, pNext, pAvgShort, pAvgUShort;
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;      // Variables for overshoot measurement.
-    int16_t auxP;
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
     time_t rSV2ValveDelay;
@@ -148,6 +147,7 @@ void main(void)
         tstamp1   = timeGet();
         printTime = timeGet();
         uint16_t v1, v2;
+        int16_t auxP;
         uint32_t volume;
 
         volume = 0;
@@ -292,9 +292,8 @@ void main(void)
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    aCaptGetResult(AuxPSensor, &auxP);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    DEBUG_PRINT(("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d. VP %d\n", 
+                    DEBUG_PRINT(("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", 
                             timeDiff(rValveDelayStart,timeGet()),
                             vMeasureGet(),
                             (10*pInst)/MPRESSURE_MBAR(1),
@@ -302,8 +301,7 @@ void main(void)
                             (10*(pInst-pAvgShort))/MPRESSURE_MBAR(1), 
                             rSV2ValveDelay,
                             (10*pPlateau)/MPRESSURE_MBAR(1),
-                            (10*pInspOS)/MPRESSURE_MBAR(1),
-                            auxP));
+                            (10*pInspOS)/MPRESSURE_MBAR(1)));
                 }
 #endif
             }

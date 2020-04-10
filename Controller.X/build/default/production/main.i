@@ -27882,7 +27882,6 @@ void main(void)
 
     int16_t pInst, pNext, pAvgShort, pAvgUShort;
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;
-    int16_t auxP;
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
     time_t rSV2ValveDelay;
@@ -27924,6 +27923,7 @@ void main(void)
         tstamp1 = timeGet();
         printTime = timeGet();
         uint16_t v1, v2;
+        int16_t auxP;
         uint32_t volume;
 
         volume = 0;
@@ -28068,10 +28068,9 @@ void main(void)
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    aCaptGetResult(AuxPSensor, &auxP);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d. VP %d\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1), auxP);
-# 307 "main.c"
+                    printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
+# 305 "main.c"
                 }
 
             }

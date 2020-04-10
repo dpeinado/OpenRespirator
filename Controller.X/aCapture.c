@@ -68,14 +68,14 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
             // Compute also the other filters.
             // LPI with about 4ms Tau.
-            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+adcData<<2)>>2;
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+(adcData<<2))>>2;
             // LPI with about 16ms Tau.
-            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+adcData<<4)>>4;
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+(adcData<<4))>>4;
             // LPI with about 64ms Tau.
-            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+adcData<<6)>>6;
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
             // LPI with about 2 seconds Tau. Must fit in 32 bit, full precision not possible on 32 bit.
             // Only loose 2 bits, not relevant for this.
-            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+adcData<<9)>>10;
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+(adcData<<9))>>10;
             
             resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];

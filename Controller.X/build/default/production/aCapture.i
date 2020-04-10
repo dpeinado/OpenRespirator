@@ -27279,14 +27279,14 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
 
 
-            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+adcData<<2)>>2;
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+(adcData<<2))>>2;
 
-            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+adcData<<4)>>4;
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+(adcData<<4))>>4;
 
-            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+adcData<<6)>>6;
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
 
 
-            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+adcData<<9)>>10;
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+(adcData<<9))>>10;
 
             resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
