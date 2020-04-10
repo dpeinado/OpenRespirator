@@ -27159,10 +27159,10 @@ void TMR1_Initialize(void)
     T1CLK = 0x09;
 
 
-    TMR1H = 0xF4;
+    TMR1H = 0x00;
 
 
-    TMR1L = 0x48;
+    TMR1L = 0x00;
 
 
     PIR4bits.TMR1IF = 0;

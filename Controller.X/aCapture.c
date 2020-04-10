@@ -11,8 +11,10 @@ aSrcTyp curASrc;
 // Pressure sensor.
 // MPXV5010
 int16_t mainPSensCal = 190;
+int16_t auxPSensCal = 1190;
 #define PSENS_K 1
-// Currently sample every channel at 27.5KHz.
+#define ASENS_K 1
+        // Currently sample every channel at 27.5KHz.
 
 uint32_t resultTbl[ATOT_N];
 
@@ -66,21 +68,20 @@ void adcCaptureIsr(void){
         if (adcSel == MainPSensor) {
             // Compute also the other filters.
             // LPI with about 4ms Tau.
-            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+4*adcData)>>2;
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+adcData<<2)>>2;
             // LPI with about 16ms Tau.
-            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+16*adcData)>>4;
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+adcData<<4)>>4;
             // LPI with about 64ms Tau.
-            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+64*adcData)>>6;
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+adcData<<6)>>6;
             // LPI with about 2 seconds Tau. Must fit in 32 bit, full precision not possible on 32 bit.
             // Only loose 2 bits, not relevant for this.
-            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+512*adcData)>>10;
+            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+adcData<<9)>>10;
             
             resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
-        }
-
+        } 
     } else {
         // ERROR.
         ERROR_CONDITION(1);
@@ -141,13 +142,15 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
         case Flt1PSensor:
         case Flt2PSensor:
         case Flt3PSensor:
-            if (lclRaw < mainPSensCal) {
-                lclRaw = mainPSensCal-lclRaw;
+            if (lclRaw < mainPSensCal) {                lclRaw = mainPSensCal-lclRaw;
                 *outVal = - (lclRaw/PSENS_K);
             } else {
                 lclRaw = lclRaw - mainPSensCal;
                 *outVal=(lclRaw/PSENS_K);
             }
+            return true;
+        case AuxPSensor:
+            *outVal = (lclRaw - auxPSensCal)/ASENS_K;
             return true;
         default:
             // ERROR.

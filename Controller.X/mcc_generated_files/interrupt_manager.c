@@ -82,6 +82,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         ADCC_ThresholdISR();
     }
+    else if(PIE4bits.TMR2IE == 1 && PIR4bits.TMR2IF == 1)
+    {
+        TMR2_ISR();
+    }
     else
     {
         //Unhandled Interrupt

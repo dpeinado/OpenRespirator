@@ -1,6 +1,6 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [v F16458 `(v ~T0 @X0 0 tf ]
-[v F16570 `(v ~T0 @X0 0 tf ]
+[v F16647 `(v ~T0 @X0 0 tf ]
 "46941 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 46941:     struct {
 [s S2122 :1 `uc 1 :1 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -123,6 +123,31 @@ Version 4.0 HI-TECH Software Intermediate Code
 "863 mcc_generated_files/adcc.h
 [; ;mcc_generated_files/adcc.h: 863: void ADCC_ThresholdISR(void);
 [v _ADCC_ThresholdISR `(v ~T0 @X0 0 ef ]
+"3754 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 3754:     struct {
+[s S168 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S168 . TMR1IE TMR1GIE TMR2IE CCP1IE . NCO1IE CWG1IE CLC1IE ]
+"3753
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 3753: typedef union {
+[u S167 `S168 1 ]
+[n S167 . . ]
+"3765
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 3765: extern volatile PIE4bits_t PIE4bits __attribute__((address(0x3994)));
+[v _PIE4bits `VS167 ~T0 @X0 0 e@14740 ]
+"4375
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 4375:     struct {
+[s S194 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S194 . TMR1IF TMR1GIF TMR2IF CCP1IF . NCO1IF CWG1IF CLC1IF ]
+"4374
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 4374: typedef union {
+[u S193 `S194 1 ]
+[n S193 . . ]
+"4386
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 4386: extern volatile PIR4bits_t PIR4bits __attribute__((address(0x39A4)));
+[v _PIR4bits `VS193 ~T0 @X0 0 e@14756 ]
+"828 mcc_generated_files/tmr2.h
+[; ;mcc_generated_files/tmr2.h: 828: void TMR2_ISR(void);
+[v _TMR2_ISR `(v ~T0 @X0 0 ef ]
 "250 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 250: __asm("STATUS_CSHAD equ 03880h");
 [; <" STATUS_CSHAD equ 03880h ;# ">
@@ -2360,7 +2385,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _I2C1_InterruptHandler `*F16458 ~T0 @X0 1 e ]
 "477 mcc_generated_files/uart1.h
 [; ;mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
-[v _UART1_TxInterruptHandler `*F16570 ~T0 @X0 1 e ]
+[v _UART1_TxInterruptHandler `*F16647 ~T0 @X0 1 e ]
 "52 mcc_generated_files/interrupt_manager.c
 [; ;mcc_generated_files/interrupt_manager.c: 52: void INTERRUPT_Initialize (void)
 [v _INTERRUPT_Initialize `(v ~T0 @X0 1 ef ]
@@ -2469,21 +2494,36 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2246  ]
 "85
-[; ;mcc_generated_files/interrupt_manager.c: 85:     else
+[; ;mcc_generated_files/interrupt_manager.c: 85:     else if(PIE4bits.TMR2IE == 1 && PIR4bits.TMR2IF == 1)
 [e :U 2245 ]
+[e $ ! && == -> . . _PIE4bits 0 2 `i -> 1 `i == -> . . _PIR4bits 0 2 `i -> 1 `i 2247  ]
 "86
 [; ;mcc_generated_files/interrupt_manager.c: 86:     {
 {
+"87
+[; ;mcc_generated_files/interrupt_manager.c: 87:         TMR2_ISR();
+[e ( _TMR2_ISR ..  ]
 "88
 [; ;mcc_generated_files/interrupt_manager.c: 88:     }
 }
+[e $U 2248  ]
+"89
+[; ;mcc_generated_files/interrupt_manager.c: 89:     else
+[e :U 2247 ]
+"90
+[; ;mcc_generated_files/interrupt_manager.c: 90:     {
+{
+"92
+[; ;mcc_generated_files/interrupt_manager.c: 92:     }
+}
+[e :U 2248 ]
 [e :U 2246 ]
 [e :U 2244 ]
 [e :U 2242 ]
 [e :U 2240 ]
 [e :U 2238 ]
 [e :U 2236 ]
-"89
-[; ;mcc_generated_files/interrupt_manager.c: 89: }
+"93
+[; ;mcc_generated_files/interrupt_manager.c: 93: }
 [e :UE 2234 ]
 }

@@ -45,6 +45,8 @@
 #include "ORespGlobal.h"
 #include "aCapture.h"
 #include "time.h"
+#include "cmath.h"
+#include "vMeasure.h"
 
 #ifdef DEBUG
 void putch(char byte)
@@ -69,9 +71,9 @@ uint8_t PEEP=10;
 
 // CONTROLLER INTERNAL PARAMETERS.
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
-#define PEEPCTRLMIN   MPRESSURE_MBAR(3)
+#define PEEPCTRLMIN   MPRESSURE_MBAR(2)
 // Minimum actuation time of the valve has a big effect on pressure, so avoid acting too soon.
-#define FINECTRLHIST  MPRESSURE_MBAR(3)
+#define FINECTRLHIST  MPRESSURE_MBAR(2)
 
 #define PRINTTIME TIME_MS(20)
 #define SV2OTIME TIME_MS(15)
@@ -92,6 +94,10 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
     return pInst + ((uint16_t) intLVal);
 }
 
+void rVolumeMIrqH(void){
+    
+}
+
 void main(void)
 {
 #ifdef DEBUG
@@ -100,6 +106,7 @@ void main(void)
     
     int16_t pInst, pNext, pAvgShort, pAvgUShort;
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;      // Variables for overshoot measurement.
+    int16_t auxP;
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
     time_t rSV2ValveDelay;
@@ -134,11 +141,42 @@ void main(void)
     OSCheck = false;
     pExpOS = 0;
     pInspOS = 0;
+    vMeasureInit();
     
     if (0) {
+        time_t tstamp1, tstamp2, tstamp3;
+        tstamp1   = timeGet();
+        printTime = timeGet();
+        uint16_t v1, v2;
+        uint32_t volume;
+
+        volume = 0;
+        
+        // Flow sensor calibration.
+        tstamp3   = timeGet();                
+        while (1){  
+            if (timeElapsedR(&tstamp1, TIME_MS(2))) {
+                aCaptGetResult(AuxPSensor, &auxP);
+                if (auxP > 0){
+                    v1=auxP<<4;
+                    v2=isqrt(v1);
+                } else {
+                    v1=0;
+                    v2=0;
+                }
+                if (v2 > 20) {
+                    volume = volume + v2;
+                }
+                tstamp2   = timeGet();                
+            }
+            
+            if (timeElapsedR(&printTime, TIME_MS(100))) {
+                // Scale up for maximum resolution.
+                DEBUG_PRINT(("T %d VP %d SVP %d, SQRT %d. VolumeIrq %ld Volume %ld Del %d\n", 
+                            timeDiff(tstamp3, timeGet()),auxP, v1, v2, vMeasureGet(), volume, timeDiff(tstamp1,tstamp2)));      
+            }
+        }
         // Code with constant on-off to debug pressure sensor noise.
-        time_t tstamp1;
-        tstamp1 = timeGet();
         while (1) {
             if (timeElapsedR(&tstamp1, TIME_MS(100))) {
                 if (aCaptGetResult(MainPSensor, &pInst)) {
@@ -170,7 +208,7 @@ void main(void)
             valveDelayCheck = true;
             OSCheck = false;
             rValveDelayStart=timeGet();
-
+            vMeasureRst(); 
             while (1) {
                 if (timeElapsedR(&rCycleTime, IDURATION)) {
                     // Goto next.
@@ -254,15 +292,18 @@ void main(void)
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
+                    aCaptGetResult(AuxPSensor, &auxP);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    DEBUG_PRINT(("PI T %d - Pi %d Pn %d Pd %d. R %d Pip %d OS %d\n", 
+                    DEBUG_PRINT(("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d. VP %d\n", 
                             timeDiff(rValveDelayStart,timeGet()),
+                            vMeasureGet(),
                             (10*pInst)/MPRESSURE_MBAR(1),
                             (10*(pNext))/MPRESSURE_MBAR(1),
                             (10*(pInst-pAvgShort))/MPRESSURE_MBAR(1), 
                             rSV2ValveDelay,
                             (10*pPlateau)/MPRESSURE_MBAR(1),
-                            (10*pInspOS)/MPRESSURE_MBAR(1)));
+                            (10*pInspOS)/MPRESSURE_MBAR(1),
+                            auxP));
                 }
 #endif
             }

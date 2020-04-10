@@ -1,0 +1,164 @@
+Version 4.0 HI-TECH Software Intermediate Code
+"129 ./mcc_generated_files/tmr0.h
+[; ;./mcc_generated_files/tmr0.h: 129: void TMR0_StartTimer(void);
+[v _TMR0_StartTimer `(v ~T0 @X0 0 ef ]
+"129 ./mcc_generated_files/tmr1.h
+[; ;./mcc_generated_files/tmr1.h: 129: void TMR1_StartTimer(void);
+[v _TMR1_StartTimer `(v ~T0 @X0 0 ef ]
+"196
+[; ;./mcc_generated_files/tmr1.h: 196: uint16_t TMR1_ReadTimer(void);
+[v _TMR1_ReadTimer `(us ~T0 @X0 0 ef ]
+"5 time.c
+[; ;time.c: 5: void timeInit(void){
+[v _timeInit `(v ~T0 @X0 1 ef ]
+{
+[e :U _timeInit ]
+[f ]
+"6
+[; ;time.c: 6:     TMR0_StartTimer();
+[e ( _TMR0_StartTimer ..  ]
+"7
+[; ;time.c: 7:     TMR1_StartTimer();
+[e ( _TMR1_StartTimer ..  ]
+"8
+[; ;time.c: 8: }
+[e :UE 1 ]
+}
+"11
+[; ;time.c: 11: time_t timeGet(void){
+[v _timeGet `(us ~T0 @X0 1 ef ]
+{
+[e :U _timeGet ]
+[f ]
+"12
+[; ;time.c: 12:     return TMR1_ReadTimer();
+[e ) ( _TMR1_ReadTimer ..  ]
+[e $UE 2  ]
+"13
+[; ;time.c: 13: }
+[e :UE 2 ]
+}
+"16
+[; ;time.c: 16: time_t timeDiff(time_t startT, time_t endT){
+[v _timeDiff `(us ~T0 @X0 1 ef2`us`us ]
+{
+[e :U _timeDiff ]
+[v _startT `us ~T0 @X0 1 r1 ]
+[v _endT `us ~T0 @X0 1 r2 ]
+[f ]
+"17
+[; ;time.c: 17:     time_t intDur;
+[v _intDur `us ~T0 @X0 1 a ]
+"19
+[; ;time.c: 19:     intDur = endT - startT;
+[e = _intDur -> - -> _endT `ui -> _startT `ui `us ]
+"20
+[; ;time.c: 20:     if (intDur>0x8000){
+[e $ ! > -> _intDur `ui -> 32768 `ui 4  ]
+{
+"22
+[; ;time.c: 22:         intDur = startT-endT;
+[e = _intDur -> - -> _startT `ui -> _endT `ui `us ]
+"23
+[; ;time.c: 23:     }
+}
+[e :U 4 ]
+"24
+[; ;time.c: 24:     return intDur;
+[e ) _intDur ]
+[e $UE 3  ]
+"25
+[; ;time.c: 25: }
+[e :UE 3 ]
+}
+"28
+[; ;time.c: 28: _Bool timeElapsedR(time_t *prevTime, time_t duration){
+[v _timeElapsedR `(a ~T0 @X0 1 ef2`*us`us ]
+{
+[e :U _timeElapsedR ]
+[v _prevTime `*us ~T0 @X0 1 r1 ]
+[v _duration `us ~T0 @X0 1 r2 ]
+[f ]
+"29
+[; ;time.c: 29:     time_t intTime, intDur;
+[v _intTime `us ~T0 @X0 1 a ]
+[v _intDur `us ~T0 @X0 1 a ]
+"30
+[; ;time.c: 30:     intTime = TMR1_ReadTimer();
+[e = _intTime ( _TMR1_ReadTimer ..  ]
+"31
+[; ;time.c: 31:     intDur = intTime - *prevTime;
+[e = _intDur -> - -> _intTime `ui -> *U _prevTime `ui `us ]
+"32
+[; ;time.c: 32:     if (intDur < duration) {
+[e $ ! < -> _intDur `ui -> _duration `ui 6  ]
+{
+"33
+[; ;time.c: 33:         return 0;
+[e ) -> -> 0 `i `a ]
+[e $UE 5  ]
+"34
+[; ;time.c: 34:     } else {
+}
+[e $U 7  ]
+[e :U 6 ]
+{
+"35
+[; ;time.c: 35:         *prevTime = intTime;
+[e = *U _prevTime _intTime ]
+"36
+[; ;time.c: 36:         return 1;
+[e ) -> -> 1 `i `a ]
+[e $UE 5  ]
+"37
+[; ;time.c: 37:     }
+}
+[e :U 7 ]
+"38
+[; ;time.c: 38: }
+[e :UE 5 ]
+}
+"41
+[; ;time.c: 41: _Bool timeElapsed(time_t prevTime, time_t duration){
+[v _timeElapsed `(a ~T0 @X0 1 ef2`us`us ]
+{
+[e :U _timeElapsed ]
+[v _prevTime `us ~T0 @X0 1 r1 ]
+[v _duration `us ~T0 @X0 1 r2 ]
+[f ]
+"42
+[; ;time.c: 42:     time_t intTime, intDur;
+[v _intTime `us ~T0 @X0 1 a ]
+[v _intDur `us ~T0 @X0 1 a ]
+"43
+[; ;time.c: 43:     intTime = TMR1_ReadTimer();
+[e = _intTime ( _TMR1_ReadTimer ..  ]
+"44
+[; ;time.c: 44:     intDur = intTime - prevTime;
+[e = _intDur -> - -> _intTime `ui -> _prevTime `ui `us ]
+"45
+[; ;time.c: 45:     if (intDur < duration) {
+[e $ ! < -> _intDur `ui -> _duration `ui 9  ]
+{
+"46
+[; ;time.c: 46:         return 0;
+[e ) -> -> 0 `i `a ]
+[e $UE 8  ]
+"47
+[; ;time.c: 47:     } else {
+}
+[e $U 10  ]
+[e :U 9 ]
+{
+"48
+[; ;time.c: 48:         return 1;
+[e ) -> -> 1 `i `a ]
+[e $UE 8  ]
+"49
+[; ;time.c: 49:     }
+}
+[e :U 10 ]
+"50
+[; ;time.c: 50: }
+[e :UE 8 ]
+}
