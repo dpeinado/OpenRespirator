@@ -27210,6 +27210,9 @@ typedef enum{
 void aCaptureInit(void);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
 # 5 "aCapture.c" 2
 
 # 1 "./ORespGlobal.h" 1
@@ -27285,8 +27288,7 @@ void adcCaptureIsr(void){
 
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
 
-
-            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+(adcData<<9))>>10;
+            resultTbl[Flt3PSensor]=(511*resultTbl[Flt3PSensor]+(adcData<<9))>>9;
 
             resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
@@ -27313,6 +27315,25 @@ void aCaptureInit(void){
     ADCC_StartConversion(adcGetCh(curASrc));
 
     PIE1bits.ADTIE = 1;
+}
+
+void aCaptRstFlt(aSrcTyp sel) {
+    switch (sel) {
+            PIE1bits.ADTIE = 0;
+        case Flt3PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<9;
+            break;
+        case Flt2PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<6;
+            break;
+        case Flt1PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<4;
+            break;
+        case Flt0PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<2;
+            break;
+    }
+            PIE1bits.ADTIE = 1;
 }
 
 

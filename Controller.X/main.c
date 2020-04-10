@@ -75,6 +75,9 @@ uint8_t PEEP=10;
 // Minimum actuation time of the valve has a big effect on pressure, so avoid acting too soon.
 #define FINECTRLHIST  MPRESSURE_MBAR(2)
 
+#define BDTECT_THRL   MPRESSURE_MBAR(0.5)
+
+#define PLATEAUMDEL TIME_MS(80)
 #define PRINTTIME TIME_MS(20)
 #define SV2OTIME TIME_MS(15)
 // Internal parameters.
@@ -105,6 +108,7 @@ void main(void)
 #endif
     
     int16_t pInst, pNext, pAvgShort, pAvgUShort;
+    int16_t bdP1, bdP2;
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;      // Variables for overshoot measurement.
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
@@ -275,7 +279,7 @@ void main(void)
                                     pPlateau = pAvgUShort;
                                 }
                                 
-                                if (timeElapsed(rValveAcuationTstamp, TIME_MS(60))){
+                                if (timeElapsed(rValveAcuationTstamp, PLATEAUMDEL)){
                                     // Filtered pExpOS.
                                     pTmp = pPlateau - pValveActuation;
                                     pInspOS =  (pInspOS + pTmp)/2;
@@ -371,21 +375,36 @@ void main(void)
                             }
                         } else if (aCaptGetResult(MainPSensor, &pInst)) {
                             if (OSCheck) {
-                                if (timeElapsed(rValveAcuationTstamp, TIME_MS(60))){
+                                if (timeElapsed(rValveAcuationTstamp, PLATEAUMDEL)){
                                     // Take averaged pressure measurement as mean value.
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                     pPlateau=pAvgUShort;
                                     // Filtered pExpOS.
                                     pTmp = pPlateau - pValveActuation;
                                     pExpOS =  (pExpOS + pTmp)/2;
+                                    // Clear long filters.
+                                    aCaptRstFlt(Flt2PSensor);
+                                    aCaptRstFlt(Flt3PSensor);
                                     OSCheck=false;
                                 }
-                            }
-                            // Meassure only after delay of valve actuation has elapsed, x2.
-                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (MPRESSURE_MBAR(PEEP)-FINECTRLHIST))) {
-                                OPEN_SV2;
-                                rSubCycleTime = timeGet();
-                                DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1)));
+                            } else {
+                                // Breath detection.
+                                // Comparison of two filtered versions of the pressure with different time constants.
+                                // To avoid interference with the algorithm to keep PEEP controlled, PEEP control uses the 50ms filtered version of the signal.
+                                aCaptGetResult(Flt2PSensor, &bdP1);
+                                aCaptGetResult(Flt3PSensor, &bdP2);
+                                if ((bdP1 + BDTECT_THRL) < bdP2) {
+                                    // Detected breath.
+                                    DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1),(10*bdP1)/MPRESSURE_MBAR(1),(10*bdP1)/MPRESSURE_MBAR(1)));
+                                    break;
+                                }
+                                // Then PEEP level maintenance.
+                                // Measure only after delay of valve actuation has elapsed, x2.
+                                if (timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (bdP1 < (MPRESSURE_MBAR(PEEP)-FINECTRLHIST))) {
+                                    OPEN_SV2;
+                                    rSubCycleTime = timeGet();
+                                    DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/MPRESSURE_MBAR(1),(10*bdP1)/MPRESSURE_MBAR(1)));
+                                }
                             }
                         }
                     }

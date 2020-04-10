@@ -73,9 +73,8 @@ void adcCaptureIsr(void){
             resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+(adcData<<4))>>4;
             // LPI with about 64ms Tau.
             resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
-            // LPI with about 2 seconds Tau. Must fit in 32 bit, full precision not possible on 32 bit.
-            // Only loose 2 bits, not relevant for this.
-            resultTbl[Flt3PSensor]=(1023*resultTbl[Flt3PSensor]+(adcData<<9))>>10;
+            // LPI with about 0.5 seconds Tau. 
+            resultTbl[Flt3PSensor]=(511*resultTbl[Flt3PSensor]+(adcData<<9))>>9;
             
             resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
             resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
@@ -102,6 +101,25 @@ void aCaptureInit(void){
     ADCC_StartConversion(adcGetCh(curASrc));    
     // Enable ADC Irq.
     PIE1bits.ADTIE = 1;
+}
+
+void aCaptRstFlt(aSrcTyp sel) {
+    switch (sel) {
+            PIE1bits.ADTIE = 0;
+        case Flt3PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<9;
+            break;
+        case Flt2PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<6;
+            break;
+        case Flt1PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<4;
+            break;
+        case Flt0PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<2;
+            break;
+    }
+            PIE1bits.ADTIE = 1;
 }
 
 // All results are 8 bit.

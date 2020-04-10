@@ -388,6 +388,9 @@ typedef enum{
 void aCaptureInit(void);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
 # 2 "vMeasure.c" 2
 
 # 1 "./cmath.h" 1

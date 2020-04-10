@@ -27818,6 +27818,9 @@ typedef enum{
 void aCaptureInit(void);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
 # 46 "main.c" 2
 
 # 1 "./time.h" 1
@@ -27860,7 +27863,7 @@ void putch(char byte)
 uint8_t BPM=10;
 uint8_t IP=30;
 uint8_t PEEP=10;
-# 88 "main.c"
+# 91 "main.c"
 __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
     int32_t intLVal;
 
@@ -27881,6 +27884,7 @@ void main(void)
 
 
     int16_t pInst, pNext, pAvgShort, pAvgUShort;
+    int16_t bdP1, bdP2;
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
@@ -28051,7 +28055,7 @@ void main(void)
                                     pPlateau = pAvgUShort;
                                 }
 
-                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 60*1))){
+                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 80*1))){
 
                                     pTmp = pPlateau - pValveActuation;
                                     pInspOS = (pInspOS + pTmp)/2;
@@ -28074,7 +28078,7 @@ void main(void)
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
-# 309 "main.c"
+# 313 "main.c"
                 }
 
             }
@@ -28140,21 +28144,36 @@ void main(void)
                             }
                         } else if (aCaptGetResult(MainPSensor, &pInst)) {
                             if (OSCheck) {
-                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 60*1))){
+                                if (timeElapsed(rValveAcuationTstamp, ((time_t) 80*1))){
 
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                     pPlateau=pAvgUShort;
 
                                     pTmp = pPlateau - pValveActuation;
                                     pExpOS = (pExpOS + pTmp)/2;
+
+                                    aCaptRstFlt(Flt2PSensor);
+                                    aCaptRstFlt(Flt3PSensor);
                                     OSCheck=0;
                                 }
-                            }
+                            } else {
 
-                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (((int16_t) 45*PEEP)-((int16_t) 45*2)))) {
-                                LATAbits.LATA2 = 1;
-                                rSubCycleTime = timeGet();
-                                printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1));
+
+
+                                aCaptGetResult(Flt2PSensor, &bdP1);
+                                aCaptGetResult(Flt3PSensor, &bdP2);
+                                if ((bdP1 + ((int16_t) 45*0.5)) < bdP2) {
+
+                                    printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1),(10*bdP1)/((int16_t) 45*1),(10*bdP1)/((int16_t) 45*1));
+                                    break;
+                                }
+
+
+                                if (timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (bdP1 < (((int16_t) 45*PEEP)-((int16_t) 45*2)))) {
+                                    LATAbits.LATA2 = 1;
+                                    rSubCycleTime = timeGet();
+                                    printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1),(10*bdP1)/((int16_t) 45*1));
+                                }
                             }
                         }
                     }

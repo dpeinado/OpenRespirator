@@ -32,6 +32,9 @@ void aCaptureInit(void);
 
 bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
+// Initialized filter with the instantaneous value.
+void aCaptRstFlt(aSrcTyp sel);
+
 #ifdef	__cplusplus
 }
 #endif
