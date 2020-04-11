@@ -183,11 +183,11 @@ i2c1_status_t I2C1_Status = {0};
 void I2C1_Initialize()
 {
     //EN disabled; RSEN disabled; S Cleared by hardware after Start; CSTR Enable clocking; MODE four 7-bit address; 
-    I2C1CON0 = 0x04;
+    I2C1CON0 = 0x00;
     //ACKCNT Acknowledge; ACKDT Acknowledge; ACKSTAT ACK received; ACKT 0; RXO 0; TXU 0; CSD Clock Stretching enabled; 
-    I2C1CON1 = 0x80;
+    I2C1CON1 = 0x00;
     //ACNT disabled; GCEN disabled; FME disabled; ABD enabled; SDAHT 300 ns hold time; BFRET 8 I2C Clock pulses; 
-    I2C1CON2 = 0x18;
+    I2C1CON2 = 0x00;
     //CLK MFINTOSC; 
     I2C1CLK = 0x03;
     //CNTIF 0; ACKTIF 0; WRIF 0; ADRIF 0; PCIF 0; RSCIF 0; SCIF 0; 
@@ -197,7 +197,7 @@ void I2C1_Initialize()
     //BTOIF No bus timout; BCLIF No bus collision detected; NACKIF No NACK/Error detected; BTOIE disabled; BCLIE disabled; NACKIE disabled; 
     I2C1ERR = 0x00;
     //Count register 
-    I2C1CNT = 0xFF;
+    I2C1CNT = 0x00;
     return;
 }
 
@@ -641,7 +641,7 @@ static inline bool I2C1_MasterOpen(void)
         //BTOIF No bus timout; BCLIF No bus collision detected; NACKIF No NACK/Error detected; BTOIE disabled; BCLIE disabled; NACKIE disabled; 
         I2C1ERR = 0x00;
         //Count register 
-        I2C1CNT = 0xFF;
+        I2C1CNT = 0x00;
         //Clock PadReg Configuration
         RC3I2C  = 0x51;
         //Data PadReg Configuration

@@ -12,6 +12,8 @@
 extern "C" {
 #endif
     
+#include "mcc_generated_files/mcc.h"
+
 typedef uint16_t time_t;
 
 // ENSURE USE WITH TIME BELOW 1/2.

@@ -27462,11 +27462,11 @@ i2c1_status_t I2C1_Status = {0};
 void I2C1_Initialize()
 {
 
-    I2C1CON0 = 0x04;
+    I2C1CON0 = 0x00;
 
-    I2C1CON1 = 0x80;
+    I2C1CON1 = 0x00;
 
-    I2C1CON2 = 0x18;
+    I2C1CON2 = 0x00;
 
     I2C1CLK = 0x03;
 
@@ -27476,7 +27476,7 @@ void I2C1_Initialize()
 
     I2C1ERR = 0x00;
 
-    I2C1CNT = 0xFF;
+    I2C1CNT = 0x00;
     return;
 }
 
@@ -27920,7 +27920,7 @@ static __attribute__((inline)) _Bool I2C1_MasterOpen(void)
 
         I2C1ERR = 0x00;
 
-        I2C1CNT = 0xFF;
+        I2C1CNT = 0x00;
 
         RC3I2C = 0x51;
 
