@@ -27056,12 +27056,12 @@ void PIN_MANAGER_Initialize(void)
     TRISA = 0xF3;
     TRISB = 0xC0;
     TRISC = 0xE5;
-    TRISD = 0x7E;
+    TRISD = 0xBE;
 
 
 
 
-    ANSELD = 0x81;
+    ANSELD = 0x00;
     ANSELC = 0xE6;
     ANSELB = 0xF9;
     ANSELE = 0x07;
@@ -27070,7 +27070,7 @@ void PIN_MANAGER_Initialize(void)
 
 
 
-    WPUD = 0x00;
+    WPUD = 0xBE;
     WPUE = 0x00;
     WPUB = 0x00;
     WPUA = 0x00;
@@ -27112,16 +27112,7 @@ void PIN_MANAGER_Initialize(void)
     INLVLC = 0xFF;
     INLVLD = 0xFF;
     INLVLE = 0x0F;
-
-
-
-
-
-
-
-    PIE0bits.IOCIE = 1;
-
-
+# 137 "mcc_generated_files/pin_manager.c"
     I2C2SCLPPS = 0x09;
     I2C1SDAPPS = 0x14;
     RB1PPS = 0x23;

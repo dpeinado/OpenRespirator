@@ -47,6 +47,7 @@
 #include "time.h"
 #include "cmath.h"
 #include "vMeasure.h"
+#include "keyRead.h"
 
 #ifdef DEBUG
 void putch(char byte)
@@ -145,7 +146,19 @@ void main(void)
     pExpOS = 0;
     pInspOS = 0;
     vMeasureInit();
-    
+    keyReadInit();
+
+    if (1) {
+        int8_t keyPress;
+        while (1){
+            keyPress = keyRead();
+            if (keyPress >= 0){
+                   DEBUG_PRINT(("KEY! %d\n", keyPress));  
+            }
+        }
+    }    
+
+
     if (0) {
         time_t tstamp1, tstamp2, tstamp3;
         tstamp1   = timeGet();

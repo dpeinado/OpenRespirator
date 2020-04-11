@@ -27896,11 +27896,7 @@ _Bool timeElapsed(time_t prevTime, time_t duration);
 # 9 "keyRead.c" 2
 
 # 1 "./keyRead.h" 1
-
-
-
-
-
+# 14 "./keyRead.h"
 void keyReadInit(void);
 
 int8_t keyAvailable(void);
@@ -27916,29 +27912,38 @@ int8_t keyRead();
 
 
 
-uint8_t* keys;
-uint8_t lastkey;
+
+
+int8_t keys[6] = {1,2,3,4,5,7};
+int8_t lastkey;
 time_t pressMills;
+
+uint8_t digitalRead(uint8_t pin){
+    return (PORTD&(1<<pin))!= 0;
+}
 
 void keyReadInit(void){
     pressMills = 0;
     lastkey = -1;
+
+
 };
 
 int8_t keyAvailable(void) {
     int8_t ch = keyPeek();
     if (lastkey == -1) {
         lastkey = ch;
-        pressMills = millis();
-    } else if (2000 && millis() - pressMills > 2000) return 1;
+        pressMills = timeGet();
+    } else if (2000 && (timeDiff(pressMills,timeGet()) > 2000)) return 1;
     if (ch == lastkey) return 0;
     return 1;
 }
 
 int8_t keyPeek(void) {
     for (int8_t n = 0; n < 6; n++) {
-        int8_t pin = keys[n];
-        if (digitalRead(pin) != 1) return n;
+        if (digitalRead(keys[n]) != 1) {
+            return n;
+        }
     }
     return -1;
 }
@@ -27948,8 +27953,8 @@ int8_t keyReadEC() {
     int8_t ch = keyPeek();
     if (ch == lastkey) return -1;
     int8_t tmp = lastkey;
-    _Bool longPress = 2000 && millis() - pressMills>2000;
-    pressMills = millis();
+    _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
+    pressMills = timeGet();
     lastkey = ch;
     return longPress ? -100 : tmp;
 }

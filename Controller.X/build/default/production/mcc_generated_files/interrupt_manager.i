@@ -27925,10 +27925,6 @@ void __attribute__((picinterrupt(("")))) INTERRUPT_InterruptManager (void)
     {
         TMR2_ISR();
     }
-    else if(PIE0bits.IOCIE == 1 && PIR0bits.IOCIF == 1)
-    {
-        PIN_MANAGER_IOC();
-    }
     else
     {
 

@@ -27922,6 +27922,20 @@ void vMeasureInit(void);
 uint16_t vMeasureGet(void);
 # 49 "main.c" 2
 
+# 1 "./keyRead.h" 1
+# 14 "./keyRead.h"
+void keyReadInit(void);
+
+int8_t keyAvailable(void);
+
+int8_t keyPeek(void);
+
+
+int8_t keyReadEC();
+
+int8_t keyRead();
+# 50 "main.c" 2
+
 
 
 void putch(char byte)
@@ -27929,11 +27943,11 @@ void putch(char byte)
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
-# 68 "main.c"
+# 69 "main.c"
 uint8_t BPM=10;
 uint8_t IP=30;
 uint8_t PEEP=10;
-# 91 "main.c"
+# 92 "main.c"
 __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
     int32_t intLVal;
 
@@ -27991,6 +28005,18 @@ void main(void)
     pExpOS = 0;
     pInspOS = 0;
     vMeasureInit();
+    keyReadInit();
+
+    if (1) {
+        int8_t keyPress;
+        while (1){
+            keyPress = keyRead();
+            if (keyPress >= 0){
+                   printf ("KEY! %d\n", keyPress);
+            }
+        }
+    }
+
 
     if (0) {
         time_t tstamp1, tstamp2, tstamp3;
@@ -28148,7 +28174,7 @@ void main(void)
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
-# 313 "main.c"
+# 326 "main.c"
                 }
 
             }

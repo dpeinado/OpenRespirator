@@ -3,6 +3,14 @@
 
 #include "mcc_generated_files/mcc.h"
 
+#define KEYIP     0
+#define KEYEP     1
+#define KEYBPM    2
+#define KEYMINUS  3
+#define KEYPLUS   5
+#define KEYBREATH 4
+
+
 void keyReadInit(void);
 
 int8_t keyAvailable(void);
