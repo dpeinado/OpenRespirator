@@ -27908,6 +27908,7 @@ time_t timeGet(void);
 time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
 # 47 "main.c" 2
 
 # 1 "./cmath.h" 1
@@ -27936,6 +27937,40 @@ int8_t keyReadEC();
 int8_t keyRead();
 # 50 "main.c" 2
 
+# 1 "./LiquidCrystal_I2C.h" 1
+# 53 "./LiquidCrystal_I2C.h"
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
+void clear();
+void home();
+void noDisplay();
+void display();
+void noBlink();
+void blink();
+void noCursor();
+void cursor();
+void scrollDisplayLeft();
+void scrollDisplayRight();
+void printLeft();
+void printRight();
+void leftToRight();
+void rightToLeft();
+void shiftIncrement();
+void shiftDecrement();
+void noBacklight();
+void backlight();
+void autoscroll();
+void noAutoscroll();
+void createChar(uint8_t, uint8_t[]);
+void setCursor(uint8_t, uint8_t);
+void write(uint8_t);
+void init();
+void setBacklight(uint8_t new_val);
+void load_custom_character(uint8_t char_num, uint8_t *rows);
+void printstr(const char[]);
+void printstrblock(const char[]);
+_Bool PrintStrBusy(void);
+# 51 "main.c" 2
+
 
 
 void putch(char byte)
@@ -27943,11 +27978,11 @@ void putch(char byte)
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
-# 69 "main.c"
+# 70 "main.c"
 uint8_t BPM=10;
 uint8_t IP=30;
 uint8_t PEEP=10;
-# 92 "main.c"
+# 101 "main.c"
 __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
     int32_t intLVal;
 
@@ -27957,9 +27992,143 @@ __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, in
     return pInst + ((uint16_t) intLVal);
 }
 
-void rVolumeMIrqH(void){
 
+
+enum menuStatusT{
+    CFG_IDLE,
+    CFG_IP,
+    CFG_BPM,
+    CFG_PEEP
+} menuStatus;
+
+time_t menuTstamp;
+
+uint8_t menuVal;
+
+uint8_t lcdTopRow[17];
+
+void MenuInit(void){
+    menuStatus = CFG_IDLE;
 }
+
+void MenuMng(void){
+
+    int8_t keyPress;
+    keyPress = keyRead();
+    if (keyPress >= 0){
+        printf ("KEY! %d\n", keyPress);
+
+        switch (keyPress){
+            case 0:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_IP;
+                    menuVal = IP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_IP){
+
+                    IP = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 2:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_BPM;
+                    menuVal = BPM;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_BPM){
+
+                    BPM = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 1:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_PEEP;
+                    menuVal = PEEP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_PEEP){
+
+                    PEEP = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 5:
+                if (menuStatus != CFG_IDLE){
+                    menuTstamp = timeGet();
+                    menuVal = menuVal + 1;
+
+                    switch (menuStatus){
+                        case CFG_IP:
+                            if (menuVal > 35){
+                                menuVal = 35;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            if (menuVal > 25){
+                                menuVal = 25;
+                            }
+                            break;
+                        case CFG_BPM:
+                            if (menuVal > 30){
+                                menuVal = 30;
+                            }
+                            break;
+                    }
+                }
+                break;
+            case 3:
+                if (menuStatus != CFG_IDLE){
+                    menuTstamp = timeGet();
+                    menuVal = menuVal - 1;
+
+                    switch (menuStatus){
+                        case CFG_IP:
+                            if (menuVal < 4){
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            if (menuVal > 4){
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_BPM:
+                            if (menuVal > 10){
+                                menuVal = 10;
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+    } else {
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))){
+
+            menuStatus = CFG_IDLE;
+        }
+        return;
+    }
+}
+
+
+void i2cDummyWr(uint8_t data) {
+        uint8_t i2cBuff[2];
+        i2cBuff[0]=data;
+        I2C2_Open(0x27);
+        I2C2_SetBuffer(i2cBuff,1);
+        I2C2_MasterWrite();
+        while(I2C2_BUSY == I2C2_Close());
+}
+
 
 void main(void)
 {
@@ -28006,13 +28175,39 @@ void main(void)
     pInspOS = 0;
     vMeasureInit();
     keyReadInit();
+    LcdI2CInit(0x27, 16,2);
+    noBacklight();
+
+    setCursor(0,0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0,1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(((time_t) 2000*1));
+    clear();
 
     if (1) {
-        int8_t keyPress;
-        while (1){
-            keyPress = keyRead();
-            if (keyPress >= 0){
-                   printf ("KEY! %d\n", keyPress);
+        time_t tstamp1;
+        tstamp1 = timeGet();
+        while (1) {
+            MenuMng();
+            if (timeElapsedR(&tstamp1, ((time_t) 20*1))) {
+                if (menuStatus == CFG_IDLE) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, PEEP, IP, vMeasureGet());
+                    printf ("LCD: %02d %02d %02d --------\r", BPM, PEEP, IP);
+                } else if (menuStatus == CFG_BPM) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", menuVal, PEEP, IP, vMeasureGet());
+                    printf ("LCD: %02d %02d %02d BPM: %d\r", BPM, PEEP, IP, menuVal);
+                } else if (menuStatus == CFG_PEEP) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, menuVal, IP, vMeasureGet());
+                    printf ("LCD: %02d %02d %02d PEEP: %d\r", BPM, PEEP, IP, menuVal);
+                } else if (menuStatus == CFG_IP) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, PEEP, menuVal, vMeasureGet());
+                    printf ("LCD: %02d %02d %02d IP: %d\r", BPM, PEEP, IP, menuVal);
+                }
+            }
+            if (!PrintStrBusy()){
+                setCursor(0,0);
+                printstr("prueba");
             }
         }
     }
@@ -28159,7 +28354,7 @@ void main(void)
                                 }
                             }
 
-                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (((int16_t) 45*IP)-((int16_t) 45*2)))) {
+                            if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (pInst < (((int16_t) 45*IP)-((int16_t) 45*1.5)))) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
                                 printf ("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1));
@@ -28174,7 +28369,7 @@ void main(void)
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
-# 326 "main.c"
+# 495 "main.c"
                 }
 
             }
@@ -28214,8 +28409,8 @@ void main(void)
 
 
                                 pTmp = ((int16_t) 45*PEEP) - pExpOS;
-                                if (pTmp <= ((int16_t) 45*2)){
-                                    pTmp=((int16_t) 45*2);
+                                if (pTmp <= ((int16_t) 45*1)){
+                                    pTmp=((int16_t) 45*1);
                                 }
                                 if (pInst < pTmp) {
                                     LATAbits.LATA3 = 1;
@@ -28265,7 +28460,7 @@ void main(void)
                                 }
 
 
-                                if (timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (bdP1 < (((int16_t) 45*PEEP)-((int16_t) 45*2)))) {
+                                if (timeElapsed(rValveAcuationTstamp, 32*rSV2ValveDelay/16) && (bdP1 < (((int16_t) 45*PEEP)-((int16_t) 45*1.5)))) {
                                     LATAbits.LATA2 = 1;
                                     rSubCycleTime = timeGet();
                                     printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart,rSubCycleTime),(10*pInst)/((int16_t) 45*1),(10*bdP1)/((int16_t) 45*1));

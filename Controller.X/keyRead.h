@@ -4,7 +4,7 @@
 #include "mcc_generated_files/mcc.h"
 
 #define KEYIP     0
-#define KEYEP     1
+#define KEYPEEP   1
 #define KEYBPM    2
 #define KEYMINUS  3
 #define KEYPLUS   5

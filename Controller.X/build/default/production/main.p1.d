@@ -17,4 +17,5 @@ aCapture.h  \
 time.h  \
 cmath.h  \
 vMeasure.h  \
-keyRead.h 
+keyRead.h  \
+LiquidCrystal_I2C.h 

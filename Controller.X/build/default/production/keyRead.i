@@ -27893,6 +27893,7 @@ time_t timeGet(void);
 time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
 # 9 "keyRead.c" 2
 
 # 1 "./keyRead.h" 1

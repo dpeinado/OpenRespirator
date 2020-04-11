@@ -48,6 +48,7 @@
 #include "cmath.h"
 #include "vMeasure.h"
 #include "keyRead.h"
+#include "LiquidCrystal_I2C.h"
 
 #ifdef DEBUG
 void putch(char byte)
@@ -70,11 +71,19 @@ uint8_t BPM=10;
 uint8_t IP=30;
 uint8_t PEEP=10;
 
+// User parameter limits.
+#define BPM_MIN 10
+#define BPM_MAX 30
+#define IP_MIN 4
+#define IP_MAX 35
+#define PEEP_MIN 4
+#define PEEP_MAX 25
+
 // CONTROLLER INTERNAL PARAMETERS.
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
-#define PEEPCTRLMIN   MPRESSURE_MBAR(2)
+#define PEEPCTRLMIN   MPRESSURE_MBAR(1)
 // Minimum actuation time of the valve has a big effect on pressure, so avoid acting too soon.
-#define FINECTRLHIST  MPRESSURE_MBAR(2)
+#define FINECTRLHIST  MPRESSURE_MBAR(1.5)
 
 #define BDTECT_THRL   MPRESSURE_MBAR(0.5)
 
@@ -98,9 +107,143 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
     return pInst + ((uint16_t) intLVal);
 }
 
-void rVolumeMIrqH(void){
-    
+#define MENU_TOUT TIME_S(5)
+
+enum menuStatusT{
+    CFG_IDLE,
+    CFG_IP,
+    CFG_BPM,
+    CFG_PEEP
+} menuStatus;
+
+time_t menuTstamp;
+
+uint8_t menuVal;
+
+uint8_t lcdTopRow[17];
+
+void MenuInit(void){
+    menuStatus = CFG_IDLE;
 }
+
+void MenuMng(void){
+    // Manage menu.
+    int8_t keyPress;
+    keyPress = keyRead();
+    if (keyPress >= 0){
+        DEBUG_PRINT(("KEY! %d\n", keyPress));  
+
+        switch (keyPress){
+            case KEYIP:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_IP;
+                    menuVal = IP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_IP){
+                    // Accept change and exit.
+                    IP = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+                    // Any other case, abort setting.
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case KEYBPM:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_BPM;
+                    menuVal = BPM;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_BPM){
+                    // Accept change and exit.
+                    BPM = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+                    // Any other case, abort setting.
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case KEYPEEP:
+                if (menuStatus == CFG_IDLE){
+                    menuStatus = CFG_PEEP;
+                    menuVal = PEEP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_PEEP){
+                    // Accept change and exit.
+                    PEEP = menuVal;
+                    menuStatus = CFG_IDLE;
+                } else {
+                    // Any other case, abort setting.
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case KEYPLUS:
+                if (menuStatus != CFG_IDLE){
+                    menuTstamp = timeGet();
+                    menuVal = menuVal + 1;
+                    // Should also check limits.
+                    switch (menuStatus){
+                        case CFG_IP:
+                            if (menuVal > IP_MAX){
+                                menuVal = IP_MAX;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            if (menuVal > PEEP_MAX){
+                                menuVal = PEEP_MAX;
+                            }
+                            break;
+                        case CFG_BPM:
+                            if (menuVal > BPM_MAX){
+                                menuVal = BPM_MAX;
+                            }
+                            break;
+                    }
+                }
+                break;
+            case KEYMINUS:
+                if (menuStatus != CFG_IDLE){
+                    menuTstamp = timeGet();
+                    menuVal = menuVal - 1;
+                    // Should also check limits.
+                    switch (menuStatus){
+                        case CFG_IP:
+                            if (menuVal < IP_MIN){
+                                menuVal = IP_MIN;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            if (menuVal > PEEP_MIN){
+                                menuVal = PEEP_MIN;
+                            }
+                            break;
+                        case CFG_BPM:
+                            if (menuVal > BPM_MIN){
+                                menuVal = BPM_MIN;
+                            }
+                            break;
+                    }
+                }
+                break;
+        }    
+    } else  {
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, MENU_TOUT))){
+            // Silently exit menu.
+            menuStatus = CFG_IDLE;
+        }
+        return;
+    }
+}
+
+#if 1
+void i2cDummyWr(uint8_t data) {
+        uint8_t i2cBuff[2];
+        i2cBuff[0]=data;
+        I2C2_Open(0x27);
+        I2C2_SetBuffer(i2cBuff,1);
+        I2C2_MasterWrite();
+        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+}
+#endif 
 
 void main(void)
 {
@@ -147,13 +290,39 @@ void main(void)
     pInspOS = 0;
     vMeasureInit();
     keyReadInit();
-
+    LcdI2CInit(0x27, 16,2);
+    noBacklight();
+    
+    setCursor(0,0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0,1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(TIME_MS(2000));
+    clear();
+        
     if (1) {
-        int8_t keyPress;
-        while (1){
-            keyPress = keyRead();
-            if (keyPress >= 0){
-                   DEBUG_PRINT(("KEY! %d\n", keyPress));  
+        time_t tstamp1;
+        tstamp1 = timeGet();
+        while (1) {
+            MenuMng();
+            if (timeElapsedR(&tstamp1, TIME_MS(20))) {
+                if (menuStatus == CFG_IDLE) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, PEEP, IP, vMeasureGet());
+                    DEBUG_PRINT(("LCD: %02d %02d %02d --------\r", BPM, PEEP, IP));
+                } else if (menuStatus == CFG_BPM) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", menuVal, PEEP, IP, vMeasureGet());
+                    DEBUG_PRINT(("LCD: %02d %02d %02d BPM: %d\r", BPM, PEEP, IP, menuVal));
+                } else if (menuStatus == CFG_PEEP) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, menuVal, IP, vMeasureGet());
+                    DEBUG_PRINT(("LCD: %02d %02d %02d PEEP: %d\r", BPM, PEEP, IP, menuVal));
+                } else if (menuStatus == CFG_IP) {
+                    sprintf(lcdTopRow,"% 2d %2d % 2d V: % 3d", BPM, PEEP, menuVal, vMeasureGet());
+                    DEBUG_PRINT(("LCD: %02d %02d %02d IP: %d\r", BPM, PEEP, IP, menuVal));
+                }
+            }
+            if (!PrintStrBusy()){
+                setCursor(0,0);
+                printstr("prueba");
             }
         }
     }    

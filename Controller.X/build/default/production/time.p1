@@ -2406,3 +2406,27 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;time.c: 50: }
 [e :UE 2240 ]
 }
+"52
+[; ;time.c: 52: void timeDelayMs(time_t delms){
+[v _timeDelayMs `(v ~T0 @X0 1 ef1`us ]
+{
+[e :U _timeDelayMs ]
+[v _delms `us ~T0 @X0 1 r1 ]
+[f ]
+"53
+[; ;time.c: 53:     time_t tstamp;
+[v _tstamp `us ~T0 @X0 1 a ]
+"54
+[; ;time.c: 54:     tstamp=timeGet();
+[e = _tstamp ( _timeGet ..  ]
+"55
+[; ;time.c: 55:     while (!timeElapsed(tstamp, ((time_t) delms*1)));
+[e $U 2244  ]
+[e :U 2245 ]
+[e :U 2244 ]
+[e $ ! != -> ( _timeElapsed (2 , _tstamp -> * -> _delms `ui -> -> 1 `i `ui `us `i -> 0 `i 2245  ]
+[e :U 2246 ]
+"56
+[; ;time.c: 56: }
+[e :UE 2243 ]
+}
