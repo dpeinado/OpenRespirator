@@ -26,41 +26,41 @@ HW and system dodumentation are in the Doc directory <br>
 - Document front and back pannel
 ### Production
 - Prepare production documentation
--- Assembly map
--- BOM update
--- Define part alternatives
+- - Assembly map
+- - BOM update
+- - Define part alternatives
 - Price estimation
 - Define production test & calibration
 ### Electronics
 - Prototype
--- Monitor: microphone, I2C slave connector
--- Controller:
+- - Monitor: microphone, I2C slave connector
+- - Controller:
 - Schematics
--- New version after prototype validation
+- - New version after prototype validation
 - Layout
--- First version
+- - First version
 - Documentation
--- Documentation for PCB manufacture
--- Documentation for PCB assembly
--- Electronics BOM
--- Electronics production test
+- - Documentation for PCB manufacture
+- - Documentation for PCB assembly
+- - Electronics BOM
+- - Electronics production test
 ### Firmware
 - Monitor:
--- Integration Monitor & Controller (I2C link)
--- Implement Microphone check
--- Update alarms with integration
--- Add volume report
+- - Integration Monitor & Controller (I2C link)
+- - Implement Microphone check
+- - Update alarms with integration
+- - Add volume report
 - Controller:
--- Integration Monitor & Controller (I2C link)
+- - Integration Monitor & Controller (I2C link)
 ### Test & Validation
 - Lab test:
--- All functionality test with test equipment
--- All functionality test with articial lung
+- - All functionality test with test equipment
+- - All functionality test with articial lung
 - Medical validation:
 -- Doctor functionality demosntration and feedback
 - Animal validation:
 ### Certification
 - Documentation
--- Update existing documentation with final design
+- - Update existing documentation with final design
 - Presentation to gobernment
 
