@@ -27950,6 +27950,7 @@ void expanderWrite(uint8_t data) {
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close());
 }
+
 void write4bits(uint8_t value) {
         uint8_t i2cBuff[2];
 
@@ -27971,14 +27972,13 @@ void write4bits(uint8_t value) {
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close());
 }
-# 62 "LiquidCrystal_I2C.c"
+# 64 "LiquidCrystal_I2C.c"
 void send(uint8_t value, uint8_t mode) {
  uint8_t highnib=value&0xf0;
  uint8_t lownib=(value<<4)&0xf0;
     write4bits((highnib)|mode);
  write4bits((lownib)|mode);
 }
-
 
 void write(uint8_t value) {
     uint8_t i2cBuff[4];
@@ -28029,7 +28029,7 @@ void printstrblock(const char c[]){
 __attribute__((inline)) void command(uint8_t value) {
  send(value, 0);
 }
-# 140 "LiquidCrystal_I2C.c"
+# 141 "LiquidCrystal_I2C.c"
 void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
   _Addr = lcd_Addr;
   _cols = lcd_cols;

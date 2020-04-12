@@ -24,6 +24,7 @@ void expanderWrite(uint8_t data) {
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
 }
+#if 1
 void write4bits(uint8_t value) {
         uint8_t i2cBuff[2];
         
@@ -45,14 +46,15 @@ void write4bits(uint8_t value) {
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
 }
-#if 0
+#else
 void write4bits(uint8_t value) {
-        uint8_t i2cBuff[2];
+        uint8_t i2cBuff[3];
         
         I2C2_Open(_Addr);
-        i2cBuff[0]=value | En | _backlightval;
-        i2cBuff[1]=value | ~En | _backlightval;
-        I2C2_SetBuffer(i2cBuff,2);
+        i2cBuff[0]=value | _backlightval;
+        i2cBuff[1]=value | En | _backlightval;
+        i2cBuff[2]=value | ~En | _backlightval;
+        I2C2_SetBuffer(i2cBuff,3);
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
 }
@@ -65,7 +67,6 @@ void send(uint8_t value, uint8_t mode) {
     write4bits((highnib)|mode);
 	write4bits((lownib)|mode); 
 }
-
 
 void write(uint8_t value) {
     uint8_t i2cBuff[4];
