@@ -117,10 +117,11 @@ enum menuStatusT{
 } menuStatus;
 
 time_t menuTstamp;
-
 uint8_t menuVal;
-
-uint8_t lcdTopRow[17];
+char lcdTopRow[17];
+char lcdBtnRow[17];
+bool lcdPrint, lcdBlink;
+uint16_t lastCycleVol;
 
 void MenuInit(void){
     menuStatus = CFG_IDLE;
@@ -132,6 +133,7 @@ void MenuMng(void){
     keyPress = keyRead();
     if (keyPress >= 0){
         DEBUG_PRINT(("KEY! %d\n", keyPress));  
+        lcdPrint = true;
 
         switch (keyPress){
             case KEYIP:
@@ -234,6 +236,55 @@ void MenuMng(void){
     }
 }
 
+void screenInit(void){
+    LcdI2CInit(0x27, 16,2);
+    setCursor(0,0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0,1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(TIME_MS(2000));
+    clear();  
+    lcdPrint=true;
+    blink();
+}
+
+void screenMng(void) {
+    // Check if something to print.
+    if (lcdPrint) {
+        if (menuStatus == CFG_IDLE) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, IP, lastCycleVol);
+        } else if (menuStatus == CFG_BPM) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", menuVal, PEEP, IP, lastCycleVol);
+        } else if (menuStatus == CFG_PEEP) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, menuVal, IP, lastCycleVol);
+        } else if (menuStatus == CFG_IP) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, menuVal, lastCycleVol);
+        }
+        DEBUG_PRINT((lcdTopRow));
+        if (!PrintStrBusy()) {
+            lcdPrint = false;
+            setCursor(0, 0);
+            printstr(lcdTopRow);
+            if (menuStatus != CFG_IDLE){
+                lcdBlink=true;
+            }
+        }
+    } else if (lcdBlink) {
+        lcdBlink = false;
+        switch (menuStatus) {
+            case CFG_BPM:
+                setCursor(1, 0);
+                break;
+            case CFG_PEEP:
+                setCursor(4,0);
+                break;
+            case CFG_IP:
+                setCursor(7,0);
+                break;
+        }
+    }
+}
+
 #if 1
 void i2cDummyWr(uint8_t data) {
         uint8_t i2cBuff[2];
@@ -289,18 +340,15 @@ void main(void)
     pExpOS = 0;
     pInspOS = 0;
     vMeasureInit();
+    lastCycleVol=0;
     keyReadInit();
-    LcdI2CInit(0x27, 16,2);
-    noBacklight();
+    screenInit();
+    while(1){
+        screenMng();
+        MenuMng();
+    }
     
-    setCursor(0,0);
-    printstrblock("EMERG.RESPIRATOR");
-    setCursor(0,1);
-    printstrblock("  CONTROLLER   ");
-    timeDelayMs(TIME_MS(2000));
-    clear();
-        
-    if (1) {
+    if (0) {
         time_t tstamp1;
         tstamp1 = timeGet();
         while (1) {

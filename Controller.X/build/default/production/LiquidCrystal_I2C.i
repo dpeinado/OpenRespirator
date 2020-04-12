@@ -9,7 +9,10 @@
 # 1 "LiquidCrystal_I2C.c" 2
 
 
+
 # 1 "./LiquidCrystal_I2C.h" 1
+
+
 
 
 
@@ -27874,8 +27877,8 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 104 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 5 "./LiquidCrystal_I2C.h" 2
-# 53 "./LiquidCrystal_I2C.h"
+# 7 "./LiquidCrystal_I2C.h" 2
+# 55 "./LiquidCrystal_I2C.h"
 void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
 void clear();
 void home();
@@ -27906,7 +27909,7 @@ void load_custom_character(uint8_t char_num, uint8_t *rows);
 void printstr(const char[]);
 void printstrblock(const char[]);
 _Bool PrintStrBusy(void);
-# 3 "LiquidCrystal_I2C.c" 2
+# 4 "LiquidCrystal_I2C.c" 2
 
 # 1 "./time.h" 1
 # 17 "./time.h"
@@ -27924,7 +27927,7 @@ time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 void timeDelayMs(time_t delms);
-# 4 "LiquidCrystal_I2C.c" 2
+# 5 "LiquidCrystal_I2C.c" 2
 
 
 uint8_t _Addr;
@@ -27968,7 +27971,7 @@ void write4bits(uint8_t value) {
         I2C2_MasterWrite();
         while(I2C2_BUSY == I2C2_Close());
 }
-# 61 "LiquidCrystal_I2C.c"
+# 62 "LiquidCrystal_I2C.c"
 void send(uint8_t value, uint8_t mode) {
  uint8_t highnib=value&0xf0;
  uint8_t lownib=(value<<4)&0xf0;
@@ -28026,7 +28029,7 @@ void printstrblock(const char c[]){
 __attribute__((inline)) void command(uint8_t value) {
  send(value, 0);
 }
-# 139 "LiquidCrystal_I2C.c"
+# 140 "LiquidCrystal_I2C.c"
 void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
   _Addr = lcd_Addr;
   _cols = lcd_cols;

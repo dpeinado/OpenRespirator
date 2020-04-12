@@ -27938,7 +27938,7 @@ int8_t keyRead();
 # 50 "main.c" 2
 
 # 1 "./LiquidCrystal_I2C.h" 1
-# 53 "./LiquidCrystal_I2C.h"
+# 55 "./LiquidCrystal_I2C.h"
 void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
 void clear();
 void home();
@@ -28002,10 +28002,11 @@ enum menuStatusT{
 } menuStatus;
 
 time_t menuTstamp;
-
 uint8_t menuVal;
-
-uint8_t lcdTopRow[17];
+char lcdTopRow[17];
+char lcdBtnRow[17];
+_Bool lcdPrint, lcdBlink;
+uint16_t lastCycleVol;
 
 void MenuInit(void){
     menuStatus = CFG_IDLE;
@@ -28017,6 +28018,7 @@ void MenuMng(void){
     keyPress = keyRead();
     if (keyPress >= 0){
         printf ("KEY! %d\n", keyPress);
+        lcdPrint = 1;
 
         switch (keyPress){
             case 0:
@@ -28119,6 +28121,55 @@ void MenuMng(void){
     }
 }
 
+void screenInit(void){
+    LcdI2CInit(0x27, 16,2);
+    setCursor(0,0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0,1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(((time_t) 2000*1));
+    clear();
+    lcdPrint=1;
+    blink();
+}
+
+void screenMng(void) {
+
+    if (lcdPrint) {
+        if (menuStatus == CFG_IDLE) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, IP, lastCycleVol);
+        } else if (menuStatus == CFG_BPM) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", menuVal, PEEP, IP, lastCycleVol);
+        } else if (menuStatus == CFG_PEEP) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, menuVal, IP, lastCycleVol);
+        } else if (menuStatus == CFG_IP) {
+            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, menuVal, lastCycleVol);
+        }
+        printf (lcdTopRow);
+        if (!PrintStrBusy()) {
+            lcdPrint = 0;
+            setCursor(0, 0);
+            printstr(lcdTopRow);
+            if (menuStatus != CFG_IDLE){
+                lcdBlink=1;
+            }
+        }
+    } else if (lcdBlink) {
+        lcdBlink = 0;
+        switch (menuStatus) {
+            case CFG_BPM:
+                setCursor(1, 0);
+                break;
+            case CFG_PEEP:
+                setCursor(4,0);
+                break;
+            case CFG_IP:
+                setCursor(7,0);
+                break;
+        }
+    }
+}
+
 
 void i2cDummyWr(uint8_t data) {
         uint8_t i2cBuff[2];
@@ -28174,18 +28225,15 @@ void main(void)
     pExpOS = 0;
     pInspOS = 0;
     vMeasureInit();
+    lastCycleVol=0;
     keyReadInit();
-    LcdI2CInit(0x27, 16,2);
-    noBacklight();
+    screenInit();
+    while(1){
+        screenMng();
+        MenuMng();
+    }
 
-    setCursor(0,0);
-    printstrblock("EMERG.RESPIRATOR");
-    setCursor(0,1);
-    printstrblock("  CONTROLLER   ");
-    timeDelayMs(((time_t) 2000*1));
-    clear();
-
-    if (1) {
+    if (0) {
         time_t tstamp1;
         tstamp1 = timeGet();
         while (1) {
@@ -28369,7 +28417,7 @@ void main(void)
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart,timeGet()), vMeasureGet(), (10*pInst)/((int16_t) 45*1), (10*(pNext))/((int16_t) 45*1), (10*(pInst-pAvgShort))/((int16_t) 45*1), rSV2ValveDelay, (10*pPlateau)/((int16_t) 45*1), (10*pInspOS)/((int16_t) 45*1));
-# 495 "main.c"
+# 543 "main.c"
                 }
 
             }
