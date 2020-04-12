@@ -73,6 +73,16 @@ void LCDMessage1(char *str) {
     LCDMessage(str);
     LCDWriteCmd(0x02);
 }
+
+void LCDMessage12(char *str1, char *str2) {
+    LCDWriteCmd(0x01);
+    __delay_ms(2);
+    LCDMessage(str1);
+    LCDWriteCmd(0xC0);      // Second Line
+    LCDMessage(str2);
+    LCDWriteCmd(0x02);
+}
+
 void LCDMessage2(char *str) {
     LCDWriteCmd(0x01);
     __delay_ms(2);

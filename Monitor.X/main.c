@@ -103,7 +103,8 @@ void main(void)
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
             if (ch=='i') I2CSend(1,1,1,0xF0);
-
+            if (ch=='v') SetSV1(false);
+            if (ch=='V') SetSV1(true);
             if (ch=='0') TestAlarm(0);
             if (ch=='1') TestAlarm(1);
             if (ch=='2') TestAlarm(2);

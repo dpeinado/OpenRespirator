@@ -12,6 +12,8 @@
 char msg1[17]="";
 char msg2[17]="";
 
+char msg3[17]="";
+
 void InitDisplay(void) {
     LCDInit();
 }
@@ -38,8 +40,9 @@ void ValueDisplay() {
     
     printf("\r%2d%% %d.%02d %d.%02d - %d/%d  %u:%u/%u ms       ", TR, etdi,dtdi, etde, dtde, pi, pe, bp, ti, te);
     //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
-    sprintf(msg1, "%2d%% %d.%02d %d.%02d", TR, etdi,dtdi, etde, dtde ); 
-}
+    sprintf(msg1, "%2d%% %d.%02d %d.%02d", TR, etdi,dtdi, etde, dtde );
+    sprintf(msg3, "%2d/%2d %4u/%4u ", pi, pe, ti, te);
+}//                 123 4567890123456
 void AlarmDisplay(int type, char *alarm) {
     char msg[16];
     char t = (type==ALARM_HIGH) ? 'H' : ((type==ALARM_MED) ? 'M' : 'L');
@@ -49,8 +52,8 @@ void AlarmDisplay(int type, char *alarm) {
 }
 
 void DisplayTask(void) {
-    if (msg1[0]) {
-        LCDMessage1(msg1);
+    if (msg1[0] && msg3[0]) {
+        LCDMessage12(msg1,msg3);
         msg1[0]=0;
     }
     if (msg2[0]) {
