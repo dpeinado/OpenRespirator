@@ -62,10 +62,7 @@ int histSec = 0;
 int hist = 0;
 
 // TBD Timer
-void MuteAlarm(void) {
-    BuzzerClear();
-    muteSec = 120;
-}
+
 
 #define DISPLAY_NORMAL 0
 #define DISPLAY_ALARM  1
@@ -99,12 +96,19 @@ int HigherAlarm(void) {
     }
     return max;
 }
-
+ 
 bool AnyAlarm(void) {
     for (int i=0; i<NUM_ALARMS; i++) {
         if (alarms[i]) return true;
     }
     return false;
+}
+
+void MuteAlarm(void) {
+    if (AnyAlarm()) {
+        BuzzerClear();
+        muteSec = 120;
+    }
 }
 
 void AlarmUpdateLCD(void) {

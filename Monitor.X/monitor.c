@@ -173,7 +173,7 @@ void MonitorPressureTask(void) {
 void InitializePressure (void) {
     //ADCC_Initialize(); // Already in mcc.c
     ADCC_EnableContinuousConversion();
-    ADCC_StartConversion(channel_ANA0);
+    ADCC_StartConversion(PRS);
     targetHigh = 25; // mbar
     targetLow  = 10; // mbar
     adcOffset = 0; // Read from EEPROM or calibrate. ADC counts
@@ -232,6 +232,6 @@ uint16_t GetPressure_pa (void) {
 }
 
 void SetSV1(bool value) {
-    if (value) IO_RA1_SetHigh();
-    else IO_RA1_SetLow();
+    if (value) VALVE_SetHigh();
+    else VALVE_SetLow();
 }

@@ -45,6 +45,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
 #include "display.h"
+#include "lcd.h"
 #include "buttons.h"
 #include "alarm.h"
 #include "buzzer.h"
@@ -85,10 +86,9 @@ void main(void)
     while (1)
     {
         // Add your application code
-//        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
-//        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
 
+        DisplayTask();
         
         if (UART1_is_rx_ready())
         {
@@ -102,6 +102,7 @@ void main(void)
             if (ch=='o') BuzzerTest('O');
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
+            if (ch=='i') I2CSend(1,1,1,0xF0);
 
             if (ch=='0') TestAlarm(0);
             if (ch=='1') TestAlarm(1);
