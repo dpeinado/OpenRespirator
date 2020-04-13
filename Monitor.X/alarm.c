@@ -61,12 +61,13 @@ int histSec = 0;
 // Hist num
 int hist = 0;
 
-// TBD Timer
+int displayStatus;
 
 
 #define DISPLAY_NORMAL 0
 #define DISPLAY_ALARM  1
 #define DISPLAY_HIST   2
+
 
 void TestAlarm(int id) {
     testAlarm[id] = !testAlarm[id];
@@ -105,14 +106,26 @@ bool AnyAlarm(void) {
 }
 
 void MuteAlarm(void) {
+    if (muteSec && muteSec<115) {
+        muteSec = 0;
+        return;
+    }
     if (AnyAlarm()) {
         BuzzerClear();
         muteSec = 120;
     }
 }
 
+char *GetAlarmState(void) {
+    if (displayStatus==DISPLAY_HIST) return "Hi";
+    else {
+        if (AnyAlarm() && muteSec) return "Mu";
+        else if (AnyAlarm()) return "Al";
+    }
+    return "  ";
+}
+
 void AlarmUpdateLCD(void) {
-    static int displayStatus = DISPLAY_NORMAL;
     
     if (histSec) {
         displayStatus = DISPLAY_HIST;
@@ -182,7 +195,9 @@ void HistAlarm(void) {
 }
 
 void AlarmCheckTask(void) {
+    // Current buzzer state
     static int current = 0;
+    
     // Check each alarm and set or clear it needed
     for (int id=0; id<NUM_ALARMS; id++) {
         if (alarmData[id].func() || testAlarm[id]) {
@@ -194,15 +209,27 @@ void AlarmCheckTask(void) {
     // Update LCD
     AlarmUpdateLCD();
     
-    if (AnyAlarm()) {
-        int type = alarmData[HigherAlarm()].type;
-        if (type!=current) {
-            current = type; 
-            // Update Buzzer
-            if (muteSec==0) BuzzerSet(type);
-            else current = 0;
+    // Update buzzer state
+    // I am mute ?
+    if (muteSec == 0)
+    {
+        // There is an alarm
+        if (AnyAlarm()) {
+            // The type of the alarm
+            int type = alarmData[HigherAlarm()].type;
+            // The type of the higher alarm is the same than the one playing ?
+            if (type!=current) {
+                // Update alarm
+                current = type;
+                BuzzerSet(type);
+            } 
+        } else {
+            // No alarm
+            current = 0;
+            BuzzerClear();
         }
     } else {
+        // I am mute
         current = 0;
         BuzzerClear();
     }
@@ -211,7 +238,7 @@ void AlarmCheckTask(void) {
 
 
 void AlarmHandler(void) {
-    //printf("AH\r\n");
+    printf("AH %d %d\r\n", muteSec, histSec);
     if (muteSec) muteSec--;
     if (histSec) histSec--;
     AlarmCheckTask();    
@@ -223,6 +250,7 @@ void AlarmInit() {
         alarms[i] = 0;
         testAlarm[i] =0;
     }
+    displayStatus = DISPLAY_NORMAL;
     
     TMR5_SetInterruptHandler(AlarmHandler);
     TMR5_StartTimer();

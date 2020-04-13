@@ -79,9 +79,10 @@ void main(void)
     ButtonInit();
     
     // Interrupt driven tasks:
-    //  + ADC acquisition
+    //  + ADC acquisition using TIMER 0
     //  + I2C reception
     //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
+    //  + Display message generation TIMER 5
     
     while (1)
     {
@@ -118,6 +119,8 @@ void main(void)
 
             if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
             if (ch=='p') MonitorDump();
+            if (ch=='z') SetCalibrateState(false);
+            if (ch=='Z') SetCalibrateState(true);
             if (ch) {
                 //putch(ch);
                 //putch('\n');

@@ -15,10 +15,9 @@ extern "C" {
 void InitDisplay(void);
 void DisplayTask(void);
 void ValueDisplay();
-void AlarmDisplay(int idx, char *alarm);
-
-
-
+void AlarmDisplay(int, char *);
+void DisplayCalibrate(int16_t, int16_t);
+void UnDisplayCalibrate(void);
 
 #ifdef	__cplusplus
 }

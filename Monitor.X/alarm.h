@@ -27,6 +27,7 @@ void MuteAlarm(void);
 void HistAlarm(void);
 
 void TestAlarm(int);
+char *GetAlarmState(void);
 
 #ifdef	__cplusplus
 }

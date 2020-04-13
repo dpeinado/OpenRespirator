@@ -68,28 +68,22 @@ void LCDMessage(char *str) {
     //printf("\rLCD(%02d): %s", length, str);
 }
 void LCDMessage1(char *str) {
-    LCDWriteCmd(0x01);
-    __delay_ms(2);
-    LCDMessage(str);
     LCDWriteCmd(0x02);
+    LCDMessage(str);
+
 }
 
 void LCDMessage12(char *str1, char *str2) {
-    LCDWriteCmd(0x01);
-    __delay_ms(2);
+    LCDWriteCmd(0x02);
     LCDMessage(str1);
     LCDWriteCmd(0xC0);      // Second Line
     LCDMessage(str2);
-    LCDWriteCmd(0x02);
 }
 
 void LCDMessage2(char *str) {
-    LCDWriteCmd(0x01);
-    __delay_ms(2);
-    //LCDMessage("                ");
+    LCDWriteCmd(0x02);
     LCDWriteCmd(0xC0);      // Second Line
     LCDMessage(str);
-    LCDWriteCmd(0x02);
 }
 
 void LCDWriteChar(char chr)
