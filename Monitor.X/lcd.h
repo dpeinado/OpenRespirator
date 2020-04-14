@@ -14,6 +14,10 @@ extern "C" {
 
 void LCDInit (void);
 void LCDMessage(char *str);
+void LCDMessage1(char *str);
+void LCDMessage2(char *str);
+void LCDMessage12(char *str1, char *str2);
+void I2CSend(bool RS, bool RW, bool E, uint8_t D74);
 
 
 #ifdef	__cplusplus

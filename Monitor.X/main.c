@@ -45,6 +45,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
 #include "display.h"
+#include "lcd.h"
 #include "buttons.h"
 #include "alarm.h"
 #include "buzzer.h"
@@ -78,17 +79,17 @@ void main(void)
     ButtonInit();
     
     // Interrupt driven tasks:
-    //  + ADC acquisition
+    //  + ADC acquisition using TIMER 0
     //  + I2C reception
     //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
+    //  + Display message generation TIMER 5
     
     while (1)
     {
         // Add your application code
-//        MonitorPressureTask();          // Update input information from pressure sensor
 //        InputTargetsTask();             // Update targets from Controller via I2C
-//        CalculateParametersTask();      // Calculate estimators: IP EP Tdi Tde BPM Volume etc
 
+        DisplayTask();
         
         if (UART1_is_rx_ready())
         {
@@ -102,7 +103,9 @@ void main(void)
             if (ch=='o') BuzzerTest('O');
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
-
+            if (ch=='i') I2CSend(1,1,1,0xF0);
+            if (ch=='v') SetSV1(false);
+            if (ch=='V') SetSV1(true);
             if (ch=='0') TestAlarm(0);
             if (ch=='1') TestAlarm(1);
             if (ch=='2') TestAlarm(2);
@@ -116,6 +119,8 @@ void main(void)
 
             if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
             if (ch=='p') MonitorDump();
+            if (ch=='z') SetCalibrateState(false);
+            if (ch=='Z') SetCalibrateState(true);
             if (ch) {
                 //putch(ch);
                 //putch('\n');

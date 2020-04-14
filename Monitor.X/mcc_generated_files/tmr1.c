@@ -74,10 +74,10 @@ void TMR1_Initialize(void)
     //CS FOSC/4; 
     T1CLK = 0x01;
 
-    //TMR1H 158; 0x9e 50ms
+    //TMR1H 216; 
     TMR1H = 0xD8;
 
-    //TMR1L 88; 0x48 50 ms
+    //TMR1L 240; 
     TMR1L = 0xF0;
 
     // Clearing IF flag before enabling the interrupt.

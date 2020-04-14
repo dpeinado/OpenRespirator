@@ -27,6 +27,42 @@ void MuteAlarm(void);
 void HistAlarm(void);
 
 void TestAlarm(int);
+char *GetAlarmState(void);
+
+void SetBatteryFailAlarm(void);
+void SetMonitorFailAlarm(void);
+void SetControlFailAlarm(void);
+void SetGasFailureAlarm(void);
+void SetHighPressureAlarmLow(void);
+void SetHighPressureAlarmHigh(void);
+void SetCircuitFailureAlarm(void);
+void SetBaterryLowAlarmMed(void);
+void SetBaterryLowAlarmHigh(void);
+void SetEPBellowSetAlarm(void);
+void SetEPAboveSetAlarm(void);
+void SetIPBellowSetAlarm(void);
+void SetIPAboveSetAlarm(void);
+void SetTdiTooLongAlarm(void);
+void SetTdeTooLongAlarm(void);
+void SetNoPowerSupplyAlarm(void);
+
+void ClearBatteryFailAlarm(void);
+void ClearMonitorFailAlarm(void);
+void ClearControlFailAlarm(void);
+void ClearGasFailureAlarm(void);
+void ClearHighPressureAlarmLow(void);
+void ClearHighPressureAlarmHigh(void);
+void ClearCircuitFailureAlarm(void);
+void ClearBaterryLowAlarmMed(void);
+void ClearBaterryLowAlarmHigh(void);
+void ClearEPBellowSetAlarm(void);
+void ClearEPAboveSetAlarm(void);
+void ClearIPBellowSetAlarm(void);
+void ClearIPAboveSetAlarm(void);
+void ClearTdiTooLongAlarm(void);
+void ClearTdeTooLongAlarm(void);
+void ClearNoPowerSupplyAlarm(void);
+
 
 #ifdef	__cplusplus
 }
