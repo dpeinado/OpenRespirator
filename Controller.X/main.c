@@ -64,12 +64,6 @@ void putch(char byte)
 # define DEBUG_PRINT(x) do {} while (0)
 #endif
 
-///////////////////
-// User parameters.
-///////////////////
-uint8_t BPM=10;
-uint8_t IP=30;
-uint8_t PEEP=10;
 
 // To avoid problems with control, keep a copy of the values during first part of inspiration and expiration.
 uint16_t intIP, intPEEP;
@@ -81,6 +75,13 @@ uint16_t intIP, intPEEP;
 #define IP_MAX 35
 #define PEEP_MIN 4
 #define PEEP_MAX 25
+
+///////////////////
+// User parameters.
+///////////////////
+uint8_t BPM=10;
+uint8_t IP=4;
+uint8_t PEEP=4;
 
 // CONTROLLER INTERNAL PARAMETERS.
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
