@@ -13,9 +13,9 @@
 #include "tick.h"
 
 int16_t adcOffset;
-uint16_t targetHigh;
-uint16_t targetLow;
-uint16_t timeUp;
+int16_t targetHigh;
+int16_t targetLow;
+uint16_t targetBp;
 
 #define STATE_OFF           0
 #define STATE_CALIBRATE     1
@@ -49,6 +49,12 @@ int16_t prSlow;
 int16_t prFast;
 uint32_t tt;
 
+void SetTarget(int16_t pi, int16_t pe, uint16_t br) {
+    targetHigh = pi;
+    targetLow  = pe;
+    targetBp   = 60000/br;
+}
+
 void MonitorDump(void) {
     printf("\r\nSlow: ");
     //for (int i=0; i<25; i++ ) printf(" %d", prSlowBuffer[i]);
@@ -75,10 +81,10 @@ void MonitorDump(void) {
 void SetCalibrateState(bool calib) {
     TMR0_StopTimer();
     if (calib) {
-        printf("\r\nSTART CALIBRATE\r\n");
+        //printf("\r\nSTART CALIBRATE\r\n");
         state = STATE_CALIBRATE;
     } else {
-        printf("\r\nSTOP CALIBRATE\r\n");
+        //printf("\r\nSTOP CALIBRATE\r\n");
         printf("\r\nC: %d %d\r\n", GetPressure_mbar02(), adcOffset);
         state = STATE_OFF;
         UnDisplayCalibrate();
@@ -87,7 +93,7 @@ void SetCalibrateState(bool calib) {
     TMR0_StartTimer();
 }
 
-void MonitorPressureTask(void) {
+void MonitorPressureTask(void) { // Every 2 ms
     uint8_t pr;
     int next;
     next = state;
@@ -112,6 +118,7 @@ void MonitorPressureTask(void) {
     count ++;
     if (count>=6*25) count =0;
     
+    if (tt>45000) ClearVars() ; // No breaths for more than 1 min
     
     switch (state) {
         case STATE_OFF:
@@ -119,11 +126,11 @@ void MonitorPressureTask(void) {
             if (prSlow>=targetHigh) next = STATE_HIGH;
             break;
         case STATE_CALIBRATE:
-            if (prFast == prSlow && prFast < targetLow ) {
+            if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
                 static int cnt=0;
                 adcOffset +=  prFast;
                 cnt++;
-                if (cnt==100) {
+                if (cnt==250) { // 500 ms
                     printf("\r\nC: %d %d\r\n", prFast, adcOffset);
                     cnt = 0;
                     DisplayCalibrate(prFast, adcOffset);
@@ -132,7 +139,7 @@ void MonitorPressureTask(void) {
             }
             break;
         case STATE_LOW:   
-            if (prFast>prSlow && prSlow<= targetLow) {
+            if (prFast>prSlow && prSlow<= ((targetLow+targetHigh)/2)) {
                 bp = tt-tt1;              
                 te = tt-tt3;
                 if (tt>16000) tt =0;
@@ -142,7 +149,7 @@ void MonitorPressureTask(void) {
             }
             break;
         case STATE_TDI:
-            if (prFast==prSlow && prSlow>=targetHigh) {
+            if (prFast==prSlow && prSlow>=((targetLow+targetHigh)/2)) {
                 int16_t ntdi;
                 tt2 = tt;
                 next = STATE_HIGH;
@@ -163,7 +170,7 @@ void MonitorPressureTask(void) {
             }
             break;
         case STATE_HIGH:
-            if ((prFast)<prSlow && prSlow>=targetHigh) {
+            if ((prFast)<prSlow && prSlow>=((targetLow+targetHigh)/2)) {
                 ti = tt-tt1;
                 tt3 = tt;
                 next = STATE_TDE;
@@ -171,7 +178,7 @@ void MonitorPressureTask(void) {
             }
             break;
         case STATE_TDE:
-            if (prFast>=prSlow && prSlow<=targetLow) {
+            if (prFast>=prSlow && prSlow<=((targetLow+targetHigh)/2)) {
                 int16_t ntde;
                 tt4 = tt;
                 next = STATE_LOW;
@@ -209,15 +216,17 @@ void ClearVars(void) {
         tdiBuffer[i] = 0;
         tdeBuffer[i] = 0;
     }
-    numtdi=0;
-    numtde=0;
-    ti =0;
-    te =0;
-    tt1=0;
-    tt2=0;
-    tt3=0;
-    tt4=0;
-    bp=0;
+    numtdi = 0;
+    numtde = 0;
+    ti = 0;
+    te = 0;
+    tdi = 0;
+    tde = 0;
+    tt1 = 0;
+    tt2 = 0;
+    tt3 = 0;
+    tt4 = 0;
+    bp  = 0;
     
     pi = 0;
     pe = 0;
