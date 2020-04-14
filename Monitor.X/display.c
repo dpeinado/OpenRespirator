@@ -46,8 +46,8 @@ void ValueDisplay() {
     uint8_t ete = te/1000;
     uint8_t dte = (te-((uint16_t) ete)*1000)/10;
     uint16_t bp = GetBp();
-    int16_t pi = GetPi();
-    int16_t pe = GetPe();
+    int16_t pi = GetIp();
+    int16_t pe = GetEp();
     uint8_t etdi = tdi/1000;
     uint8_t dtdi = (tdi-((uint16_t) etdi)*1000)/10;
     uint8_t etde = tde/1000;

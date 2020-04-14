@@ -32,8 +32,9 @@ uint16_t GetTi(void);
 uint16_t GetTe(void);
 uint16_t GetBp(void);
 
-int16_t GetPi(void);
-int16_t GetPe(void);
+int16_t GetIp(void);
+int16_t GetEp(void);
+int16_t GetMaxPressure(void);
 int GetMonitorState(void);
 
 

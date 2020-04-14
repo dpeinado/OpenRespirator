@@ -9,6 +9,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
 #include "display.h"
+#include "alarm.h"
 #include "buttons.h"
 #include "tick.h"
 
@@ -28,15 +29,21 @@ int state;
 
 uint32_t tt1, tt2, tt3, tt4;
 int16_t tdi, tde, ti, te, bp;
-int16_t pi,pe;
+int16_t pi,pe, maxPressure;
 
 uint16_t GetTde(void) { return ((uint8_t) tde)*2; } // Time in ms
 uint16_t GetTdi(void) { return ((uint8_t) tdi)*2; } // Time in ms
 uint16_t GetTi(void) { return ((uint16_t) ti)*2; } // Time in ms
 uint16_t GetTe(void) { return ((uint16_t) te)*2; } // Time in ms
 uint16_t GetBp(void) { return ((uint16_t) bp)*2; } // Time in ms
-int16_t GetPe(void) { return (pe/5); } // 
-int16_t GetPi(void) { return (pi/5); } // 
+int16_t GetEp(void) { return (pe/5); } // 
+int16_t GetIp(void) { return (pi/5); } // 
+int16_t GetMaxPressure(void) {
+    int temp = maxPressure/5;
+    printf("\r\n MAXP: %d\r\n", temp);
+    maxPressure = 0;
+    return temp;
+}
 int GetMonitorState(void) { return state; }
 void ClearVars(void);
 int16_t prSlowBuffer[25];
@@ -49,9 +56,9 @@ int16_t prSlow;
 int16_t prFast;
 uint32_t tt;
 
-void SetTarget(int16_t pi, int16_t pe, uint16_t br) {
-    targetHigh = pi;
-    targetLow  = pe;
+void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
+    targetHigh = ip;
+    targetLow  = ep;
     targetBp   = 60000/br;
 }
 
@@ -116,6 +123,11 @@ void MonitorPressureTask(void) { // Every 2 ms
         prSlow = temp/25;
     }
     count ++;
+    if (pr>maxPressure) {
+        maxPressure = pr;
+        //printf("\r\n MAXP: %d\r\n", pr/5);
+    }
+    
     if (count>=6*25) count =0;
     
     if (tt>45000) ClearVars() ; // No breaths for more than 1 min
@@ -159,6 +171,8 @@ void MonitorPressureTask(void) { // Every 2 ms
                 if (true) {
                     tdiBuffer[numtdi%10] = ntdi;
                     pi = prFast;
+                    if (pi>targetHigh+3*5) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
+                    if (pi<targetHigh-3*5) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm();
                     tdi = 0;
                     for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
                     tdi = tdi/MIN(10,numtdi+1);
@@ -188,6 +202,8 @@ void MonitorPressureTask(void) { // Every 2 ms
                 if (true) {
                     tdeBuffer[numtde%10] = ntde;
                     pe = prFast;
+                    if (pe>targetLow+2*5) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+                    if (pe<targetLow-2*5) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
                     tde = 0;
                     for (int i=0; i<MIN(numtde+1,10); i++) tde = tde + tdeBuffer[i];                   
                     tde = tde/MIN(numtde+1,10);
@@ -230,6 +246,7 @@ void ClearVars(void) {
     
     pi = 0;
     pe = 0;
+    maxPressure = 0;
  
 }
 
@@ -238,7 +255,7 @@ void InitializePressure (void) {
     ADCC_EnableContinuousConversion();
     ADCC_StartConversion(PRS);
     targetHigh = 25*5; // 0.2 mbar
-    targetLow  = 10*5; // 0.2 mbar
+    targetLow  = 5*5; // 0.2 mbar
     adcOffset = 0; // Read from EEPROM or calibrate. ADC counts
     state = STATE_OFF;
     ClearVars();
