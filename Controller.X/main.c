@@ -287,18 +287,6 @@ void screenMng(void) {
     }
 }
 
-#if 0
-
-void i2cDummyWr(uint8_t data) {
-    uint8_t i2cBuff[2];
-    i2cBuff[0] = data;
-    I2C2_Open(0x27);
-    I2C2_SetBuffer(i2cBuff, 1);
-    I2C2_MasterWrite();
-    while (I2C2_BUSY == I2C2_Close()); // sit here until finished.
-}
-#endif 
-
 void main(void) {
 #ifdef DEBUG
     time_t printTime;
