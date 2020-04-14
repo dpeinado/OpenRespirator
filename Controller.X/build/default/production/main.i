@@ -28102,12 +28102,12 @@ void MenuMng(void){
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal > 4){
+                            if (menuVal < 4){
                                 menuVal = 4;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal > 10){
+                            if (menuVal < 10){
                                 menuVal = 10;
                             }
                             break;
@@ -28171,7 +28171,7 @@ void screenMng(void) {
         }
     }
 }
-# 302 "main.c"
+
 void main(void) {
 
     time_t printTime;
@@ -28218,7 +28218,7 @@ void main(void) {
     lastCycleVol = 0;
     keyReadInit();
     screenInit();
-# 419 "main.c"
+# 407 "main.c"
     while (1) {
 
 
@@ -28329,7 +28329,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) 45*1), (10 * (pNext)) / ((int16_t) 45*1), (10 * (pInst - pAvgShort)) / ((int16_t) 45*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) 45*1), (10 * pInspOS) / ((int16_t) 45*1));
-# 537 "main.c"
+# 525 "main.c"
             }
 
         }

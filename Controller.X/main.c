@@ -217,12 +217,12 @@ void MenuMng(void){
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal > PEEP_MIN){
+                            if (menuVal < PEEP_MIN){
                                 menuVal = PEEP_MIN;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal > BPM_MIN){
+                            if (menuVal < BPM_MIN){
                                 menuVal = BPM_MIN;
                             }
                             break;
