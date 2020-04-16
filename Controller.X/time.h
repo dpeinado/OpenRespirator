@@ -12,6 +12,8 @@
 extern "C" {
 #endif
     
+#include "mcc_generated_files/mcc.h"
+
 typedef uint16_t time_t;
 
 // ENSURE USE WITH TIME BELOW 1/2.
@@ -25,6 +27,7 @@ time_t timeGet(void);
 time_t timeDiff(time_t startT, time_t endT);
 bool timeElapsedR(time_t *prevTime, time_t duration);
 bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
 
 
 #ifdef	__cplusplus

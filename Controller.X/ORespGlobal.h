@@ -12,15 +12,29 @@
 extern "C" {
 #endif
 
+#if 1
 #define SV2ISOPEN LATAbits.LATA2
 #define OPEN_SV2 LATAbits.LATA2 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0
 
-// TBD.
 #define SV3ISOPEN LATAbits.LATA3
 #define OPEN_SV3 LATAbits.LATA3 = 1
 #define CLOSE_SV3 LATAbits.LATA3 = 0
 
+#define BLED_ON  LATDbits.LATD6 = 1
+#define BLED_OFF LATDbits.LATD6 = 0
+#else
+#define SV2ISOPEN LATAbits.LATA2
+#define OPEN_SV2 
+#define CLOSE_SV2
+
+#define SV3ISOPEN LATAbits.LATA3
+#define OPEN_SV3 
+#define CLOSE_SV3 
+
+#define BLED_ON  LATDbits.LATD6 = 1
+#define BLED_OFF LATDbits.LATD6 = 0
+#endif
     
 #define DEBUG
     

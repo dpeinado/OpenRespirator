@@ -49,3 +49,9 @@ bool timeElapsed(time_t prevTime, time_t duration){
     }
 }
 
+void timeDelayMs(time_t delms){
+    time_t tstamp;
+    tstamp=timeGet();
+    while (!timeElapsed(tstamp, TIME_MS(delms)));
+}
+

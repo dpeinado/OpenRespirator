@@ -35,6 +35,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
         default:
            // ERROR.
            ERROR_CONDITION(1);
+           return -1;
     }
 }
 
