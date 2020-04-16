@@ -26,11 +26,12 @@ void SetCalibrateState(bool calib);
 void SetSV1 (bool);
 
 // Output values
-uint16_t GetTdi(void);
-uint16_t GetTde(void);
-uint16_t GetTi(void);
-uint16_t GetTe(void);
-uint16_t GetBp(void);
+int16_t GetTdi(void);
+int16_t GetTde(void);
+int16_t GetTi(void);
+int16_t GetTe(void);
+int16_t GetBp(void);
+int16_t GetBpm(void);
 
 int16_t GetIp(void);
 int16_t GetEp(void);

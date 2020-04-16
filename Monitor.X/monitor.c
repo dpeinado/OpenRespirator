@@ -27,34 +27,37 @@ uint16_t targetBp;
 
 int state;
 
-uint32_t tt1, tt2, tt3, tt4;
-int16_t tdi, tde, ti, te, bp;
-int16_t pi,pe, maxPressure;
+int32_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34;
+int16_t tdi, tde, ti, te, bp, bpm;
+int16_t pi,pe, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
+int16_t rpi, rpe, lrpi, lrpe;
+int16_t hiLimit, loLimit;
 
-uint16_t GetTde(void) { return ((uint8_t) tde)*2; } // Time in ms
-uint16_t GetTdi(void) { return ((uint8_t) tdi)*2; } // Time in ms
-uint16_t GetTi(void) { return ((uint16_t) ti)*2; } // Time in ms
-uint16_t GetTe(void) { return ((uint16_t) te)*2; } // Time in ms
-uint16_t GetBp(void) { return ((uint16_t) bp)*2; } // Time in ms
-int16_t GetEp(void) { return (pe/5); } // 
-int16_t GetIp(void) { return (pi/5); } // 
+int16_t GetTde(void) { return tde*2; } // Time in ms
+int16_t GetTdi(void) { return tdi*2; } // Time in ms
+int16_t GetTi(void) { return ti*2; } // Time in ms
+int16_t GetTe(void) { return te*2; } // Time in ms
+int16_t GetBp(void) { return bp*2; } // Time in ms
+int16_t GetBpm(void) { return bpm; } // Breaths per minute
+int16_t GetEp(void) { return (lrpe/5); } // 
+int16_t GetIp(void) { return (lrpi/5); } // 
 int16_t GetMaxPressure(void) {
-    int temp = maxPressure/5;
-    printf("\r\n MAXP: %d\r\n", temp);
-    maxPressure = 0;
+    int temp = alarmMaxPressure/5;
+    //printf("\r\n MAXP: %d\r\n", temp);
+    alarmMaxPressure = 0;
     return temp;
 }
 int GetMonitorState(void) { return state; }
 void ClearVars(void);
 int16_t prSlowBuffer[25];
 int16_t prFastBuffer[25];
-uint16_t tdeBuffer[10];
-uint16_t tdiBuffer[10];
-uint16_t numtdi, numtde;
-uint16_t count;
-int16_t prSlow;
-int16_t prFast;
-uint32_t tt;
+int16_t tdeBuffer[10];
+int16_t tdiBuffer[10];
+int16_t numtdi, numtde;
+int16_t count;
+int16_t prSlow, prSlowDev, prSlowNumStable;
+int16_t prFast, prFastDev;
+int32_t tt;
 
 void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
     targetHigh = ip;
@@ -63,21 +66,21 @@ void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
 }
 
 void MonitorDump(void) {
-    printf("\r\nSlow: ");
+    //printf("\r\nSlow: ");
     //for (int i=0; i<25; i++ ) printf(" %d", prSlowBuffer[i]);
-    printf(": %d\r\n", prSlow);
+    //printf(": %d\r\n", prSlow);
     
-    printf("\r\nFast: ");
+    //printf("\r\nFast: ");
     //for (int i=0; i<25; i++ ) printf(" %d", prFastBuffer[i]);
-    printf(": %d\r\n", prFast);
+    //printf(": %d\r\n", prFast);
     
     printf("\r\nTdi: ");
-    for (int i=0; i<10; i++ ) printf(" %d", tdiBuffer[i]);
-    printf(": %d\r\n", tdi);
+    for (int i=0; i<10; i++ ) printf(" %d", tdiBuffer[i]*2);
+    printf(": %d\r\n", tdi*2);
     
     printf("\r\nTde: ");
-    for (int i=0; i<10; i++ ) printf(" %d", tdeBuffer[i]);
-    printf(": %d\r\n", tde);
+    for (int i=0; i<10; i++ ) printf(" %d", tdeBuffer[i]*2);
+    printf(": %d\r\n", tde*2);
 
 }
 
@@ -103,12 +106,18 @@ void SetCalibrateState(bool calib) {
 void MonitorPressureTask(void) { // Every 2 ms
     uint8_t pr;
     int next;
+    static bool measPi=false;
+    static bool measPe=false;
+    
     next = state;
     
     uint16_t temp;
     
+    //TST1_Toggle();
+    
  //   ToggleAlarmLED();
     tt++;
+    ttExt++;
     
     pr = GetPressure_mbar02();
     //tt = tick_get_slow();  
@@ -121,102 +130,174 @@ void MonitorPressureTask(void) { // Every 2 ms
         temp = 0;
         for (int i=0; i<25; i++) temp +=prSlowBuffer[i];
         prSlow = temp/25;
+ //       prSlowDev=0;
+ //       for (int i=0; i<25; i++) prSlowDev +=ABS(prSlowBuffer[i]-prSlow);
+ //       prSlowDev=prSlowDev/25;
     }
-    count ++;
-    if (pr>maxPressure) {
-        maxPressure = pr;
+    
+//    if (prSlowDev<5) prSlowNumStable++;
+//    else prSlowNumStable=0;
+    
+//    if (prSlow==prFast) {
+ //       TST2_SetHigh();
+//    } else {
+ //       TST2_SetLow();
+//    }
+    
+    if (ttExt>6*500) { // Every 6 s we should have at least one breath
+        printf("\r\n pLow: %d pHigh: %d Min: %d Max: %d pe: %d pi:%d \r\n", pLow/5, pHigh/5, minPressure/5, maxPressure/5, pe/5, pi/5);
+        // Define Hi and Low limits for next cycle
+        hiLimit = maxPressure - (maxPressure-minPressure)/5;
+        loLimit = minPressure + (maxPressure-minPressure)/4;
+        // Store estimation of last cycle
+        pe = pLow;
+        pi = pHigh; 
+        
+        // Reset maximum and minimum periodically
+        pLow = minPressure;
+        pHigh = maxPressure;
+        maxPressure = 0;
+        minPressure = 40*5;
+        ttExt=0;
+    }
+    
+    count ++;   
+    if (count>=6*25) count =0; // 25*6 time for both filters to go around
+    
+    if (tt>45000) {
+        printf("\r\n No breath detected in 1 min\r\n");
+        ClearVars() ; // No breaths for more than 1 min
+        measPe = false;
+        measPi = false;
+    }
+    
+    if (prSlow>alarmMaxPressure) {
+        alarmMaxPressure = prSlow;
         //printf("\r\n MAXP: %d\r\n", pr/5);
     }
     
-    if (count>=6*25) count =0;
-    
-    if (tt>45000) ClearVars() ; // No breaths for more than 1 min
-    
-    switch (state) {
-        case STATE_OFF:
-            if (prSlow<=targetLow)  next = STATE_LOW;
-            if (prSlow>=targetHigh) next = STATE_HIGH;
-            break;
-        case STATE_CALIBRATE:
-            if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
-                static int cnt=0;
-                adcOffset +=  prFast;
-                cnt++;
-                if (cnt==250) { // 500 ms
-                    printf("\r\nC: %d %d\r\n", prFast, adcOffset);
-                    cnt = 0;
-                    DisplayCalibrate(prFast, adcOffset);
-                }
-                //DisplayCalibrate(prFast, adcOffset);
-            }
-            break;
-        case STATE_LOW:   
-            if (prFast>prSlow && prSlow<= ((targetLow+targetHigh)/2)) {
-                bp = tt-tt1;              
-                te = tt-tt3;
-                if (tt>16000) tt =0;
-                tt1 = tt;              
-                next = STATE_TDI;
-                //printf("\r\nUP: %lu %d %d\r\n", tt, prFast, prSlow);
-            }
-            break;
-        case STATE_TDI:
-            if (prFast==prSlow && prSlow>=((targetLow+targetHigh)/2)) {
-                int16_t ntdi;
-                tt2 = tt;
-                next = STATE_HIGH;
-                ntdi = tt2-tt1;
+    if (prSlow>maxPressure) {
+        maxPressure = prSlow;
+        //printf("\r\n MAXP: %d\r\n", pr/5);
+    }
+    if (prSlow<minPressure) {
+        minPressure = prFast;
+        //printf("\r\n MAXP: %d\r\n", pr/5);
+    }
+   
+    // Average signals within limits
+    if (prSlow>hiLimit) {
+        TST1_SetHigh();
+        pHigh = (pHigh*9+prSlow)/10;
+    }
+    if (prSlow<loLimit) {
+        TST1_SetLow();
+        pLow = (pLow*9+prSlow)/10;    
+    }
 
-                //if (numtdi<10 || (ABS(ntdi-tdi)<tdi/3)) { // New samples within 33%
-                if (true) {
-                    tdiBuffer[numtdi%10] = ntdi;
-                    pi = prFast;
-                    if (pi>targetHigh+3*5) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
-                    if (pi<targetHigh-3*5) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm();
-                    tdi = 0;
-                    for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
-                    tdi = tdi/MIN(10,numtdi+1);
-                    //printf("\r\nTDI: %d %d @ %lu %d %d\r\n", ntdi, tdi, tt, prFast, prSlow); 
-                    //MonitorDump();
-                }
-                numtdi++;
-                if (numtdi>=100) numtdi=10;
+    // Calc start of breath 
+    int16_t halfLimit;
+    halfLimit = (hiLimit+loLimit)/2;
+    
+    if (prSlow<loLimit && prFast>= loLimit) { // Crossing low limit up
+        TST1_SetHigh();
+        if (tt>400) { // Filter more events during ramp-up
+            bp = tt; 
+            if (bp!=0) bpm = 60000/(bp*2);
+ //           printf("\r\nUP12: %ld pr: %d bpm: %d\r\n", tt, prSlow/5, bpm);           
+        }
+        tt=0; // This is the start of time
+        tt1 = tt;
+        tt12 = tt;
+        measPe=false;
+        measPi=false;
+        lrpe = rpe;
+        if (lrpe>(targetLow+2*5)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+        if (lrpe<(targetLow-2*5)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
+
+    }
+    if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
+        TST1_SetLow();
+        tt3 = tt;
+        tt34 = tt;
+        measPe=false;
+        measPi=false;
+        lrpi = rpi;
+        if (lrpi>(targetHigh+3*5)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
+        if (lrpi<(targetHigh-3*5)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
+    }
+    // Starting state
+    if ( state == STATE_OFF) {
+        if (pi> (targetHigh+targetLow)/2) { // Don´t do anything until estimators are reasonable
+            if (prSlow < targetLow) next = STATE_LOW; else next = STATE_HIGH;
+        }
+    }
+    
+    // Transition to HIGH at the top
+    if (prSlow>=(pi-3*5) && state == STATE_LOW) { // State is LOW and I am in the top
+        TST2_SetHigh();
+        next = STATE_HIGH;
+        tt2 = tt;
+//        printf("\r\nUP: %ld %d\r\n", tt, prSlow/5);
+        tdiBuffer[numtdi%10] = ((tt2-tt1));
+        tdi = 0;
+        for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
+        tdi = tdi/MIN(10,numtdi+1);
+//        printf("\r\nTDI(%d): %d %d\r\n", numtdi%10, ((tt2-tt1)*2), tdi*2); 
+        //MonitorDump();
+        numtdi++;
+        if (numtdi>=100) numtdi=10;
+        measPi=true;
+        rpi=pi;
+    }
+    
+    if (prSlow<=(pe+2*5) && state == STATE_HIGH) {
+        TST2_SetLow();
+        next = STATE_LOW;
+        tt4 = tt;
+//        printf("\r\nDOWN: %ld %d\r\n", tt, prSlow/5);
+
+        tdeBuffer[numtde%10] = ((tt4-tt3));
+        tde = 0;
+        for (int i=0; i<MIN(numtde+1,10); i++) tde = tde + tdeBuffer[i];                   
+        tde = tde/MIN(numtde+1,10);
+        //printf("\r\nTDE: %d %d @ %lu %d %d\r\n", ntde, tde, tt, prFast, prSlow);
+        //MonitorDump();
+        numtde++;
+        if (numtde>=100) numtde=10;
+        measPe = true;
+        rpe = pe;
+    }
+    
+    // New estimators
+    if (measPi) rpi = (rpi*19+prSlow)/20;
+    if (measPe) rpe = (rpe*19+prSlow)/20;
+    
+    // TBD: Timeout alarms of events
+    if (tt>(bp+bp/5)) {
+        if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No breath in %d ms\r\n", ((bp*12)/10)*2);
+        SetCircuitFailureAlarm();
+    }
+    if (tt>(tt3+tt3/5) && state==STATE_HIGH) {
+        if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No exhalation in %d ms\r\n", ((tt3*12)/10)*2);
+        SetCircuitFailureAlarm();
+    }
+    
+    
+    if (state == STATE_CALIBRATE) {
+        if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
+            static int cnt=0;
+            adcOffset +=  prFast;
+            cnt++;
+            if (cnt==250) { // 500 ms
+                //printf("\r\nC: %d %d\r\n", prFast, adcOffset);
+                cnt = 0;
+                DisplayCalibrate(prFast, adcOffset);
             }
-            break;
-        case STATE_HIGH:
-            if ((prFast)<prSlow && prSlow>=((targetLow+targetHigh)/2)) {
-                ti = tt-tt1;
-                tt3 = tt;
-                next = STATE_TDE;
-                //printf("\r\nDOWN: %lu %d %d\r\n", tt, prFast, prSlow);
-            }
-            break;
-        case STATE_TDE:
-            if (prFast>=prSlow && prSlow<=((targetLow+targetHigh)/2)) {
-                int16_t ntde;
-                tt4 = tt;
-                next = STATE_LOW;
-                ntde = tt4-tt3;
-               
-                //if (numtde<10 || (ABS(ntde-tde)<tde/3)) { // New samples within 33%
-                if (true) {
-                    tdeBuffer[numtde%10] = ntde;
-                    pe = prFast;
-                    if (pe>targetLow+2*5) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
-                    if (pe<targetLow-2*5) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
-                    tde = 0;
-                    for (int i=0; i<MIN(numtde+1,10); i++) tde = tde + tdeBuffer[i];                   
-                    tde = tde/MIN(numtde+1,10);
-                    //printf("\r\nTDE: %d %d @ %lu %d %d\r\n", ntde, tde, tt, prFast, prSlow);
-                    //MonitorDump();
-                }
-                numtde++;
-                if (numtde>=100) numtde=10; 
-            }
-            break;
-        default:
-            break; 
-    };
+            //DisplayCalibrate(prFast, adcOffset);
+        }
+    } 
+            
     state = next;
     
 }
@@ -238,15 +319,37 @@ void ClearVars(void) {
     te = 0;
     tdi = 0;
     tde = 0;
+    tt  = 0;
+    ttExt = 0;
     tt1 = 0;
     tt2 = 0;
     tt3 = 0;
     tt4 = 0;
+    tt12 = 0;
+    tt34 = 0;
+    bpm = 0;
     bp  = 0;
     
     pi = 0;
     pe = 0;
+    rpi = targetHigh;
+    rpe = targetLow;
+    lrpi = targetHigh;
+    lrpe = targetLow;
     maxPressure = 0;
+    minPressure = 40*5;
+    alarmMaxPressure = 0;
+    prSlow = 0;
+    prSlowDev = 0;
+    prSlowNumStable = 0;
+    hiLimit = 40*5;
+    loLimit = 0;
+
+    
+    ClearEPAboveSetAlarm();
+    ClearEPBellowSetAlarm();
+    ClearIPAboveSetAlarm();
+    ClearIPBellowSetAlarm();
  
 }
 
@@ -254,8 +357,8 @@ void InitializePressure (void) {
     //ADCC_Initialize(); // Already in mcc.c
     ADCC_EnableContinuousConversion();
     ADCC_StartConversion(PRS);
-    targetHigh = 25*5; // 0.2 mbar
-    targetLow  = 5*5; // 0.2 mbar
+    targetHigh = 30*5; // 0.2 mbar
+    targetLow  = 7*5; // 0.2 mbar
     adcOffset = 0; // Read from EEPROM or calibrate. ADC counts
     state = STATE_OFF;
     ClearVars();

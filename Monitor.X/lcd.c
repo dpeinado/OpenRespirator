@@ -7,9 +7,6 @@
 #include "mcc_generated_files/mcc.h"
 #include "lcd.h"
 
-#define LCD_DATA		PORTB
-#define LCD_E			PORTBbits.RB1
-#define LCD_RS			PORTBbits.RB0
 
 void LCDWriteCmd(uint8_t data);
 void LCDWriteChar(char chr);

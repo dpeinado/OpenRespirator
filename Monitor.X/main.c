@@ -78,6 +78,8 @@ void main(void)
     //tick_init();
     ButtonInit();
     
+    SetSV1(true); // Open air input to the system
+    
     // Interrupt driven tasks:
     //  + ADC acquisition using TIMER 0
     //  + I2C reception
@@ -90,6 +92,7 @@ void main(void)
 //        InputTargetsTask();             // Update targets from Controller via I2C
 
         DisplayTask();
+        AlarmCheckTask();
         
         if (UART1_is_rx_ready())
         {
@@ -126,7 +129,7 @@ void main(void)
                 //putch('\n');
             }
         }
-        _delay(10);
+        //_delay(10);
     }
 }
 /**

@@ -60,9 +60,18 @@ bool EPBellowSetAlarm(void) {
     if (epBellowSetAlarm> 3) return true;
     else return false;
 };
-bool EPAboveSetAlarm(void) { return epAboveSetAlarm; };
-bool IPBellowSetAlarm(void) { return ipBellowSetAlarm; };
-bool IPAboveSetAlarm(void) { return ipAboveSetAlarm; };
+bool EPAboveSetAlarm(void) {
+    if (epAboveSetAlarm> 3) return true;
+    else return false;
+};
+bool IPBellowSetAlarm(void) {
+    if (ipBellowSetAlarm> 3) return true;
+    else return false;
+};
+bool IPAboveSetAlarm(void) {
+    if (ipAboveSetAlarm> 3) return true;
+    else return false;
+};
 bool TdiTooLongAlarm(void) { 
     if (GetTdi() > 700) tdiTooLongAlarm= true;
     else tdiTooLongAlarm = false;
@@ -154,12 +163,11 @@ int histSec = 0;
 int hist = 0;
 
 int displayStatus;
-
+bool alarmCheck = false;
 
 #define DISPLAY_NORMAL 0
 #define DISPLAY_ALARM  1
 #define DISPLAY_HIST   2
-
 
 void TestAlarm(int id) {
     testAlarm[id] = !testAlarm[id];
@@ -207,6 +215,18 @@ void MuteAlarm(void) {
         muteSec = 120;
         if (alarmData[HigherAlarm()].func==HighPressureAlarmHigh) {
             ClearHighPressureAlarmHigh();
+        }
+        if (alarmData[HigherAlarm()].func==MonitorFailAlarm) {
+            ClearMonitorFailAlarm();
+        }
+        if (alarmData[HigherAlarm()].func==ControlFailAlarm) {
+            ClearControlFailAlarm();
+        }
+        if (alarmData[HigherAlarm()].func==GasFailureAlarm) {
+            ClearGasFailureAlarm();
+        }
+        if (alarmData[HigherAlarm()].func==CircuitFailureAlarm) {
+            ClearCircuitFailureAlarm();
         }
     }
 }
@@ -290,6 +310,8 @@ void HistAlarm(void) {
 }
 
 void AlarmCheckTask(void) {
+    if (alarmCheck == false) return;
+    alarmCheck = false;
     // Current buzzer state
     static int current = 0;
     
@@ -333,11 +355,12 @@ void AlarmCheckTask(void) {
 
 
 void AlarmHandler(void) {
-    printf("AH %d %d\r\n", muteSec, histSec);
+    //printf("AH %d %d\r\n", muteSec, histSec);
     if (muteSec && AnyAlarm()) muteSec--;
     else muteSec = 0;
     if (histSec) histSec--;
-    AlarmCheckTask();    
+    //AlarmCheckTask(); // Task is done at app level, not at IRQ
+    alarmCheck = true; // Tell main loop to do checkTask
 }
 
 void AlarmInit() {

@@ -22,12 +22,15 @@ extern "C" {
                      // ... C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 4s
 
 void AlarmInit(void);
+void AlarmCheckTask(void);
 
 void MuteAlarm(void);
 void HistAlarm(void);
 
 void TestAlarm(int);
 char *GetAlarmState(void);
+
+bool CircuitFailureAlarm(void);
 
 void SetBatteryFailAlarm(void);
 void SetMonitorFailAlarm(void);
