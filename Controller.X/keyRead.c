@@ -3,7 +3,6 @@
 #define ESCAPE_TIME 2000
 #endif
 
-#define ESCAPE_CODE -100
 #define KEYN 6
 
 #include "time.h"

@@ -378,7 +378,7 @@ uint16_t vMeasureGet(void);
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
-    MicSensor=2,
+    VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
     Flt2PSensor=5,
@@ -386,6 +386,8 @@ typedef enum{
 } aSrcTyp;
 
 void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
@@ -27524,5 +27526,5 @@ uint16_t vMeasureGet(void) {
     rawV=volume;
     PIE4bits.TMR2IE = 1;
 
-    return rawV/123;
+    return rawV/54;
 }

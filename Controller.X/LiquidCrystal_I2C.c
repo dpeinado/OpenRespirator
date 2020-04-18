@@ -299,7 +299,7 @@ void load_custom_character(uint8_t char_num, uint8_t *rows){
 		createChar(char_num, rows);
 }
 
-void setBacklight(uint8_t new_val){
+void setBacklight(bool new_val){
 	if(new_val){
 		backlight();		// turn backlight on
 	}else{

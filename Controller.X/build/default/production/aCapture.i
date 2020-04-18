@@ -27200,7 +27200,7 @@ void ADCC_DefaultInterruptHandler(void);
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
-    MicSensor=2,
+    VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
     Flt2PSensor=5,
@@ -27208,6 +27208,8 @@ typedef enum{
 } aSrcTyp;
 
 void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
@@ -27224,8 +27226,8 @@ aSrcTyp curASrc;
 
 
 
-int16_t mainPSensCal = 190;
-int16_t auxPSensCal = 1190;
+int16_t mainPSensCal = 164;
+int16_t auxPSensCal = 962;
 
 
 
@@ -27243,12 +27245,12 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
         case AuxPSensor:
             return channel_ANE2;
             break;
-        case MicSensor:
+        case VddSensor:
             return channel_ANE0;
             break;
         default:
 
-           LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+           LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",100);
            return -1;
     }
 }
@@ -27268,11 +27270,19 @@ void adcCaptureIsr(void){
     if (curASrc==3){
         curASrc=0;
     }
+    if (curASrc <= AuxPSensor ){
+        ADCON0bits.ADON = 0;
+
+        ADREF = 0x00;
+    } else {
+        ADCON0bits.ADON = 0;
+
+        ADREF = 0x03;
+    }
     ADCC_StartConversion(adcGetCh(curASrc));
 
 
     if (adcSel<3){
-
         resultTbl[adcSel]=adcData;
 
         resultTblVal[adcSel]++;
@@ -27298,7 +27308,7 @@ void adcCaptureIsr(void){
         }
     } else {
 
-        LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",1);
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",101);
     }
 }
 
@@ -27316,6 +27326,16 @@ void aCaptureInit(void){
     ADCC_StartConversion(adcGetCh(curASrc));
 
     PIE1bits.ADTIE = 1;
+}
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+    if (sel == MainPSensor) {
+        mainPSensCal = offVal;
+    } else if (sel == AuxPSensor) {
+        auxPSensCal = offVal;
+    } else {
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",102);
+    }
 }
 
 void aCaptRstFlt(aSrcTyp sel) {
@@ -27385,8 +27405,11 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
         case AuxPSensor:
             *outVal = (lclRaw - auxPSensCal)/1;
             return 1;
+        case VddSensor:
+            *outVal = lclRaw<<1;
+            return 1;
         default:
 
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",103);
     }
 }

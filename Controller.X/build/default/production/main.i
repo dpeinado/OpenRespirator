@@ -27878,7 +27878,7 @@ void PMD_Initialize(void);
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
-    MicSensor=2,
+    VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
     Flt2PSensor=5,
@@ -27886,6 +27886,8 @@ typedef enum{
 } aSrcTyp;
 
 void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
@@ -27924,7 +27926,7 @@ uint16_t vMeasureGet(void);
 # 49 "main.c" 2
 
 # 1 "./keyRead.h" 1
-# 14 "./keyRead.h"
+# 16 "./keyRead.h"
 void keyReadInit(void);
 
 int8_t keyAvailable(void);
@@ -27964,7 +27966,7 @@ void createChar(uint8_t, uint8_t[]);
 void setCursor(uint8_t, uint8_t);
 void write(uint8_t);
 void init();
-void setBacklight(uint8_t new_val);
+void setBacklight(_Bool new_val);
 void load_custom_character(uint8_t char_num, uint8_t *rows);
 void printstr(const char[]);
 void printstrblock(const char[]);
@@ -27973,35 +27975,42 @@ _Bool PrintStrBusy(void);
 
 
 
-void putch(char byte)
-{
+
+void putch(char byte) {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
 # 69 "main.c"
 uint16_t intIP, intPEEP;
 # 82 "main.c"
-uint8_t BPM=10;
-uint8_t IP=4;
-uint8_t PEEP=4;
-# 107 "main.c"
-__attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
+uint8_t BPM = 10;
+uint8_t IP = 4;
+uint8_t PEEP = 4;
+# 108 "main.c"
+__attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
     int32_t intLVal;
 
 
-    intLVal = (delay*256)/(((time_t) 20*1));
-    intLVal = (intLVal * (pInst - pAvgShort))/256;
+    intLVal = (delay * 256) / (((time_t) 20*1));
+    intLVal = (intLVal * (pInst - pAvgShort)) / 256;
     return pInst + ((uint16_t) intLVal);
 }
 
 
 
-enum menuStatusT{
+enum menuStatusT {
     CFG_IDLE,
     CFG_IP,
     CFG_BPM,
     CFG_PEEP
 } menuStatus;
+
+enum ctrlStatusT {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN
+} ctrlStatus;
+
 
 time_t menuTstamp;
 uint8_t menuVal;
@@ -28009,26 +28018,27 @@ char lcdTopRow[20];
 char lcdBtnRow[20];
 _Bool lcdPrint, lcdBlink;
 uint16_t lastCycleVol;
+uint16_t openFlowRate;
 
-void MenuInit(void){
+void MenuInit(void) {
     menuStatus = CFG_IDLE;
 }
 
-void MenuMng(void){
+void MenuMng(void) {
 
     int8_t keyPress;
     keyPress = keyRead();
-    if (keyPress >= 0){
+    if (keyPress >= 0) {
         printf ("KEY! %d\n", keyPress);
         lcdPrint = 1;
 
-        switch (keyPress){
+        switch (keyPress) {
             case 0:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_IP;
                     menuVal = IP;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_IP){
+                } else if (menuStatus == CFG_IP) {
 
                     IP = menuVal;
                     menuStatus = CFG_IDLE;
@@ -28038,11 +28048,11 @@ void MenuMng(void){
                 }
                 break;
             case 2:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_BPM;
                     menuVal = BPM;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_BPM){
+                } else if (menuStatus == CFG_BPM) {
 
                     BPM = menuVal;
                     menuStatus = CFG_IDLE;
@@ -28052,11 +28062,11 @@ void MenuMng(void){
                 }
                 break;
             case 1:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_PEEP;
                     menuVal = PEEP;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_PEEP){
+                } else if (menuStatus == CFG_PEEP) {
 
                     PEEP = menuVal;
                     menuStatus = CFG_IDLE;
@@ -28066,56 +28076,62 @@ void MenuMng(void){
                 }
                 break;
             case 5:
-                if (menuStatus != CFG_IDLE){
+                if (menuStatus != CFG_IDLE) {
                     menuTstamp = timeGet();
                     menuVal = menuVal + 1;
 
-                    switch (menuStatus){
+                    switch (menuStatus) {
                         case CFG_IP:
-                            if (menuVal > 35){
+                            if (menuVal > 35) {
                                 menuVal = 35;
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal > 25){
+                            if (menuVal > 25) {
                                 menuVal = 25;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal > 30){
+                            if (menuVal > 30) {
                                 menuVal = 30;
                             }
+                            break;
+                        default:
+
                             break;
                     }
                 }
                 break;
             case 3:
-                if (menuStatus != CFG_IDLE){
+                if (menuStatus != CFG_IDLE) {
                     menuTstamp = timeGet();
                     menuVal = menuVal - 1;
 
-                    switch (menuStatus){
+                    switch (menuStatus) {
                         case CFG_IP:
-                            if (menuVal < 4){
+                            if (menuVal < 4) {
                                 menuVal = 4;
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal < 4){
+                            if (menuVal < 4) {
                                 menuVal = 4;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal < 10){
+                            if (menuVal < 10) {
                                 menuVal = 10;
                             }
+                            break;
+                        default:
+
                             break;
                     }
                 }
                 break;
         }
     } else {
-        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))){
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
 
             lcdPrint = 1;
             menuStatus = CFG_IDLE;
@@ -28167,8 +28183,227 @@ void screenMng(void) {
             case CFG_IP:
                 setCursor(7, 0);
                 break;
+            default:
+
+                break;
         }
     }
+}
+
+
+
+
+_Bool InitProcedure(void) {
+    int16_t vddVal, vddValMax, vddValMin, vddValMean;
+    int16_t mPVal, mPValMax, mPValMin, mPValMean;
+    int16_t aPVal, aPValMax, aPValMin, aPValMean;
+    _Bool lcdBLight;
+    time_t tstamp;
+    _Bool initOk;
+
+    ctrlStatus = CTRL_UNCAL;
+
+    setCursor(0, 0);
+    printstrblock("SELF-TEST.      ");
+    setCursor(0, 1);
+    printstrblock("AIRWAY OPEN     ");
+    timeDelayMs(1000);
+
+    vddValMin = 8000;
+    vddValMax = 0;
+    initOk = 1;
+
+    aCaptureSetOff(MainPSensor, 0);
+    aCaptureSetOff(AuxPSensor, 0);
+
+    tstamp = timeGet();
+
+    while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+        if (aCaptGetResult(VddSensor, &vddVal)) {
+            printf ("VDD %d\n", vddVal);
+            if (vddVal > vddValMax) {
+                vddValMax = vddVal;
+            }
+            if (vddVal < vddValMin) {
+                vddValMin = vddVal;
+            }
+        } else {
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+            initOk = 0;
+        }
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+
+    vddValMean = (vddValMax + vddValMin) >> 1;
+    printf ("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean);
+
+    if ((vddValMean > 5250) || (vddValMean < 4750)) {
+
+        setCursor(0, 0);
+        printstrblock("INTERNAL ERROR  ");
+        setCursor(0, 1);
+        sprintf(lcdTopRow, "VDD OOL: % 3d mV", vddValMean);
+        printstrblock(lcdTopRow);
+        initOk = 0;
+    } else if ((vddValMax - vddValMin) > 100) {
+
+        setCursor(0, 0);
+        printstrblock("INTERNAL ERROR  ");
+        setCursor(0, 1);
+        printstrblock("VDD NOISY       ");
+        initOk = 0;
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+    while (ctrlStatus == CTRL_UNCAL) {
+
+
+        LATDbits.LATD6 = 1;
+        setCursor(0, 0);
+        printstrblock("CAL PRESS BREATH");
+        tstamp = timeGet();
+        lcdBLight = 1;
+        tstamp = timeGet();
+
+
+        while (keyPeek() != -1)
+            ;
+        keyRead();
+
+        while (1) {
+            if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
+                setBacklight(lcdBLight);
+                lcdBLight = !lcdBLight;
+            }
+
+
+            if (keyReadEC() == -100) {
+                if (keyPeek() == 4) {
+
+                    setBacklight(1);
+                    break;
+                }
+            }
+        }
+
+
+        mPValMin = 4096;
+        aPValMin = 4096;
+        mPValMax = 0;
+        aPValMax = 0;
+
+        while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+            if (aCaptGetResult(MainPSensor, &mPVal)) {
+                if (mPVal > mPValMax) {
+                    mPValMax = mPVal;
+                }
+                if (mPVal < mPValMin) {
+                    mPValMin = mPVal;
+                }
+            } else {
+                LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+                initOk = 0;
+            }
+
+            if (aCaptGetResult(AuxPSensor, &aPVal)) {
+                if (aPVal > aPValMax) {
+                    aPValMax = aPVal;
+                }
+                if (aPVal < aPValMin) {
+                    aPValMin = aPVal;
+                }
+            } else {
+                initOk = 0;
+                LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+            }
+        }
+
+
+        mPValMean = (mPValMax + mPValMin) >> 1;
+        aPValMean = (aPValMax + aPValMin) >> 1;
+        LATDbits.LATD6 = 0;
+        sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+        printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+        printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(1000);
+
+
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean > 350) || (aPValMean < 600) || (aPValMean > 1030)) {
+
+            setCursor(0, 0);
+            printstrblock("CAL ERROR. RETRY ");
+            timeDelayMs(500);
+        } else {
+
+            aCaptureSetOff(MainPSensor, mPValMean);
+            aCaptureSetOff(AuxPSensor, aPValMean);
+
+            aCaptRstFlt(Flt0PSensor);
+            aCaptRstFlt(Flt1PSensor);
+            aCaptRstFlt(Flt2PSensor);
+            aCaptRstFlt(Flt3PSensor);
+            printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+            printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+            timeDelayMs(50);
+            ctrlStatus = CTRL_STOP;
+        }
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+
+    tstamp = timeGet();
+
+
+    setCursor(0, 0);
+    printstrblock("FLOW RATE        ");
+
+    LATAbits.LATA2 = 1;
+    LATAbits.LATA3 = 1;
+    timeDelayMs(250);
+    vMeasureRst();
+    timeDelayMs(250);
+
+    openFlowRate = vMeasureGet()<<2;
+    LATAbits.LATA2 = 0;
+    LATAbits.LATA3 = 0;
+
+    sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+    setCursor(0, 0);
+    printstrblock(lcdTopRow);
+    timeDelayMs(4000);
+
+    if (openFlowRate < 200) {
+
+        setCursor(0, 0);
+        printstrblock("FLOW TOO LOW    ");
+        timeDelayMs(1000);
+        initOk = 0;
+    } else if (openFlowRate > 2500) {
+
+        setCursor(0, 0);
+        printstrblock("FLOW TOO HIGH   ");
+        timeDelayMs(1000);
+        initOk = 0;
+    }
+
+
+    while (keyPeek() != -1)
+        ;
+    keyRead();
+
+    return initOk;
 }
 
 void main(void) {
@@ -28202,10 +28437,8 @@ void main(void) {
     aCaptureInit();
     timeInit();
 
-    printf ("PCTRL START\n");
 
-    rSubCycleTime = timeGet();
-    while (timeElapsedR(&rSubCycleTime, ((time_t) 50*1)));
+    timeDelayMs(50);
 
 
     rSV2ValveDelay = 20;
@@ -28217,13 +28450,58 @@ void main(void) {
     lastCycleVol = 0;
     keyReadInit();
     screenInit();
-# 410 "main.c"
+
+    while (1) {
+        char keyTmp;
+        while (!InitProcedure())
+            ;
+
+        setCursor(0, 0);
+        printstrblock("PRESS + TO REPEAT ");
+        setCursor(0, 1);
+        printstrblock("PRESS - TO EXIT ");
+
+        keyTmp=keyRead();
+        while ((keyTmp != 3)&&(keyTmp != 5)) {
+            keyTmp=keyRead();
+        }
+        if (keyTmp == 3){
+            break;
+        }
+    }
+
+
+    lcdPrint=1;
+    setCursor(0, 1);
+    printstrblock("BREATH TO START ");
+    while (ctrlStatus != CTRL_RUN) {
+        LATDbits.LATD6 = 1;
+
+        MenuMng();
+        screenMng();
+
+
+        if (keyPeek() == 4) {
+            if (keyReadEC() == -100) {
+
+                LATDbits.LATD6 = 0;
+                ctrlStatus = CTRL_RUN;
+
+
+                while (keyPeek() != -1)
+                ;
+                keyRead();
+                break;
+            }
+        }
+    }
+# 672 "main.c"
     while (1) {
 
 
 
         printf ("\nIP\n");
-        intIP = ((int16_t) 45*IP);
+        intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
 
 
         LATAbits.LATA2 = 1;
@@ -28235,13 +28513,12 @@ void main(void) {
         OSCheck = 0;
         rValveDelayStart = timeGet();
         vMeasureRst();
-
         while (1) {
             if (timeElapsedR(&rCycleTime, ((time_t) ((1*60.0)/(3*BPM)*1000)))) {
 
                 break;
             } else {
-                TODO:
+
 
 
 
@@ -28256,7 +28533,7 @@ void main(void) {
                     if (aCaptGetResult(MainPSensor, &pInst)) {
 
 
-                        if ((pInspOS < ((int16_t) 45*5)) && (pInspOS > ((int16_t) 45*-5))) {
+                        if ((pInspOS < ((int16_t) ((0.045*4096+2)/5)*5)) && (pInspOS > ((int16_t) ((0.045*4096+2)/5)*-5))) {
                             pTmp = intIP - pInspOS;
                         } else {
                             pTmp = intIP;
@@ -28277,12 +28554,12 @@ void main(void) {
                             pValveActuation = pNext;
                             OSCheck = 1;
                             pPlateau = 0;
-                            printf ("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) 45*1), (10 * pNext) / ((int16_t) 45*1));
+                            printf ("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pNext) / ((int16_t) ((0.045*4096+2)/5)*1));
                         }
                         if (valveDelayCheck) {
 
 
-                            if (pInst > (pAvgShort + ((int16_t) 45*1))) {
+                            if (pInst > (pAvgShort + ((int16_t) ((0.045*4096+2)/5)*1))) {
                                 valveDelayCheck = 0;
 
                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
@@ -28302,28 +28579,29 @@ void main(void) {
                             LATAbits.LATA2 = 0;
                             rValveAcuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            printf ("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) 45*1));
+                            printf ("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                         }
                     } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                         if (OSCheck) {
 
-                            aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                            aCaptGetResult(Flt1PSensor, &pAvgUShort);
                             if (pPlateau < pAvgUShort) {
                                 pPlateau = pAvgUShort;
                             }
 
-                            if (timeElapsed(rValveAcuationTstamp, ((time_t) 150*1)+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, ((time_t) 150*1) + rSV2ValveDelay)) {
 
                                 pTmp = pPlateau - pValveActuation;
-                                pInspOS = (pInspOS + pTmp) / 2;
+                                pInspOS = (3*pInspOS + pTmp)>>2;
                                 OSCheck = 0;
+                                printf ("PIOSE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                             }
                         }
 
-                        if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) 45*2.5)))) {
+                        if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
                             LATAbits.LATA2 = 1;
                             rSubCycleTime = timeGet();
-                            printf ("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) 45*1));
+                            printf ("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                         }
                     }
                 }
@@ -28337,8 +28615,8 @@ void main(void) {
                 aCaptGetResult(MainPSensor, &pInst);
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) 45*1), (10 * (pNext)) / ((int16_t) 45*1), (10 * (pInst - pAvgShort)) / ((int16_t) 45*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) 45*1), (10 * pInspOS) / ((int16_t) 45*1));
-# 538 "main.c"
+                printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
+# 800 "main.c"
             }
 
         }
@@ -28350,7 +28628,7 @@ void main(void) {
 
 
         printf ("\nEP\n");
-        intPEEP = ((int16_t) 45*PEEP);
+        intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
         rSubCycleTime = timeGet();
         LATAbits.LATA2 = 0;
         LATAbits.LATA3 = 0;
@@ -28374,8 +28652,8 @@ void main(void) {
 
 
                         pTmp = intPEEP - pExpOS;
-                        if (pTmp <= ((int16_t) 45*1)) {
-                            pTmp = ((int16_t) 45*1);
+                        if (pTmp <= ((int16_t) ((0.045*4096+2)/5)*1)) {
+                            pTmp = ((int16_t) ((0.045*4096+2)/5)*1);
                         }
                         if (pAvgShort < pTmp) {
                             LATAbits.LATA3 = 1;
@@ -28383,7 +28661,7 @@ void main(void) {
                             rValveAcuationTstamp = timeGet();
                             pValveActuation = pInst;
                             OSCheck = 1;
-                            printf ("PEI end T %d - Pi %d OS %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) 45*1), (10 * pExpOS) / ((int16_t) 45*1));
+                            printf ("PEI end T %d - Pi %d OS %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
 
 
 
@@ -28395,22 +28673,22 @@ void main(void) {
                             LATAbits.LATA2 = 0;
                             rValveAcuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            printf ("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) 45*1));
+                            printf ("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                         }
                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
                         if (OSCheck) {
-                            if (timeElapsed(rValveAcuationTstamp, ((time_t) 350*1)+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, ((time_t) 350*1) + rSV2ValveDelay)) {
 
                                 aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                 pPlateau = pAvgUShort;
 
                                 pTmp = pPlateau - pValveActuation;
-                                pExpOS = (3*pExpOS + pTmp) / 4;
+                                pExpOS = (3 * pExpOS + pTmp) / 4;
 
                                 aCaptRstFlt(Flt2PSensor);
                                 aCaptRstFlt(Flt3PSensor);
                                 OSCheck = 0;
-                                printf ("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) 45*1), (10 * pAvgUShort) / ((int16_t) 45*1));
+                                printf ("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pAvgUShort) / ((int16_t) ((0.045*4096+2)/5)*1));
                             }
                         } else {
 
@@ -28418,19 +28696,19 @@ void main(void) {
 
                             aCaptGetResult(Flt2PSensor, &bdP1);
                             aCaptGetResult(Flt3PSensor, &bdP2);
-                            if (((bdP1 + ((int16_t) 45*0.5)) < bdP2) || (keyPeek() == 4)) {
+                            if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*0.5)) < bdP2) || (keyPeek() == 4)) {
 
-                                printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) 45*1), (10 * bdP1) / ((int16_t) 45*1), (10 * bdP1) / ((int16_t) 45*1));
+                                printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
                                 LATDbits.LATD6 = 1;
                                 rCycleTime = timeGet();
                                 break;
                             }
 
 
-                            if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (bdP1 < (intPEEP - ((int16_t) 45*2.5)))) {
+                            if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (bdP1 < (intPEEP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
-                                printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) 45*1), (10 * bdP1) / ((int16_t) 45*1));
+                                printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
                             }
                         }
                     }
@@ -28444,7 +28722,7 @@ void main(void) {
                 aCaptGetResult(MainPSensor, &pInst);
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                printf ("PE T %d - Pi %d Pn %d Pd %d. Pep %d OS %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) 45*1), (10 * (pNext)) / ((int16_t) 45*1), (10 * (pInst - pAvgShort)) / ((int16_t) 45*1), (10 * pPlateau) / ((int16_t) 45*1), (10 * pExpOS) / ((int16_t) 45*1));
+                printf ("PE T %d - Pi %d Pn %d Pd %d. Pep %d OS %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
 
 
 

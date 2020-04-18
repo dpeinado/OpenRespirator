@@ -16,7 +16,7 @@
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
         Device            :  PIC18F46K42
         Driver Version    :  2.00
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -39,7 +39,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #include "mcc_generated_files/mcc.h"
 #include "ORespGlobal.h"
@@ -51,17 +51,17 @@
 #include "LiquidCrystal_I2C.h"
 
 #ifdef DEBUG
-void putch(char byte)
-{
+
+void putch(char byte) {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
 #endif
 
 #ifdef DEBUG
-# define DEBUG_PRINT(x) printf x
+#define DEBUG_PRINT(x) printf x
 #else
-# define DEBUG_PRINT(x) do {} while (0)
+#define DEBUG_PRINT(x) do {} while (0)
 #endif
 
 
@@ -79,9 +79,9 @@ uint16_t intIP, intPEEP;
 ///////////////////
 // User parameters.
 ///////////////////
-uint8_t BPM=10;
-uint8_t IP=4;
-uint8_t PEEP=4;
+uint8_t BPM = 10;
+uint8_t IP = 4;
+uint8_t PEEP = 4;
 
 // CONTROLLER INTERNAL PARAMETERS.
 #define BLED_ONTIME TIME_MS(500)
@@ -104,23 +104,31 @@ uint8_t PEEP=4;
 
 // pAvgShort assumed to have 16ms tau.
 #define PAVGSHORTTAU TIME_MS(20)
-inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort){
+
+inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
     int32_t intLVal;
-    
+
     // Scale delay.
-    intLVal = (delay*256)/(PAVGSHORTTAU);
-    intLVal = (intLVal * (pInst - pAvgShort))/256;
+    intLVal = (delay * 256) / (PAVGSHORTTAU);
+    intLVal = (intLVal * (pInst - pAvgShort)) / 256;
     return pInst + ((uint16_t) intLVal);
 }
 
 #define MENU_TOUT TIME_S(5)
 
-enum menuStatusT{
+enum menuStatusT {
     CFG_IDLE,
     CFG_IP,
     CFG_BPM,
     CFG_PEEP
 } menuStatus;
+
+enum ctrlStatusT {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN
+} ctrlStatus;
+
 
 time_t menuTstamp;
 uint8_t menuVal;
@@ -128,26 +136,27 @@ char lcdTopRow[20];
 char lcdBtnRow[20];
 bool lcdPrint, lcdBlink;
 uint16_t lastCycleVol;
+uint16_t openFlowRate;
 
-void MenuInit(void){
+void MenuInit(void) {
     menuStatus = CFG_IDLE;
 }
 
-void MenuMng(void){
+void MenuMng(void) {
     // Manage menu.
     int8_t keyPress;
     keyPress = keyRead();
-    if (keyPress >= 0){
-        DEBUG_PRINT(("KEY! %d\n", keyPress));  
+    if (keyPress >= 0) {
+        DEBUG_PRINT(("KEY! %d\n", keyPress));
         lcdPrint = true;
 
-        switch (keyPress){
+        switch (keyPress) {
             case KEYIP:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_IP;
                     menuVal = IP;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_IP){
+                } else if (menuStatus == CFG_IP) {
                     // Accept change and exit.
                     IP = menuVal;
                     menuStatus = CFG_IDLE;
@@ -157,11 +166,11 @@ void MenuMng(void){
                 }
                 break;
             case KEYBPM:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_BPM;
                     menuVal = BPM;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_BPM){
+                } else if (menuStatus == CFG_BPM) {
                     // Accept change and exit.
                     BPM = menuVal;
                     menuStatus = CFG_IDLE;
@@ -171,11 +180,11 @@ void MenuMng(void){
                 }
                 break;
             case KEYPEEP:
-                if (menuStatus == CFG_IDLE){
+                if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_PEEP;
                     menuVal = PEEP;
                     menuTstamp = timeGet();
-                } else if (menuStatus == CFG_PEEP){
+                } else if (menuStatus == CFG_PEEP) {
                     // Accept change and exit.
                     PEEP = menuVal;
                     menuStatus = CFG_IDLE;
@@ -185,56 +194,62 @@ void MenuMng(void){
                 }
                 break;
             case KEYPLUS:
-                if (menuStatus != CFG_IDLE){
+                if (menuStatus != CFG_IDLE) {
                     menuTstamp = timeGet();
                     menuVal = menuVal + 1;
                     // Should also check limits.
-                    switch (menuStatus){
+                    switch (menuStatus) {
                         case CFG_IP:
-                            if (menuVal > IP_MAX){
+                            if (menuVal > IP_MAX) {
                                 menuVal = IP_MAX;
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal > PEEP_MAX){
+                            if (menuVal > PEEP_MAX) {
                                 menuVal = PEEP_MAX;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal > BPM_MAX){
+                            if (menuVal > BPM_MAX) {
                                 menuVal = BPM_MAX;
                             }
+                            break;
+                        default:
+                            // No processing.
                             break;
                     }
                 }
                 break;
             case KEYMINUS:
-                if (menuStatus != CFG_IDLE){
+                if (menuStatus != CFG_IDLE) {
                     menuTstamp = timeGet();
                     menuVal = menuVal - 1;
                     // Should also check limits.
-                    switch (menuStatus){
+                    switch (menuStatus) {
                         case CFG_IP:
-                            if (menuVal < IP_MIN){
+                            if (menuVal < IP_MIN) {
                                 menuVal = IP_MIN;
                             }
                             break;
                         case CFG_PEEP:
-                            if (menuVal < PEEP_MIN){
+                            if (menuVal < PEEP_MIN) {
                                 menuVal = PEEP_MIN;
                             }
                             break;
                         case CFG_BPM:
-                            if (menuVal < BPM_MIN){
+                            if (menuVal < BPM_MIN) {
                                 menuVal = BPM_MIN;
                             }
+                            break;
+                        default:
+                            // No processing.
                             break;
                     }
                 }
                 break;
-        }    
-    } else  {
-        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, MENU_TOUT))){
+        }
+    } else {
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, MENU_TOUT))) {
             // Silently exit menu.
             lcdPrint = true;
             menuStatus = CFG_IDLE;
@@ -286,8 +301,227 @@ void screenMng(void) {
             case CFG_IP:
                 setCursor(7, 0);
                 break;
+            default:
+                // No processing.
+                break;
         }
     }
+}
+
+// Initialization procedure.
+// Self-test.
+
+bool InitProcedure(void) {
+    int16_t vddVal, vddValMax, vddValMin, vddValMean;
+    int16_t mPVal, mPValMax, mPValMin, mPValMean;
+    int16_t aPVal, aPValMax, aPValMin, aPValMean;
+    bool lcdBLight;
+    time_t tstamp;
+    bool initOk;
+
+    ctrlStatus = CTRL_UNCAL;
+
+    setCursor(0, 0);
+    printstrblock("SELF-TEST.      ");
+    setCursor(0, 1);
+    printstrblock("AIRWAY OPEN     ");
+    timeDelayMs(1000);
+
+    vddValMin = 8000;
+    vddValMax = 0;
+    initOk = true;
+
+    aCaptureSetOff(MainPSensor, 0);
+    aCaptureSetOff(AuxPSensor, 0);
+    // First check VDD stability.
+    tstamp = timeGet();
+
+    while (!timeElapsedR(&tstamp, TIME_MS(500))) {
+        if (aCaptGetResult(VddSensor, &vddVal)) {
+            DEBUG_PRINT(("VDD %d\n", vddVal));
+            if (vddVal > vddValMax) {
+                vddValMax = vddVal;
+            }
+            if (vddVal < vddValMin) {
+                vddValMin = vddVal;
+            }
+        } else {
+            ERROR_CONDITION(10);
+            initOk = false;
+        }
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+    // Now check within limits.
+    vddValMean = (vddValMax + vddValMin) >> 1;
+    DEBUG_PRINT(("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean));
+
+    if ((vddValMean > 5250) || (vddValMean < 4750)) {
+        // Print error message and exit.
+        setCursor(0, 0);
+        printstrblock("INTERNAL ERROR  ");
+        setCursor(0, 1);
+        sprintf(lcdTopRow, "VDD OOL: % 3d mV", vddValMean);
+        printstrblock(lcdTopRow);
+        initOk = false;
+    } else if ((vddValMax - vddValMin) > 100) {
+        // Print error message and exit.
+        setCursor(0, 0);
+        printstrblock("INTERNAL ERROR  ");
+        setCursor(0, 1);
+        printstrblock("VDD NOISY       ");
+        initOk = false;
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+    while (ctrlStatus == CTRL_UNCAL) {
+        // Repeat until correct calibration.
+        // Now calibrate.
+        BLED_ON;
+        setCursor(0, 0);
+        printstrblock("CAL PRESS BREATH");
+        tstamp = timeGet();
+        lcdBLight = true;
+        tstamp = timeGet();
+
+        // First, ensure no key pressed.
+        while (keyPeek() != -1)
+            ;
+        keyRead();
+
+        while (1) {
+            if (timeElapsedR(&tstamp, TIME_MS(500))) {
+                setBacklight(lcdBLight);
+                lcdBLight = !lcdBLight;
+            }
+            // WAIT UNTIL BREATH BUTTON IS PRESSED DURING 2 SECONDS.
+            // MEANWHILE BLINK LCD and KEEP BREATH PRESSED.
+            if (keyReadEC() == ESCAPE_CODE) {
+                if (keyPeek() == KEYBREATH) {
+                    // Key Breath pressed.
+                    setBacklight(true);
+                    break;
+                }
+            }
+        }
+
+        // Now capture data.
+        mPValMin = 4096;
+        aPValMin = 4096;
+        mPValMax = 0;
+        aPValMax = 0;
+
+        while (!timeElapsedR(&tstamp, TIME_MS(500))) {
+            if (aCaptGetResult(MainPSensor, &mPVal)) {
+                if (mPVal > mPValMax) {
+                    mPValMax = mPVal;
+                }
+                if (mPVal < mPValMin) {
+                    mPValMin = mPVal;
+                }
+            } else {
+                ERROR_CONDITION(10);
+                initOk = false;
+            }
+
+            if (aCaptGetResult(AuxPSensor, &aPVal)) {
+                if (aPVal > aPValMax) {
+                    aPValMax = aPVal;
+                }
+                if (aPVal < aPValMin) {
+                    aPValMin = aPVal;
+                }
+            } else {
+                initOk = false;
+                ERROR_CONDITION(10);
+            }
+        }
+
+        // Cal mean values.
+        mPValMean = (mPValMax + mPValMin) >> 1;
+        aPValMean = (aPValMax + aPValMin) >> 1;
+        BLED_OFF;
+        sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+        DEBUG_PRINT(("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean));
+        DEBUG_PRINT(("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean));
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(1000);
+
+        // Now check pressure sensors working correctly.
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean > 350) || (aPValMean < 600) || (aPValMean > 1030)) {
+            // Too noisy, or values outside expected range.
+            setCursor(0, 0);
+            printstrblock("CAL ERROR. RETRY ");
+            timeDelayMs(500);
+        } else {
+            // Set cal values.
+            aCaptureSetOff(MainPSensor, mPValMean);
+            aCaptureSetOff(AuxPSensor, aPValMean);
+            // Reset filters.
+            aCaptRstFlt(Flt0PSensor);
+            aCaptRstFlt(Flt1PSensor);
+            aCaptRstFlt(Flt2PSensor);
+            aCaptRstFlt(Flt3PSensor);
+            DEBUG_PRINT(("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean));
+            DEBUG_PRINT(("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean));
+            timeDelayMs(50);
+            ctrlStatus = CTRL_STOP;
+        }
+    }
+
+    if (!initOk) {
+        return initOk;
+    }
+
+    // Last step, check volume. 
+    tstamp = timeGet();
+
+    // Open valve, wait for 100ms, measure flow during 500ms, display result.
+    setCursor(0, 0);
+    printstrblock("FLOW RATE        ");
+
+    OPEN_SV2;
+    OPEN_SV3;
+    timeDelayMs(250);
+    vMeasureRst();
+    timeDelayMs(250);
+    // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
+    openFlowRate = vMeasureGet()<<2;
+    CLOSE_SV2;
+    CLOSE_SV3;
+
+    sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+    setCursor(0, 0);
+    printstrblock(lcdTopRow);
+    timeDelayMs(4000);
+
+    if (openFlowRate < 200) {
+        // Outside limits.
+        setCursor(0, 0);
+        printstrblock("FLOW TOO LOW    ");
+        timeDelayMs(1000);
+        initOk = false;
+    } else if (openFlowRate > 2500) {
+        // Outside limits.
+        setCursor(0, 0);
+        printstrblock("FLOW TOO HIGH   ");
+        timeDelayMs(1000);
+        initOk = false;
+    }
+    
+    // Wait until key depressed.
+    while (keyPeek() != -1)
+        ;
+    keyRead();
+        
+    return initOk;
 }
 
 void main(void) {
@@ -303,7 +537,7 @@ void main(void) {
     time_t rSV2ValveDelay;
     time_t rValveDelayStart, rTimeTmp;
     bool initialSubState, valveDelayCheck, OSCheck;
-
+    
     // Initialize the device
     SYSTEM_Initialize();
     // Disable ADC irq.
@@ -321,10 +555,8 @@ void main(void) {
     aCaptureInit();
     timeInit();
 
-    DEBUG_PRINT(("PCTRL START\n"));
     // First wait for startup. 50ms.
-    rSubCycleTime = timeGet();
-    while (timeElapsedR(&rSubCycleTime, TIME_MS(50)));
+    timeDelayMs(50);
 
     // Init all control variables.
     rSV2ValveDelay = 20;
@@ -336,6 +568,51 @@ void main(void) {
     lastCycleVol = 0;
     keyReadInit();
     screenInit();
+
+    while (1) {
+        char keyTmp;
+        while (!InitProcedure())
+            ;
+
+        setCursor(0, 0);
+        printstrblock("PRESS + TO REPEAT ");
+        setCursor(0, 1);
+        printstrblock("PRESS - TO EXIT ");
+
+        keyTmp=keyRead();
+        while ((keyTmp != KEYMINUS)&&(keyTmp != KEYPLUS)) {
+            keyTmp=keyRead();
+        }
+        if (keyTmp == KEYMINUS){
+            break;
+        }
+    }
+    
+    // Now wait until BREATH button pressed.
+    lcdPrint=true;
+    setCursor(0, 1);
+    printstrblock("BREATH TO START ");
+    while (ctrlStatus != CTRL_RUN) {
+        BLED_ON;
+        // User inputs, screen update.
+        MenuMng();
+        screenMng();
+
+        
+        if (keyPeek() == KEYBREATH) {
+            if (keyReadEC() == ESCAPE_CODE) {
+                // Key Breath pressed.
+                BLED_OFF;
+                ctrlStatus = CTRL_RUN;
+    
+                // Wait until key depressed.
+                while (keyPeek() != -1)
+                ;
+                keyRead();
+                break;
+            }
+        }
+    }
     
 #if 0
     if (0) {
@@ -392,21 +669,6 @@ void main(void) {
     }
 #endif
 
-    // Update screen.
-#if 0
-    MenuMng();        
-    screenMng();
-    timeDelayMs(2000);
-    MenuMng();        
-    screenMng();
-    timeDelayMs(2000);
-    MenuMng();        
-    screenMng();
-    timeDelayMs(2000);
-    MenuMng();        
-    screenMng();
-    timeDelayMs(2000);
-#endif
     while (1) {
         /////////////////////////////////////////////
         // Inspiration part of the cycle.
@@ -424,13 +686,12 @@ void main(void) {
         OSCheck = false;
         rValveDelayStart = timeGet();
         vMeasureRst();
-
         while (1) {
             if (timeElapsedR(&rCycleTime, IDURATION)) {
                 // Goto next.
                 break;
             } else {
-                TODO:
+                //TODO
                 // When BPM is very high, i time very short. 
                 // Ensure algorighm is stable in this conditions:
                 // If SV2 is closed before end of IP cycle, and there is time to measure OS, do it.
@@ -496,16 +757,17 @@ void main(void) {
                     } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                         if (OSCheck) {
                             // Keep tracking of pressure, take as plateau max value of pressure during 60ms after valve closing.
-                            aCaptGetResult(Flt0PSensor, &pAvgUShort);
+                            aCaptGetResult(Flt1PSensor, &pAvgUShort);
                             if (pPlateau < pAvgUShort) {
                                 pPlateau = pAvgUShort;
                             }
 
-                            if (timeElapsed(rValveAcuationTstamp, PIPLATEAUMDEL+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, PIPLATEAUMDEL + rSV2ValveDelay)) {
                                 // Filtered pExpOS.
                                 pTmp = pPlateau - pValveActuation;
-                                pInspOS = (pInspOS + pTmp) / 2;
+                                pInspOS = (3*pInspOS + pTmp)>>2;
                                 OSCheck = false;
+                                DEBUG_PRINT(("PIOSE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1)));
                             }
                         }
                         // Measure only after delay of valve actuation has elapsed, x2.
@@ -595,13 +857,13 @@ void main(void) {
                         }
                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
                         if (OSCheck) {
-                            if (timeElapsed(rValveAcuationTstamp, PEPLATEAUMDEL+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, PEPLATEAUMDEL + rSV2ValveDelay)) {
                                 // Take averaged pressure measurement as mean value.
                                 aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                 pPlateau = pAvgUShort;
                                 // Filtered pExpOS.
                                 pTmp = pPlateau - pValveActuation;
-                                pExpOS = (3*pExpOS + pTmp) / 4;
+                                pExpOS = (3 * pExpOS + pTmp) / 4;
                                 // Clear long filters.
                                 aCaptRstFlt(Flt2PSensor);
                                 aCaptRstFlt(Flt3PSensor);
@@ -617,7 +879,7 @@ void main(void) {
                             if (((bdP1 + BDTECT_THRL) < bdP2) || (keyPeek() == KEYBREATH)) {
                                 // Detected breath, or pressed breath button
                                 DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
-                                BLED_ON;                                
+                                BLED_ON;
                                 rCycleTime = timeGet();
                                 break;
                             }
@@ -654,4 +916,4 @@ void main(void) {
 }
 /**
  End of File
-*/
+ */

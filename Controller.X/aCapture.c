@@ -10,8 +10,8 @@ aSrcTyp curASrc;
 // Variables store results in raw format, conversion is done only on call to get result.
 // Pressure sensor.
 // MPXV5010
-int16_t mainPSensCal = 190;
-int16_t auxPSensCal = 1190;
+int16_t mainPSensCal = 164;
+int16_t auxPSensCal = 962;
 #define PSENS_K 1
 #define ASENS_K 1
         // Currently sample every channel at 27.5KHz.
@@ -29,12 +29,12 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
         case AuxPSensor:
             return channel_ANE2;
             break;
-        case MicSensor:
+        case VddSensor:
             return channel_ANE0;
             break;
         default:
            // ERROR.
-           ERROR_CONDITION(1);
+           ERROR_CONDITION(100);
            return -1;
     }
 }
@@ -54,11 +54,19 @@ void adcCaptureIsr(void){
     if (curASrc==ACAPT_N){
         curASrc=0;
     }
+    if (curASrc <= AuxPSensor ){
+        ADCON0bits.ADON = 0;
+        // ADNREF VSS; ADPREF VDD; 
+        ADREF = 0x00;
+    } else {
+        ADCON0bits.ADON = 0;
+        // ADNREF VSS; ADPREF FVR; 
+        ADREF = 0x03;
+    }
     ADCC_StartConversion(adcGetCh(curASrc));
             
     // Process current capture.
     if (adcSel<ACAPT_N){
-        // IIR 1/4, output with 2 decimal bits.
         resultTbl[adcSel]=adcData;
 
         resultTblVal[adcSel]++;
@@ -84,7 +92,7 @@ void adcCaptureIsr(void){
         } 
     } else {
         // ERROR.
-        ERROR_CONDITION(1);
+        ERROR_CONDITION(101);
     }
 }
 
@@ -102,6 +110,16 @@ void aCaptureInit(void){
     ADCC_StartConversion(adcGetCh(curASrc));    
     // Enable ADC Irq.
     PIE1bits.ADTIE = 1;
+}
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+    if (sel == MainPSensor) {
+        mainPSensCal = offVal;
+    } else if (sel == AuxPSensor) {
+        auxPSensCal = offVal;
+    } else {
+        ERROR_CONDITION(102);
+    }
 }
 
 void aCaptRstFlt(aSrcTyp sel) {
@@ -171,9 +189,12 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
         case AuxPSensor:
             *outVal = (lclRaw - auxPSensCal)/ASENS_K;
             return true;
+        case VddSensor:
+            *outVal = lclRaw<<1;
+            return true;
         default:
             // ERROR.
-            ERROR_CONDITION(10);
+            ERROR_CONDITION(103);
     }
 }
 
