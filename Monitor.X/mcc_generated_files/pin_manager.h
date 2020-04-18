@@ -161,45 +161,29 @@
 #define RB3_SetAnalogMode()         do { ANSELBbits.ANSELB3 = 1; } while(0)
 #define RB3_SetDigitalMode()        do { ANSELBbits.ANSELB3 = 0; } while(0)
 
-// get/set TST1 aliases
-#define TST1_TRIS                 TRISBbits.TRISB4
-#define TST1_LAT                  LATBbits.LATB4
-#define TST1_PORT                 PORTBbits.RB4
-#define TST1_WPU                  WPUBbits.WPUB4
-#define TST1_OD                   ODCONBbits.ODCB4
-#define TST1_ANS                  ANSELBbits.ANSELB4
-#define TST1_SetHigh()            do { LATBbits.LATB4 = 1; } while(0)
-#define TST1_SetLow()             do { LATBbits.LATB4 = 0; } while(0)
-#define TST1_Toggle()             do { LATBbits.LATB4 = ~LATBbits.LATB4; } while(0)
-#define TST1_GetValue()           PORTBbits.RB4
-#define TST1_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
-#define TST1_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
-#define TST1_SetPullup()          do { WPUBbits.WPUB4 = 1; } while(0)
-#define TST1_ResetPullup()        do { WPUBbits.WPUB4 = 0; } while(0)
-#define TST1_SetPushPull()        do { ODCONBbits.ODCB4 = 0; } while(0)
-#define TST1_SetOpenDrain()       do { ODCONBbits.ODCB4 = 1; } while(0)
-#define TST1_SetAnalogMode()      do { ANSELBbits.ANSELB4 = 1; } while(0)
-#define TST1_SetDigitalMode()     do { ANSELBbits.ANSELB4 = 0; } while(0)
+// get/set RB4 procedures
+#define RB4_SetHigh()            do { LATBbits.LATB4 = 1; } while(0)
+#define RB4_SetLow()             do { LATBbits.LATB4 = 0; } while(0)
+#define RB4_Toggle()             do { LATBbits.LATB4 = ~LATBbits.LATB4; } while(0)
+#define RB4_GetValue()              PORTBbits.RB4
+#define RB4_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
+#define RB4_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
+#define RB4_SetPullup()             do { WPUBbits.WPUB4 = 1; } while(0)
+#define RB4_ResetPullup()           do { WPUBbits.WPUB4 = 0; } while(0)
+#define RB4_SetAnalogMode()         do { ANSELBbits.ANSELB4 = 1; } while(0)
+#define RB4_SetDigitalMode()        do { ANSELBbits.ANSELB4 = 0; } while(0)
 
-// get/set TST2 aliases
-#define TST2_TRIS                 TRISBbits.TRISB5
-#define TST2_LAT                  LATBbits.LATB5
-#define TST2_PORT                 PORTBbits.RB5
-#define TST2_WPU                  WPUBbits.WPUB5
-#define TST2_OD                   ODCONBbits.ODCB5
-#define TST2_ANS                  ANSELBbits.ANSELB5
-#define TST2_SetHigh()            do { LATBbits.LATB5 = 1; } while(0)
-#define TST2_SetLow()             do { LATBbits.LATB5 = 0; } while(0)
-#define TST2_Toggle()             do { LATBbits.LATB5 = ~LATBbits.LATB5; } while(0)
-#define TST2_GetValue()           PORTBbits.RB5
-#define TST2_SetDigitalInput()    do { TRISBbits.TRISB5 = 1; } while(0)
-#define TST2_SetDigitalOutput()   do { TRISBbits.TRISB5 = 0; } while(0)
-#define TST2_SetPullup()          do { WPUBbits.WPUB5 = 1; } while(0)
-#define TST2_ResetPullup()        do { WPUBbits.WPUB5 = 0; } while(0)
-#define TST2_SetPushPull()        do { ODCONBbits.ODCB5 = 0; } while(0)
-#define TST2_SetOpenDrain()       do { ODCONBbits.ODCB5 = 1; } while(0)
-#define TST2_SetAnalogMode()      do { ANSELBbits.ANSELB5 = 1; } while(0)
-#define TST2_SetDigitalMode()     do { ANSELBbits.ANSELB5 = 0; } while(0)
+// get/set RB5 procedures
+#define RB5_SetHigh()            do { LATBbits.LATB5 = 1; } while(0)
+#define RB5_SetLow()             do { LATBbits.LATB5 = 0; } while(0)
+#define RB5_Toggle()             do { LATBbits.LATB5 = ~LATBbits.LATB5; } while(0)
+#define RB5_GetValue()              PORTBbits.RB5
+#define RB5_SetDigitalInput()    do { TRISBbits.TRISB5 = 1; } while(0)
+#define RB5_SetDigitalOutput()   do { TRISBbits.TRISB5 = 0; } while(0)
+#define RB5_SetPullup()             do { WPUBbits.WPUB5 = 1; } while(0)
+#define RB5_ResetPullup()           do { WPUBbits.WPUB5 = 0; } while(0)
+#define RB5_SetAnalogMode()         do { ANSELBbits.ANSELB5 = 1; } while(0)
+#define RB5_SetDigitalMode()        do { ANSELBbits.ANSELB5 = 0; } while(0)
 
 // get/set RC0 procedures
 #define RC0_SetHigh()            do { LATCbits.LATC0 = 1; } while(0)

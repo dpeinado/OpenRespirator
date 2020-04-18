@@ -90,6 +90,22 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C1_InterruptHandler();
     }
+    else if(PIE6bits.I2C2EIE == 1 && PIR6bits.I2C2EIF == 1)
+    {
+        I2C2_InterruptHandler();
+    }
+    else if(PIE5bits.I2C2RXIE == 1 && PIR5bits.I2C2RXIF == 1)
+    {
+        I2C2_InterruptHandler();
+    }
+    else if(PIE6bits.I2C2IE == 1 && PIR6bits.I2C2IF == 1)
+    {
+        I2C2_InterruptHandler();
+    }
+    else if(PIE5bits.I2C2TXIE == 1 && PIR5bits.I2C2TXIF == 1)
+    {
+        I2C2_InterruptHandler();
+    }
     else if(PIE8bits.TMR5IE == 1 && PIR8bits.TMR5IF == 1)
     {
         TMR5_ISR();

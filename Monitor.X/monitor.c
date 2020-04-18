@@ -21,13 +21,12 @@ uint16_t targetBp;
 #define STATE_OFF           0
 #define STATE_CALIBRATE     1
 #define STATE_LOW           2
-#define STATE_TDI           3
 #define STATE_HIGH          4
-#define STATE_TDE           5
 
 int state;
 
-int32_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34;
+int32_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34, ttNoAlarm;
+bool enableAlarms;
 int16_t tdi, tde, ti, te, bp, bpm;
 int16_t pi,pe, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
 int16_t rpi, rpe, lrpi, lrpe;
@@ -118,7 +117,9 @@ void MonitorPressureTask(void) { // Every 2 ms
  //   ToggleAlarmLED();
     tt++;
     ttExt++;
+    ttNoAlarm++;
     
+    // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
     pr = GetPressure_mbar02();
     //tt = tick_get_slow();  
     prFastBuffer[count%25]=pr;
@@ -130,22 +131,17 @@ void MonitorPressureTask(void) { // Every 2 ms
         temp = 0;
         for (int i=0; i<25; i++) temp +=prSlowBuffer[i];
         prSlow = temp/25;
- //       prSlowDev=0;
- //       for (int i=0; i<25; i++) prSlowDev +=ABS(prSlowBuffer[i]-prSlow);
- //       prSlowDev=prSlowDev/25;
+
     }
     
-//    if (prSlowDev<5) prSlowNumStable++;
-//    else prSlowNumStable=0;
-    
-//    if (prSlow==prFast) {
- //       TST2_SetHigh();
-//    } else {
- //       TST2_SetLow();
-//    }
-    
+    // Only alarm after 12s after setting
+    if (ttNoAlarm>12*500) {
+        enableAlarms = true;
+    }
+
+    // Limits of pressure estimations
     if (ttExt>6*500) { // Every 6 s we should have at least one breath
-        printf("\r\n pLow: %d pHigh: %d Min: %d Max: %d pe: %d pi:%d \r\n", pLow/5, pHigh/5, minPressure/5, maxPressure/5, pe/5, pi/5);
+        //printf("\r\n pLow: %d pHigh: %d Min: %d Max: %d pe: %d pi:%d \r\n", pLow/5, pHigh/5, minPressure/5, maxPressure/5, pe/5, pi/5);
         // Define Hi and Low limits for next cycle
         hiLimit = maxPressure - (maxPressure-minPressure)/5;
         loLimit = minPressure + (maxPressure-minPressure)/4;
@@ -171,11 +167,13 @@ void MonitorPressureTask(void) { // Every 2 ms
         measPi = false;
     }
     
+    // Absolute maximum for the alarm. Max is cleared every second by alarmtask
     if (prSlow>alarmMaxPressure) {
         alarmMaxPressure = prSlow;
         //printf("\r\n MAXP: %d\r\n", pr/5);
     }
     
+    // Get absolute maximum / minimum breaths during the 6 seconds period
     if (prSlow>maxPressure) {
         maxPressure = prSlow;
         //printf("\r\n MAXP: %d\r\n", pr/5);
@@ -185,13 +183,13 @@ void MonitorPressureTask(void) { // Every 2 ms
         //printf("\r\n MAXP: %d\r\n", pr/5);
     }
    
-    // Average signals within limits
+    // Average signals within limits. This will average last 10*25*6 samples: 3 seconds of samples (Between 1 and 2 extra breaths)
     if (prSlow>hiLimit) {
-        TST1_SetHigh();
+        //TST1_SetHigh();
         pHigh = (pHigh*9+prSlow)/10;
     }
     if (prSlow<loLimit) {
-        TST1_SetLow();
+        //TST1_SetLow();
         pLow = (pLow*9+prSlow)/10;    
     }
 
@@ -199,8 +197,11 @@ void MonitorPressureTask(void) { // Every 2 ms
     int16_t halfLimit;
     halfLimit = (hiLimit+loLimit)/2;
     
+    // Use limits and Pe / PI to identify rise and falls
+    
+    // Start of rise
     if (prSlow<loLimit && prFast>= loLimit) { // Crossing low limit up
-        TST1_SetHigh();
+        //TST1_SetHigh();
         if (tt>400) { // Filter more events during ramp-up
             bp = tt; 
             if (bp!=0) bpm = 60000/(bp*2);
@@ -209,23 +210,34 @@ void MonitorPressureTask(void) { // Every 2 ms
         tt=0; // This is the start of time
         tt1 = tt;
         tt12 = tt;
+        // Store PE measured during TE
         measPe=false;
         measPi=false;
         lrpe = rpe;
-        if (lrpe>(targetLow+2*5)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
-        if (lrpe<(targetLow-2*5)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
+        // Check alarms
+        if (enableAlarms) {
+            if (lrpe>(targetLow+2*5)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+            if (lrpe<(targetLow-2*5)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
+        }
 
     }
+    
+    // Start of fall
     if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
-        TST1_SetLow();
+        //TST1_SetLow();
         tt3 = tt;
         tt34 = tt;
+        // Store PI measured during TI
         measPe=false;
         measPi=false;
         lrpi = rpi;
-        if (lrpi>(targetHigh+3*5)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
-        if (lrpi<(targetHigh-3*5)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
+        // Check alarms
+        if (enableAlarms) {
+            if (lrpi>(targetHigh+3*5)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
+            if (lrpi<(targetHigh-3*5)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
+        }
     }
+    
     // Starting state
     if ( state == STATE_OFF) {
         if (pi> (targetHigh+targetLow)/2) { // Don´t do anything until estimators are reasonable
@@ -234,8 +246,8 @@ void MonitorPressureTask(void) { // Every 2 ms
     }
     
     // Transition to HIGH at the top
-    if (prSlow>=(pi-3*5) && state == STATE_LOW) { // State is LOW and I am in the top
-        TST2_SetHigh();
+    if (prSlow>=(pi-3*5) && state == STATE_LOW) { // State is LOW and I am at the top
+        //TST2_SetHigh();
         next = STATE_HIGH;
         tt2 = tt;
 //        printf("\r\nUP: %ld %d\r\n", tt, prSlow/5);
@@ -247,12 +259,14 @@ void MonitorPressureTask(void) { // Every 2 ms
         //MonitorDump();
         numtdi++;
         if (numtdi>=100) numtdi=10;
+        // Now we can start averaging Pi
         measPi=true;
         rpi=pi;
     }
     
-    if (prSlow<=(pe+2*5) && state == STATE_HIGH) {
-        TST2_SetLow();
+    // Transition to LOW at the bottom
+    if (prSlow<=(pe+2*5) && state == STATE_HIGH) { // State is HIGH and I am at the bottom
+        //TST2_SetLow();
         next = STATE_LOW;
         tt4 = tt;
 //        printf("\r\nDOWN: %ld %d\r\n", tt, prSlow/5);
@@ -265,22 +279,25 @@ void MonitorPressureTask(void) { // Every 2 ms
         //MonitorDump();
         numtde++;
         if (numtde>=100) numtde=10;
+        // Now we can start averaging Pe
         measPe = true;
         rpe = pe;
     }
     
-    // New estimators
-    if (measPi) rpi = (rpi*19+prSlow)/20;
-    if (measPe) rpe = (rpe*19+prSlow)/20;
-    
+    // New estimators: 5*25*2 = 250 ms We will average the last 250 ms
+    if (measPi) rpi = (rpi*4+prFast)/5;
+    if (measPe) rpe = (rpe*4+prFast)/5;
+   
     // TBD: Timeout alarms of events
-    if (tt>(bp+bp/5)) {
-        if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No breath in %d ms\r\n", ((bp*12)/10)*2);
-        SetCircuitFailureAlarm();
-    }
-    if (tt>(tt3+tt3/5) && state==STATE_HIGH) {
-        if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No exhalation in %d ms\r\n", ((tt3*12)/10)*2);
-        SetCircuitFailureAlarm();
+    if (enableAlarms) {
+        if (tt>(bp+bp/2) && bp>500) {
+            if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No breath in %d ms\r\n", bp+bp/2);
+            SetCircuitFailureAlarm();
+        }
+        if (tt>(tt3+tt3/2) && tt3>500 && state==STATE_HIGH) {
+            if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No exhalation in %d ms\r\n", tt3+tt3/2);
+            SetCircuitFailureAlarm();
+        }
     }
     
     
@@ -321,6 +338,8 @@ void ClearVars(void) {
     tde = 0;
     tt  = 0;
     ttExt = 0;
+    ttNoAlarm = 0;
+    enableAlarms = false;
     tt1 = 0;
     tt2 = 0;
     tt3 = 0;
