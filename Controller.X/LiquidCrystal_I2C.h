@@ -77,7 +77,7 @@ void createChar(uint8_t, uint8_t[]);
 void setCursor(uint8_t, uint8_t); 
 void write(uint8_t);
 void init();
-void setBacklight(uint8_t new_val);				// alias for backlight() and nobacklight()
+void setBacklight(bool new_val);				// alias for backlight() and nobacklight()
 void load_custom_character(uint8_t char_num, uint8_t *rows);	// alias for createChar()
 void printstr(const char[]);
 void printstrblock(const char[]);

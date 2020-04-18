@@ -15,13 +15,13 @@ extern "C" {
 #define ACAPT_N 3
 #define ATOT_N 7
     
-#define MPRESSURE_MBAR(x) ((int16_t) 45*x)
-#define APRESSURE_MBAR(x) ((int16_t) 100*x)
+#define MPRESSURE_MBAR(x) ((int16_t) ((0.045*4096+2)/5)*x)
+#define APRESSURE_MBAR(x) ((int16_t) ((0.100*4096+2)/5)*x)
     
 typedef enum{
     MainPSensor=0,
     AuxPSensor=1,
-    MicSensor=2,
+    VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
     Flt2PSensor=5,
@@ -29,6 +29,8 @@ typedef enum{
 } aSrcTyp;
 
 void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
 
 bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 

@@ -2,8 +2,8 @@
 #include "aCapture.h"
 #include "cmath.h"
 
-// Constant from acc diff pressure to ml (2ms acc time): 123
-#define VOLK 123
+// Constant from acc diff pressure to ml (2ms acc time): 54 for 6mm orifice.
+#define VOLK 54
 
 uint32_t volume;
 

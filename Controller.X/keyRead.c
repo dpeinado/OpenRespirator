@@ -3,7 +3,6 @@
 #define ESCAPE_TIME 2000
 #endif
 
-#define ESCAPE_CODE -100
 #define KEYN 6
 
 #include "time.h"
@@ -14,7 +13,7 @@
 
 // Pins of portd.
 int8_t keys[KEYN] = {1,2,3,4,5,7};
-int8_t lastkey;
+int8_t lastkey, lastkeyEC;
 time_t pressMills;
 
 uint8_t digitalRead(uint8_t pin){
@@ -24,7 +23,7 @@ uint8_t digitalRead(uint8_t pin){
 void keyReadInit(void){
     pressMills = 0;
     lastkey = -1;
-    
+    lastkeyEC = -1;
     // Keys already initialized.
 };
 
@@ -46,15 +45,15 @@ int8_t keyPeek(void) {
     }
     return -1;
 }
-// Read with escape code.
 
+// Read with escape code.
 int8_t keyReadEC() {
     int8_t ch = keyPeek();
-    if (ch == lastkey) return -1;
-    int8_t tmp = lastkey;
+    if (ch == lastkeyEC) return -1;
+    int8_t tmp = lastkeyEC;
     bool longPress = ESCAPE_TIME && (timeDiff(pressMills,timeGet())>ESCAPE_TIME);
     pressMills = timeGet();
-    lastkey = ch;
+    lastkeyEC = ch;
     return longPress ? ESCAPE_CODE : tmp; //long press will result in escape
 }
 

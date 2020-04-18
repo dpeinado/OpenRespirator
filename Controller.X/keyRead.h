@@ -10,6 +10,8 @@
 #define KEYPLUS   5
 #define KEYBREATH 4
 
+#define ESCAPE_CODE -100
+
 
 void keyReadInit(void);
 
