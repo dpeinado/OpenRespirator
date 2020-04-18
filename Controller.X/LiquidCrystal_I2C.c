@@ -12,6 +12,7 @@ uint8_t _numlines;
 uint8_t _cols;
 uint8_t _rows;
 uint8_t _backlightval;
+uint8_t i2cBuff[80];
 
 
 /************ low level data pushing commands **********/
@@ -83,7 +84,6 @@ void write(uint8_t value) {
 }
 
 void printstr(const char c[]){
-    uint8_t i2cBuff[80];
     uint8_t idx;
     
 

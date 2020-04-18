@@ -84,16 +84,14 @@ uint8_t IP=4;
 uint8_t PEEP=4;
 
 // CONTROLLER INTERNAL PARAMETERS.
-#define BLED_ONTIME TIME_MS(500)
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
 #define PEEPCTRLMIN   MPRESSURE_MBAR(1)
 // Minimum actuation time of the valve has a big effect on pressure, so avoid acting too soon.
-#define FINECTRLHIST  MPRESSURE_MBAR(2.5)
+#define FINECTRLHIST  MPRESSURE_MBAR(1.5)
 
 #define BDTECT_THRL   MPRESSURE_MBAR(0.5)
 
-#define PIPLATEAUMDEL TIME_MS(150)
-#define PEPLATEAUMDEL TIME_MS(350)
+#define PLATEAUMDEL TIME_MS(80)
 #define PRINTTIME TIME_MS(20)
 #define SV2OTIME TIME_MS(15)
 // Internal parameters.
@@ -430,16 +428,6 @@ void main(void) {
                 // Goto next.
                 break;
             } else {
-                TODO:
-                // When BPM is very high, i time very short. 
-                // Ensure algorighm is stable in this conditions:
-                // If SV2 is closed before end of IP cycle, and there is time to measure OS, do it.
-                // Otherwise, ensure OS is not used in those conditions...
-                // Do the same in case of EP.
-                if (timeElapsed(rCycleTime, BLED_ONTIME)) {
-                    // Turn off led. Can be done here because minimum IP time with fixed 1:2 ratio and 30 BPM is 0.66 seconds.
-                    BLED_OFF;
-                }
                 if (initialSubState) {
                     // Inhale.
                     if (aCaptGetResult(MainPSensor, &pInst)) {
@@ -501,7 +489,7 @@ void main(void) {
                                 pPlateau = pAvgUShort;
                             }
 
-                            if (timeElapsed(rValveAcuationTstamp, PIPLATEAUMDEL+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, PLATEAUMDEL)) {
                                 // Filtered pExpOS.
                                 pTmp = pPlateau - pValveActuation;
                                 pInspOS = (pInspOS + pTmp) / 2;
@@ -560,12 +548,7 @@ void main(void) {
             } else {
                 if (initialSubState) {
                     // Exhale.
-                    // During exhalation, the pressure that is measured is lower than the pressure once SV3 opens,
-                    // and the effect is higher the faster the pressure drops during the exhalation.
-                    // To compensate for this, and ensure the system converges to the set value, use 
-                    // a filtered version of the pressure, instead of the instantaneous pressure.
                     if (aCaptGetResult(MainPSensor, &pInst)) {
-                        aCaptGetResult(Flt1PSensor, &pAvgShort);
                         // Compensation of pre-measured difference between plateu pressure and pressure at closing of valve.
                         // Due to overshoot after OPEN of SV3.
                         // Ensure comparison value is never 0.
@@ -573,7 +556,7 @@ void main(void) {
                         if (pTmp <= PEEPCTRLMIN) {
                             pTmp = PEEPCTRLMIN;
                         }
-                        if (pAvgShort < pTmp) {
+                        if (pInst < pTmp) {
                             OPEN_SV3;
                             initialSubState = 0;
                             rValveAcuationTstamp = timeGet();
@@ -595,18 +578,17 @@ void main(void) {
                         }
                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
                         if (OSCheck) {
-                            if (timeElapsed(rValveAcuationTstamp, PEPLATEAUMDEL+rSV2ValveDelay)) {
+                            if (timeElapsed(rValveAcuationTstamp, PLATEAUMDEL)) {
                                 // Take averaged pressure measurement as mean value.
                                 aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                 pPlateau = pAvgUShort;
                                 // Filtered pExpOS.
                                 pTmp = pPlateau - pValveActuation;
-                                pExpOS = (3*pExpOS + pTmp) / 4;
+                                pExpOS = (pExpOS + pTmp) / 2;
                                 // Clear long filters.
                                 aCaptRstFlt(Flt2PSensor);
                                 aCaptRstFlt(Flt3PSensor);
                                 OSCheck = false;
-                                DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pAvgUShort) / MPRESSURE_MBAR(1)));
                             }
                         } else {
                             // Breath detection.
@@ -614,11 +596,9 @@ void main(void) {
                             // To avoid interference with the algorithm to keep PEEP controlled, PEEP control uses the 50ms filtered version of the signal.
                             aCaptGetResult(Flt2PSensor, &bdP1);
                             aCaptGetResult(Flt3PSensor, &bdP2);
-                            if (((bdP1 + BDTECT_THRL) < bdP2) || (keyPeek() == KEYBREATH)) {
-                                // Detected breath, or pressed breath button
+                            if ((bdP1 + BDTECT_THRL) < bdP2) {
+                                // Detected breath.
                                 DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
-                                BLED_ON;                                
-                                rCycleTime = timeGet();
                                 break;
                             }
                             // Then PEEP level maintenance.
