@@ -27915,7 +27915,7 @@ int8_t keyRead();
 
 
 int8_t keys[6] = {1,2,3,4,5,7};
-int8_t lastkey;
+int8_t lastkey, lastkeyEC;
 time_t pressMills;
 
 uint8_t digitalRead(uint8_t pin){
@@ -27925,7 +27925,7 @@ uint8_t digitalRead(uint8_t pin){
 void keyReadInit(void){
     pressMills = 0;
     lastkey = -1;
-
+    lastkeyEC = -1;
 
 };
 
@@ -27951,11 +27951,11 @@ int8_t keyPeek(void) {
 
 int8_t keyReadEC() {
     int8_t ch = keyPeek();
-    if (ch == lastkey) return -1;
-    int8_t tmp = lastkey;
+    if (ch == lastkeyEC) return -1;
+    int8_t tmp = lastkeyEC;
     _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
     pressMills = timeGet();
-    lastkey = ch;
+    lastkeyEC = ch;
     return longPress ? -100 : tmp;
 }
 

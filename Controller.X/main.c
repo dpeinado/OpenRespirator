@@ -66,7 +66,7 @@ void putch(char byte) {
 
 
 // To avoid problems with control, keep a copy of the values during first part of inspiration and expiration.
-uint16_t intIP, intPEEP;
+uint16_t intIP, intPEEP, intIDuration, intEDuration;
 
 // User parameter limits.
 #define BPM_MIN 10
@@ -80,6 +80,7 @@ uint16_t intIP, intPEEP;
 // User parameters.
 ///////////////////
 uint8_t BPM = 10;
+uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
 
@@ -96,9 +97,6 @@ uint8_t PEEP = 4;
 #define PEPLATEAUMDEL TIME_MS(350)
 #define PRINTTIME TIME_MS(20)
 #define SV2OTIME TIME_MS(15)
-// Internal parameters.
-#define IDURATION TIME_S((1*60.0)/(3*BPM))
-#define EDURATION (TIME_S((60.0/BPM))-IDURATION)
 ///////////////////
 ///////////////////
 
@@ -173,6 +171,8 @@ void MenuMng(void) {
                 } else if (menuStatus == CFG_BPM) {
                     // Accept change and exit.
                     BPM = menuVal;
+                    IDuration = ((uint16_t) 60*1000)/(3*BPM);
+                    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
                     menuStatus = CFG_IDLE;
                 } else {
                     // Any other case, abort setting.
@@ -534,7 +534,7 @@ void main(void) {
     int16_t pValveActuation, pPlateau, pExpOS, pInspOS; // Variables for overshoot measurement.
     int16_t pTmp;
     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
-    time_t rSV2ValveDelay;
+    time_t rSV2ValveDelay, rSV3ValveDelay;
     time_t rValveDelayStart, rTimeTmp;
     bool initialSubState, valveDelayCheck, OSCheck;
     
@@ -560,10 +560,13 @@ void main(void) {
 
     // Init all control variables.
     rSV2ValveDelay = 20;
+    rSV2ValveDelay = 50;
     valveDelayCheck = false;
     OSCheck = false;
     pExpOS = 0;
     pInspOS = 0;
+    IDuration = ((uint16_t) 60*1000)/(3*BPM);
+    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
     vMeasureInit();
     lastCycleVol = 0;
     keyReadInit();
@@ -597,7 +600,6 @@ void main(void) {
         // User inputs, screen update.
         MenuMng();
         screenMng();
-
         
         if (keyPeek() == KEYBREATH) {
             if (keyReadEC() == ESCAPE_CODE) {
@@ -675,7 +677,9 @@ void main(void) {
         /////////////////////////////////////////////
         DEBUG_PRINT(("\nIP\n"));
         intIP = MPRESSURE_MBAR(IP);
-
+        intPEEP = MPRESSURE_MBAR(PEEP);
+        intIDuration = TIME_MS(IDuration);
+        intEDuration = TIME_MS(EDuration);
         // Set valves initial values.
         OPEN_SV2;
         OPEN_SV3;
@@ -687,7 +691,7 @@ void main(void) {
         rValveDelayStart = timeGet();
         vMeasureRst();
         while (1) {
-            if (timeElapsedR(&rCycleTime, IDURATION)) {
+            if (timeElapsedR(&rCycleTime, intIDuration)) {
                 // Goto next.
                 break;
             } else {
@@ -738,10 +742,9 @@ void main(void) {
                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
                                 if (rTimeTmp < TIME_MS(100)) {
                                     // If value within limits update value, if outside, keep previous value.
-                                    rSV2ValveDelay = rTimeTmp;
+                                    rSV2ValveDelay = (rSV2ValveDelay + rTimeTmp)>>1;
                                 } else {
-                                    // Consider adding a warning/alarm.
-                                    //                                
+                                    // TODO: Consider adding a warning/alarm.
                                 }
                             }
                         }
@@ -808,15 +811,20 @@ void main(void) {
         // Expiration part of the cycle.
         /////////////////////////////////////////////
         DEBUG_PRINT(("\nEP\n"));
-        intPEEP = MPRESSURE_MBAR(PEEP);
+        // Clear filters.
+        aCaptRstFlt(Flt0PSensor);
+        aCaptRstFlt(Flt1PSensor);
+
         rSubCycleTime = timeGet();
         CLOSE_SV2;
         CLOSE_SV3;
         initialSubState = true;
-        valveDelayCheck = false;
+        valveDelayCheck = true;
+        OSCheck = false;
+        rValveDelayStart = timeGet();
 
         while (1) {
-            if (timeElapsedR(&rCycleTime, EDURATION)) {
+            if (timeElapsedR(&rCycleTime, intEDuration)) {
                 // Goto next.
                 break;
             } else {
@@ -845,6 +853,21 @@ void main(void) {
                                     timeDiff(rValveDelayStart, rValveAcuationTstamp),
                                     (10 * pInst) / MPRESSURE_MBAR(1),
                                     (10 * pExpOS) / MPRESSURE_MBAR(1)));
+                        }
+                        if (valveDelayCheck) {
+                            // Measure response time of valve.
+                            // When detect a change of 1mBar on pInst-pAvgShort.
+                            if (pInst < (pAvgShort - MPRESSURE_MBAR(1))) {
+                                valveDelayCheck = false;
+                                // Minimum reached. Store response time.
+                                rTimeTmp = timeDiff(rValveDelayStart, timeGet());
+                                 if (rTimeTmp < TIME_MS(700)) {
+                                    // If value within limits update value, if outside, keep previous value.
+                                    rSV3ValveDelay = (rSV3ValveDelay + rTimeTmp)>>1;
+                                } else {
+                                    // TODO: Consider adding a warning/alarm.
+                                }
+                           }
                         }
                     }
                 } else {
@@ -902,11 +925,12 @@ void main(void) {
                 aCaptGetResult(MainPSensor, &pInst);
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. Pep %d OS %d\n",
+                DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d OS %d\n",
                         timeDiff(rValveDelayStart, timeGet()),
                         (10 * pInst) / MPRESSURE_MBAR(1),
                         (10 * (pNext)) / MPRESSURE_MBAR(1),
                         (10 * (pInst - pAvgShort)) / MPRESSURE_MBAR(1),
+                        rSV3ValveDelay,
                         (10 * pPlateau) / MPRESSURE_MBAR(1),
                         (10 * pExpOS) / MPRESSURE_MBAR(1)));
             }

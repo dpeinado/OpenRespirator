@@ -2269,8 +2269,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "16
-[; ;keyRead.c: 16: int8_t lastkey;
+[; ;keyRead.c: 16: int8_t lastkey, lastkeyEC;
 [v _lastkey `c ~T0 @X0 1 e ]
+[v _lastkeyEC `c ~T0 @X0 1 e ]
 "17
 [; ;keyRead.c: 17: time_t pressMills;
 [v _pressMills `us ~T0 @X0 1 e ]
@@ -2301,6 +2302,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "25
 [; ;keyRead.c: 25:     lastkey = -1;
 [e = _lastkey -> -U -> 1 `i `c ]
+"26
+[; ;keyRead.c: 26:     lastkeyEC = -1;
+[e = _lastkeyEC -> -U -> 1 `i `c ]
 "28
 [; ;keyRead.c: 28: };
 [e :UE 2234 ]
@@ -2402,15 +2406,15 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _ch `c ~T0 @X0 1 a ]
 [e = _ch ( _keyPeek ..  ]
 "52
-[; ;keyRead.c: 52:     if (ch == lastkey) return -1;
-[e $ ! == -> _ch `i -> _lastkey `i 2246  ]
+[; ;keyRead.c: 52:     if (ch == lastkeyEC) return -1;
+[e $ ! == -> _ch `i -> _lastkeyEC `i 2246  ]
 [e ) -> -U -> 1 `i `c ]
 [e $UE 2245  ]
 [e :U 2246 ]
 "53
-[; ;keyRead.c: 53:     int8_t tmp = lastkey;
+[; ;keyRead.c: 53:     int8_t tmp = lastkeyEC;
 [v _tmp `c ~T0 @X0 1 a ]
-[e = _tmp _lastkey ]
+[e = _tmp _lastkeyEC ]
 "54
 [; ;keyRead.c: 54:     _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
 [v _longPress `a ~T0 @X0 1 a ]
@@ -2419,8 +2423,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;keyRead.c: 55:     pressMills = timeGet();
 [e = _pressMills ( _timeGet ..  ]
 "56
-[; ;keyRead.c: 56:     lastkey = ch;
-[e = _lastkey _ch ]
+[; ;keyRead.c: 56:     lastkeyEC = ch;
+[e = _lastkeyEC _ch ]
 "57
 [; ;keyRead.c: 57:     return longPress ? -100 : tmp;
 [e ) -> ? != -> _longPress `i -> 0 `i : -U -> 100 `i -> _tmp `i `c ]
