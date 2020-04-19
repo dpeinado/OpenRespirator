@@ -1,4 +1,4 @@
-# 1 "aCapture.c"
+# 1 "menu.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,12 +6,18 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "aCapture.c" 2
+# 1 "menu.c" 2
 
 
 
-# 1 "./mcc_generated_files/adcc.h" 1
-# 54 "./mcc_generated_files/adcc.h"
+
+
+
+
+# 1 "./ORespGlobal.h" 1
+# 15 "./ORespGlobal.h"
+# 1 "./mcc_generated_files/mcc.h" 1
+# 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -27028,7 +27034,17 @@ extern __attribute__((nonreentrant)) void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 32 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 2 3
-# 54 "./mcc_generated_files/adcc.h" 2
+# 49 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/device_config.h" 1
+# 50 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/pin_manager.h" 1
+# 490 "./mcc_generated_files/pin_manager.h"
+void PIN_MANAGER_Initialize (void);
+# 502 "./mcc_generated_files/pin_manager.h"
+void PIN_MANAGER_IOC(void);
+# 51 "./mcc_generated_files/mcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 1 3
 # 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
@@ -27113,125 +27129,10 @@ typedef int32_t int_fast32_t;
 typedef uint32_t uint_fast16_t;
 typedef uint32_t uint_fast32_t;
 # 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
-# 55 "./mcc_generated_files/adcc.h" 2
+# 52 "./mcc_generated_files/mcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdbool.h" 1 3
-# 56 "./mcc_generated_files/adcc.h" 2
-# 72 "./mcc_generated_files/adcc.h"
-typedef uint16_t adc_result_t;
-
-typedef __uint24 uint24_t;
-# 89 "./mcc_generated_files/adcc.h"
-typedef enum
-{
-    channel_ANE0 = 0x20,
-    channel_ANE1 = 0x21,
-    channel_ANE2 = 0x22,
-    channel_VSS = 0x3B,
-    channel_Temp = 0x3C,
-    channel_DAC1 = 0x3D,
-    channel_FVR_Buffer1 = 0x3E,
-    channel_FVR_Buffer2 = 0x3F
-} adcc_channel_t;
-# 133 "./mcc_generated_files/adcc.h"
-void ADCC_Initialize(void);
-# 162 "./mcc_generated_files/adcc.h"
-void ADCC_StartConversion(adcc_channel_t channel);
-# 192 "./mcc_generated_files/adcc.h"
-_Bool ADCC_IsConversionDone();
-# 224 "./mcc_generated_files/adcc.h"
-adc_result_t ADCC_GetConversionResult(void);
-# 255 "./mcc_generated_files/adcc.h"
-adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
-# 280 "./mcc_generated_files/adcc.h"
-void ADCC_StopConversion(void);
-# 307 "./mcc_generated_files/adcc.h"
-void ADCC_SetStopOnInterrupt(void);
-# 332 "./mcc_generated_files/adcc.h"
-void ADCC_DischargeSampleCapacitor(void);
-# 358 "./mcc_generated_files/adcc.h"
-void ADCC_LoadAcquisitionRegister(uint16_t);
-# 384 "./mcc_generated_files/adcc.h"
-void ADCC_SetPrechargeTime(uint16_t);
-# 409 "./mcc_generated_files/adcc.h"
-void ADCC_SetRepeatCount(uint8_t);
-# 437 "./mcc_generated_files/adcc.h"
-uint8_t ADCC_GetCurrentCountofConversions(void);
-# 461 "./mcc_generated_files/adcc.h"
-void ADCC_ClearAccumulator(void);
-# 486 "./mcc_generated_files/adcc.h"
-uint24_t ADCC_GetAccumulatorValue(void);
-# 514 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasAccumulatorOverflowed(void);
-# 539 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetFilterValue(void);
-# 567 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetPreviousResult(void);
-# 593 "./mcc_generated_files/adcc.h"
-void ADCC_DefineSetPoint(uint16_t);
-# 619 "./mcc_generated_files/adcc.h"
-void ADCC_SetUpperThreshold(uint16_t);
-# 645 "./mcc_generated_files/adcc.h"
-void ADCC_SetLowerThreshold(uint16_t);
-# 672 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetErrorCalculation(void);
-# 699 "./mcc_generated_files/adcc.h"
-void ADCC_EnableDoubleSampling(void);
-# 723 "./mcc_generated_files/adcc.h"
-void ADCC_EnableContinuousConversion(void);
-# 747 "./mcc_generated_files/adcc.h"
-void ADCC_DisableContinuousConversion(void);
-# 775 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasErrorCrossedUpperThreshold(void);
-# 803 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasErrorCrossedLowerThreshold(void);
-# 830 "./mcc_generated_files/adcc.h"
-uint8_t ADCC_GetConversionStageStatus(void);
-# 847 "./mcc_generated_files/adcc.h"
-void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
-# 863 "./mcc_generated_files/adcc.h"
-void ADCC_ThresholdISR(void);
-# 881 "./mcc_generated_files/adcc.h"
-void ADCC_DefaultInterruptHandler(void);
-# 4 "aCapture.c" 2
-
-# 1 "./aCapture.h" 1
-# 21 "./aCapture.h"
-typedef enum{
-    MainPSensor=0,
-    AuxPSensor=1,
-    VddSensor=2,
-    Flt0PSensor=3,
-    Flt1PSensor=4,
-    Flt2PSensor=5,
-    Flt3PSensor=6,
-} aSrcTyp;
-
-void aCaptureInit(void);
-
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
-
-_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
-
-
-void aCaptRstFlt(aSrcTyp sel);
-# 5 "aCapture.c" 2
-
-# 1 "./ORespGlobal.h" 1
-# 15 "./ORespGlobal.h"
-# 1 "./mcc_generated_files/mcc.h" 1
-# 50 "./mcc_generated_files/mcc.h"
-# 1 "./mcc_generated_files/device_config.h" 1
-# 50 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/pin_manager.h" 1
-# 490 "./mcc_generated_files/pin_manager.h"
-void PIN_MANAGER_Initialize (void);
-# 502 "./mcc_generated_files/pin_manager.h"
-void PIN_MANAGER_IOC(void);
-# 51 "./mcc_generated_files/mcc.h" 2
-
-
+# 53 "./mcc_generated_files/mcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\conio.h" 1 3
 
@@ -27846,6 +27747,84 @@ _Bool TMR0_HasOverflowOccured(void);
 _Bool FVR_IsOutputReady(void);
 # 61 "./mcc_generated_files/mcc.h" 2
 
+# 1 "./mcc_generated_files/adcc.h" 1
+# 72 "./mcc_generated_files/adcc.h"
+typedef uint16_t adc_result_t;
+
+typedef __uint24 uint24_t;
+# 89 "./mcc_generated_files/adcc.h"
+typedef enum
+{
+    channel_ANE0 = 0x20,
+    channel_ANE1 = 0x21,
+    channel_ANE2 = 0x22,
+    channel_VSS = 0x3B,
+    channel_Temp = 0x3C,
+    channel_DAC1 = 0x3D,
+    channel_FVR_Buffer1 = 0x3E,
+    channel_FVR_Buffer2 = 0x3F
+} adcc_channel_t;
+# 133 "./mcc_generated_files/adcc.h"
+void ADCC_Initialize(void);
+# 162 "./mcc_generated_files/adcc.h"
+void ADCC_StartConversion(adcc_channel_t channel);
+# 192 "./mcc_generated_files/adcc.h"
+_Bool ADCC_IsConversionDone();
+# 224 "./mcc_generated_files/adcc.h"
+adc_result_t ADCC_GetConversionResult(void);
+# 255 "./mcc_generated_files/adcc.h"
+adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
+# 280 "./mcc_generated_files/adcc.h"
+void ADCC_StopConversion(void);
+# 307 "./mcc_generated_files/adcc.h"
+void ADCC_SetStopOnInterrupt(void);
+# 332 "./mcc_generated_files/adcc.h"
+void ADCC_DischargeSampleCapacitor(void);
+# 358 "./mcc_generated_files/adcc.h"
+void ADCC_LoadAcquisitionRegister(uint16_t);
+# 384 "./mcc_generated_files/adcc.h"
+void ADCC_SetPrechargeTime(uint16_t);
+# 409 "./mcc_generated_files/adcc.h"
+void ADCC_SetRepeatCount(uint8_t);
+# 437 "./mcc_generated_files/adcc.h"
+uint8_t ADCC_GetCurrentCountofConversions(void);
+# 461 "./mcc_generated_files/adcc.h"
+void ADCC_ClearAccumulator(void);
+# 486 "./mcc_generated_files/adcc.h"
+uint24_t ADCC_GetAccumulatorValue(void);
+# 514 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasAccumulatorOverflowed(void);
+# 539 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetFilterValue(void);
+# 567 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetPreviousResult(void);
+# 593 "./mcc_generated_files/adcc.h"
+void ADCC_DefineSetPoint(uint16_t);
+# 619 "./mcc_generated_files/adcc.h"
+void ADCC_SetUpperThreshold(uint16_t);
+# 645 "./mcc_generated_files/adcc.h"
+void ADCC_SetLowerThreshold(uint16_t);
+# 672 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetErrorCalculation(void);
+# 699 "./mcc_generated_files/adcc.h"
+void ADCC_EnableDoubleSampling(void);
+# 723 "./mcc_generated_files/adcc.h"
+void ADCC_EnableContinuousConversion(void);
+# 747 "./mcc_generated_files/adcc.h"
+void ADCC_DisableContinuousConversion(void);
+# 775 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasErrorCrossedUpperThreshold(void);
+# 803 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasErrorCrossedLowerThreshold(void);
+# 830 "./mcc_generated_files/adcc.h"
+uint8_t ADCC_GetConversionStageStatus(void);
+# 847 "./mcc_generated_files/adcc.h"
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
+# 863 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
+void ADCC_DefaultInterruptHandler(void);
+# 62 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
@@ -27919,204 +27898,427 @@ void PMD_Initialize(void);
 
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
-# 6 "aCapture.c" 2
+# 8 "menu.c" 2
+
+# 1 "./menu.h" 1
+# 19 "./menu.h"
+extern _Bool lcdPrintTR;
+extern _Bool lcdPrintBR;
+extern char lcdTopRow[20];
+extern char lcdBtnRow[20];
+
+typedef enum {
+    CFG_IDLE,
+    CFG_IP,
+    CFG_BPM,
+    CFG_PEEP,
+    CFG_MAXP,
+    CFG_MAXV,
+    CFG_LOWVA,
+    CFG_HIGHVA,
+} menuStatusT;
+
+void MenuInit(void);
+
+void MenuMng(void);
+
+void screenInit(void);
+
+void screenMng(void);
+# 9 "menu.c" 2
 
 
-aSrcTyp curASrc;
+# 1 "./keyRead.h" 1
+# 19 "./keyRead.h"
+void keyReadInit(void);
+
+int8_t keyPeek(void);
+
+
+int8_t keyReadEC();
+
+int8_t keyRead();
+# 11 "menu.c" 2
+
+# 1 "./time.h" 1
+# 17 "./time.h"
+typedef uint16_t time_t;
 
 
 
 
-int16_t mainPSensCal = 164;
-int16_t auxPSensCal = 962;
 
 
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 12 "menu.c" 2
+
+# 1 "./LiquidCrystal_I2C.h" 1
+# 55 "./LiquidCrystal_I2C.h"
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
+void clear();
+void home();
+void noDisplay();
+void display();
+void noBlink();
+void blink();
+void noCursor();
+void cursor();
+void scrollDisplayLeft();
+void scrollDisplayRight();
+void printLeft();
+void printRight();
+void leftToRight();
+void rightToLeft();
+void shiftIncrement();
+void shiftDecrement();
+void noBacklight();
+void backlight();
+void autoscroll();
+void noAutoscroll();
+void createChar(uint8_t, uint8_t[]);
+void setCursor(uint8_t, uint8_t);
+void write(uint8_t);
+void init();
+void setBacklight(_Bool new_val);
+void load_custom_character(uint8_t char_num, uint8_t *rows);
+void printstr(const char[]);
+void printstrblock(const char[]);
+_Bool PrintStrBusy(void);
+# 13 "menu.c" 2
 
 
-uint32_t resultTbl[7];
+_Bool lcdPrintTR, lcdPrintBR, lcdBlink;
+_Bool lcdMenuPrint;
 
-uint8_t resultTblVal[7];
+char lcdTopRow[20];
+char lcdBtnRow[20];
+menuStatusT menuStatus;
+uint16_t menuVal;
+time_t menuTstamp;
 
-
-adcc_channel_t adcGetCh(aSrcTyp sel){
-    switch (sel){
-        case MainPSensor:
-            return channel_ANE1;
-            break;
-        case AuxPSensor:
-            return channel_ANE2;
-            break;
-        case VddSensor:
-            return channel_ANE0;
-            break;
-        default:
-
-           LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
-           return -1;
-    }
+void MenuInit(void) {
+    menuStatus = CFG_IDLE;
+    lcdMenuPrint = 1;
+    lcdPrintBR=1;
+    lcdPrintTR=1;
 }
 
-void adcCaptureIsr(void){
+void MenuMng(void) {
+
+    int8_t keyPress;
+    keyPress = keyRead();
+    if ((keyPress >= 0) && (keyPress != 4)) {
+        lcdMenuPrint = 1;
+        printf ("KEY! %d\n", keyPress);
+
+        switch (keyPress) {
+            case 0:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_IP;
+                    menuVal = IP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_IP) {
+
+                    IP = menuVal;
+                    chIP = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 2:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_BPM;
+                    menuVal = BPM;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_BPM) {
+
+                    BPM = menuVal;
+                    chBPM = 1;
+                    IDuration = ((uint16_t) 60*1000)/(3*BPM);
+                    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 1:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_PEEP;
+                    menuVal = PEEP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_PEEP) {
+
+                    PEEP = menuVal;
+                    chPEEP = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 6:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_MAXP;
+                    menuVal = MaxP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_MAXP) {
+
+                    MaxP = menuVal;
+                    chMaxP = 1;
+                    if (VentMode == 0) {
+                        VentMode = 1;
+                        chVentMode = 1;
+                    }
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 7:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_MAXV;
+                    menuVal = MaxP;
+                    menuTstamp = timeGet();
+                    if ((MaxP != IP) && (VentMode == 0)) {
 
 
-    uint32_t adcData;
-    aSrcTyp adcSel;
+                        MaxP = IP;
+                        chMaxP = 1;
+                    }
+                } else if (menuStatus == CFG_MAXV) {
 
-    adcData = ADCC_GetFilterValue();
-
-    adcSel=curASrc;
-
-
-    curASrc++;
-    if (curASrc==3){
-        curASrc=0;
-    }
-    if (curASrc <= AuxPSensor ){
-        ADCON0bits.ADON = 0;
-
-        ADREF = 0x00;
-    } else {
-        ADCON0bits.ADON = 0;
-
-        ADREF = 0x03;
-    }
-    ADCC_StartConversion(adcGetCh(curASrc));
+                    MaxV = menuVal;
+                    chMaxV = 1;
+                    if (VentMode == 0) {
+                        VentMode = 1;
+                        chVentMode = 1;
 
 
-    if (adcSel<3){
-        resultTbl[adcSel]=adcData;
+                        MaxP = IP;
+                        chMaxP = 1;
+                    }
+                    menuStatus = CFG_IDLE;
+                } else {
 
-        resultTblVal[adcSel]++;
-        if (resultTblVal[adcSel]==0){
-            resultTblVal[adcSel]=1;
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 8:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_HIGHVA;
+                    menuVal = HighVAlarm;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_HIGHVA) {
+
+                    HighVAlarm = menuVal;
+                    chHighVAlarm = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 9:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_LOWVA;
+                    menuVal = LowVAlarm;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_LOWVA) {
+
+                    LowVAlarm = menuVal;
+                    chLowVAlarm = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 5:
+                if (menuStatus != CFG_IDLE) {
+                    menuTstamp = timeGet();
+
+                    switch (menuStatus) {
+                        case CFG_IP:
+                        case CFG_MAXP:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 80) {
+                                menuVal = 80;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 25) {
+                                menuVal = 25;
+                            }
+                            break;
+                        case CFG_BPM:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 30) {
+                                menuVal = 30;
+                            }
+                            break;
+                        case CFG_MAXV:
+                        case CFG_LOWVA:
+                        case CFG_HIGHVA:
+                            menuVal = menuVal + 20;
+                            if (menuVal > 800) {
+                                menuVal = 800;
+                            }
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+                break;
+            case 3:
+                if (menuStatus != CFG_IDLE) {
+                    menuTstamp = timeGet();
+
+                    switch (menuStatus) {
+                        case CFG_IP:
+                        case CFG_MAXP:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 4) {
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 4) {
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_BPM:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 10) {
+                                menuVal = 10;
+                            }
+                            break;
+                        case CFG_MAXV:
+                        case CFG_LOWVA:
+                        case CFG_HIGHVA:
+                            menuVal = menuVal - 20;
+                            if (menuVal < 100) {
+                                menuVal = 100;
+                            }
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+                break;
         }
 
-        if (adcSel == MainPSensor) {
+        lcdPrintBR = 1;
+        lcdPrintTR = 1;
+        lcdMenuPrint = 1;
+    } else {
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
 
-
-            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+(adcData<<2))>>2;
-
-            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+(adcData<<4))>>4;
-
-            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
-
-            resultTbl[Flt3PSensor]=(511*resultTbl[Flt3PSensor]+(adcData<<9))>>9;
-
-            resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
-            resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
-            resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
-            resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
+            lcdPrintTR = 1;
+            lcdPrintBR = 1;
+            menuStatus = CFG_IDLE;
         }
-    } else {
-
-        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
+        return;
     }
 }
 
-
-void aCaptureInit(void){
-    int idx;
-    curASrc=MainPSensor;
-
-    for (idx=0;idx<3;idx++)
-        resultTblVal[idx]=0;
-
-    ADCC_SetADTIInterruptHandler(adcCaptureIsr);
-
-
-    ADCC_StartConversion(adcGetCh(curASrc));
-
-    PIE1bits.ADTIE = 1;
+void screenInit(void) {
+    LcdI2CInit(0x27, 16, 2);
+    setCursor(0, 0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0, 1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(((time_t) 2000*1));
+    clear();
+    lcdPrintTR = 1;
+    blink();
 }
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
-    if (sel == MainPSensor) {
-        mainPSensCal = offVal;
-    } else if (sel == AuxPSensor) {
-        auxPSensCal = offVal;
-    } else {
-        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
-    }
-}
+void screenMng(void) {
 
-void aCaptRstFlt(aSrcTyp sel) {
-    switch (sel) {
-            PIE1bits.ADTIE = 0;
-        case Flt3PSensor:
-            resultTbl[sel] = resultTbl[MainPSensor]<<9;
-            break;
-        case Flt2PSensor:
-            resultTbl[sel] = resultTbl[MainPSensor]<<6;
-            break;
-        case Flt1PSensor:
-            resultTbl[sel] = resultTbl[MainPSensor]<<4;
-            break;
-        case Flt0PSensor:
-            resultTbl[sel] = resultTbl[MainPSensor]<<2;
-            break;
-        default:
-
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
-    }
-            PIE1bits.ADTIE = 1;
-}
-
-
-_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
-    uint32_t lclRaw;
-    uint8_t lclValid;
-
-
-    PIE1bits.ADTIE = 0;
-    lclRaw=resultTbl[sel];
-    lclValid=resultTblVal[sel];
-    PIE1bits.ADTIE = 1;
-
-    if (lclValid == 0) {
-        return 0;
-    }
-
-
-
-    switch (sel){
-        case Flt3PSensor:
-            lclRaw=lclRaw>>9;
-            break;
-        case Flt2PSensor:
-            lclRaw=lclRaw>>6;
-            break;
-        case Flt1PSensor:
-            lclRaw=lclRaw>>4;
-            break;
-        case Flt0PSensor:
-            lclRaw=lclRaw>>2;
-            break;
-        default:
-
-            break;
-    }
-
-    switch (sel){
-        case MainPSensor:
-        case Flt0PSensor:
-        case Flt1PSensor:
-        case Flt2PSensor:
-        case Flt3PSensor:
-            if (lclRaw < mainPSensCal) { lclRaw = mainPSensCal-lclRaw;
-                *outVal = - (lclRaw/1);
+    if (lcdPrintTR && !PrintStrBusy()) {
+        lcdPrintTR = 0;
+        if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
+            if (VentMode == 0) {
+                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, IP);
             } else {
-                lclRaw = lclRaw - mainPSensCal;
-                *outVal=(lclRaw/1);
+                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", BPM, PEEP, MaxP, MaxV);
             }
-            return 1;
-        case AuxPSensor:
-            *outVal = (lclRaw - auxPSensCal)/1;
-            return 1;
-        case VddSensor:
-            *outVal = lclRaw<<1;
-            return 1;
-        default:
+        } else if (menuStatus == CFG_BPM) {
+            if (VentMode == 0) {
+                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", menuVal, PEEP, MaxP, MaxV);
+            }
+        } else if (menuStatus == CFG_PEEP) {
+            if (VentMode == 0) {
+                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", BPM, menuVal, MaxP, MaxV);
+            }
+        } else if (menuStatus == CFG_IP) {
+            sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
+        } else if (menuStatus == CFG_MAXP) {
+            sprintf(lcdTopRow, "%2d %2d  -- %2d % 3d", BPM, PEEP, menuVal, MaxV);
+        } else if (menuStatus == CFG_MAXV) {
+            sprintf(lcdTopRow, "%2d %2d  -- %2d % 3d", BPM, PEEP, MaxP, menuVal);
+        }
 
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
+        printf (lcdTopRow);
+        setCursor(0, 0);
+        printstr(lcdTopRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = 1;
+        }
+    } else if (lcdPrintBR && !PrintStrBusy()) {
+        lcdPrintBR = 0;
+
+        if (lcdMenuPrint) {
+            lcdMenuPrint = 0;
+            if (menuStatus == CFG_LOWVA) {
+                sprintf(lcdBtnRow, "LOW V. ALARM % 3d", menuVal);
+            } else if (menuStatus == CFG_HIGHVA) {
+                sprintf(lcdBtnRow, "HIGHV. ALARM % 3d", menuVal);
+            } else {
+                sprintf(lcdBtnRow, "                ");
+            }
+        }
+
+
+        printf (lcdBtnRow);
+        setCursor(0, 1);
+        printstr(lcdBtnRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = 1;
+        }
+    } else if (lcdBlink && !PrintStrBusy()) {
+        lcdBlink = 0;
+        switch (menuStatus) {
+            case CFG_BPM:
+                setCursor(1, 0);
+                break;
+            case CFG_PEEP:
+                setCursor(4, 0);
+                break;
+            case CFG_IP:
+                setCursor(8, 0);
+                break;
+            default:
+
+                break;
+        }
     }
 }

@@ -7,34 +7,10 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "main.c" 2
-# 44 "main.c"
-# 1 "./ORespGlobal.h" 1
-# 44 "main.c" 2
-
-# 1 "./aCapture.h" 1
-# 21 "./aCapture.h"
-typedef enum{
-    MainPSensor=0,
-    AuxPSensor=1,
-    VddSensor=2,
-    Flt0PSensor=3,
-    Flt1PSensor=4,
-    Flt2PSensor=5,
-    Flt3PSensor=6,
-} aSrcTyp;
-
-void aCaptureInit(void);
-
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
-
-bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 
-void aCaptRstFlt(aSrcTyp sel);
-# 45 "main.c" 2
 
-# 1 "./time.h" 1
-# 15 "./time.h"
+
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27895,9 +27871,56 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 104 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./time.h" 2
+# 5 "main.c" 2
+
+# 1 "./ORespGlobal.h" 1
+# 60 "./ORespGlobal.h"
+    typedef enum {
+        VMODE_PRESSURE = 0,
+        VMODE_VOLUME = 1
+    } vmodeT;
 
 
+    extern vmodeT VentMode;
+    extern uint8_t BPM;
+    extern uint16_t IDuration, EDuration;
+    extern uint8_t IP;
+    extern uint8_t MaxP;
+    extern uint8_t MaxV;
+    extern uint8_t LowVAlarm;
+    extern uint8_t HighVAlarm;
+    extern uint8_t PEEP;
+    extern uint8_t eBRate;
+    extern int16_t vddValMean;
+
+    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern uint16_t lastCycleVol;
+# 6 "main.c" 2
+
+# 1 "./aCapture.h" 1
+# 21 "./aCapture.h"
+typedef enum{
+    MainPSensor=0,
+    AuxPSensor=1,
+    VddSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
+} aSrcTyp;
+
+void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
+# 7 "main.c" 2
+
+# 1 "./time.h" 1
+# 17 "./time.h"
 typedef uint16_t time_t;
 
 
@@ -27912,22 +27935,22 @@ time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 void timeDelayMs(time_t delms);
-# 46 "main.c" 2
+# 8 "main.c" 2
 
 # 1 "./cmath.h" 1
 # 17 "./cmath.h"
 uint16_t isqrt(uint16_t x);
-# 47 "main.c" 2
+# 9 "main.c" 2
 
 # 1 "./vMeasure.h" 1
 # 19 "./vMeasure.h"
 void vMeasureRst(void);
 void vMeasureInit(void);
 uint16_t vMeasureGet(void);
-# 48 "main.c" 2
+# 10 "main.c" 2
 
 # 1 "./keyRead.h" 1
-# 16 "./keyRead.h"
+# 19 "./keyRead.h"
 void keyReadInit(void);
 
 int8_t keyPeek(void);
@@ -27936,7 +27959,7 @@ int8_t keyPeek(void);
 int8_t keyReadEC();
 
 int8_t keyRead();
-# 49 "main.c" 2
+# 11 "main.c" 2
 
 # 1 "./LiquidCrystal_I2C.h" 1
 # 55 "./LiquidCrystal_I2C.h"
@@ -27970,7 +27993,34 @@ void load_custom_character(uint8_t char_num, uint8_t *rows);
 void printstr(const char[]);
 void printstrblock(const char[]);
 _Bool PrintStrBusy(void);
-# 50 "main.c" 2
+# 12 "main.c" 2
+
+# 1 "./menu.h" 1
+# 19 "./menu.h"
+extern _Bool lcdPrintTR;
+extern _Bool lcdPrintBR;
+extern char lcdTopRow[20];
+extern char lcdBtnRow[20];
+
+typedef enum {
+    CFG_IDLE,
+    CFG_IP,
+    CFG_BPM,
+    CFG_PEEP,
+    CFG_MAXP,
+    CFG_MAXV,
+    CFG_LOWVA,
+    CFG_HIGHVA,
+} menuStatusT;
+
+void MenuInit(void);
+
+void MenuMng(void);
+
+void screenInit(void);
+
+void screenMng(void);
+# 13 "main.c" 2
 
 
 
@@ -27979,14 +28029,32 @@ void putch(char byte) {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
 }
-# 68 "main.c"
-uint16_t intIP, intPEEP, intIDuration, intEDuration;
-# 81 "main.c"
+
+
+
+
+uint16_t intIP, intPEEP, intIDuration, intEDuration, intMaxV;
+vmodeT intVentMode;
+
+
+
+
+vmodeT VentMode = 0;
+uint8_t MaxP = 4;
+uint8_t MaxV = 100;
+uint8_t LowVAlarm = 100;
+uint8_t HighVAlarm = 100;
 uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
-# 105 "main.c"
+_Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
+int16_t vddValMean;
+uint8_t eBRate;
+
+uint24_t bRateHist;
+uint24_t bRatePtr;
+# 66 "main.c"
 __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
     int32_t intLVal;
 
@@ -27996,24 +28064,18 @@ __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, in
     return pInst + ((uint16_t) intLVal);
 }
 
-
-
 enum ctrlStatusT {
     CTRL_UNCAL,
     CTRL_STOP,
-    CTRL_RUN
+    CTRL_RUN,
+    CTRL_SLEEP
 } ctrlStatus;
 
 
-time_t menuTstamp;
-uint8_t menuVal;
-char lcdTopRow[20];
-char lcdBtnRow[20];
-_Bool lcdPrint, lcdBlink;
 uint16_t lastCycleVol;
 uint16_t openFlowRate;
-# 144 "main.c"
-char monitorMsg[11];
+# 99 "main.c"
+char monitorMsg[10];
 char ctrlErrorStatus;
 
 typedef enum {
@@ -28024,8 +28086,24 @@ typedef enum {
     MON_SV2E= 0x08
 } monErrorT;
 
-monErrorT monError;
+typedef enum {
+    MONSTATE_INIT = 0x80,
+    MONSTATE_CALP = 0xC0,
+    MONSTATE_CALF = 0xA0,
+    MONSTATE_STOP = 0x0,
+    MONSTATE_RUNP = 0x10,
+    MONSTATE_RUNV = 0x14,
+    MONSTATE_SLEEP = 0x8
+} monStateT;
 
+monStateT monState;
+
+monErrorT monError;
+time_t monTstamp;
+
+void MonitorInit(void){
+    ;
+}
 void MonitorErrorSet(monErrorT flag){
     ctrlErrorStatus = ctrlErrorStatus|flag;
 }
@@ -28034,21 +28112,126 @@ void MonitorErrorClr(monErrorT flag){
     ctrlErrorStatus = ctrlErrorStatus&(~flag);
 }
 
-void MonitorMsgSend (void){
+void MonitorMsgForcedSend (monStateT state){
+    i2c1_error_t trfError;
+    int16_t vddVal;
 
+
+
+    trfError = I2C1_Close();
+    if (trfError == I2C1_FAIL) {
+
+        sprintf(lcdBtnRow, "        M. ERROR");
+        lcdPrintBR = 1;
+        LATDbits.LATD0 = 1;
+        printf ("MON ERROR");
+    } else if ((LATDbits.LATD0) && (trfError == I2C1_NOERR)) {
+
+        sprintf(lcdBtnRow, "                ");
+        lcdPrintBR = 1;
+        LATDbits.LATD0 = 0;
+        printf ("MON ERROR CLR");
+    }
+
+    if (trfError != I2C1_BUSY) {
+
+        aCaptGetResult(VddSensor, &vddVal);
+        if (vddVal > vddValMean){
+            vddVal = vddVal - vddValMean;
+        } else {
+            vddVal = vddValMean - vddVal;
+        }
+        if (vddVal > 150) {
+            MonitorErrorSet(MON_VDDE);
+        } else {
+            MonitorErrorClr(MON_VDDE);
+        }
+
+
+        if (VentMode == VMODE_VOLUME) {
+            monitorMsg[0] = state|0x4;
+        } else {
+            monitorMsg[0] = state;
+        }
+
+        monitorMsg[1] = IP;
+        if (chIP) {
+            monitorMsg[1] |= 0x80;
+        }
+
+        monitorMsg[2] = PEEP;
+        if (chPEEP) {
+            monitorMsg[2] |= 0x80;
+        }
+
+        monitorMsg[3] = BPM;
+        if (chBPM) {
+            monitorMsg[3] |= 0x80;
+        }
+
+        monitorMsg[4] = MaxP;
+        if (chMaxP){
+            monitorMsg[3] |= 0x80;
+        }
+
+        monitorMsg[5] = MaxV;
+        if (chMaxV){
+            monitorMsg[5] |= 0x80;
+        }
+
+        monitorMsg[6] = LowVAlarm;
+        if (chLowVAlarm){
+            monitorMsg[6] |= 0x80;
+        }
+
+        monitorMsg[7] = HighVAlarm;
+        if (chHighVAlarm){
+            monitorMsg[7] |= 0x80;
+        }
+
+        monitorMsg[8] = eBRate;
+        monitorMsg[9] = ctrlErrorStatus;
+
+        I2C1_Open(0x50);
+        I2C1_SetBuffer(monitorMsg,10);
+        I2C1_MasterWrite();
+    }
+}
+
+void MonitorMsgSend (monStateT state){
+    if (timeElapsedR(&monTstamp, ((time_t) 50*1))) {
+         MonitorMsgForcedSend(state);
+    }
 }
 
 
-_Bool MonitorError (void){
-
+void bRateInit(void){
+    bRateHist = 0;
+    bRatePtr = 1;
+    eBRate = 0;
 }
 
+void bRateUpdt(_Bool triggered){
+    bRatePtr = bRatePtr<<1;
+    if (bRatePtr == 0x1L<<20){
+        bRatePtr = 1;
+    }
 
+    if (bRateHist && bRatePtr) {
+        eBRate -= 5;
+    }
+    if (triggered) {
+        bRateHist |= bRatePtr;
+        eBRate += 5;
+    } else {
+        bRateHist &= ~bRatePtr;
+    }
+}
 
 
 
 _Bool InitProcedure(void) {
-    int16_t vddVal, vddValMax, vddValMin, vddValMean;
+    int16_t vddVal, vddValMax, vddValMin;
     int16_t mPVal, mPValMax, mPValMin, mPValMean;
     int16_t aPVal, aPValMax, aPValMin, aPValMean;
     _Bool lcdBLight;
@@ -28066,6 +28249,7 @@ _Bool InitProcedure(void) {
     vddValMin = 8000;
     vddValMax = 0;
     initOk = 1;
+    MonitorMsgForcedSend (MONSTATE_INIT);
 
     aCaptureSetOff(MainPSensor, 0);
     aCaptureSetOff(AuxPSensor, 0);
@@ -28082,7 +28266,7 @@ _Bool InitProcedure(void) {
                 vddValMin = vddVal;
             }
         } else {
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
             initOk = 0;
         }
     }
@@ -28148,6 +28332,8 @@ _Bool InitProcedure(void) {
             }
         }
 
+        MonitorMsgForcedSend (MONSTATE_CALP);
+
 
         mPValMin = 4096;
         aPValMin = 4096;
@@ -28163,7 +28349,7 @@ _Bool InitProcedure(void) {
                     mPValMin = mPVal;
                 }
             } else {
-                LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+                LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
                 initOk = 0;
             }
 
@@ -28176,7 +28362,7 @@ _Bool InitProcedure(void) {
                 }
             } else {
                 initOk = 0;
-                LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+                LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
             }
         }
 
@@ -28224,9 +28410,10 @@ _Bool InitProcedure(void) {
     setCursor(0, 0);
     printstrblock("FLOW RATE        ");
 
-
     aPValMin = 4096;
     aPValMax = 0;
+
+    MonitorMsgForcedSend (MONSTATE_CALF);
 
     LATAbits.LATA2 = 1;
     LATAbits.LATA3 = 1;
@@ -28244,6 +28431,7 @@ _Bool InitProcedure(void) {
     }
 
     openFlowRate = vMeasureGet()<<2;
+    MonitorMsgForcedSend (MONSTATE_STOP);
     LATAbits.LATA2 = 0;
     LATAbits.LATA3 = 0;
 
@@ -28328,6 +28516,8 @@ void main(void) {
     lastCycleVol = 0;
     keyReadInit();
     screenInit();
+    bRateInit();
+    MonitorInit();
 
     while (1) {
         char keyTmp;
@@ -28349,7 +28539,7 @@ void main(void) {
     }
 
 
-    lcdPrint=1;
+    lcdPrintTR=1;
     setCursor(0, 1);
     printstrblock("BREATH TO START ");
     LATDbits.LATD6 = 1;
@@ -28372,7 +28562,15 @@ void main(void) {
             }
         }
     }
-# 560 "main.c"
+
+
+    monTstamp = timeGet();
+    if (VentMode == VMODE_PRESSURE){
+        MonitorMsgForcedSend(MONSTATE_RUNP);
+    } else {
+        MonitorMsgForcedSend(MONSTATE_RUNV);
+    }
+# 651 "main.c"
     rCycleTime = timeGet();
 
     while (1) {
@@ -28380,7 +28578,13 @@ void main(void) {
 
 
         printf ("\nIP\n");
-        intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
+        intVentMode = VentMode;
+        if (intVentMode == VMODE_PRESSURE) {
+            intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
+            intMaxV = MaxV;
+        } else {
+            intIP = ((int16_t) ((0.045*4096+2)/5)*MaxP);
+        }
         intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
         intIDuration = ((time_t) IDuration*1);
         intEDuration = ((time_t) EDuration*1);
@@ -28395,6 +28599,12 @@ void main(void) {
         rValveDelayStart = timeGet();
         vMeasureRst();
         while (1) {
+            if (intVentMode == VMODE_PRESSURE){
+                MonitorMsgSend(MONSTATE_RUNP);
+            } else {
+                MonitorMsgSend(MONSTATE_RUNV);
+            }
+
             if (timeElapsedR(&rCycleTime, intIDuration)) {
 
                 if (initialSubState){
@@ -28512,14 +28722,16 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 707 "main.c"
+# 810 "main.c"
             }
 
         }
 
 
         lastCycleVol = vMeasureGet();
-        lcdPrint = 1;
+        sprintf(lcdBtnRow, "CV: % 3d ", lastCycleVol);
+        lcdPrintBR = 1;
+
 
 
 
@@ -28540,8 +28752,14 @@ void main(void) {
         OSCheck = 0;
 
         while (1) {
+            if (intVentMode == VMODE_PRESSURE){
+                MonitorMsgSend(MONSTATE_RUNP);
+            } else {
+                MonitorMsgSend(MONSTATE_RUNV);
+            }
             if (timeElapsedR(&rCycleTime, intEDuration)) {
 
+                bRateUpdt(0);
                 if (initialSubState){
 
                     MonitorErrorSet(MON_EPE);
@@ -28628,6 +28846,7 @@ void main(void) {
                                 printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
                                 LATDbits.LATD6 = 1;
                                 rCycleTime = timeGet();
+                                bRateUpdt(1);
                                 break;
                             }
 

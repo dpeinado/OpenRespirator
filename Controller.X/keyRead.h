@@ -9,9 +9,12 @@
 #define KEYMINUS  3
 #define KEYPLUS   5
 #define KEYBREATH 4
+#define KEYMAXP   6
+#define KEYMAXV   7
+#define KEYHIGHVA 8
+#define KEYLOWVA  9
 
 #define ESCAPE_CODE -100
-
 
 void keyReadInit(void);
 

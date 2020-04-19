@@ -137,6 +137,9 @@ void aCaptRstFlt(aSrcTyp sel) {
         case Flt0PSensor:
             resultTbl[sel] = resultTbl[MainPSensor]<<2;
             break;
+        default:
+            // ERROR.
+            ERROR_CONDITION(103);
     }
             PIE1bits.ADTIE = 1;
 }
@@ -171,6 +174,9 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
         case Flt0PSensor:
             lclRaw=lclRaw>>2;
             break;
+        default:
+            // Nothing to be done.
+            break;
     }
     
     switch (sel){
@@ -194,7 +200,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return true;
         default:
             // ERROR.
-            ERROR_CONDITION(103);
+            ERROR_CONDITION(104);
     }
 }
 

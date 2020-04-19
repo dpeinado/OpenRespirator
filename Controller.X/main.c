@@ -1,46 +1,8 @@
 /**
-  Generated Main Source File
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    main.c
-
-  Summary:
-    This is the main file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
-
-  Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.
-    Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
-        Device            :  PIC18F46K42
-        Driver Version    :  2.00
+ Author: David Ortiz
  */
 
-/*
-    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
-    
-    Subject to your compliance with these terms, you may use Microchip software and any 
-    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
-    license terms applicable to your use of third party software (including open source software) that 
-    may accompany Microchip software.
-    
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
-    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
-    FOR A PARTICULAR PURPOSE.
-    
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
-    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
-    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
-    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
-    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
-    SOFTWARE.
- */
-
+#include "mcc_generated_files/mcc.h"
 #include "ORespGlobal.h"
 #include "aCapture.h"
 #include "time.h"
@@ -48,6 +10,7 @@
 #include "vMeasure.h"
 #include "keyRead.h"
 #include "LiquidCrystal_I2C.h"
+#include "menu.h"
 
 #ifdef DEBUG
 
@@ -57,31 +20,29 @@ void putch(char byte) {
 }
 #endif
 
-#ifdef DEBUG
-#define DEBUG_PRINT(x) printf x
-#else
-#define DEBUG_PRINT(x) do {} while (0)
-#endif
-
 
 // To avoid problems with control, keep a copy of the values during first part of inspiration and expiration.
-uint16_t intIP, intPEEP, intIDuration, intEDuration;
-
-// User parameter limits.
-#define BPM_MIN 10
-#define BPM_MAX 30
-#define IP_MIN 4
-#define IP_MAX 35
-#define PEEP_MIN 4
-#define PEEP_MAX 25
+uint16_t intIP, intPEEP, intIDuration, intEDuration, intMaxV;
+vmodeT intVentMode; 
 
 ///////////////////
 // User parameters.
 ///////////////////
+vmodeT   VentMode = 0; // 0 --> Pressure-control, 1 --> Volume-control.
+uint8_t  MaxP = 4;
+uint8_t  MaxV = 100;
+uint8_t  LowVAlarm = 100;
+uint8_t  HighVAlarm = 100;
 uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
+bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
+int16_t  vddValMean;
+uint8_t  eBRate;
+
+uint24_t bRateHist;
+uint24_t bRatePtr;
 
 // CONTROLLER INTERNAL PARAMETERS.
 #define BLED_ONTIME TIME_MS(500)
@@ -111,37 +72,31 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) 
     return pInst + ((uint16_t) intLVal);
 }
 
-#define MENU_TOUT TIME_S(5)
-
 enum ctrlStatusT {
     CTRL_UNCAL,
     CTRL_STOP,
-    CTRL_RUN
+    CTRL_RUN,
+    CTRL_SLEEP
 } ctrlStatus;
 
 
-time_t menuTstamp;
-uint8_t menuVal;
-char lcdTopRow[20];
-char lcdBtnRow[20];
-bool lcdPrint, lcdBlink;
 uint16_t lastCycleVol;
 uint16_t openFlowRate;
 
 // FUNCTIONS TO COMMUNICATE WITH MONITOR.
 // Message to sent to monitor.
-#define MONIDX_ADDR   0
-#define MONIDX_MODE   1
-#define MONIDX_IPV    2
-#define MONIDX_EPV    3
-#define MONIDX_BPMV   4
-#define MONIDX_PMAXV  5
-#define MONIDX_VMAXV  6
-#define MONIDX_LVAV   7
-#define MONIDX_HVAV   8
-#define MONIDX_BRRTV  9
-#define MONIDX_ALARMV 10
-char monitorMsg[11];
+#define MONIDX_MODE   0
+#define MONIDX_IPV    1
+#define MONIDX_EPV    2
+#define MONIDX_BPMV   3
+#define MONIDX_PMAXV  4
+#define MONIDX_VMAXV  5
+#define MONIDX_LVAV   6
+#define MONIDX_HVAV   7
+#define MONIDX_BRRTV  8
+#define MONIDX_ALARMV 9
+
+char monitorMsg[10];
 char ctrlErrorStatus;
 
 typedef enum {
@@ -152,8 +107,24 @@ typedef enum {
     MON_SV2E= 0x08
 } monErrorT;
 
-monErrorT monError;
+typedef enum {
+    MONSTATE_INIT = 0x80,
+    MONSTATE_CALP = 0xC0,
+    MONSTATE_CALF = 0xA0,
+    MONSTATE_STOP = 0x0,
+    MONSTATE_RUNP = 0x10,
+    MONSTATE_RUNV = 0x14,
+    MONSTATE_SLEEP = 0x8
+} monStateT;
 
+monStateT monState;
+
+monErrorT monError;
+time_t    monTstamp;
+
+void MonitorInit(void){
+    ;
+}
 void MonitorErrorSet(monErrorT flag){
     ctrlErrorStatus = ctrlErrorStatus|flag;
 }
@@ -162,21 +133,126 @@ void MonitorErrorClr(monErrorT flag){
     ctrlErrorStatus = ctrlErrorStatus&(~flag);    
 }
 
-void MonitorMsgSend (void){
-    // Assemble message for monitor and sent it.
-}
-
-// Return true if error in monitor is detected.
-bool MonitorError (void){
+void MonitorMsgForcedSend (monStateT state){
+    i2c1_error_t trfError;
+    int16_t vddVal;
     
+    // Assemble message for monitor and sent it.
+    // Ensure previous message was sent.
+    trfError = I2C1_Close();
+    if (trfError == I2C1_FAIL) {
+        // Enable buzzer and display error message on second line.
+        sprintf(lcdBtnRow, "        M. ERROR");
+        lcdPrintBR = true;
+        BUZZER_ON;
+        DEBUG_PRINT(("MON ERROR"));
+    } else if ((BUZZERISON) && (trfError == I2C1_NOERR)) {
+        // Disable buzzer.
+        sprintf(lcdBtnRow, "                ");
+        lcdPrintBR = true;
+        BUZZER_OFF;
+        DEBUG_PRINT(("MON ERROR CLR"));
+    }
+    
+    if (trfError != I2C1_BUSY) {
+        // First set VDD error flag. No more than 150mV deviation with respect to calibration value.
+        aCaptGetResult(VddSensor, &vddVal);
+        if (vddVal > vddValMean){
+            vddVal = vddVal - vddValMean;
+        } else {
+            vddVal = vddValMean - vddVal;
+        }
+        if (vddVal > 150) {
+            MonitorErrorSet(MON_VDDE);
+        } else {
+            MonitorErrorClr(MON_VDDE);        
+        }
+        
+        // Now build message.
+        if (VentMode == VMODE_VOLUME) {
+            monitorMsg[MONIDX_MODE] = state|0x4;
+        } else {
+            monitorMsg[MONIDX_MODE] = state;
+        }
+
+        monitorMsg[MONIDX_IPV] = IP;    
+        if (chIP) {
+            monitorMsg[MONIDX_IPV] |= 0x80;    
+        }
+        
+        monitorMsg[MONIDX_EPV] = PEEP;
+        if (chPEEP) {
+            monitorMsg[MONIDX_EPV] |= 0x80;
+        }
+        
+        monitorMsg[MONIDX_BPMV]  = BPM;
+        if (chBPM) {
+            monitorMsg[MONIDX_BPMV] |= 0x80;
+        }
+        
+        monitorMsg[MONIDX_PMAXV] = MaxP;
+        if (chMaxP){
+            monitorMsg[MONIDX_BPMV] |= 0x80;
+        }
+
+        monitorMsg[MONIDX_VMAXV] = MaxV;
+        if (chMaxV){
+            monitorMsg[MONIDX_VMAXV] |= 0x80;
+        }
+        
+        monitorMsg[MONIDX_LVAV]  = LowVAlarm;
+        if (chLowVAlarm){
+            monitorMsg[MONIDX_LVAV] |= 0x80;
+        }
+        
+        monitorMsg[MONIDX_HVAV]  = HighVAlarm;
+        if (chHighVAlarm){
+            monitorMsg[MONIDX_HVAV]  |= 0x80;
+        }
+        
+        monitorMsg[MONIDX_BRRTV] = eBRate;        
+        monitorMsg[MONIDX_ALARMV] = ctrlErrorStatus;
+
+        I2C1_Open(0x50);
+        I2C1_SetBuffer(monitorMsg,10);
+        I2C1_MasterWrite();
+    }
 }
 
+void MonitorMsgSend (monStateT state){
+    if (timeElapsedR(&monTstamp, TIME_MS(50))) {
+         MonitorMsgForcedSend(state);     
+    }
+}
+
+// Keep Rate in last 20 inspirations.
+void bRateInit(void){
+    bRateHist = 0;
+    bRatePtr  = 1;
+    eBRate = 0;
+}
+
+void bRateUpdt(bool triggered){
+    bRatePtr = bRatePtr<<1;
+    if (bRatePtr == 0x1L<<20){
+        bRatePtr = 1;
+    }
+
+    if (bRateHist && bRatePtr) {
+        eBRate -= 5;
+    }
+    if (triggered) {
+        bRateHist |= bRatePtr;
+        eBRate += 5;
+    } else {
+        bRateHist &= ~bRatePtr;        
+    }
+}
 
 // Initialization procedure.
 // Self-test.
-
 bool InitProcedure(void) {
-    int16_t vddVal, vddValMax, vddValMin, vddValMean;
+    int16_t vddVal, vddValMax, vddValMin;
     int16_t mPVal, mPValMax, mPValMin, mPValMean;
     int16_t aPVal, aPValMax, aPValMin, aPValMean;
     bool lcdBLight;
@@ -194,7 +270,8 @@ bool InitProcedure(void) {
     vddValMin = 8000;
     vddValMax = 0;
     initOk = true;
-
+    MonitorMsgForcedSend (MONSTATE_INIT);
+        
     aCaptureSetOff(MainPSensor, 0);
     aCaptureSetOff(AuxPSensor, 0);
     // First check VDD stability.
@@ -276,6 +353,8 @@ bool InitProcedure(void) {
             }
         }
 
+        MonitorMsgForcedSend (MONSTATE_CALP);
+
         // Now capture data.
         mPValMin = 4096;
         aPValMin = 4096;
@@ -348,13 +427,14 @@ bool InitProcedure(void) {
     // Last step, check volume. 
     tstamp = timeGet();
 
-    // Open valve, wait for 100ms, measure flow during 500ms, display result.
+    // Open valve, wait for 250ms, measure flow during 250ms, display result.
     setCursor(0, 0);
     printstrblock("FLOW RATE        ");
 
-
     aPValMin = 4096;
     aPValMax = 0;
+
+    MonitorMsgForcedSend (MONSTATE_CALF);
 
     OPEN_SV2;
     OPEN_SV3;
@@ -372,6 +452,7 @@ bool InitProcedure(void) {
     }
     // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
     openFlowRate = vMeasureGet()<<2;
+    MonitorMsgForcedSend (MONSTATE_STOP);
     CLOSE_SV2;
     CLOSE_SV3;
 
@@ -456,6 +537,8 @@ void main(void) {
     lastCycleVol = 0;
     keyReadInit();
     screenInit();
+    bRateInit();
+    MonitorInit();
 
     while (1) {
         char keyTmp;
@@ -477,7 +560,7 @@ void main(void) {
     }
     
     // Now wait until BREATH button pressed.
-    lcdPrint=true;
+    lcdPrintTR=true;
     setCursor(0, 1);
     printstrblock("BREATH TO START ");
     BLED_ON;
@@ -500,7 +583,15 @@ void main(void) {
             }
         }
     }
-    
+
+    // Start periodic message sent.
+    monTstamp = timeGet();
+    if (VentMode == VMODE_PRESSURE){
+        MonitorMsgForcedSend(MONSTATE_RUNP);
+    } else {
+        MonitorMsgForcedSend(MONSTATE_RUNV);        
+    }
+
 #if 0
     if (0) {
         time_t tstamp1, tstamp2, tstamp3;
@@ -564,7 +655,13 @@ void main(void) {
         // Inspiration part of the cycle.
         /////////////////////////////////////////////
         DEBUG_PRINT(("\nIP\n"));
-        intIP = MPRESSURE_MBAR(IP);
+        intVentMode = VentMode;
+        if (intVentMode == VMODE_PRESSURE) {
+            intIP = MPRESSURE_MBAR(IP);             
+            intMaxV = MaxV;
+        } else {
+            intIP = MPRESSURE_MBAR(MaxP);
+        }
         intPEEP = MPRESSURE_MBAR(PEEP);
         intIDuration = TIME_MS(IDuration);
         intEDuration = TIME_MS(EDuration);
@@ -579,6 +676,12 @@ void main(void) {
         rValveDelayStart = timeGet();
         vMeasureRst();
         while (1) {
+            if (intVentMode == VMODE_PRESSURE){
+                MonitorMsgSend(MONSTATE_RUNP);
+            } else {
+                MonitorMsgSend(MONSTATE_RUNV);        
+            }
+
             if (timeElapsedR(&rCycleTime, intIDuration)) {
                 // Goto next.
                 if (initialSubState){
@@ -708,9 +811,11 @@ void main(void) {
 #endif
         }
 
-        // Update last cycle inspiration volume.
+        // Update last cycle inspiration volume. Temporal, should be removed once this is implemented on Monitor.
         lastCycleVol = vMeasureGet();
-        lcdPrint = true;
+        sprintf(lcdBtnRow, "CV: % 3d ", lastCycleVol);
+        lcdPrintBR = true;
+
         /////////////////////////////////////////////
         // Expiration part of the cycle.
         /////////////////////////////////////////////
@@ -731,8 +836,14 @@ void main(void) {
         OSCheck = false;
 
         while (1) {
+            if (intVentMode == VMODE_PRESSURE){
+                MonitorMsgSend(MONSTATE_RUNP);
+            } else {
+                MonitorMsgSend(MONSTATE_RUNV);        
+            }
             if (timeElapsedR(&rCycleTime, intEDuration)) {
                 // Goto next.
+                bRateUpdt(false);
                 if (initialSubState){
                     // IP not reached.
                     MonitorErrorSet(MON_EPE);
@@ -819,6 +930,7 @@ void main(void) {
                                 DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
                                 BLED_ON;
                                 rCycleTime = timeGet();
+                                bRateUpdt(true);
                                 break;
                             }
                             // Then PEEP level maintenance.

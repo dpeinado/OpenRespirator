@@ -27896,7 +27896,7 @@ void timeDelayMs(time_t delms);
 # 8 "keyRead.c" 2
 
 # 1 "./keyRead.h" 1
-# 16 "./keyRead.h"
+# 19 "./keyRead.h"
 void keyReadInit(void);
 
 int8_t keyPeek(void);
