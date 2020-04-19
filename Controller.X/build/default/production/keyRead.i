@@ -27899,8 +27899,6 @@ void timeDelayMs(time_t delms);
 # 16 "./keyRead.h"
 void keyReadInit(void);
 
-int8_t keyAvailable(void);
-
 int8_t keyPeek(void);
 
 
@@ -27929,16 +27927,6 @@ void keyReadInit(void){
 
 };
 
-int8_t keyAvailable(void) {
-    int8_t ch = keyPeek();
-    if (lastkey == -1) {
-        lastkey = ch;
-        pressMills = timeGet();
-    } else if (2000 && (timeDiff(pressMills,timeGet()) > 2000)) return 1;
-    if (ch == lastkey) return 0;
-    return 1;
-}
-
 int8_t keyPeek(void) {
     for (int8_t n = 0; n < 6; n++) {
         if (digitalRead(keys[n]) != 1) {
@@ -27951,12 +27939,18 @@ int8_t keyPeek(void) {
 
 int8_t keyReadEC() {
     int8_t ch = keyPeek();
-    if (ch == lastkeyEC) return -1;
-    int8_t tmp = lastkeyEC;
-    _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
-    pressMills = timeGet();
-    lastkeyEC = ch;
-    return longPress ? -100 : tmp;
+    if (lastkeyEC == -1) {
+        lastkeyEC = ch;
+        pressMills = timeGet();
+    } else if ((ch != -1) && (ch == lastkeyEC)) {
+        _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
+        if (longPress) {
+            return -100;
+        }
+    } else if (ch == -1) {
+        lastkeyEC = -1;
+    }
+    return -1;
 }
 
 int8_t keyRead() {

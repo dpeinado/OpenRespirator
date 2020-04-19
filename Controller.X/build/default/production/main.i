@@ -27929,8 +27929,6 @@ uint16_t vMeasureGet(void);
 # 16 "./keyRead.h"
 void keyReadInit(void);
 
-int8_t keyAvailable(void);
-
 int8_t keyPeek(void);
 
 
@@ -28266,6 +28264,12 @@ _Bool InitProcedure(void) {
     }
 
     while (ctrlStatus == CTRL_UNCAL) {
+        LATDbits.LATD6 = 0;
+
+        while (keyPeek() != -1)
+            ;
+        keyReadInit();
+
 
 
         LATDbits.LATD6 = 1;
@@ -28273,12 +28277,6 @@ _Bool InitProcedure(void) {
         printstrblock("CAL PRESS BREATH");
         tstamp = timeGet();
         lcdBLight = 1;
-
-
-        while (keyPeek() != -1)
-            ;
-        keyRead();
-        keyReadEC();
 
         tstamp = timeGet();
         while (1) {
@@ -28425,7 +28423,7 @@ _Bool InitProcedure(void) {
 
     while (keyPeek() != -1)
         ;
-    keyRead();
+    keyReadInit();
 
     return initOk;
 }
@@ -28501,14 +28499,14 @@ void main(void) {
     lcdPrint=1;
     setCursor(0, 1);
     printstrblock("BREATH TO START ");
+    LATDbits.LATD6 = 1;
     while (ctrlStatus != CTRL_RUN) {
-        LATDbits.LATD6 = 1;
 
         MenuMng();
         screenMng();
 
-        if (keyPeek() == 4) {
-            if (keyReadEC() == -100) {
+        if (keyReadEC() == -100) {
+            if (keyPeek() == 4) {
 
                 LATDbits.LATD6 = 0;
                 ctrlStatus = CTRL_RUN;
@@ -28516,7 +28514,7 @@ void main(void) {
 
                 while (keyPeek() != -1)
                 ;
-                keyRead();
+                keyReadInit();
                 break;
             }
         }

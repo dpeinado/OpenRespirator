@@ -381,6 +381,12 @@ bool InitProcedure(void) {
     }
 
     while (ctrlStatus == CTRL_UNCAL) {
+        BLED_OFF;
+        // First, ensure no key pressed.
+        while (keyPeek() != -1)
+            ;
+        keyReadInit();
+
         // Repeat until correct calibration.
         // Now calibrate.
         BLED_ON;
@@ -388,12 +394,6 @@ bool InitProcedure(void) {
         printstrblock("CAL PRESS BREATH");
         tstamp = timeGet();
         lcdBLight = true;
-
-        // First, ensure no key pressed.
-        while (keyPeek() != -1)
-            ;
-        keyRead();
-        keyReadEC();
 
         tstamp = timeGet();
         while (1) {
@@ -540,7 +540,7 @@ bool InitProcedure(void) {
     // Wait until key depressed.
     while (keyPeek() != -1)
         ;
-    keyRead();
+    keyReadInit();
         
     return initOk;
 }
@@ -616,14 +616,14 @@ void main(void) {
     lcdPrint=true;
     setCursor(0, 1);
     printstrblock("BREATH TO START ");
+    BLED_ON;
     while (ctrlStatus != CTRL_RUN) {
-        BLED_ON;
         // User inputs, screen update.
         MenuMng();
         screenMng();
         
-        if (keyPeek() == KEYBREATH) {
-            if (keyReadEC() == ESCAPE_CODE) {
+        if (keyReadEC() == ESCAPE_CODE) {
+            if (keyPeek() == KEYBREATH) {
                 // Key Breath pressed.
                 BLED_OFF;
                 ctrlStatus = CTRL_RUN;
@@ -631,7 +631,7 @@ void main(void) {
                 // Wait until key depressed.
                 while (keyPeek() != -1)
                 ;
-                keyRead();
+                keyReadInit();
                 break;
             }
         }

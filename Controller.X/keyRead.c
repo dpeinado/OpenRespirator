@@ -27,16 +27,6 @@ void keyReadInit(void){
     // Keys already initialized.
 };
 
-int8_t keyAvailable(void) {
-    int8_t ch = keyPeek();
-    if (lastkey == -1) {
-        lastkey = ch;
-        pressMills = timeGet();
-    } else if (ESCAPE_TIME && (timeDiff(pressMills,timeGet()) > ESCAPE_TIME)) return 1;
-    if (ch == lastkey) return 0;
-    return 1;
-}
-
 int8_t keyPeek(void) {
     for (int8_t n = 0; n < KEYN; n++) {
         if (digitalRead(keys[n]) != 1) {
@@ -46,15 +36,21 @@ int8_t keyPeek(void) {
     return -1;
 }
 
-// Read with escape code.
+// Check if long press on a key. Should not be used together with keyPeek, not for normal key read.
 int8_t keyReadEC() {
     int8_t ch = keyPeek();
-    if (ch == lastkeyEC) return -1;
-    int8_t tmp = lastkeyEC;
-    bool longPress = ESCAPE_TIME && (timeDiff(pressMills,timeGet())>ESCAPE_TIME);
-    pressMills = timeGet();
-    lastkeyEC = ch;
-    return longPress ? ESCAPE_CODE : tmp; //long press will result in escape
+    if (lastkeyEC == -1) {
+        lastkeyEC = ch;
+        pressMills = timeGet();
+    } else if ((ch != -1) && (ch == lastkeyEC)) {
+        bool longPress = ESCAPE_TIME && (timeDiff(pressMills,timeGet())>ESCAPE_TIME);        
+        if (longPress) {
+            return ESCAPE_CODE;
+        }
+    } else if (ch == -1) {
+        lastkeyEC = -1;
+    }
+    return -1;
 }
 
 int8_t keyRead() {

@@ -15,8 +15,6 @@
 
 void keyReadInit(void);
 
-int8_t keyAvailable(void);
-
 int8_t keyPeek(void);
 // Read with escape code.
 
