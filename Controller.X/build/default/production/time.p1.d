@@ -10,6 +10,6 @@ mcc_generated_files/interrupt_manager.h  \
 mcc_generated_files/i2c1_master.h  \
 mcc_generated_files/i2c2_master.h  \
 mcc_generated_files/tmr2.h  \
-mcc_generated_files/fvr.h  \
 mcc_generated_files/adcc.h  \
+mcc_generated_files/fvr.h  \
 mcc_generated_files/uart1.h 

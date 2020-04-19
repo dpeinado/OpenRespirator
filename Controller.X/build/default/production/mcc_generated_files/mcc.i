@@ -27732,13 +27732,6 @@ void TMR0_Reload(uint8_t periodVal);
 _Bool TMR0_HasOverflowOccured(void);
 # 60 "mcc_generated_files/mcc.h" 2
 
-# 1 "mcc_generated_files/fvr.h" 1
-# 93 "mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
-# 61 "mcc_generated_files/mcc.h" 2
-
 # 1 "mcc_generated_files/adcc.h" 1
 # 72 "mcc_generated_files/adcc.h"
 typedef uint16_t adc_result_t;
@@ -27816,6 +27809,13 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
+# 61 "mcc_generated_files/mcc.h" 2
+
+# 1 "mcc_generated_files/fvr.h" 1
+# 93 "mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
 # 62 "mcc_generated_files/mcc.h" 2
 
 # 1 "mcc_generated_files/uart1.h" 1
