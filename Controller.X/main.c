@@ -41,7 +41,6 @@
     SOFTWARE.
  */
 
-#include "mcc_generated_files/mcc.h"
 #include "ORespGlobal.h"
 #include "aCapture.h"
 #include "time.h"
@@ -114,13 +113,6 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) 
 
 #define MENU_TOUT TIME_S(5)
 
-enum menuStatusT {
-    CFG_IDLE,
-    CFG_IP,
-    CFG_BPM,
-    CFG_PEEP
-} menuStatus;
-
 enum ctrlStatusT {
     CTRL_UNCAL,
     CTRL_STOP,
@@ -136,177 +128,49 @@ bool lcdPrint, lcdBlink;
 uint16_t lastCycleVol;
 uint16_t openFlowRate;
 
-void MenuInit(void) {
-    menuStatus = CFG_IDLE;
+// FUNCTIONS TO COMMUNICATE WITH MONITOR.
+// Message to sent to monitor.
+#define MONIDX_ADDR   0
+#define MONIDX_MODE   1
+#define MONIDX_IPV    2
+#define MONIDX_EPV    3
+#define MONIDX_BPMV   4
+#define MONIDX_PMAXV  5
+#define MONIDX_VMAXV  6
+#define MONIDX_LVAV   7
+#define MONIDX_HVAV   8
+#define MONIDX_BRRTV  9
+#define MONIDX_ALARMV 10
+char monitorMsg[11];
+char ctrlErrorStatus;
+
+typedef enum {
+    MON_VDDE= 0x80,
+    MON_SV3E= 0x40,
+    MON_IPE = 0x20,
+    MON_EPE = 0x10,
+    MON_SV2E= 0x08
+} monErrorT;
+
+monErrorT monError;
+
+void MonitorErrorSet(monErrorT flag){
+    ctrlErrorStatus = ctrlErrorStatus|flag;
 }
 
-void MenuMng(void) {
-    // Manage menu.
-    int8_t keyPress;
-    keyPress = keyRead();
-    if (keyPress >= 0) {
-        DEBUG_PRINT(("KEY! %d\n", keyPress));
-        lcdPrint = true;
-
-        switch (keyPress) {
-            case KEYIP:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_IP;
-                    menuVal = IP;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_IP) {
-                    // Accept change and exit.
-                    IP = menuVal;
-                    menuStatus = CFG_IDLE;
-                } else {
-                    // Any other case, abort setting.
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case KEYBPM:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_BPM;
-                    menuVal = BPM;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_BPM) {
-                    // Accept change and exit.
-                    BPM = menuVal;
-                    IDuration = ((uint16_t) 60*1000)/(3*BPM);
-                    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
-                    menuStatus = CFG_IDLE;
-                } else {
-                    // Any other case, abort setting.
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case KEYPEEP:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_PEEP;
-                    menuVal = PEEP;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_PEEP) {
-                    // Accept change and exit.
-                    PEEP = menuVal;
-                    menuStatus = CFG_IDLE;
-                } else {
-                    // Any other case, abort setting.
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case KEYPLUS:
-                if (menuStatus != CFG_IDLE) {
-                    menuTstamp = timeGet();
-                    menuVal = menuVal + 1;
-                    // Should also check limits.
-                    switch (menuStatus) {
-                        case CFG_IP:
-                            if (menuVal > IP_MAX) {
-                                menuVal = IP_MAX;
-                            }
-                            break;
-                        case CFG_PEEP:
-                            if (menuVal > PEEP_MAX) {
-                                menuVal = PEEP_MAX;
-                            }
-                            break;
-                        case CFG_BPM:
-                            if (menuVal > BPM_MAX) {
-                                menuVal = BPM_MAX;
-                            }
-                            break;
-                        default:
-                            // No processing.
-                            break;
-                    }
-                }
-                break;
-            case KEYMINUS:
-                if (menuStatus != CFG_IDLE) {
-                    menuTstamp = timeGet();
-                    menuVal = menuVal - 1;
-                    // Should also check limits.
-                    switch (menuStatus) {
-                        case CFG_IP:
-                            if (menuVal < IP_MIN) {
-                                menuVal = IP_MIN;
-                            }
-                            break;
-                        case CFG_PEEP:
-                            if (menuVal < PEEP_MIN) {
-                                menuVal = PEEP_MIN;
-                            }
-                            break;
-                        case CFG_BPM:
-                            if (menuVal < BPM_MIN) {
-                                menuVal = BPM_MIN;
-                            }
-                            break;
-                        default:
-                            // No processing.
-                            break;
-                    }
-                }
-                break;
-        }
-    } else {
-        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, MENU_TOUT))) {
-            // Silently exit menu.
-            lcdPrint = true;
-            menuStatus = CFG_IDLE;
-        }
-        return;
-    }
+void MonitorErrorClr(monErrorT flag){
+    ctrlErrorStatus = ctrlErrorStatus&(~flag);    
 }
 
-void screenInit(void) {
-    LcdI2CInit(0x27, 16, 2);
-    setCursor(0, 0);
-    printstrblock("EMERG.RESPIRATOR");
-    setCursor(0, 1);
-    printstrblock("  CONTROLLER   ");
-    timeDelayMs(TIME_MS(2000));
-    clear();
-    lcdPrint = true;
-    blink();
+void MonitorMsgSend (void){
+    // Assemble message for monitor and sent it.
 }
 
-void screenMng(void) {
-    // Check if something to print.
-    if (lcdPrint && !PrintStrBusy()) {
-        if (menuStatus == CFG_IDLE) {
-            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, IP, lastCycleVol);
-        } else if (menuStatus == CFG_BPM) {
-            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", menuVal, PEEP, IP, lastCycleVol);
-        } else if (menuStatus == CFG_PEEP) {
-            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, menuVal, IP, lastCycleVol);
-        } else if (menuStatus == CFG_IP) {
-            sprintf(lcdTopRow, "% 2d %2d % 2d IV: % 3d", BPM, PEEP, menuVal, lastCycleVol);
-        }
-        DEBUG_PRINT((lcdTopRow));
-        lcdPrint = false;
-        setCursor(0, 0);
-        printstr(lcdTopRow);
-        if (menuStatus != CFG_IDLE) {
-            lcdBlink = true;
-        }
-    } else if (lcdBlink && !PrintStrBusy()) {
-        lcdBlink = false;
-        switch (menuStatus) {
-            case CFG_BPM:
-                setCursor(1, 0);
-                break;
-            case CFG_PEEP:
-                setCursor(4, 0);
-                break;
-            case CFG_IP:
-                setCursor(7, 0);
-                break;
-            default:
-                // No processing.
-                break;
-        }
-    }
+// Return true if error in monitor is detected.
+bool MonitorError (void){
+    
 }
+
 
 // Initialization procedure.
 // Self-test.
@@ -581,7 +445,7 @@ void main(void) {
 
     // Init all control variables.
     rSV2ValveDelay = 20;
-    rSV2ValveDelay = 50;
+    rSV3ValveDelay = 40;
     valveDelayCheck = false;
     OSCheck = false;
     pExpOS = 0;
@@ -692,6 +556,9 @@ void main(void) {
     }
 #endif
 
+    // Start.
+    rCycleTime = timeGet();
+
     while (1) {
         /////////////////////////////////////////////
         // Inspiration part of the cycle.
@@ -714,13 +581,17 @@ void main(void) {
         while (1) {
             if (timeElapsedR(&rCycleTime, intIDuration)) {
                 // Goto next.
+                if (initialSubState){
+                    // IP not reached.
+                    MonitorErrorSet(MON_IPE);
+                }
                 break;
             } else {
                 //TODO
-                // When BPM is very high, i time very short. 
+                // When BPM is very high, IP time can be very short. 
                 // Ensure algorighm is stable in this conditions:
                 // If SV2 is closed before end of IP cycle, and there is time to measure OS, do it.
-                // Otherwise, ensure OS is not used in those conditions...
+                // Otherwise, ensure OS should not used in those conditions...
                 // Do the same in case of EP.
                 if (timeElapsed(rCycleTime, BLED_ONTIME)) {
                     // Turn off led. Can be done here because minimum IP time with fixed 1:2 ratio and 30 BPM is 0.66 seconds.
@@ -752,7 +623,7 @@ void main(void) {
                             pValveActuation = pNext;
                             OSCheck = true;
                             pPlateau = 0;
-                            DEBUG_PRINT(("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pNext) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PII end T %d - Pi %d Pn %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pNext) / MPRESSURE_MBAR(1)));
                         }
                         if (valveDelayCheck) {
                             // Measure response time of valve.
@@ -764,19 +635,23 @@ void main(void) {
                                 if (rTimeTmp < TIME_MS(100)) {
                                     // If value within limits update value, if outside, keep previous value.
                                     rSV2ValveDelay = (rSV2ValveDelay + rTimeTmp)>>1;
+                                    // Clear alarm.
+                                    MonitorErrorClr(MON_SV2E);
                                 } else {
-                                    // TODO: Consider adding a warning/alarm.
+                                    // Raise alarm.
+                                    MonitorErrorSet(MON_SV2E);
                                 }
                             }
                         }
                     }
                 } else {
+                    MonitorErrorClr(MON_IPE);
                     if (SV2ISOPEN) {
                         if (timeElapsedR(&rSubCycleTime, SV2OTIME)) {
                             CLOSE_SV2;
                             rValveAcuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            DEBUG_PRINT(("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PI VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveAcuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1)));
                         }
                     } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                         if (OSCheck) {
@@ -791,14 +666,22 @@ void main(void) {
                                 pTmp = pPlateau - pValveActuation;
                                 pInspOS = (3*pInspOS + pTmp)>>2;
                                 OSCheck = false;
-                                DEBUG_PRINT(("PIOSE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1)));
+                                DEBUG_PRINT(("PIOSE VO T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
                             }
-                        }
-                        // Measure only after delay of valve actuation has elapsed, x2.
-                        if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - FINECTRLHIST))) {
-                            OPEN_SV2;
-                            rSubCycleTime = timeGet();
-                            DEBUG_PRINT(("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1)));
+                        } else {
+                            // Partially compensate for SV3 opening time, once inhalation part has been reached.
+                            if ((SV3ISOPEN) && (rSV3ValveDelay > TIME_MS(50)) && ((intIDuration < (rSV3ValveDelay - TIME_MS(50))) || timeElapsed(rCycleTime, intIDuration - (rSV3ValveDelay - TIME_MS(50))))) {
+                                valveDelayCheck = true;
+                                rValveDelayStart = timeGet();
+                                CLOSE_SV3;
+                                DEBUG_PRINT(("PI VO T %d OSV3\n", timeDiff(rCycleTime, rValveDelayStart)));
+                            }
+                            if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - FINECTRLHIST))) {
+                                // Measure only after delay of valve actuation has elapsed, x2.
+                                OPEN_SV2;
+                                rSubCycleTime = timeGet();
+                                DEBUG_PRINT(("PI VO T %d - Pi %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            }
                         }
                     }
                 }
@@ -813,7 +696,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 DEBUG_PRINT(("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n",
-                        timeDiff(rValveDelayStart, timeGet()),
+                        timeDiff(rCycleTime, timeGet()),
                         vMeasureGet(),
                         (10 * pInst) / MPRESSURE_MBAR(1),
                         (10 * (pNext)) / MPRESSURE_MBAR(1),
@@ -838,15 +721,22 @@ void main(void) {
 
         rSubCycleTime = timeGet();
         CLOSE_SV2;
-        CLOSE_SV3;
+        if (SV3ISOPEN){
+            CLOSE_SV3;
+            valveDelayCheck = true;
+            rValveDelayStart = timeGet();
+        }
+        
         initialSubState = true;
-        valveDelayCheck = true;
         OSCheck = false;
-        rValveDelayStart = timeGet();
 
         while (1) {
             if (timeElapsedR(&rCycleTime, intEDuration)) {
                 // Goto next.
+                if (initialSubState){
+                    // IP not reached.
+                    MonitorErrorSet(MON_EPE);
+                }
                 break;
             } else {
                 if (initialSubState) {
@@ -871,7 +761,7 @@ void main(void) {
                             pValveActuation = pInst;
                             OSCheck = true;
                             DEBUG_PRINT(("PEI end T %d - Pi %d OS %d\n",
-                                    timeDiff(rValveDelayStart, rValveAcuationTstamp),
+                                    timeDiff(rCycleTime, rValveAcuationTstamp),
                                     (10 * pInst) / MPRESSURE_MBAR(1),
                                     (10 * pExpOS) / MPRESSURE_MBAR(1)));
                         }
@@ -882,22 +772,26 @@ void main(void) {
                                 valveDelayCheck = false;
                                 // Minimum reached. Store response time.
                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-                                 if (rTimeTmp < TIME_MS(700)) {
+                                 if (rTimeTmp < TIME_MS(600)) {
                                     // If value within limits update value, if outside, keep previous value.
                                     rSV3ValveDelay = (rSV3ValveDelay + rTimeTmp)>>1;
+                                    // Clear alarm.
+                                    MonitorErrorClr(MON_SV3E);
                                 } else {
-                                    // TODO: Consider adding a warning/alarm.
+                                    // Clear alarm.
+                                    MonitorErrorSet(MON_SV3E);
                                 }
                            }
                         }
                     }
                 } else {
+                    MonitorErrorClr(MON_EPE);
                     if (SV2ISOPEN) {
                         if (timeElapsedR(&rSubCycleTime, SV2OTIME)) {
                             CLOSE_SV2;
                             rValveAcuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
                         }
                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
                         if (OSCheck) {
@@ -912,7 +806,7 @@ void main(void) {
                                 aCaptRstFlt(Flt2PSensor);
                                 aCaptRstFlt(Flt3PSensor);
                                 OSCheck = false;
-                                DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pAvgUShort) / MPRESSURE_MBAR(1)));
+                                DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pAvgUShort) / MPRESSURE_MBAR(1)));
                             }
                         } else {
                             // Breath detection.
@@ -922,7 +816,7 @@ void main(void) {
                             aCaptGetResult(Flt3PSensor, &bdP2);
                             if (((bdP1 + BDTECT_THRL) < bdP2) || (keyPeek() == KEYBREATH)) {
                                 // Detected breath, or pressed breath button
-                                DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
+                                DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
                                 BLED_ON;
                                 rCycleTime = timeGet();
                                 break;
@@ -932,7 +826,7 @@ void main(void) {
                             if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (bdP1 < (intPEEP - FINECTRLHIST))) {
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
-                                DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
+                                DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
                             }
                         }
                     }
@@ -947,7 +841,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d OS %d\n",
-                        timeDiff(rValveDelayStart, timeGet()),
+                        timeDiff(rCycleTime, timeGet()),
                         (10 * pInst) / MPRESSURE_MBAR(1),
                         (10 * (pNext)) / MPRESSURE_MBAR(1),
                         (10 * (pInst - pAvgShort)) / MPRESSURE_MBAR(1),

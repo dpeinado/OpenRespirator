@@ -23,6 +23,9 @@ extern "C" {
 
 #define BLED_ON  LATDbits.LATD6 = 1
 #define BLED_OFF LATDbits.LATD6 = 0
+
+#define BUZZER_ON  LATDbits.LATD0 = 1
+#define BUZZER_OFF LATDbits.LATD0 = 0
 #else
 #define SV2ISOPEN LATAbits.LATA2
 #define OPEN_SV2 
