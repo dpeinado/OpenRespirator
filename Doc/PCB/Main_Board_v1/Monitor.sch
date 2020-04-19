@@ -318,9 +318,9 @@ F 3 "" H 3900 7100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3900 6050 3900 6200
+	3900 6050 3900 6150
 Wire Wire Line
-	3900 6800 3900 7100
+	3900 6800 3900 6850
 Connection ~ 3550 6500
 NoConn ~ 6450 3700
 NoConn ~ 13600 2200
@@ -429,8 +429,6 @@ Wire Wire Line
 Connection ~ 1050 3900
 Wire Wire Line
 	1050 3900 1000 3900
-Wire Wire Line
-	1050 4700 1050 4900
 Wire Wire Line
 	1050 4900 1750 4900
 Connection ~ 1750 4900
@@ -1644,4 +1642,84 @@ Wire Wire Line
 Connection ~ 10250 3000
 Wire Wire Line
 	10250 3000 10250 3300
+Wire Wire Line
+	1050 4700 1050 4900
+Connection ~ 1550 7050
+Wire Wire Line
+	1550 7050 1050 7050
+Connection ~ 1850 7050
+Wire Wire Line
+	1850 7050 1550 7050
+Connection ~ 1050 4900
+Wire Wire Line
+	1050 4900 1050 7050
+$Comp
+L power:GND #PWR?
+U 1 1 5EADB5B4
+P 4350 6750
+AR Path="/5EADB5B4" Ref="#PWR?"  Part="1" 
+AR Path="/5EA602EB/5EADB5B4" Ref="#PWR?"  Part="1" 
+AR Path="/5E9337AC/5EADB5B4" Ref="#PWR08"  Part="1" 
+F 0 "#PWR08" H 4350 6500 50  0001 C CNN
+F 1 "GND" H 4355 6577 50  0000 C CNN
+F 2 "" H 4350 6750 50  0001 C CNN
+F 3 "" H 4350 6750 50  0001 C CNN
+	1    4350 6750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4350 6650 4350 6700
+Wire Wire Line
+	4350 6250 4350 6300
+Wire Wire Line
+	4050 6300 4350 6300
+Connection ~ 4350 6300
+Wire Wire Line
+	4350 6300 4350 6350
+Wire Wire Line
+	4050 6700 4350 6700
+Connection ~ 4350 6700
+Wire Wire Line
+	4350 6700 4350 6750
+$Comp
+L Device:C C?
+U 1 1 5EADB5C2
+P 4350 6500
+AR Path="/5EADB5C2" Ref="C?"  Part="1" 
+AR Path="/5EA602EB/5EADB5C2" Ref="C?"  Part="1" 
+AR Path="/5E9337AC/5EADB5C2" Ref="C21"  Part="1" 
+F 0 "C21" H 4465 6546 50  0000 L CNN
+F 1 "100nF" H 4465 6455 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 4388 6350 50  0001 C CNN
+F 3 "~" H 4350 6500 50  0001 C CNN
+	1    4350 6500
+	1    0    0    -1  
+$EndComp
+Text Label 4350 6250 0    50   ~ 0
++5V_M
+$Comp
+L Ventilator:+5V_M #PWR05
+U 1 1 5EADB5C9
+P 4350 6250
+F 0 "#PWR05" H 4350 6100 50  0001 C CNN
+F 1 "+5V_M" H 4365 6423 50  0000 C CNN
+F 2 "" H 4350 6250 50  0001 C CNN
+F 3 "" H 4350 6250 50  0001 C CNN
+	1    4350 6250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3900 6150 4050 6150
+Wire Wire Line
+	4050 6150 4050 6300
+Connection ~ 3900 6150
+Wire Wire Line
+	3900 6150 3900 6200
+Wire Wire Line
+	4050 6700 4050 6850
+Wire Wire Line
+	4050 6850 3900 6850
+Connection ~ 3900 6850
+Wire Wire Line
+	3900 6850 3900 7100
 $EndSCHEMATC

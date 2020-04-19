@@ -117,22 +117,6 @@ Text GLabel 7300 2000 2    50   BiDi ~ 0
 SCL
 Text GLabel 7300 2100 2    50   BiDi ~ 0
 SDA
-$Comp
-L power:GND #PWR?
-U 1 1 5EB072C9
-P 11000 3450
-AR Path="/5EB072C9" Ref="#PWR?"  Part="1" 
-AR Path="/5EA602EB/5EB072C9" Ref="#PWR?"  Part="1" 
-AR Path="/5E9337AC/5EB072C9" Ref="#PWR040"  Part="1" 
-F 0 "#PWR040" H 11000 3200 50  0001 C CNN
-F 1 "GND" H 11005 3277 50  0000 C CNN
-F 2 "" H 11000 3450 50  0001 C CNN
-F 3 "" H 11000 3450 50  0001 C CNN
-	1    11000 3450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	10800 2600 11000 2600
 Wire Wire Line
 	1750 3750 1750 3900
 Wire Wire Line
@@ -170,25 +154,11 @@ Wire Wire Line
 Wire Wire Line
 	9300 3200 9550 3200
 Wire Wire Line
-	11000 2600 11000 2900
-Wire Wire Line
-	10800 3200 11000 3200
-Connection ~ 11000 3200
-Wire Wire Line
-	10800 2900 11000 2900
-Connection ~ 11000 2900
-Wire Wire Line
-	11000 2900 11000 3200
-Wire Wire Line
 	9800 2500 9800 2900
 Connection ~ 9800 2900
 Wire Wire Line
-	9800 2900 10400 2900
-Wire Wire Line
 	9550 2500 9550 3200
 Connection ~ 9550 3200
-Wire Wire Line
-	9550 3200 10400 3200
 Wire Wire Line
 	9550 2000 9800 2000
 Wire Wire Line
@@ -199,9 +169,9 @@ Connection ~ 9550 2000
 Wire Wire Line
 	6450 2800 9300 2800
 Wire Wire Line
-	9300 2800 9300 2600
+	9300 2800 9300 2700
 Wire Wire Line
-	9300 2600 9950 2600
+	9300 2700 9950 2700
 Wire Wire Line
 	6450 2900 9800 2900
 Wire Wire Line
@@ -230,11 +200,7 @@ NoConn ~ 5300 3700
 Wire Wire Line
 	6450 2700 6900 2700
 Wire Wire Line
-	10250 2600 10400 2600
-Wire Wire Line
-	11000 3200 11000 3450
-Wire Wire Line
-	10250 3550 10300 3550
+	10250 3550 10500 3550
 Wire Wire Line
 	10250 3650 10250 3550
 $Comp
@@ -256,7 +222,7 @@ Wire Wire Line
 Wire Wire Line
 	9100 3100 9100 3450
 Wire Wire Line
-	9100 3450 10300 3450
+	9100 3450 10500 3450
 Wire Wire Line
 	2100 5950 1850 5950
 Wire Wire Line
@@ -662,7 +628,7 @@ U 1 1 5E94D426
 P 10750 1200
 F 0 "J6" H 10722 1082 50  0000 R CNN
 F 1 "I2C Interface LCD_M" H 11051 856 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 10750 1200 50  0001 C CNN
+F 2 "Ventilator:PH_4_pol" H 10750 1200 50  0001 C CNN
 F 3 "~" H 10750 1200 50  0001 C CNN
 	1    10750 1200
 	-1   0    0    1   
@@ -901,34 +867,6 @@ F 3 "~" H 9550 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint_2Pole TP?
-U 1 1 5EB07324
-P 10600 3200
-AR Path="/5EB07324" Ref="TP?"  Part="1" 
-AR Path="/5EA602EB/5EB07324" Ref="TP?"  Part="1" 
-AR Path="/5E9337AC/5EB07324" Ref="TP3"  Part="1" 
-F 0 "TP3" H 10600 3395 50  0000 C CNN
-F 1 "ALARM HISTORY" H 10600 3304 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 10600 3200 50  0001 C CNN
-F 3 "~" H 10600 3200 50  0001 C CNN
-	1    10600 3200
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:TestPoint_2Pole TP?
-U 1 1 5EB0731E
-P 10600 2900
-AR Path="/5EB0731E" Ref="TP?"  Part="1" 
-AR Path="/5EA602EB/5EB0731E" Ref="TP?"  Part="1" 
-AR Path="/5E9337AC/5EB0731E" Ref="TP2"  Part="1" 
-F 0 "TP2" H 10600 3095 50  0000 C CNN
-F 1 "ALARM MUTE" H 10600 3004 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 10600 2900 50  0001 C CNN
-F 3 "~" H 10600 2900 50  0001 C CNN
-	1    10600 2900
-	1    0    0    -1  
-$EndComp
-$Comp
 L Diode:1N4001 D?
 U 1 1 5EB072D6
 P 1750 4100
@@ -957,31 +895,17 @@ F 3 "~" H 2300 4650 50  0001 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L Connector:TestPoint_2Pole TP?
-U 1 1 5EB072C3
-P 10600 2600
-AR Path="/5EB072C3" Ref="TP?"  Part="1" 
-AR Path="/5EA602EB/5EB072C3" Ref="TP?"  Part="1" 
-AR Path="/5E9337AC/5EB072C3" Ref="TP1"  Part="1" 
-F 0 "TP1" H 10600 2795 50  0000 C CNN
-F 1 "ALARM LED" H 10600 2704 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 10600 2600 50  0001 C CNN
-F 3 "~" H 10600 2600 50  0001 C CNN
-	1    10600 2600
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:R R?
 U 1 1 5EB072BC
-P 10100 2600
+P 10100 2700
 AR Path="/5EB072BC" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5EB072BC" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5EB072BC" Ref="R12"  Part="1" 
-F 0 "R12" V 9893 2600 50  0000 C CNN
-F 1 "470" V 9984 2600 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 10030 2600 50  0001 C CNN
-F 3 "~" H 10100 2600 50  0001 C CNN
-	1    10100 2600
+F 0 "R12" V 9893 2700 50  0000 C CNN
+F 1 "470" V 9984 2700 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 10030 2700 50  0001 C CNN
+F 3 "~" H 10100 2700 50  0001 C CNN
+	1    10100 2700
 	0    1    1    0   
 $EndComp
 $Comp
@@ -1236,12 +1160,12 @@ Wire Wire Line
 $Comp
 L Connector_Generic:Conn_01x02 J5
 U 1 1 5F29E587
-P 10500 3450
-F 0 "J5" H 10580 3442 50  0000 L CNN
-F 1 "Buzzer" H 10580 3351 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 10500 3450 50  0001 C CNN
-F 3 "~" H 10500 3450 50  0001 C CNN
-	1    10500 3450
+P 10700 3450
+F 0 "J5" H 10780 3442 50  0000 L CNN
+F 1 "BUZZER" H 10780 3351 50  0000 L CNN
+F 2 "Ventilator:PH_2_pol" H 10700 3450 50  0001 C CNN
+F 3 "~" H 10700 3450 50  0001 C CNN
+	1    10700 3450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1677,4 +1601,47 @@ F 3 "" H 2950 3150 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	2950 3150 2950 3200
+$Comp
+L Connector_Generic:Conn_01x04 J14
+U 1 1 5E9D817B
+P 10700 2800
+F 0 "J14" H 10780 2792 50  0000 L CNN
+F 1 "MUTE+LED" H 10780 2701 50  0000 L CNN
+F 2 "Ventilator:PH_4_pol" H 10700 2800 50  0001 C CNN
+F 3 "~" H 10700 2800 50  0001 C CNN
+	1    10700 2800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10250 2700 10500 2700
+Wire Wire Line
+	10500 2800 10250 2800
+Wire Wire Line
+	9800 2900 10500 2900
+$Comp
+L Connector_Generic:Conn_01x02 J15
+U 1 1 5EA6CD7A
+P 10700 3200
+F 0 "J15" H 10780 3192 50  0000 L CNN
+F 1 "HISTORY" H 10780 3101 50  0000 L CNN
+F 2 "Ventilator:PH_2_pol" H 10700 3200 50  0001 C CNN
+F 3 "~" H 10700 3200 50  0001 C CNN
+	1    10700 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9550 3200 10500 3200
+Wire Wire Line
+	10250 2800 10250 3000
+Connection ~ 10250 3550
+Wire Wire Line
+	10500 3300 10250 3300
+Connection ~ 10250 3300
+Wire Wire Line
+	10250 3300 10250 3550
+Wire Wire Line
+	10500 3000 10250 3000
+Connection ~ 10250 3000
+Wire Wire Line
+	10250 3000 10250 3300
 $EndSCHEMATC

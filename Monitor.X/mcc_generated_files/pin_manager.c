@@ -59,7 +59,7 @@ void PIN_MANAGER_Initialize(void)
     */
     LATE = 0x00;
     LATD = 0x00;
-    LATA = 0x00;
+    LATA = 0x08;
     LATB = 0x00;
     LATC = 0x00;
 
@@ -79,7 +79,7 @@ void PIN_MANAGER_Initialize(void)
     ANSELC = 0xFE;
     ANSELB = 0xC3;
     ANSELE = 0x07;
-    ANSELA = 0xF7;
+    ANSELA = 0xFF;
 
     /**
     WPUx registers
