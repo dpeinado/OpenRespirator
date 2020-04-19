@@ -99,12 +99,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 "20 ./keyRead.h
 [; ;./keyRead.h: 20: int8_t keyPeek(void);
 [v _keyPeek `(c ~T0 @X0 0 ef ]
+"23
+[; ;./keyRead.h: 23: int8_t keyReadEC();
+[v _keyReadEC `(c ~T0 @X0 0 e? ]
 "80 ./LiquidCrystal_I2C.h
 [; ;./LiquidCrystal_I2C.h: 80: void setBacklight(_Bool new_val);
 [v _setBacklight `(v ~T0 @X0 0 ef1`a ]
-"23 ./keyRead.h
-[; ;./keyRead.h: 23: int8_t keyReadEC();
-[v _keyReadEC `(c ~T0 @X0 0 e? ]
 "38 ./aCapture.h
 [; ;./aCapture.h: 38: void aCaptRstFlt(aSrcTyp sel);
 [v _aCaptRstFlt `(v ~T0 @X0 0 ef1`E16733 ]
@@ -3328,1271 +3328,1341 @@ Version 4.0 HI-TECH Software Intermediate Code
 "390
 [; ;main.c: 390:         lcdBLight = 1;
 [e = _lcdBLight -> -> 1 `i `a ]
-"391
-[; ;main.c: 391:         tstamp = timeGet();
-[e = _tstamp ( _timeGet ..  ]
-"394
-[; ;main.c: 394:         while (keyPeek() != -1)
+"393
+[; ;main.c: 393:         while (keyPeek() != -1)
 [e $U 2317  ]
 [e :U 2318 ]
-"395
-[; ;main.c: 395:             ;
-[e :U 2317 ]
 "394
-[; ;main.c: 394:         while (keyPeek() != -1)
+[; ;main.c: 394:             ;
+[e :U 2317 ]
+"393
+[; ;main.c: 393:         while (keyPeek() != -1)
 [e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2318  ]
 [e :U 2319 ]
-"396
-[; ;main.c: 396:         keyRead();
+"395
+[; ;main.c: 395:         keyRead();
 [e ( _keyRead ..  ]
+"396
+[; ;main.c: 396:         keyReadEC();
+[e ( _keyReadEC ..  ]
 "398
-[; ;main.c: 398:         while (1) {
+[; ;main.c: 398:         tstamp = timeGet();
+[e = _tstamp ( _timeGet ..  ]
+"399
+[; ;main.c: 399:         while (1) {
 [e :U 2321 ]
 {
-"399
-[; ;main.c: 399:             if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"400
+[; ;main.c: 400:             if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2323  ]
 {
-"400
-[; ;main.c: 400:                 setBacklight(lcdBLight);
-[e ( _setBacklight (1 _lcdBLight ]
 "401
-[; ;main.c: 401:                 lcdBLight = !lcdBLight;
-[e = _lcdBLight -> -> ! != -> _lcdBLight `i -> 0 `i `i `a ]
+[; ;main.c: 401:                 setBacklight(lcdBLight);
+[e ( _setBacklight (1 _lcdBLight ]
 "402
-[; ;main.c: 402:             }
+[; ;main.c: 402:                 lcdBLight = !lcdBLight;
+[e = _lcdBLight -> -> ! != -> _lcdBLight `i -> 0 `i `i `a ]
+"403
+[; ;main.c: 403:             }
 }
 [e :U 2323 ]
-"405
-[; ;main.c: 405:             if (keyReadEC() == -100) {
+"406
+[; ;main.c: 406:             if (keyReadEC() == -100) {
 [e $ ! == -> ( _keyReadEC ..  `i -U -> 100 `i 2324  ]
 {
-"406
-[; ;main.c: 406:                 if (keyPeek() == 4) {
+"407
+[; ;main.c: 407:                 if (keyPeek() == 4) {
 [e $ ! == -> ( _keyPeek ..  `i -> 4 `i 2325  ]
 {
-"408
-[; ;main.c: 408:                     setBacklight(1);
-[e ( _setBacklight (1 -> -> 1 `i `a ]
 "409
-[; ;main.c: 409:                     break;
-[e $U 2322  ]
+[; ;main.c: 409:                     setBacklight(1);
+[e ( _setBacklight (1 -> -> 1 `i `a ]
 "410
-[; ;main.c: 410:                 }
+[; ;main.c: 410:                     break;
+[e $U 2322  ]
+"411
+[; ;main.c: 411:                 }
 }
 [e :U 2325 ]
-"411
-[; ;main.c: 411:             }
+"412
+[; ;main.c: 412:             }
 }
 [e :U 2324 ]
-"412
-[; ;main.c: 412:         }
+"413
+[; ;main.c: 413:         }
 }
 [e :U 2320 ]
 [e $U 2321  ]
 [e :U 2322 ]
-"415
-[; ;main.c: 415:         mPValMin = 4096;
-[e = _mPValMin -> -> 4096 `i `s ]
 "416
-[; ;main.c: 416:         aPValMin = 4096;
-[e = _aPValMin -> -> 4096 `i `s ]
+[; ;main.c: 416:         mPValMin = 4096;
+[e = _mPValMin -> -> 4096 `i `s ]
 "417
-[; ;main.c: 417:         mPValMax = 0;
-[e = _mPValMax -> -> 0 `i `s ]
+[; ;main.c: 417:         aPValMin = 4096;
+[e = _aPValMin -> -> 4096 `i `s ]
 "418
-[; ;main.c: 418:         aPValMax = 0;
+[; ;main.c: 418:         mPValMax = 0;
+[e = _mPValMax -> -> 0 `i `s ]
+"419
+[; ;main.c: 419:         aPValMax = 0;
 [e = _aPValMax -> -> 0 `i `s ]
-"420
-[; ;main.c: 420:         while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"421
+[; ;main.c: 421:         while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $U 2326  ]
 [e :U 2327 ]
 {
-"421
-[; ;main.c: 421:             if (aCaptGetResult(MainPSensor, &mPVal)) {
+"422
+[; ;main.c: 422:             if (aCaptGetResult(MainPSensor, &mPVal)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _mPVal `i -> 0 `i 2329  ]
 {
-"422
-[; ;main.c: 422:                 if (mPVal > mPValMax) {
+"423
+[; ;main.c: 423:                 if (mPVal > mPValMax) {
 [e $ ! > -> _mPVal `i -> _mPValMax `i 2330  ]
 {
-"423
-[; ;main.c: 423:                     mPValMax = mPVal;
-[e = _mPValMax _mPVal ]
 "424
-[; ;main.c: 424:                 }
+[; ;main.c: 424:                     mPValMax = mPVal;
+[e = _mPValMax _mPVal ]
+"425
+[; ;main.c: 425:                 }
 }
 [e :U 2330 ]
-"425
-[; ;main.c: 425:                 if (mPVal < mPValMin) {
+"426
+[; ;main.c: 426:                 if (mPVal < mPValMin) {
 [e $ ! < -> _mPVal `i -> _mPValMin `i 2331  ]
 {
-"426
-[; ;main.c: 426:                     mPValMin = mPVal;
-[e = _mPValMin _mPVal ]
 "427
-[; ;main.c: 427:                 }
+[; ;main.c: 427:                     mPValMin = mPVal;
+[e = _mPValMin _mPVal ]
+"428
+[; ;main.c: 428:                 }
 }
 [e :U 2331 ]
-"428
-[; ;main.c: 428:             } else {
+"429
+[; ;main.c: 429:             } else {
 }
 [e $U 2332  ]
 [e :U 2329 ]
 {
-"429
-[; ;main.c: 429:                 LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+"430
+[; ;main.c: 430:                 LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 [e ( _printf , (. :s 18C -> 10 `i ]
-"430
-[; ;main.c: 430:                 initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
 "431
-[; ;main.c: 431:             }
+[; ;main.c: 431:                 initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"432
+[; ;main.c: 432:             }
 }
 [e :U 2332 ]
-"433
-[; ;main.c: 433:             if (aCaptGetResult(AuxPSensor, &aPVal)) {
+"434
+[; ;main.c: 434:             if (aCaptGetResult(AuxPSensor, &aPVal)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E16733 1 &U _aPVal `i -> 0 `i 2333  ]
 {
-"434
-[; ;main.c: 434:                 if (aPVal > aPValMax) {
+"435
+[; ;main.c: 435:                 if (aPVal > aPValMax) {
 [e $ ! > -> _aPVal `i -> _aPValMax `i 2334  ]
 {
-"435
-[; ;main.c: 435:                     aPValMax = aPVal;
-[e = _aPValMax _aPVal ]
 "436
-[; ;main.c: 436:                 }
+[; ;main.c: 436:                     aPValMax = aPVal;
+[e = _aPValMax _aPVal ]
+"437
+[; ;main.c: 437:                 }
 }
 [e :U 2334 ]
-"437
-[; ;main.c: 437:                 if (aPVal < aPValMin) {
+"438
+[; ;main.c: 438:                 if (aPVal < aPValMin) {
 [e $ ! < -> _aPVal `i -> _aPValMin `i 2335  ]
 {
-"438
-[; ;main.c: 438:                     aPValMin = aPVal;
-[e = _aPValMin _aPVal ]
 "439
-[; ;main.c: 439:                 }
+[; ;main.c: 439:                     aPValMin = aPVal;
+[e = _aPValMin _aPVal ]
+"440
+[; ;main.c: 440:                 }
 }
 [e :U 2335 ]
-"440
-[; ;main.c: 440:             } else {
+"441
+[; ;main.c: 441:             } else {
 }
 [e $U 2336  ]
 [e :U 2333 ]
 {
-"441
-[; ;main.c: 441:                 initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
 "442
-[; ;main.c: 442:                 LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
+[; ;main.c: 442:                 initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"443
+[; ;main.c: 443:                 LATAbits.LATA2 = 0;LATAbits.LATA3 = 1;printf("Fatal %d",10);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 [e ( _printf , (. :s 19C -> 10 `i ]
-"443
-[; ;main.c: 443:             }
+"444
+[; ;main.c: 444:             }
 }
 [e :U 2336 ]
-"444
-[; ;main.c: 444:         }
+"445
+[; ;main.c: 445:         }
 }
 [e :U 2326 ]
-"420
-[; ;main.c: 420:         while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"421
+[; ;main.c: 421:         while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2327  ]
 [e :U 2328 ]
-"447
-[; ;main.c: 447:         mPValMean = (mPValMax + mPValMin) >> 1;
-[e = _mPValMean -> >> + -> _mPValMax `i -> _mPValMin `i -> 1 `i `s ]
 "448
-[; ;main.c: 448:         aPValMean = (aPValMax + aPValMin) >> 1;
-[e = _aPValMean -> >> + -> _aPValMax `i -> _aPValMin `i -> 1 `i `s ]
+[; ;main.c: 448:         mPValMean = (mPValMax + mPValMin) >> 1;
+[e = _mPValMean -> >> + -> _mPValMax `i -> _mPValMin `i -> 1 `i `s ]
 "449
-[; ;main.c: 449:         LATDbits.LATD6 = 0;
-[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
+[; ;main.c: 449:         aPValMean = (aPValMax + aPValMin) >> 1;
+[e = _aPValMean -> >> + -> _aPValMax `i -> _aPValMin `i -> 1 `i `s ]
 "450
-[; ;main.c: 450:         sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
-[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 20C -> _mPValMean `i -> _aPValMean `i ]
+[; ;main.c: 450:         LATDbits.LATD6 = 0;
+[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
 "451
-[; ;main.c: 451:         printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
-[e ( _printf , , , (. :s 21C -> _mPValMin `i -> _mPValMax `i -> _mPValMean `i ]
+[; ;main.c: 451:         sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 20C -> _mPValMean `i -> _aPValMean `i ]
 "452
-[; ;main.c: 452:         printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
-[e ( _printf , , , (. :s 22C -> _aPValMin `i -> _aPValMax `i -> _aPValMean `i ]
+[; ;main.c: 452:         printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+[e ( _printf , , , (. :s 21C -> _mPValMin `i -> _mPValMax `i -> _mPValMean `i ]
 "453
-[; ;main.c: 453:         setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;main.c: 453:         printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+[e ( _printf , , , (. :s 22C -> _aPValMin `i -> _aPValMax `i -> _aPValMean `i ]
 "454
-[; ;main.c: 454:         printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+[; ;main.c: 454:         setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "455
-[; ;main.c: 455:         timeDelayMs(1000);
+[; ;main.c: 455:         printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+"456
+[; ;main.c: 456:         timeDelayMs(1000);
 [e ( _timeDelayMs (1 -> -> 1000 `i `us ]
-"458
-[; ;main.c: 458:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean > 350) || (aPValMean < 600) || (aPValMean > 1030)) {
+"459
+[; ;main.c: 459:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean > 350) || (aPValMean < 600) || (aPValMean > 1030)) {
 [e $ ! || || || || || > - -> _aPValMax `i -> _aPValMin `i -> 16 `i > - -> _mPValMax `i -> _mPValMin `i -> 16 `i > -> _mPValMean `i -> 350 `i > -> _mPValMean `i -> 350 `i < -> _aPValMean `i -> 600 `i > -> _aPValMean `i -> 1030 `i 2337  ]
 {
-"460
-[; ;main.c: 460:             setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "461
-[; ;main.c: 461:             printstrblock("CAL ERROR. RETRY ");
-[e ( _printstrblock (1 :s 23C ]
+[; ;main.c: 461:             setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "462
-[; ;main.c: 462:             timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;main.c: 462:             printstrblock("CAL ERROR. RETRY ");
+[e ( _printstrblock (1 :s 23C ]
 "463
-[; ;main.c: 463:         } else {
+[; ;main.c: 463:             timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"464
+[; ;main.c: 464:         } else {
 }
 [e $U 2338  ]
 [e :U 2337 ]
 {
-"465
-[; ;main.c: 465:             aCaptureSetOff(MainPSensor, mPValMean);
-[e ( _aCaptureSetOff (2 , . `E16733 0 _mPValMean ]
 "466
-[; ;main.c: 466:             aCaptureSetOff(AuxPSensor, aPValMean);
+[; ;main.c: 466:             aCaptureSetOff(MainPSensor, mPValMean);
+[e ( _aCaptureSetOff (2 , . `E16733 0 _mPValMean ]
+"467
+[; ;main.c: 467:             aCaptureSetOff(AuxPSensor, aPValMean);
 [e ( _aCaptureSetOff (2 , . `E16733 1 _aPValMean ]
-"468
-[; ;main.c: 468:             aCaptRstFlt(Flt0PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 3 ]
 "469
-[; ;main.c: 469:             aCaptRstFlt(Flt1PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 4 ]
+[; ;main.c: 469:             aCaptRstFlt(Flt0PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 3 ]
 "470
-[; ;main.c: 470:             aCaptRstFlt(Flt2PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 5 ]
+[; ;main.c: 470:             aCaptRstFlt(Flt1PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 4 ]
 "471
-[; ;main.c: 471:             aCaptRstFlt(Flt3PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 6 ]
+[; ;main.c: 471:             aCaptRstFlt(Flt2PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 5 ]
 "472
-[; ;main.c: 472:             printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
-[e ( _printf , , , (. :s 24C -> _mPValMin `i -> _mPValMax `i -> _mPValMean `i ]
+[; ;main.c: 472:             aCaptRstFlt(Flt3PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 6 ]
 "473
-[; ;main.c: 473:             printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
-[e ( _printf , , , (. :s 25C -> _aPValMin `i -> _aPValMax `i -> _aPValMean `i ]
+[; ;main.c: 473:             printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+[e ( _printf , , , (. :s 24C -> _mPValMin `i -> _mPValMax `i -> _mPValMean `i ]
 "474
-[; ;main.c: 474:             timeDelayMs(50);
-[e ( _timeDelayMs (1 -> -> 50 `i `us ]
+[; ;main.c: 474:             printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+[e ( _printf , , , (. :s 25C -> _aPValMin `i -> _aPValMax `i -> _aPValMean `i ]
 "475
-[; ;main.c: 475:             ctrlStatus = CTRL_STOP;
-[e = _ctrlStatus . `E16841 1 ]
+[; ;main.c: 475:             timeDelayMs(50);
+[e ( _timeDelayMs (1 -> -> 50 `i `us ]
 "476
-[; ;main.c: 476:         }
+[; ;main.c: 476:             ctrlStatus = CTRL_STOP;
+[e = _ctrlStatus . `E16841 1 ]
+"477
+[; ;main.c: 477:         }
 }
 [e :U 2338 ]
-"477
-[; ;main.c: 477:     }
+"478
+[; ;main.c: 478:     }
 }
 [e :U 2314 ]
 "383
 [; ;main.c: 383:     while (ctrlStatus == CTRL_UNCAL) {
 [e $ == -> _ctrlStatus `ui -> . `E16841 0 `ui 2315  ]
 [e :U 2316 ]
-"479
-[; ;main.c: 479:     if (!initOk) {
+"480
+[; ;main.c: 480:     if (!initOk) {
 [e $ ! ! != -> _initOk `i -> 0 `i 2339  ]
 {
-"480
-[; ;main.c: 480:         return initOk;
+"481
+[; ;main.c: 481:         return initOk;
 [e ) _initOk ]
 [e $UE 2301  ]
-"481
-[; ;main.c: 481:     }
+"482
+[; ;main.c: 482:     }
 }
 [e :U 2339 ]
-"484
-[; ;main.c: 484:     tstamp = timeGet();
+"485
+[; ;main.c: 485:     tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
-"487
-[; ;main.c: 487:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "488
-[; ;main.c: 488:     printstrblock("FLOW RATE        ");
+[; ;main.c: 488:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"489
+[; ;main.c: 489:     printstrblock("FLOW RATE        ");
 [e ( _printstrblock (1 :s 26C ]
-"490
-[; ;main.c: 490:     LATAbits.LATA2 = 1;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-"491
-[; ;main.c: 491:     LATAbits.LATA3 = 1;
-[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 "492
-[; ;main.c: 492:     timeDelayMs(250);
-[e ( _timeDelayMs (1 -> -> 250 `i `us ]
+[; ;main.c: 492:     aPValMin = 4096;
+[e = _aPValMin -> -> 4096 `i `s ]
 "493
-[; ;main.c: 493:     vMeasureRst();
-[e ( _vMeasureRst ..  ]
-"494
-[; ;main.c: 494:     timeDelayMs(250);
-[e ( _timeDelayMs (1 -> -> 250 `i `us ]
+[; ;main.c: 493:     aPValMax = 0;
+[e = _aPValMax -> -> 0 `i `s ]
+"495
+[; ;main.c: 495:     LATAbits.LATA2 = 1;
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 "496
-[; ;main.c: 496:     openFlowRate = vMeasureGet()<<2;
-[e = _openFlowRate -> << -> ( _vMeasureGet ..  `ui -> 2 `i `us ]
+[; ;main.c: 496:     LATAbits.LATA3 = 1;
+[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
 "497
-[; ;main.c: 497:     LATAbits.LATA2 = 0;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;main.c: 497:     timeDelayMs(250);
+[e ( _timeDelayMs (1 -> -> 250 `i `us ]
 "498
-[; ;main.c: 498:     LATAbits.LATA3 = 0;
-[e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 498:     vMeasureRst();
+[e ( _vMeasureRst ..  ]
+"499
+[; ;main.c: 499:     tstamp = timeGet();
+[e = _tstamp ( _timeGet ..  ]
 "500
-[; ;main.c: 500:     sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
-[e ( _sprintf (1 , (. , &U _lcdTopRow :s 27C -> -> / * -> -> 60 `i `ul -> _openFlowRate `ul -> -> -> 1000 `i `l `ul `s `i ]
-"501
-[; ;main.c: 501:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-"502
-[; ;main.c: 502:     printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
-"503
-[; ;main.c: 503:     timeDelayMs(4000);
-[e ( _timeDelayMs (1 -> -> 4000 `i `us ]
-"505
-[; ;main.c: 505:     if (openFlowRate < 200) {
-[e $ ! < -> _openFlowRate `ui -> -> 200 `i `ui 2340  ]
-{
-"507
-[; ;main.c: 507:         setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-"508
-[; ;main.c: 508:         printstrblock("FLOW TOO LOW    ");
-[e ( _printstrblock (1 :s 28C ]
-"509
-[; ;main.c: 509:         timeDelayMs(1000);
-[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
-"510
-[; ;main.c: 510:         initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
-"511
-[; ;main.c: 511:     } else if (openFlowRate > 2500) {
-}
-[e $U 2341  ]
-[e :U 2340 ]
-[e $ ! > -> _openFlowRate `ui -> -> 2500 `i `ui 2342  ]
-{
-"513
-[; ;main.c: 513:         setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-"514
-[; ;main.c: 514:         printstrblock("FLOW TOO HIGH   ");
-[e ( _printstrblock (1 :s 29C ]
-"515
-[; ;main.c: 515:         timeDelayMs(1000);
-[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
-"516
-[; ;main.c: 516:         initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
-"517
-[; ;main.c: 517:     }
-}
-[e :U 2342 ]
+[; ;main.c: 500:     while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+[e $U 2340  ]
 [e :U 2341 ]
-"520
-[; ;main.c: 520:     while (keyPeek() != -1)
-[e $U 2343  ]
-[e :U 2344 ]
-"521
-[; ;main.c: 521:         ;
+{
+"501
+[; ;main.c: 501:         aCaptGetResult(AuxPSensor, &aPVal);
+[e ( _aCaptGetResult (2 , . `E16733 1 &U _aPVal ]
+"502
+[; ;main.c: 502:         if (aPVal > aPValMax) {
+[e $ ! > -> _aPVal `i -> _aPValMax `i 2343  ]
+{
+"503
+[; ;main.c: 503:             aPValMax = aPVal;
+[e = _aPValMax _aPVal ]
+"504
+[; ;main.c: 504:         }
+}
 [e :U 2343 ]
-"520
-[; ;main.c: 520:     while (keyPeek() != -1)
-[e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2344  ]
+"505
+[; ;main.c: 505:         if (aPVal < aPValMin) {
+[e $ ! < -> _aPVal `i -> _aPValMin `i 2344  ]
+{
+"506
+[; ;main.c: 506:             aPValMin = aPVal;
+[e = _aPValMin _aPVal ]
+"507
+[; ;main.c: 507:         }
+}
+[e :U 2344 ]
+"508
+[; ;main.c: 508:     }
+}
+[e :U 2340 ]
+"500
+[; ;main.c: 500:     while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 250 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2341  ]
+[e :U 2342 ]
+"510
+[; ;main.c: 510:     openFlowRate = vMeasureGet()<<2;
+[e = _openFlowRate -> << -> ( _vMeasureGet ..  `ui -> 2 `i `us ]
+"511
+[; ;main.c: 511:     LATAbits.LATA2 = 0;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"512
+[; ;main.c: 512:     LATAbits.LATA3 = 0;
+[e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
+"514
+[; ;main.c: 514:     if (((aPValMean<<1) + aPValMax+aPValMin)>= (0.95*8192)) {
+[e $ ! >= -> + + << -> _aPValMean `i -> 1 `i -> _aPValMax `i -> _aPValMin `i `d * .0.95 -> -> 8192 `i `d 2345  ]
+{
+"516
+[; ;main.c: 516:         setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"517
+[; ;main.c: 517:         printstrblock("FLOW TOO HIGH   ");
+[e ( _printstrblock (1 :s 27C ]
+"518
+[; ;main.c: 518:         timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+"519
+[; ;main.c: 519:     } else {
+}
+[e $U 2346  ]
 [e :U 2345 ]
+{
+"520
+[; ;main.c: 520:         sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+[e ( _sprintf (1 , (. , &U _lcdTopRow :s 28C -> -> / * -> -> 60 `i `ul -> _openFlowRate `ul -> -> -> 1000 `i `l `ul `s `i ]
+"521
+[; ;main.c: 521:         setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "522
-[; ;main.c: 522:     keyRead();
+[; ;main.c: 522:         printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+"523
+[; ;main.c: 523:         timeDelayMs(4000);
+[e ( _timeDelayMs (1 -> -> 4000 `i `us ]
+"525
+[; ;main.c: 525:         if (openFlowRate < 200) {
+[e $ ! < -> _openFlowRate `ui -> -> 200 `i `ui 2347  ]
+{
+"527
+[; ;main.c: 527:             setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"528
+[; ;main.c: 528:             printstrblock("FLOW TOO LOW    ");
+[e ( _printstrblock (1 :s 29C ]
+"529
+[; ;main.c: 529:             timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+"530
+[; ;main.c: 530:             initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"531
+[; ;main.c: 531:         } else if (openFlowRate > 2500) {
+}
+[e $U 2348  ]
+[e :U 2347 ]
+[e $ ! > -> _openFlowRate `ui -> -> 2500 `i `ui 2349  ]
+{
+"533
+[; ;main.c: 533:             setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"534
+[; ;main.c: 534:             printstrblock("FLOW TOO HIGH   ");
+[e ( _printstrblock (1 :s 30C ]
+"535
+[; ;main.c: 535:             timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+"536
+[; ;main.c: 536:             initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"537
+[; ;main.c: 537:         }
+}
+[e :U 2349 ]
+[e :U 2348 ]
+"538
+[; ;main.c: 538:     }
+}
+[e :U 2346 ]
+"541
+[; ;main.c: 541:     while (keyPeek() != -1)
+[e $U 2350  ]
+[e :U 2351 ]
+"542
+[; ;main.c: 542:         ;
+[e :U 2350 ]
+"541
+[; ;main.c: 541:     while (keyPeek() != -1)
+[e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2351  ]
+[e :U 2352 ]
+"543
+[; ;main.c: 543:     keyRead();
 [e ( _keyRead ..  ]
-"524
-[; ;main.c: 524:     return initOk;
+"545
+[; ;main.c: 545:     return initOk;
 [e ) _initOk ]
 [e $UE 2301  ]
-"525
-[; ;main.c: 525: }
+"546
+[; ;main.c: 546: }
 [e :UE 2301 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"527
-[; ;main.c: 527: void main(void) {
+"548
+[; ;main.c: 548: void main(void) {
 [v _main `(v ~T0 @X0 1 ef ]
 {
 [e :U _main ]
 [f ]
-"529
-[; ;main.c: 529:     time_t printTime;
+"550
+[; ;main.c: 550:     time_t printTime;
 [v _printTime `us ~T0 @X0 1 a ]
-"532
-[; ;main.c: 532:     int16_t pInst, pNext, pAvgShort, pAvgUShort;
+"553
+[; ;main.c: 553:     int16_t pInst, pNext, pAvgShort, pAvgUShort;
 [v _pInst `s ~T0 @X0 1 a ]
 [v _pNext `s ~T0 @X0 1 a ]
 [v _pAvgShort `s ~T0 @X0 1 a ]
 [v _pAvgUShort `s ~T0 @X0 1 a ]
-"533
-[; ;main.c: 533:     int16_t bdP1, bdP2;
+"554
+[; ;main.c: 554:     int16_t bdP1, bdP2;
 [v _bdP1 `s ~T0 @X0 1 a ]
 [v _bdP2 `s ~T0 @X0 1 a ]
-"534
-[; ;main.c: 534:     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;
+"555
+[; ;main.c: 555:     int16_t pValveActuation, pPlateau, pExpOS, pInspOS;
 [v _pValveActuation `s ~T0 @X0 1 a ]
 [v _pPlateau `s ~T0 @X0 1 a ]
 [v _pExpOS `s ~T0 @X0 1 a ]
 [v _pInspOS `s ~T0 @X0 1 a ]
-"535
-[; ;main.c: 535:     int16_t pTmp;
+"556
+[; ;main.c: 556:     int16_t pTmp;
 [v _pTmp `s ~T0 @X0 1 a ]
-"536
-[; ;main.c: 536:     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
+"557
+[; ;main.c: 557:     time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
 [v _rCycleTime `us ~T0 @X0 1 a ]
 [v _rSubCycleTime `us ~T0 @X0 1 a ]
 [v _rValveAcuationTstamp `us ~T0 @X0 1 a ]
-"537
-[; ;main.c: 537:     time_t rSV2ValveDelay, rSV3ValveDelay;
+"558
+[; ;main.c: 558:     time_t rSV2ValveDelay, rSV3ValveDelay;
 [v _rSV2ValveDelay `us ~T0 @X0 1 a ]
 [v _rSV3ValveDelay `us ~T0 @X0 1 a ]
-"538
-[; ;main.c: 538:     time_t rValveDelayStart, rTimeTmp;
+"559
+[; ;main.c: 559:     time_t rValveDelayStart, rTimeTmp;
 [v _rValveDelayStart `us ~T0 @X0 1 a ]
 [v _rTimeTmp `us ~T0 @X0 1 a ]
-"539
-[; ;main.c: 539:     _Bool initialSubState, valveDelayCheck, OSCheck;
+"560
+[; ;main.c: 560:     _Bool initialSubState, valveDelayCheck, OSCheck;
 [v _initialSubState `a ~T0 @X0 1 a ]
 [v _valveDelayCheck `a ~T0 @X0 1 a ]
 [v _OSCheck `a ~T0 @X0 1 a ]
-"542
-[; ;main.c: 542:     SYSTEM_Initialize();
-[e ( _SYSTEM_Initialize ..  ]
-"544
-[; ;main.c: 544:     PIE1bits.ADIE = 0;
-[e = . . _PIE1bits 0 2 -> -> 0 `i `uc ]
-"545
-[; ;main.c: 545:     PIE1bits.ADTIE = 0;
-[e = . . _PIE1bits 0 3 -> -> 0 `i `uc ]
-"550
-[; ;main.c: 550:     (INTCON0bits.GIE = 1);
-[e = . . _INTCON0bits 0 6 -> -> 1 `i `uc ]
-"555
-[; ;main.c: 555:     aCaptureInit();
-[e ( _aCaptureInit ..  ]
-"556
-[; ;main.c: 556:     timeInit();
-[e ( _timeInit ..  ]
-"559
-[; ;main.c: 559:     timeDelayMs(50);
-[e ( _timeDelayMs (1 -> -> 50 `i `us ]
-"562
-[; ;main.c: 562:     rSV2ValveDelay = 20;
-[e = _rSV2ValveDelay -> -> 20 `i `us ]
 "563
-[; ;main.c: 563:     rSV2ValveDelay = 50;
-[e = _rSV2ValveDelay -> -> 50 `i `us ]
-"564
-[; ;main.c: 564:     valveDelayCheck = 0;
-[e = _valveDelayCheck -> -> 0 `i `a ]
+[; ;main.c: 563:     SYSTEM_Initialize();
+[e ( _SYSTEM_Initialize ..  ]
 "565
-[; ;main.c: 565:     OSCheck = 0;
-[e = _OSCheck -> -> 0 `i `a ]
+[; ;main.c: 565:     PIE1bits.ADIE = 0;
+[e = . . _PIE1bits 0 2 -> -> 0 `i `uc ]
 "566
-[; ;main.c: 566:     pExpOS = 0;
-[e = _pExpOS -> -> 0 `i `s ]
-"567
-[; ;main.c: 567:     pInspOS = 0;
-[e = _pInspOS -> -> 0 `i `s ]
-"568
-[; ;main.c: 568:     IDuration = ((uint16_t) 60*1000)/(3*BPM);
-[e = _IDuration -> / * -> -> -> 60 `i `us `ui -> -> 1000 `i `ui -> * -> 3 `i -> _BPM `i `ui `us ]
-"569
-[; ;main.c: 569:     EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
-[e = _EDuration -> - / * -> -> -> 60 `i `us `ui -> -> 1000 `i `ui -> _BPM `ui -> _IDuration `ui `us ]
-"570
-[; ;main.c: 570:     vMeasureInit();
-[e ( _vMeasureInit ..  ]
+[; ;main.c: 566:     PIE1bits.ADTIE = 0;
+[e = . . _PIE1bits 0 3 -> -> 0 `i `uc ]
 "571
-[; ;main.c: 571:     lastCycleVol = 0;
-[e = _lastCycleVol -> -> 0 `i `us ]
-"572
-[; ;main.c: 572:     keyReadInit();
-[e ( _keyReadInit ..  ]
-"573
-[; ;main.c: 573:     screenInit();
-[e ( _screenInit ..  ]
-"575
-[; ;main.c: 575:     while (1) {
-[e :U 2348 ]
-{
+[; ;main.c: 571:     (INTCON0bits.GIE = 1);
+[e = . . _INTCON0bits 0 6 -> -> 1 `i `uc ]
 "576
-[; ;main.c: 576:         char keyTmp;
-[v _keyTmp `uc ~T0 @X0 1 a ]
+[; ;main.c: 576:     aCaptureInit();
+[e ( _aCaptureInit ..  ]
 "577
-[; ;main.c: 577:         while (!InitProcedure())
-[e $U 2350  ]
-[e :U 2351 ]
-"578
-[; ;main.c: 578:             ;
-[e :U 2350 ]
-"577
-[; ;main.c: 577:         while (!InitProcedure())
-[e $ ! != -> ( _InitProcedure ..  `i -> 0 `i 2351  ]
-[e :U 2352 ]
+[; ;main.c: 577:     timeInit();
+[e ( _timeInit ..  ]
 "580
-[; ;main.c: 580:         setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-"581
-[; ;main.c: 581:         printstrblock("PRESS + TO REPEAT ");
-[e ( _printstrblock (1 :s 30C ]
-"582
-[; ;main.c: 582:         setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;main.c: 580:     timeDelayMs(50);
+[e ( _timeDelayMs (1 -> -> 50 `i `us ]
 "583
-[; ;main.c: 583:         printstrblock("PRESS - TO EXIT ");
-[e ( _printstrblock (1 :s 31C ]
+[; ;main.c: 583:     rSV2ValveDelay = 20;
+[e = _rSV2ValveDelay -> -> 20 `i `us ]
+"584
+[; ;main.c: 584:     rSV2ValveDelay = 50;
+[e = _rSV2ValveDelay -> -> 50 `i `us ]
 "585
-[; ;main.c: 585:         keyTmp=keyRead();
-[e = _keyTmp -> ( _keyRead ..  `uc ]
+[; ;main.c: 585:     valveDelayCheck = 0;
+[e = _valveDelayCheck -> -> 0 `i `a ]
 "586
-[; ;main.c: 586:         while ((keyTmp != 3)&&(keyTmp != 5)) {
-[e $U 2353  ]
-[e :U 2354 ]
-{
+[; ;main.c: 586:     OSCheck = 0;
+[e = _OSCheck -> -> 0 `i `a ]
 "587
-[; ;main.c: 587:             keyTmp=keyRead();
-[e = _keyTmp -> ( _keyRead ..  `uc ]
+[; ;main.c: 587:     pExpOS = 0;
+[e = _pExpOS -> -> 0 `i `s ]
 "588
-[; ;main.c: 588:         }
-}
-[e :U 2353 ]
-"586
-[; ;main.c: 586:         while ((keyTmp != 3)&&(keyTmp != 5)) {
-[e $ && != -> _keyTmp `i -> 3 `i != -> _keyTmp `i -> 5 `i 2354  ]
-[e :U 2355 ]
+[; ;main.c: 588:     pInspOS = 0;
+[e = _pInspOS -> -> 0 `i `s ]
 "589
-[; ;main.c: 589:         if (keyTmp == 3){
-[e $ ! == -> _keyTmp `i -> 3 `i 2356  ]
-{
+[; ;main.c: 589:     IDuration = ((uint16_t) 60*1000)/(3*BPM);
+[e = _IDuration -> / * -> -> -> 60 `i `us `ui -> -> 1000 `i `ui -> * -> 3 `i -> _BPM `i `ui `us ]
 "590
-[; ;main.c: 590:             break;
-[e $U 2349  ]
+[; ;main.c: 590:     EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
+[e = _EDuration -> - / * -> -> -> 60 `i `us `ui -> -> 1000 `i `ui -> _BPM `ui -> _IDuration `ui `us ]
 "591
-[; ;main.c: 591:         }
-}
-[e :U 2356 ]
+[; ;main.c: 591:     vMeasureInit();
+[e ( _vMeasureInit ..  ]
 "592
-[; ;main.c: 592:     }
-}
-[e :U 2347 ]
-[e $U 2348  ]
-[e :U 2349 ]
-"595
-[; ;main.c: 595:     lcdPrint=1;
-[e = _lcdPrint -> -> 1 `i `a ]
+[; ;main.c: 592:     lastCycleVol = 0;
+[e = _lastCycleVol -> -> 0 `i `us ]
+"593
+[; ;main.c: 593:     keyReadInit();
+[e ( _keyReadInit ..  ]
+"594
+[; ;main.c: 594:     screenInit();
+[e ( _screenInit ..  ]
 "596
-[; ;main.c: 596:     setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;main.c: 596:     while (1) {
+[e :U 2355 ]
+{
 "597
-[; ;main.c: 597:     printstrblock("BREATH TO START ");
-[e ( _printstrblock (1 :s 32C ]
+[; ;main.c: 597:         char keyTmp;
+[v _keyTmp `uc ~T0 @X0 1 a ]
 "598
-[; ;main.c: 598:     while (ctrlStatus != CTRL_RUN) {
+[; ;main.c: 598:         while (!InitProcedure())
 [e $U 2357  ]
 [e :U 2358 ]
-{
 "599
-[; ;main.c: 599:         LATDbits.LATD6 = 1;
-[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
-"601
-[; ;main.c: 601:         MenuMng();
-[e ( _MenuMng ..  ]
-"602
-[; ;main.c: 602:         screenMng();
-[e ( _screenMng ..  ]
-"604
-[; ;main.c: 604:         if (keyPeek() == 4) {
-[e $ ! == -> ( _keyPeek ..  `i -> 4 `i 2360  ]
-{
-"605
-[; ;main.c: 605:             if (keyReadEC() == -100) {
-[e $ ! == -> ( _keyReadEC ..  `i -U -> 100 `i 2361  ]
-{
-"607
-[; ;main.c: 607:                 LATDbits.LATD6 = 0;
-[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
-"608
-[; ;main.c: 608:                 ctrlStatus = CTRL_RUN;
-[e = _ctrlStatus . `E16841 2 ]
-"611
-[; ;main.c: 611:                 while (keyPeek() != -1)
-[e $U 2362  ]
-[e :U 2363 ]
-"612
-[; ;main.c: 612:                 ;
-[e :U 2362 ]
-"611
-[; ;main.c: 611:                 while (keyPeek() != -1)
-[e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2363  ]
-[e :U 2364 ]
-"613
-[; ;main.c: 613:                 keyRead();
-[e ( _keyRead ..  ]
-"614
-[; ;main.c: 614:                 break;
-[e $U 2359  ]
-"615
-[; ;main.c: 615:             }
-}
-[e :U 2361 ]
-"616
-[; ;main.c: 616:         }
-}
-[e :U 2360 ]
-"617
-[; ;main.c: 617:     }
-}
+[; ;main.c: 599:             ;
 [e :U 2357 ]
 "598
-[; ;main.c: 598:     while (ctrlStatus != CTRL_RUN) {
-[e $ != -> _ctrlStatus `ui -> . `E16841 2 `ui 2358  ]
+[; ;main.c: 598:         while (!InitProcedure())
+[e $ ! != -> ( _InitProcedure ..  `i -> 0 `i 2358  ]
 [e :U 2359 ]
-"674
-[; ;main.c: 674:     while (1) {
-[e :U 2366 ]
+"601
+[; ;main.c: 601:         setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"602
+[; ;main.c: 602:         printstrblock("PRESS + TO REPEAT ");
+[e ( _printstrblock (1 :s 31C ]
+"603
+[; ;main.c: 603:         setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+"604
+[; ;main.c: 604:         printstrblock("PRESS - TO EXIT ");
+[e ( _printstrblock (1 :s 32C ]
+"606
+[; ;main.c: 606:         keyTmp=keyRead();
+[e = _keyTmp -> ( _keyRead ..  `uc ]
+"607
+[; ;main.c: 607:         while ((keyTmp != 3)&&(keyTmp != 5)) {
+[e $U 2360  ]
+[e :U 2361 ]
 {
-"678
-[; ;main.c: 678:         printf ("\nIP\n");
-[e ( _printf :s 33C ]
-"679
-[; ;main.c: 679:         intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
-[e = _intIP -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> _IP `i `us ]
-"680
-[; ;main.c: 680:         intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
-[e = _intPEEP -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> _PEEP `i `us ]
-"681
-[; ;main.c: 681:         intIDuration = ((time_t) IDuration*1);
-[e = _intIDuration -> * -> _IDuration `ui -> -> 1 `i `ui `us ]
-"682
-[; ;main.c: 682:         intEDuration = ((time_t) EDuration*1);
-[e = _intEDuration -> * -> _EDuration `ui -> -> 1 `i `ui `us ]
-"684
-[; ;main.c: 684:         LATAbits.LATA2 = 1;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-"685
-[; ;main.c: 685:         LATAbits.LATA3 = 1;
-[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
-"688
-[; ;main.c: 688:         initialSubState = 1;
-[e = _initialSubState -> -> 1 `i `a ]
-"689
-[; ;main.c: 689:         valveDelayCheck = 1;
-[e = _valveDelayCheck -> -> 1 `i `a ]
-"690
-[; ;main.c: 690:         OSCheck = 0;
-[e = _OSCheck -> -> 0 `i `a ]
-"691
-[; ;main.c: 691:         rValveDelayStart = timeGet();
-[e = _rValveDelayStart ( _timeGet ..  ]
-"692
-[; ;main.c: 692:         vMeasureRst();
-[e ( _vMeasureRst ..  ]
-"693
-[; ;main.c: 693:         while (1) {
-[e :U 2369 ]
-{
-"694
-[; ;main.c: 694:             if (timeElapsedR(&rCycleTime, intIDuration)) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime _intIDuration `i -> 0 `i 2371  ]
-{
-"696
-[; ;main.c: 696:                 break;
-[e $U 2370  ]
-"697
-[; ;main.c: 697:             } else {
+"608
+[; ;main.c: 608:             keyTmp=keyRead();
+[e = _keyTmp -> ( _keyRead ..  `uc ]
+"609
+[; ;main.c: 609:         }
 }
-[e $U 2372  ]
-[e :U 2371 ]
+[e :U 2360 ]
+"607
+[; ;main.c: 607:         while ((keyTmp != 3)&&(keyTmp != 5)) {
+[e $ && != -> _keyTmp `i -> 3 `i != -> _keyTmp `i -> 5 `i 2361  ]
+[e :U 2362 ]
+"610
+[; ;main.c: 610:         if (keyTmp == 3){
+[e $ ! == -> _keyTmp `i -> 3 `i 2363  ]
 {
-"704
-[; ;main.c: 704:                 if (timeElapsed(rCycleTime, ((time_t) 500*1))) {
-[e $ ! != -> ( _timeElapsed (2 , _rCycleTime -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2373  ]
-{
-"706
-[; ;main.c: 706:                     LATDbits.LATD6 = 0;
-[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
-"707
-[; ;main.c: 707:                 }
+"611
+[; ;main.c: 611:             break;
+[e $U 2356  ]
+"612
+[; ;main.c: 612:         }
 }
-[e :U 2373 ]
-"708
-[; ;main.c: 708:                 if (initialSubState) {
-[e $ ! != -> _initialSubState `i -> 0 `i 2374  ]
-{
-"710
-[; ;main.c: 710:                     if (aCaptGetResult(MainPSensor, &pInst)) {
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2375  ]
-{
-"713
-[; ;main.c: 713:                         if ((pInspOS < ((int16_t) ((0.045*4096+2)/5)*5)) && (pInspOS > ((int16_t) ((0.045*4096+2)/5)*-5))) {
-[e $ ! && < -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 5 `i > -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -U -> 5 `i 2376  ]
-{
-"714
-[; ;main.c: 714:                             pTmp = intIP - pInspOS;
-[e = _pTmp -> - -> _intIP `ui -> _pInspOS `ui `s ]
-"715
-[; ;main.c: 715:                         } else {
+[e :U 2363 ]
+"613
+[; ;main.c: 613:     }
 }
-[e $U 2377  ]
-[e :U 2376 ]
+[e :U 2354 ]
+[e $U 2355  ]
+[e :U 2356 ]
+"616
+[; ;main.c: 616:     lcdPrint=1;
+[e = _lcdPrint -> -> 1 `i `a ]
+"617
+[; ;main.c: 617:     setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+"618
+[; ;main.c: 618:     printstrblock("BREATH TO START ");
+[e ( _printstrblock (1 :s 33C ]
+"619
+[; ;main.c: 619:     while (ctrlStatus != CTRL_RUN) {
+[e $U 2364  ]
+[e :U 2365 ]
 {
-"716
-[; ;main.c: 716:                             pTmp = intIP;
-[e = _pTmp -> _intIP `s ]
-"717
-[; ;main.c: 717:                         }
-}
-[e :U 2377 ]
-"720
-[; ;main.c: 720:                         aCaptGetResult(Flt1PSensor, &pAvgShort);
-[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
-"721
-[; ;main.c: 721:                         pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
-"722
-[; ;main.c: 722:                         if ((pNext > pTmp) || (pInst > pTmp)) {
-[e $ ! || > -> _pNext `i -> _pTmp `i > -> _pInst `i -> _pTmp `i 2378  ]
-{
-"723
-[; ;main.c: 723:                             LATAbits.LATA2 = 0;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-"724
-[; ;main.c: 724:                             initialSubState = 0;
-[e = _initialSubState -> -> 0 `i `a ]
-"725
-[; ;main.c: 725:                             rValveAcuationTstamp = timeGet();
-[e = _rValveAcuationTstamp ( _timeGet ..  ]
-"731
-[; ;main.c: 731:                             pValveActuation = pNext;
-[e = _pValveActuation _pNext ]
-"732
-[; ;main.c: 732:                             OSCheck = 1;
-[e = _OSCheck -> -> 1 `i `a ]
-"733
-[; ;main.c: 733:                             pPlateau = 0;
-[e = _pPlateau -> -> 0 `i `s ]
-"734
-[; ;main.c: 734:                             printf ("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pNext) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , (. :s 34C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"735
-[; ;main.c: 735:                         }
-}
-[e :U 2378 ]
-"736
-[; ;main.c: 736:                         if (valveDelayCheck) {
-[e $ ! != -> _valveDelayCheck `i -> 0 `i 2379  ]
-{
-"739
-[; ;main.c: 739:                             if (pInst > (pAvgShort + ((int16_t) ((0.045*4096+2)/5)*1))) {
-[e $ ! > -> _pInst `i + -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2380  ]
-{
-"740
-[; ;main.c: 740:                                 valveDelayCheck = 0;
-[e = _valveDelayCheck -> -> 0 `i `a ]
-"742
-[; ;main.c: 742:                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-[e = _rTimeTmp ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  ]
-"743
-[; ;main.c: 743:                                 if (rTimeTmp < ((time_t) 100*1)) {
-[e $ ! < -> _rTimeTmp `ui * -> -> -> 100 `i `us `ui -> -> 1 `i `ui 2381  ]
-{
-"745
-[; ;main.c: 745:                                     rSV2ValveDelay = (rSV2ValveDelay + rTimeTmp)>>1;
-[e = _rSV2ValveDelay -> >> + -> _rSV2ValveDelay `ui -> _rTimeTmp `ui -> 1 `i `us ]
-"746
-[; ;main.c: 746:                                 } else {
-}
-[e $U 2382  ]
-[e :U 2381 ]
-{
-"748
-[; ;main.c: 748:                                 }
-}
-[e :U 2382 ]
-"749
-[; ;main.c: 749:                             }
-}
-[e :U 2380 ]
-"750
-[; ;main.c: 750:                         }
-}
-[e :U 2379 ]
-"751
-[; ;main.c: 751:                     }
-}
-[e :U 2375 ]
-"752
-[; ;main.c: 752:                 } else {
-}
-[e $U 2383  ]
-[e :U 2374 ]
-{
-"753
-[; ;main.c: 753:                     if (LATAbits.LATA2) {
-[e $ ! != -> . . _LATAbits 0 2 `i -> 0 `i 2384  ]
-{
-"754
-[; ;main.c: 754:                         if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rSubCycleTime -> * -> -> -> 15 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2385  ]
-{
-"755
-[; ;main.c: 755:                             LATAbits.LATA2 = 0;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-"756
-[; ;main.c: 756:                             rValveAcuationTstamp = timeGet();
-[e = _rValveAcuationTstamp ( _timeGet ..  ]
-"757
-[; ;main.c: 757:                             aCaptGetResult(MainPSensor, &pInst);
-[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
-"758
-[; ;main.c: 758:                             printf ("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , (. :s 35C -> ( _timeDiff (2 , _rValveDelayStart _rValveAcuationTstamp `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"759
-[; ;main.c: 759:                         }
-}
-[e :U 2385 ]
-"760
-[; ;main.c: 760:                     } else if ((aCaptGetResult(MainPSensor, &pInst))) {
-}
-[e $U 2386  ]
-[e :U 2384 ]
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2387  ]
-{
-"761
-[; ;main.c: 761:                         if (OSCheck) {
-[e $ ! != -> _OSCheck `i -> 0 `i 2388  ]
-{
-"763
-[; ;main.c: 763:                             aCaptGetResult(Flt1PSensor, &pAvgUShort);
-[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgUShort ]
-"764
-[; ;main.c: 764:                             if (pPlateau < pAvgUShort) {
-[e $ ! < -> _pPlateau `i -> _pAvgUShort `i 2389  ]
-{
-"765
-[; ;main.c: 765:                                 pPlateau = pAvgUShort;
-[e = _pPlateau _pAvgUShort ]
-"766
-[; ;main.c: 766:                             }
-}
-[e :U 2389 ]
-"768
-[; ;main.c: 768:                             if (timeElapsed(rValveAcuationTstamp, ((time_t) 150*1) + rSV2ValveDelay)) {
-[e $ ! != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> + * -> -> -> 150 `i `us `ui -> -> 1 `i `ui -> _rSV2ValveDelay `ui `us `i -> 0 `i 2390  ]
-{
-"770
-[; ;main.c: 770:                                 pTmp = pPlateau - pValveActuation;
-[e = _pTmp -> - -> _pPlateau `i -> _pValveActuation `i `s ]
-"771
-[; ;main.c: 771:                                 pInspOS = (3*pInspOS + pTmp)>>2;
-[e = _pInspOS -> >> + * -> 3 `i -> _pInspOS `i -> _pTmp `i -> 2 `i `s ]
-"772
-[; ;main.c: 772:                                 OSCheck = 0;
-[e = _OSCheck -> -> 0 `i `a ]
-"773
-[; ;main.c: 773:                                 printf ("PIOSE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , (. :s 36C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"774
-[; ;main.c: 774:                             }
-}
-[e :U 2390 ]
-"775
-[; ;main.c: 775:                         }
-}
-[e :U 2388 ]
-"777
-[; ;main.c: 777:                         if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
-[e $ ! && && ! != -> _OSCheck `i -> 0 `i != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> / * -> -> 32 `i `ui -> _rSV2ValveDelay `ui -> -> 16 `i `ui `us `i -> 0 `i < -> -> _pInst `i `d - -> -> _intIP `ui `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .2.5 2391  ]
-{
-"778
-[; ;main.c: 778:                             LATAbits.LATA2 = 1;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-"779
-[; ;main.c: 779:                             rSubCycleTime = timeGet();
-[e = _rSubCycleTime ( _timeGet ..  ]
-"780
-[; ;main.c: 780:                             printf ("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , (. :s 37C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"781
-[; ;main.c: 781:                         }
-}
-[e :U 2391 ]
-"782
-[; ;main.c: 782:                     }
-}
-[e :U 2387 ]
-[e :U 2386 ]
-"783
-[; ;main.c: 783:                 }
-}
-[e :U 2383 ]
-"785
-[; ;main.c: 785:                 screenMng();
-[e ( _screenMng ..  ]
-"786
-[; ;main.c: 786:                 MenuMng();
+"620
+[; ;main.c: 620:         LATDbits.LATD6 = 1;
+[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
+"622
+[; ;main.c: 622:         MenuMng();
 [e ( _MenuMng ..  ]
-"787
-[; ;main.c: 787:             }
-}
-[e :U 2372 ]
-"790
-[; ;main.c: 790:             if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2392  ]
+"623
+[; ;main.c: 623:         screenMng();
+[e ( _screenMng ..  ]
+"625
+[; ;main.c: 625:         if (keyPeek() == 4) {
+[e $ ! == -> ( _keyPeek ..  `i -> 4 `i 2367  ]
 {
-"791
-[; ;main.c: 791:                 aCaptGetResult(MainPSensor, &pInst);
-[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
-"792
-[; ;main.c: 792:                 aCaptGetResult(Flt1PSensor, &pAvgShort);
-[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
-"793
-[; ;main.c: 793:                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
-"794
-[; ;main.c: 794:                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , , , , , , (. :s 38C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui -> ( _vMeasureGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i - -> _pInst `i -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i -> _rSV2ValveDelay `ui / * -> 10 `i -> _pPlateau `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"803
-[; ;main.c: 803:             }
-}
-[e :U 2392 ]
-"805
-[; ;main.c: 805:         }
-}
-[e :U 2368 ]
+"626
+[; ;main.c: 626:             if (keyReadEC() == -100) {
+[e $ ! == -> ( _keyReadEC ..  `i -U -> 100 `i 2368  ]
+{
+"628
+[; ;main.c: 628:                 LATDbits.LATD6 = 0;
+[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
+"629
+[; ;main.c: 629:                 ctrlStatus = CTRL_RUN;
+[e = _ctrlStatus . `E16841 2 ]
+"632
+[; ;main.c: 632:                 while (keyPeek() != -1)
 [e $U 2369  ]
 [e :U 2370 ]
-"808
-[; ;main.c: 808:         lastCycleVol = vMeasureGet();
-[e = _lastCycleVol ( _vMeasureGet ..  ]
-"809
-[; ;main.c: 809:         lcdPrint = 1;
-[e = _lcdPrint -> -> 1 `i `a ]
-"813
-[; ;main.c: 813:         printf ("\nEP\n");
-[e ( _printf :s 39C ]
-"815
-[; ;main.c: 815:         aCaptRstFlt(Flt0PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 3 ]
-"816
-[; ;main.c: 816:         aCaptRstFlt(Flt1PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 4 ]
-"818
-[; ;main.c: 818:         rSubCycleTime = timeGet();
-[e = _rSubCycleTime ( _timeGet ..  ]
-"819
-[; ;main.c: 819:         LATAbits.LATA2 = 0;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-"820
-[; ;main.c: 820:         LATAbits.LATA3 = 0;
-[e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
-"821
-[; ;main.c: 821:         initialSubState = 1;
-[e = _initialSubState -> -> 1 `i `a ]
-"822
-[; ;main.c: 822:         valveDelayCheck = 1;
-[e = _valveDelayCheck -> -> 1 `i `a ]
-"823
-[; ;main.c: 823:         OSCheck = 0;
-[e = _OSCheck -> -> 0 `i `a ]
-"824
-[; ;main.c: 824:         rValveDelayStart = timeGet();
-[e = _rValveDelayStart ( _timeGet ..  ]
-"826
-[; ;main.c: 826:         while (1) {
-[e :U 2394 ]
-{
-"827
-[; ;main.c: 827:             if (timeElapsedR(&rCycleTime, intEDuration)) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime _intEDuration `i -> 0 `i 2396  ]
-{
-"829
-[; ;main.c: 829:                 break;
-[e $U 2395  ]
-"830
-[; ;main.c: 830:             } else {
+"633
+[; ;main.c: 633:                 ;
+[e :U 2369 ]
+"632
+[; ;main.c: 632:                 while (keyPeek() != -1)
+[e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2370  ]
+[e :U 2371 ]
+"634
+[; ;main.c: 634:                 keyRead();
+[e ( _keyRead ..  ]
+"635
+[; ;main.c: 635:                 break;
+[e $U 2366  ]
+"636
+[; ;main.c: 636:             }
 }
-[e $U 2397  ]
-[e :U 2396 ]
-{
-"831
-[; ;main.c: 831:                 if (initialSubState) {
-[e $ ! != -> _initialSubState `i -> 0 `i 2398  ]
-{
-"837
-[; ;main.c: 837:                     if (aCaptGetResult(MainPSensor, &pInst)) {
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2399  ]
-{
-"838
-[; ;main.c: 838:                         aCaptGetResult(Flt1PSensor, &pAvgShort);
-[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
-"842
-[; ;main.c: 842:                         pTmp = intPEEP - pExpOS;
-[e = _pTmp -> - -> _intPEEP `ui -> _pExpOS `ui `s ]
-"843
-[; ;main.c: 843:                         if (pTmp <= ((int16_t) ((0.045*4096+2)/5)*1)) {
-[e $ ! <= -> _pTmp `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2400  ]
-{
-"844
-[; ;main.c: 844:                             pTmp = ((int16_t) ((0.045*4096+2)/5)*1);
-[e = _pTmp -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i `s ]
-"845
-[; ;main.c: 845:                         }
+[e :U 2368 ]
+"637
+[; ;main.c: 637:         }
 }
-[e :U 2400 ]
-"846
-[; ;main.c: 846:                         if (pAvgShort < pTmp) {
-[e $ ! < -> _pAvgShort `i -> _pTmp `i 2401  ]
-{
-"847
-[; ;main.c: 847:                             LATAbits.LATA3 = 1;
-[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
-"848
-[; ;main.c: 848:                             initialSubState = 0;
-[e = _initialSubState -> -> 0 `i `a ]
-"849
-[; ;main.c: 849:                             rValveAcuationTstamp = timeGet();
-[e = _rValveAcuationTstamp ( _timeGet ..  ]
-"850
-[; ;main.c: 850:                             pValveActuation = pInst;
-[e = _pValveActuation _pInst ]
-"851
-[; ;main.c: 851:                             OSCheck = 1;
-[e = _OSCheck -> -> 1 `i `a ]
-"852
-[; ;main.c: 852:                             printf ("PEI end T %d - Pi %d OS %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , (. :s 40C -> ( _timeDiff (2 , _rValveDelayStart _rValveAcuationTstamp `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pExpOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"856
-[; ;main.c: 856:                         }
+[e :U 2367 ]
+"638
+[; ;main.c: 638:     }
 }
-[e :U 2401 ]
-"857
-[; ;main.c: 857:                         if (valveDelayCheck) {
-[e $ ! != -> _valveDelayCheck `i -> 0 `i 2402  ]
+[e :U 2364 ]
+"619
+[; ;main.c: 619:     while (ctrlStatus != CTRL_RUN) {
+[e $ != -> _ctrlStatus `ui -> . `E16841 2 `ui 2365  ]
+[e :U 2366 ]
+"695
+[; ;main.c: 695:     while (1) {
+[e :U 2373 ]
 {
-"860
-[; ;main.c: 860:                             if (pInst < (pAvgShort - ((int16_t) ((0.045*4096+2)/5)*1))) {
-[e $ ! < -> _pInst `i - -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2403  ]
-{
-"861
-[; ;main.c: 861:                                 valveDelayCheck = 0;
-[e = _valveDelayCheck -> -> 0 `i `a ]
-"863
-[; ;main.c: 863:                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-[e = _rTimeTmp ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  ]
-"864
-[; ;main.c: 864:                                  if (rTimeTmp < ((time_t) 700*1)) {
-[e $ ! < -> _rTimeTmp `ui * -> -> -> 700 `i `us `ui -> -> 1 `i `ui 2404  ]
-{
-"866
-[; ;main.c: 866:                                     rSV3ValveDelay = (rSV3ValveDelay + rTimeTmp)>>1;
-[e = _rSV3ValveDelay -> >> + -> _rSV3ValveDelay `ui -> _rTimeTmp `ui -> 1 `i `us ]
-"867
-[; ;main.c: 867:                                 } else {
-}
-[e $U 2405  ]
-[e :U 2404 ]
-{
-"869
-[; ;main.c: 869:                                 }
-}
-[e :U 2405 ]
-"870
-[; ;main.c: 870:                            }
-}
-[e :U 2403 ]
-"871
-[; ;main.c: 871:                         }
-}
-[e :U 2402 ]
-"872
-[; ;main.c: 872:                     }
-}
-[e :U 2399 ]
-"873
-[; ;main.c: 873:                 } else {
-}
-[e $U 2406  ]
-[e :U 2398 ]
-{
-"874
-[; ;main.c: 874:                     if (LATAbits.LATA2) {
-[e $ ! != -> . . _LATAbits 0 2 `i -> 0 `i 2407  ]
-{
-"875
-[; ;main.c: 875:                         if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _rSubCycleTime -> * -> -> -> 15 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2408  ]
-{
-"876
-[; ;main.c: 876:                             LATAbits.LATA2 = 0;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-"877
-[; ;main.c: 877:                             rValveAcuationTstamp = timeGet();
-[e = _rValveAcuationTstamp ( _timeGet ..  ]
-"878
-[; ;main.c: 878:                             aCaptGetResult(MainPSensor, &pInst);
-[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
-"879
-[; ;main.c: 879:                             printf ("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , (. :s 41C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"880
-[; ;main.c: 880:                         }
-}
-[e :U 2408 ]
-"881
-[; ;main.c: 881:                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
-}
-[e $U 2409  ]
-[e :U 2407 ]
-[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2410  ]
-{
-"882
-[; ;main.c: 882:                         if (OSCheck) {
-[e $ ! != -> _OSCheck `i -> 0 `i 2411  ]
-{
-"883
-[; ;main.c: 883:                             if (timeElapsed(rValveAcuationTstamp, ((time_t) 350*1) + rSV2ValveDelay)) {
-[e $ ! != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> + * -> -> -> 350 `i `us `ui -> -> 1 `i `ui -> _rSV2ValveDelay `ui `us `i -> 0 `i 2412  ]
-{
-"885
-[; ;main.c: 885:                                 aCaptGetResult(Flt0PSensor, &pAvgUShort);
-[e ( _aCaptGetResult (2 , . `E16733 3 &U _pAvgUShort ]
-"886
-[; ;main.c: 886:                                 pPlateau = pAvgUShort;
-[e = _pPlateau _pAvgUShort ]
-"888
-[; ;main.c: 888:                                 pTmp = pPlateau - pValveActuation;
-[e = _pTmp -> - -> _pPlateau `i -> _pValveActuation `i `s ]
-"889
-[; ;main.c: 889:                                 pExpOS = (3 * pExpOS + pTmp) / 4;
-[e = _pExpOS -> / + * -> 3 `i -> _pExpOS `i -> _pTmp `i -> 4 `i `s ]
-"891
-[; ;main.c: 891:                                 aCaptRstFlt(Flt2PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 5 ]
-"892
-[; ;main.c: 892:                                 aCaptRstFlt(Flt3PSensor);
-[e ( _aCaptRstFlt (1 . `E16733 6 ]
-"893
-[; ;main.c: 893:                                 OSCheck = 0;
-[e = _OSCheck -> -> 0 `i `a ]
-"894
-[; ;main.c: 894:                                 printf ("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pAvgUShort) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , (. :s 42C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pAvgUShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"895
-[; ;main.c: 895:                             }
-}
-[e :U 2412 ]
-"896
-[; ;main.c: 896:                         } else {
-}
-[e $U 2413  ]
-[e :U 2411 ]
-{
-"900
-[; ;main.c: 900:                             aCaptGetResult(Flt2PSensor, &bdP1);
-[e ( _aCaptGetResult (2 , . `E16733 5 &U _bdP1 ]
-"901
-[; ;main.c: 901:                             aCaptGetResult(Flt3PSensor, &bdP2);
-[e ( _aCaptGetResult (2 , . `E16733 6 &U _bdP2 ]
-"902
-[; ;main.c: 902:                             if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*0.5)) < bdP2) || (keyPeek() == 4)) {
-[e $ ! || < + -> -> _bdP1 `i `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .0.5 -> -> _bdP2 `i `d == -> ( _keyPeek ..  `i -> 4 `i 2414  ]
-{
-"904
-[; ;main.c: 904:                                 printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , , (. :s 43C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"905
-[; ;main.c: 905:                                 LATDbits.LATD6 = 1;
-[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
-"906
-[; ;main.c: 906:                                 rCycleTime = timeGet();
-[e = _rCycleTime ( _timeGet ..  ]
-"907
-[; ;main.c: 907:                                 break;
-[e $U 2395  ]
-"908
-[; ;main.c: 908:                             }
-}
-[e :U 2414 ]
-"911
-[; ;main.c: 911:                             if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (bdP1 < (intPEEP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
-[e $ ! && != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> / * -> -> 32 `i `ui -> _rSV2ValveDelay `ui -> -> 16 `i `ui `us `i -> 0 `i < -> -> _bdP1 `i `d - -> -> _intPEEP `ui `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .2.5 2415  ]
-{
-"912
-[; ;main.c: 912:                                 LATAbits.LATA2 = 1;
+"699
+[; ;main.c: 699:         printf ("\nIP\n");
+[e ( _printf :s 34C ]
+"700
+[; ;main.c: 700:         intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
+[e = _intIP -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> _IP `i `us ]
+"701
+[; ;main.c: 701:         intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
+[e = _intPEEP -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> _PEEP `i `us ]
+"702
+[; ;main.c: 702:         intIDuration = ((time_t) IDuration*1);
+[e = _intIDuration -> * -> _IDuration `ui -> -> 1 `i `ui `us ]
+"703
+[; ;main.c: 703:         intEDuration = ((time_t) EDuration*1);
+[e = _intEDuration -> * -> _EDuration `ui -> -> 1 `i `ui `us ]
+"705
+[; ;main.c: 705:         LATAbits.LATA2 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-"913
-[; ;main.c: 913:                                 rSubCycleTime = timeGet();
-[e = _rSubCycleTime ( _timeGet ..  ]
-"914
-[; ;main.c: 914:                                 printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , (. :s 44C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
-"915
-[; ;main.c: 915:                             }
+"706
+[; ;main.c: 706:         LATAbits.LATA3 = 1;
+[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
+"709
+[; ;main.c: 709:         initialSubState = 1;
+[e = _initialSubState -> -> 1 `i `a ]
+"710
+[; ;main.c: 710:         valveDelayCheck = 1;
+[e = _valveDelayCheck -> -> 1 `i `a ]
+"711
+[; ;main.c: 711:         OSCheck = 0;
+[e = _OSCheck -> -> 0 `i `a ]
+"712
+[; ;main.c: 712:         rValveDelayStart = timeGet();
+[e = _rValveDelayStart ( _timeGet ..  ]
+"713
+[; ;main.c: 713:         vMeasureRst();
+[e ( _vMeasureRst ..  ]
+"714
+[; ;main.c: 714:         while (1) {
+[e :U 2376 ]
+{
+"715
+[; ;main.c: 715:             if (timeElapsedR(&rCycleTime, intIDuration)) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime _intIDuration `i -> 0 `i 2378  ]
+{
+"717
+[; ;main.c: 717:                 break;
+[e $U 2377  ]
+"718
+[; ;main.c: 718:             } else {
 }
-[e :U 2415 ]
-"916
-[; ;main.c: 916:                         }
+[e $U 2379  ]
+[e :U 2378 ]
+{
+"725
+[; ;main.c: 725:                 if (timeElapsed(rCycleTime, ((time_t) 500*1))) {
+[e $ ! != -> ( _timeElapsed (2 , _rCycleTime -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2380  ]
+{
+"727
+[; ;main.c: 727:                     LATDbits.LATD6 = 0;
+[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
+"728
+[; ;main.c: 728:                 }
 }
-[e :U 2413 ]
-"917
-[; ;main.c: 917:                     }
+[e :U 2380 ]
+"729
+[; ;main.c: 729:                 if (initialSubState) {
+[e $ ! != -> _initialSubState `i -> 0 `i 2381  ]
+{
+"731
+[; ;main.c: 731:                     if (aCaptGetResult(MainPSensor, &pInst)) {
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2382  ]
+{
+"734
+[; ;main.c: 734:                         if ((pInspOS < ((int16_t) ((0.045*4096+2)/5)*5)) && (pInspOS > ((int16_t) ((0.045*4096+2)/5)*-5))) {
+[e $ ! && < -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 5 `i > -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -U -> 5 `i 2383  ]
+{
+"735
+[; ;main.c: 735:                             pTmp = intIP - pInspOS;
+[e = _pTmp -> - -> _intIP `ui -> _pInspOS `ui `s ]
+"736
+[; ;main.c: 736:                         } else {
 }
-[e :U 2410 ]
-[e :U 2409 ]
-"918
-[; ;main.c: 918:                 }
+[e $U 2384  ]
+[e :U 2383 ]
+{
+"737
+[; ;main.c: 737:                             pTmp = intIP;
+[e = _pTmp -> _intIP `s ]
+"738
+[; ;main.c: 738:                         }
 }
-[e :U 2406 ]
-"920
-[; ;main.c: 920:                 screenMng();
-[e ( _screenMng ..  ]
-"921
-[; ;main.c: 921:                 MenuMng();
-[e ( _MenuMng ..  ]
-"922
-[; ;main.c: 922:             }
+[e :U 2384 ]
+"741
+[; ;main.c: 741:                         aCaptGetResult(Flt1PSensor, &pAvgShort);
+[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
+"742
+[; ;main.c: 742:                         pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
+"743
+[; ;main.c: 743:                         if ((pNext > pTmp) || (pInst > pTmp)) {
+[e $ ! || > -> _pNext `i -> _pTmp `i > -> _pInst `i -> _pTmp `i 2385  ]
+{
+"744
+[; ;main.c: 744:                             LATAbits.LATA2 = 0;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"745
+[; ;main.c: 745:                             initialSubState = 0;
+[e = _initialSubState -> -> 0 `i `a ]
+"746
+[; ;main.c: 746:                             rValveAcuationTstamp = timeGet();
+[e = _rValveAcuationTstamp ( _timeGet ..  ]
+"752
+[; ;main.c: 752:                             pValveActuation = pNext;
+[e = _pValveActuation _pNext ]
+"753
+[; ;main.c: 753:                             OSCheck = 1;
+[e = _OSCheck -> -> 1 `i `a ]
+"754
+[; ;main.c: 754:                             pPlateau = 0;
+[e = _pPlateau -> -> 0 `i `s ]
+"755
+[; ;main.c: 755:                             printf ("PII end T %d - Pi %d Pn %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pNext) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , (. :s 35C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"756
+[; ;main.c: 756:                         }
+}
+[e :U 2385 ]
+"757
+[; ;main.c: 757:                         if (valveDelayCheck) {
+[e $ ! != -> _valveDelayCheck `i -> 0 `i 2386  ]
+{
+"760
+[; ;main.c: 760:                             if (pInst > (pAvgShort + ((int16_t) ((0.045*4096+2)/5)*1))) {
+[e $ ! > -> _pInst `i + -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2387  ]
+{
+"761
+[; ;main.c: 761:                                 valveDelayCheck = 0;
+[e = _valveDelayCheck -> -> 0 `i `a ]
+"763
+[; ;main.c: 763:                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
+[e = _rTimeTmp ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  ]
+"764
+[; ;main.c: 764:                                 if (rTimeTmp < ((time_t) 100*1)) {
+[e $ ! < -> _rTimeTmp `ui * -> -> -> 100 `i `us `ui -> -> 1 `i `ui 2388  ]
+{
+"766
+[; ;main.c: 766:                                     rSV2ValveDelay = (rSV2ValveDelay + rTimeTmp)>>1;
+[e = _rSV2ValveDelay -> >> + -> _rSV2ValveDelay `ui -> _rTimeTmp `ui -> 1 `i `us ]
+"767
+[; ;main.c: 767:                                 } else {
+}
+[e $U 2389  ]
+[e :U 2388 ]
+{
+"769
+[; ;main.c: 769:                                 }
+}
+[e :U 2389 ]
+"770
+[; ;main.c: 770:                             }
+}
+[e :U 2387 ]
+"771
+[; ;main.c: 771:                         }
+}
+[e :U 2386 ]
+"772
+[; ;main.c: 772:                     }
+}
+[e :U 2382 ]
+"773
+[; ;main.c: 773:                 } else {
+}
+[e $U 2390  ]
+[e :U 2381 ]
+{
+"774
+[; ;main.c: 774:                     if (LATAbits.LATA2) {
+[e $ ! != -> . . _LATAbits 0 2 `i -> 0 `i 2391  ]
+{
+"775
+[; ;main.c: 775:                         if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rSubCycleTime -> * -> -> -> 15 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2392  ]
+{
+"776
+[; ;main.c: 776:                             LATAbits.LATA2 = 0;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"777
+[; ;main.c: 777:                             rValveAcuationTstamp = timeGet();
+[e = _rValveAcuationTstamp ( _timeGet ..  ]
+"778
+[; ;main.c: 778:                             aCaptGetResult(MainPSensor, &pInst);
+[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
+"779
+[; ;main.c: 779:                             printf ("PI VC T %d - Pi %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , (. :s 36C -> ( _timeDiff (2 , _rValveDelayStart _rValveAcuationTstamp `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"780
+[; ;main.c: 780:                         }
+}
+[e :U 2392 ]
+"781
+[; ;main.c: 781:                     } else if ((aCaptGetResult(MainPSensor, &pInst))) {
+}
+[e $U 2393  ]
+[e :U 2391 ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2394  ]
+{
+"782
+[; ;main.c: 782:                         if (OSCheck) {
+[e $ ! != -> _OSCheck `i -> 0 `i 2395  ]
+{
+"784
+[; ;main.c: 784:                             aCaptGetResult(Flt1PSensor, &pAvgUShort);
+[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgUShort ]
+"785
+[; ;main.c: 785:                             if (pPlateau < pAvgUShort) {
+[e $ ! < -> _pPlateau `i -> _pAvgUShort `i 2396  ]
+{
+"786
+[; ;main.c: 786:                                 pPlateau = pAvgUShort;
+[e = _pPlateau _pAvgUShort ]
+"787
+[; ;main.c: 787:                             }
+}
+[e :U 2396 ]
+"789
+[; ;main.c: 789:                             if (timeElapsed(rValveAcuationTstamp, ((time_t) 150*1) + rSV2ValveDelay)) {
+[e $ ! != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> + * -> -> -> 150 `i `us `ui -> -> 1 `i `ui -> _rSV2ValveDelay `ui `us `i -> 0 `i 2397  ]
+{
+"791
+[; ;main.c: 791:                                 pTmp = pPlateau - pValveActuation;
+[e = _pTmp -> - -> _pPlateau `i -> _pValveActuation `i `s ]
+"792
+[; ;main.c: 792:                                 pInspOS = (3*pInspOS + pTmp)>>2;
+[e = _pInspOS -> >> + * -> 3 `i -> _pInspOS `i -> _pTmp `i -> 2 `i `s ]
+"793
+[; ;main.c: 793:                                 OSCheck = 0;
+[e = _OSCheck -> -> 0 `i `a ]
+"794
+[; ;main.c: 794:                                 printf ("PIOSE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , (. :s 37C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"795
+[; ;main.c: 795:                             }
 }
 [e :U 2397 ]
-"924
-[; ;main.c: 924:             if (timeElapsedR(&printTime, ((time_t) 20*1))) {
-[e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2416  ]
+"796
+[; ;main.c: 796:                         }
+}
+[e :U 2395 ]
+"798
+[; ;main.c: 798:                         if ((!OSCheck) && timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
+[e $ ! && && ! != -> _OSCheck `i -> 0 `i != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> / * -> -> 32 `i `ui -> _rSV2ValveDelay `ui -> -> 16 `i `ui `us `i -> 0 `i < -> -> _pInst `i `d - -> -> _intIP `ui `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .2.5 2398  ]
+{
+"799
+[; ;main.c: 799:                             LATAbits.LATA2 = 1;
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+"800
+[; ;main.c: 800:                             rSubCycleTime = timeGet();
+[e = _rSubCycleTime ( _timeGet ..  ]
+"801
+[; ;main.c: 801:                             printf ("PI VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , (. :s 38C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"802
+[; ;main.c: 802:                         }
+}
+[e :U 2398 ]
+"803
+[; ;main.c: 803:                     }
+}
+[e :U 2394 ]
+[e :U 2393 ]
+"804
+[; ;main.c: 804:                 }
+}
+[e :U 2390 ]
+"806
+[; ;main.c: 806:                 screenMng();
+[e ( _screenMng ..  ]
+"807
+[; ;main.c: 807:                 MenuMng();
+[e ( _MenuMng ..  ]
+"808
+[; ;main.c: 808:             }
+}
+[e :U 2379 ]
+"811
+[; ;main.c: 811:             if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2399  ]
+{
+"812
+[; ;main.c: 812:                 aCaptGetResult(MainPSensor, &pInst);
+[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
+"813
+[; ;main.c: 813:                 aCaptGetResult(Flt1PSensor, &pAvgShort);
+[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
+"814
+[; ;main.c: 814:                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
+"815
+[; ;main.c: 815:                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , , , , , , (. :s 39C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui -> ( _vMeasureGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i - -> _pInst `i -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i -> _rSV2ValveDelay `ui / * -> 10 `i -> _pPlateau `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pInspOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"824
+[; ;main.c: 824:             }
+}
+[e :U 2399 ]
+"826
+[; ;main.c: 826:         }
+}
+[e :U 2375 ]
+[e $U 2376  ]
+[e :U 2377 ]
+"829
+[; ;main.c: 829:         lastCycleVol = vMeasureGet();
+[e = _lastCycleVol ( _vMeasureGet ..  ]
+"830
+[; ;main.c: 830:         lcdPrint = 1;
+[e = _lcdPrint -> -> 1 `i `a ]
+"834
+[; ;main.c: 834:         printf ("\nEP\n");
+[e ( _printf :s 40C ]
+"836
+[; ;main.c: 836:         aCaptRstFlt(Flt0PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 3 ]
+"837
+[; ;main.c: 837:         aCaptRstFlt(Flt1PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 4 ]
+"839
+[; ;main.c: 839:         rSubCycleTime = timeGet();
+[e = _rSubCycleTime ( _timeGet ..  ]
+"840
+[; ;main.c: 840:         LATAbits.LATA2 = 0;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"841
+[; ;main.c: 841:         LATAbits.LATA3 = 0;
+[e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
+"842
+[; ;main.c: 842:         initialSubState = 1;
+[e = _initialSubState -> -> 1 `i `a ]
+"843
+[; ;main.c: 843:         valveDelayCheck = 1;
+[e = _valveDelayCheck -> -> 1 `i `a ]
+"844
+[; ;main.c: 844:         OSCheck = 0;
+[e = _OSCheck -> -> 0 `i `a ]
+"845
+[; ;main.c: 845:         rValveDelayStart = timeGet();
+[e = _rValveDelayStart ( _timeGet ..  ]
+"847
+[; ;main.c: 847:         while (1) {
+[e :U 2401 ]
+{
+"848
+[; ;main.c: 848:             if (timeElapsedR(&rCycleTime, intEDuration)) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rCycleTime _intEDuration `i -> 0 `i 2403  ]
+{
+"850
+[; ;main.c: 850:                 break;
+[e $U 2402  ]
+"851
+[; ;main.c: 851:             } else {
+}
+[e $U 2404  ]
+[e :U 2403 ]
+{
+"852
+[; ;main.c: 852:                 if (initialSubState) {
+[e $ ! != -> _initialSubState `i -> 0 `i 2405  ]
+{
+"858
+[; ;main.c: 858:                     if (aCaptGetResult(MainPSensor, &pInst)) {
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2406  ]
+{
+"859
+[; ;main.c: 859:                         aCaptGetResult(Flt1PSensor, &pAvgShort);
+[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
+"863
+[; ;main.c: 863:                         pTmp = intPEEP - pExpOS;
+[e = _pTmp -> - -> _intPEEP `ui -> _pExpOS `ui `s ]
+"864
+[; ;main.c: 864:                         if (pTmp <= ((int16_t) ((0.045*4096+2)/5)*1)) {
+[e $ ! <= -> _pTmp `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2407  ]
+{
+"865
+[; ;main.c: 865:                             pTmp = ((int16_t) ((0.045*4096+2)/5)*1);
+[e = _pTmp -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i `s ]
+"866
+[; ;main.c: 866:                         }
+}
+[e :U 2407 ]
+"867
+[; ;main.c: 867:                         if (pAvgShort < pTmp) {
+[e $ ! < -> _pAvgShort `i -> _pTmp `i 2408  ]
+{
+"868
+[; ;main.c: 868:                             LATAbits.LATA3 = 1;
+[e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
+"869
+[; ;main.c: 869:                             initialSubState = 0;
+[e = _initialSubState -> -> 0 `i `a ]
+"870
+[; ;main.c: 870:                             rValveAcuationTstamp = timeGet();
+[e = _rValveAcuationTstamp ( _timeGet ..  ]
+"871
+[; ;main.c: 871:                             pValveActuation = pInst;
+[e = _pValveActuation _pInst ]
+"872
+[; ;main.c: 872:                             OSCheck = 1;
+[e = _OSCheck -> -> 1 `i `a ]
+"873
+[; ;main.c: 873:                             printf ("PEI end T %d - Pi %d OS %d\n", timeDiff(rValveDelayStart, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , (. :s 41C -> ( _timeDiff (2 , _rValveDelayStart _rValveAcuationTstamp `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pExpOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"877
+[; ;main.c: 877:                         }
+}
+[e :U 2408 ]
+"878
+[; ;main.c: 878:                         if (valveDelayCheck) {
+[e $ ! != -> _valveDelayCheck `i -> 0 `i 2409  ]
+{
+"881
+[; ;main.c: 881:                             if (pInst < (pAvgShort - ((int16_t) ((0.045*4096+2)/5)*1))) {
+[e $ ! < -> _pInst `i - -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2410  ]
+{
+"882
+[; ;main.c: 882:                                 valveDelayCheck = 0;
+[e = _valveDelayCheck -> -> 0 `i `a ]
+"884
+[; ;main.c: 884:                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
+[e = _rTimeTmp ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  ]
+"885
+[; ;main.c: 885:                                  if (rTimeTmp < ((time_t) 700*1)) {
+[e $ ! < -> _rTimeTmp `ui * -> -> -> 700 `i `us `ui -> -> 1 `i `ui 2411  ]
+{
+"887
+[; ;main.c: 887:                                     rSV3ValveDelay = (rSV3ValveDelay + rTimeTmp)>>1;
+[e = _rSV3ValveDelay -> >> + -> _rSV3ValveDelay `ui -> _rTimeTmp `ui -> 1 `i `us ]
+"888
+[; ;main.c: 888:                                 } else {
+}
+[e $U 2412  ]
+[e :U 2411 ]
+{
+"890
+[; ;main.c: 890:                                 }
+}
+[e :U 2412 ]
+"891
+[; ;main.c: 891:                            }
+}
+[e :U 2410 ]
+"892
+[; ;main.c: 892:                         }
+}
+[e :U 2409 ]
+"893
+[; ;main.c: 893:                     }
+}
+[e :U 2406 ]
+"894
+[; ;main.c: 894:                 } else {
+}
+[e $U 2413  ]
+[e :U 2405 ]
+{
+"895
+[; ;main.c: 895:                     if (LATAbits.LATA2) {
+[e $ ! != -> . . _LATAbits 0 2 `i -> 0 `i 2414  ]
+{
+"896
+[; ;main.c: 896:                         if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _rSubCycleTime -> * -> -> -> 15 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2415  ]
+{
+"897
+[; ;main.c: 897:                             LATAbits.LATA2 = 0;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"898
+[; ;main.c: 898:                             rValveAcuationTstamp = timeGet();
+[e = _rValveAcuationTstamp ( _timeGet ..  ]
+"899
+[; ;main.c: 899:                             aCaptGetResult(MainPSensor, &pInst);
+[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
+"900
+[; ;main.c: 900:                             printf ("PE VC T %d - Pi %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , (. :s 42C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"901
+[; ;main.c: 901:                         }
+}
+[e :U 2415 ]
+"902
+[; ;main.c: 902:                     } else if (aCaptGetResult(MainPSensor, &pInst)) {
+}
+[e $U 2416  ]
+[e :U 2414 ]
+[e $ ! != -> ( _aCaptGetResult (2 , . `E16733 0 &U _pInst `i -> 0 `i 2417  ]
+{
+"903
+[; ;main.c: 903:                         if (OSCheck) {
+[e $ ! != -> _OSCheck `i -> 0 `i 2418  ]
+{
+"904
+[; ;main.c: 904:                             if (timeElapsed(rValveAcuationTstamp, ((time_t) 350*1) + rSV2ValveDelay)) {
+[e $ ! != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> + * -> -> -> 350 `i `us `ui -> -> 1 `i `ui -> _rSV2ValveDelay `ui `us `i -> 0 `i 2419  ]
+{
+"906
+[; ;main.c: 906:                                 aCaptGetResult(Flt0PSensor, &pAvgUShort);
+[e ( _aCaptGetResult (2 , . `E16733 3 &U _pAvgUShort ]
+"907
+[; ;main.c: 907:                                 pPlateau = pAvgUShort;
+[e = _pPlateau _pAvgUShort ]
+"909
+[; ;main.c: 909:                                 pTmp = pPlateau - pValveActuation;
+[e = _pTmp -> - -> _pPlateau `i -> _pValveActuation `i `s ]
+"910
+[; ;main.c: 910:                                 pExpOS = (3 * pExpOS + pTmp) / 4;
+[e = _pExpOS -> / + * -> 3 `i -> _pExpOS `i -> _pTmp `i -> 4 `i `s ]
+"912
+[; ;main.c: 912:                                 aCaptRstFlt(Flt2PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 5 ]
+"913
+[; ;main.c: 913:                                 aCaptRstFlt(Flt3PSensor);
+[e ( _aCaptRstFlt (1 . `E16733 6 ]
+"914
+[; ;main.c: 914:                                 OSCheck = 0;
+[e = _OSCheck -> -> 0 `i `a ]
+"915
+[; ;main.c: 915:                                 printf ("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pAvgUShort) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , (. :s 43C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pAvgUShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"916
+[; ;main.c: 916:                             }
+}
+[e :U 2419 ]
+"917
+[; ;main.c: 917:                         } else {
+}
+[e $U 2420  ]
+[e :U 2418 ]
+{
+"921
+[; ;main.c: 921:                             aCaptGetResult(Flt2PSensor, &bdP1);
+[e ( _aCaptGetResult (2 , . `E16733 5 &U _bdP1 ]
+"922
+[; ;main.c: 922:                             aCaptGetResult(Flt3PSensor, &bdP2);
+[e ( _aCaptGetResult (2 , . `E16733 6 &U _bdP2 ]
+"923
+[; ;main.c: 923:                             if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*0.5)) < bdP2) || (keyPeek() == 4)) {
+[e $ ! || < + -> -> _bdP1 `i `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .0.5 -> -> _bdP2 `i `d == -> ( _keyPeek ..  `i -> 4 `i 2421  ]
 {
 "925
-[; ;main.c: 925:                 aCaptGetResult(MainPSensor, &pInst);
-[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
+[; ;main.c: 925:                                 printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , , (. :s 44C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
 "926
-[; ;main.c: 926:                 aCaptGetResult(Flt1PSensor, &pAvgShort);
-[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
+[; ;main.c: 926:                                 LATDbits.LATD6 = 1;
+[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
 "927
-[; ;main.c: 927:                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
+[; ;main.c: 927:                                 rCycleTime = timeGet();
+[e = _rCycleTime ( _timeGet ..  ]
 "928
-[; ;main.c: 928:                 printf ("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d OS %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV3ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-[e ( _printf , , , , , , , (. :s 45C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i - -> _pInst `i -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i -> _rSV3ValveDelay `ui / * -> 10 `i -> _pPlateau `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pExpOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+[; ;main.c: 928:                                 break;
+[e $U 2402  ]
+"929
+[; ;main.c: 929:                             }
+}
+[e :U 2421 ]
+"932
+[; ;main.c: 932:                             if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (bdP1 < (intPEEP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
+[e $ ! && != -> ( _timeElapsed (2 , _rValveAcuationTstamp -> / * -> -> 32 `i `ui -> _rSV2ValveDelay `ui -> -> 16 `i `ui `us `i -> 0 `i < -> -> _bdP1 `i `d - -> -> _intPEEP `ui `d * -> -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i `d .2.5 2422  ]
+{
+"933
+[; ;main.c: 933:                                 LATAbits.LATA2 = 1;
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+"934
+[; ;main.c: 934:                                 rSubCycleTime = timeGet();
+[e = _rSubCycleTime ( _timeGet ..  ]
+"935
+[; ;main.c: 935:                                 printf ("PE VO T %d - Pi %d\n", timeDiff(rValveDelayStart, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * bdP1) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , (. :s 45C -> ( _timeDiff (2 , _rValveDelayStart _rSubCycleTime `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _bdP1 `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
 "936
-[; ;main.c: 936:             }
+[; ;main.c: 936:                             }
 }
-[e :U 2416 ]
+[e :U 2422 ]
+"937
+[; ;main.c: 937:                         }
+}
+[e :U 2420 ]
 "938
-[; ;main.c: 938:         }
+[; ;main.c: 938:                     }
 }
-[e :U 2393 ]
-[e $U 2394  ]
-[e :U 2395 ]
+[e :U 2417 ]
+[e :U 2416 ]
 "939
-[; ;main.c: 939:     }
+[; ;main.c: 939:                 }
 }
-[e :U 2365 ]
-[e $U 2366  ]
-[e :U 2367 ]
-"940
-[; ;main.c: 940: }
-[e :UE 2346 ]
+[e :U 2413 ]
+"941
+[; ;main.c: 941:                 screenMng();
+[e ( _screenMng ..  ]
+"942
+[; ;main.c: 942:                 MenuMng();
+[e ( _MenuMng ..  ]
+"943
+[; ;main.c: 943:             }
+}
+[e :U 2404 ]
+"945
+[; ;main.c: 945:             if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+[e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2423  ]
+{
+"946
+[; ;main.c: 946:                 aCaptGetResult(MainPSensor, &pInst);
+[e ( _aCaptGetResult (2 , . `E16733 0 &U _pInst ]
+"947
+[; ;main.c: 947:                 aCaptGetResult(Flt1PSensor, &pAvgShort);
+[e ( _aCaptGetResult (2 , . `E16733 4 &U _pAvgShort ]
+"948
+[; ;main.c: 948:                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
+[e = _pNext ( _rPressurePredict (3 , , _rSV2ValveDelay _pInst _pAvgShort ]
+"949
+[; ;main.c: 949:                 printf ("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d OS %d\n", timeDiff(rValveDelayStart, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV3ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _printf , , , , , , , (. :s 46C -> ( _timeDiff (2 , _rValveDelayStart ( _timeGet ..  `ui / * -> 10 `i -> _pInst `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pNext `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i - -> _pInst `i -> _pAvgShort `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i -> _rSV3ValveDelay `ui / * -> 10 `i -> _pPlateau `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i / * -> 10 `i -> _pExpOS `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i ]
+"957
+[; ;main.c: 957:             }
+}
+[e :U 2423 ]
+"959
+[; ;main.c: 959:         }
+}
+[e :U 2400 ]
+[e $U 2401  ]
+[e :U 2402 ]
+"960
+[; ;main.c: 960:     }
+}
+[e :U 2372 ]
+[e $U 2373  ]
+[e :U 2374 ]
+"961
+[; ;main.c: 961: }
+[e :UE 2353 ]
 }
 [p f _printf 9437824 ]
 [p f _sprintf 8421505 ]
@@ -4606,38 +4676,39 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 14C 86 68 68 32 79 79 76 58 32 37 32 51 100 32 109 86 0 ]
 [a 2C 69 77 69 82 71 46 82 69 83 80 73 82 65 84 79 82 0 ]
 [a 17C 67 65 76 32 80 82 69 83 83 32 66 82 69 65 84 72 0 ]
-[a 27C 70 76 79 87 58 32 37 32 51 100 32 76 47 109 105 110 32 0 ]
+[a 28C 70 76 79 87 58 32 37 32 51 100 32 76 47 109 105 110 32 0 ]
 [a 20C 77 83 58 32 37 32 51 100 32 65 83 58 32 37 32 51 100 32 0 ]
 [a 23C 67 65 76 32 69 82 82 79 82 46 32 82 69 84 82 89 32 0 ]
-[a 32C 66 82 69 65 84 72 32 84 79 32 83 84 65 82 84 32 0 ]
-[a 31C 80 82 69 83 83 32 45 32 84 79 32 69 88 73 84 32 0 ]
-[a 30C 80 82 69 83 83 32 43 32 84 79 32 82 69 80 69 65 84 32 0 ]
+[a 33C 66 82 69 65 84 72 32 84 79 32 83 84 65 82 84 32 0 ]
+[a 32C 80 82 69 83 83 32 45 32 84 79 32 69 88 73 84 32 0 ]
+[a 31C 80 82 69 83 83 32 43 32 84 79 32 82 69 80 69 65 84 32 0 ]
 [a 13C 73 78 84 69 82 78 65 76 32 69 82 82 79 82 32 32 0 ]
 [a 15C 73 78 84 69 82 78 65 76 32 69 82 82 79 82 32 32 0 ]
 [a 3C 32 32 67 79 78 84 82 79 76 76 69 82 32 32 32 0 ]
-[a 29C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
-[a 28C 70 76 79 87 32 84 79 79 32 76 79 87 32 32 32 32 0 ]
+[a 27C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
+[a 30C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
+[a 29C 70 76 79 87 32 84 79 79 32 76 79 87 32 32 32 32 0 ]
 [a 9C 65 73 82 87 65 89 32 79 80 69 78 32 32 32 32 32 0 ]
 [a 8C 83 69 76 70 45 84 69 83 84 46 32 32 32 32 32 32 0 ]
 [a 16C 86 68 68 32 78 79 73 83 89 32 32 32 32 32 32 32 0 ]
 [a 26C 70 76 79 87 32 82 65 84 69 32 32 32 32 32 32 32 32 0 ]
-[a 34C 80 73 73 32 101 110 100 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 110 32 37 100 10 0 ]
-[a 37C 80 73 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
-[a 36C 80 73 79 83 69 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
-[a 44C 80 69 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
-[a 35C 80 73 32 86 67 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
-[a 41C 80 69 32 86 67 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
-[a 45C 80 69 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 110 32 37 100 32 80 100 32 37 100 46 32 82 32 37 100 32 80 101 112 32 37 100 32 79 83 32 37 100 10 0 ]
-[a 40C 80 69 73 32 101 110 100 32 84 32 37 100 32 45 32 80 105 32 37 100 32 79 83 32 37 100 10 0 ]
+[a 35C 80 73 73 32 101 110 100 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 110 32 37 100 10 0 ]
+[a 38C 80 73 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
+[a 37C 80 73 79 83 69 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
+[a 45C 80 69 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
+[a 36C 80 73 32 86 67 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
+[a 42C 80 69 32 86 67 32 84 32 37 100 32 45 32 80 105 32 37 100 10 0 ]
+[a 46C 80 69 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 110 32 37 100 32 80 100 32 37 100 46 32 82 32 37 100 32 80 101 112 32 37 100 32 79 83 32 37 100 10 0 ]
+[a 41C 80 69 73 32 101 110 100 32 84 32 37 100 32 45 32 80 105 32 37 100 32 79 83 32 37 100 10 0 ]
 [a 12C 86 68 68 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 22C 65 85 88 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 25C 65 85 88 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 21C 77 65 73 78 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 24C 77 65 73 78 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 10C 86 68 68 32 37 100 10 0 ]
-[a 42C 80 69 32 79 83 67 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 48 32 37 100 10 0 ]
-[a 43C 66 68 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 53 48 32 37 100 32 80 50 48 48 48 32 37 100 10 0 ]
+[a 43C 80 69 32 79 83 67 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 48 32 37 100 10 0 ]
+[a 44C 66 68 32 86 79 32 84 32 37 100 32 45 32 80 105 32 37 100 32 80 53 48 32 37 100 32 80 50 48 48 48 32 37 100 10 0 ]
 [a 1C 75 69 89 33 32 37 100 10 0 ]
-[a 33C 10 73 80 10 0 ]
-[a 39C 10 69 80 10 0 ]
-[a 38C 80 73 32 84 32 37 100 32 45 32 86 111 108 32 37 100 32 80 105 32 37 100 32 80 110 32 37 100 32 80 100 32 37 100 46 32 82 32 37 100 32 80 105 112 32 37 100 32 79 83 32 37 100 46 10 0 ]
+[a 34C 10 73 80 10 0 ]
+[a 40C 10 69 80 10 0 ]
+[a 39C 80 73 32 84 32 37 100 32 45 32 86 111 108 32 37 100 32 80 105 32 37 100 32 80 110 32 37 100 32 80 100 32 37 100 46 32 82 32 37 100 32 80 105 112 32 37 100 32 79 83 32 37 100 46 10 0 ]

@@ -28273,13 +28273,14 @@ _Bool InitProcedure(void) {
         printstrblock("CAL PRESS BREATH");
         tstamp = timeGet();
         lcdBLight = 1;
-        tstamp = timeGet();
 
 
         while (keyPeek() != -1)
             ;
         keyRead();
+        keyReadEC();
 
+        tstamp = timeGet();
         while (1) {
             if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
                 setBacklight(lcdBLight);
@@ -28372,33 +28373,53 @@ _Bool InitProcedure(void) {
     setCursor(0, 0);
     printstrblock("FLOW RATE        ");
 
+
+    aPValMin = 4096;
+    aPValMax = 0;
+
     LATAbits.LATA2 = 1;
     LATAbits.LATA3 = 1;
     timeDelayMs(250);
     vMeasureRst();
-    timeDelayMs(250);
+    tstamp = timeGet();
+    while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+        aCaptGetResult(AuxPSensor, &aPVal);
+        if (aPVal > aPValMax) {
+            aPValMax = aPVal;
+        }
+        if (aPVal < aPValMin) {
+            aPValMin = aPVal;
+        }
+    }
 
     openFlowRate = vMeasureGet()<<2;
     LATAbits.LATA2 = 0;
     LATAbits.LATA3 = 0;
 
-    sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
-    setCursor(0, 0);
-    printstrblock(lcdTopRow);
-    timeDelayMs(4000);
-
-    if (openFlowRate < 200) {
-
-        setCursor(0, 0);
-        printstrblock("FLOW TOO LOW    ");
-        timeDelayMs(1000);
-        initOk = 0;
-    } else if (openFlowRate > 2500) {
+    if (((aPValMean<<1) + aPValMax+aPValMin)>= (0.95*8192)) {
 
         setCursor(0, 0);
         printstrblock("FLOW TOO HIGH   ");
         timeDelayMs(1000);
-        initOk = 0;
+    } else {
+        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(4000);
+
+        if (openFlowRate < 200) {
+
+            setCursor(0, 0);
+            printstrblock("FLOW TOO LOW    ");
+            timeDelayMs(1000);
+            initOk = 0;
+        } else if (openFlowRate > 2500) {
+
+            setCursor(0, 0);
+            printstrblock("FLOW TOO HIGH   ");
+            timeDelayMs(1000);
+            initOk = 0;
+        }
     }
 
 
@@ -28500,7 +28521,7 @@ void main(void) {
             }
         }
     }
-# 674 "main.c"
+# 695 "main.c"
     while (1) {
 
 
@@ -28622,7 +28643,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rValveDelayStart, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 803 "main.c"
+# 824 "main.c"
             }
 
         }

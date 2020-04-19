@@ -388,13 +388,14 @@ bool InitProcedure(void) {
         printstrblock("CAL PRESS BREATH");
         tstamp = timeGet();
         lcdBLight = true;
-        tstamp = timeGet();
 
         // First, ensure no key pressed.
         while (keyPeek() != -1)
             ;
         keyRead();
+        keyReadEC();
 
+        tstamp = timeGet();
         while (1) {
             if (timeElapsedR(&tstamp, TIME_MS(500))) {
                 setBacklight(lcdBLight);
@@ -487,33 +488,53 @@ bool InitProcedure(void) {
     setCursor(0, 0);
     printstrblock("FLOW RATE        ");
 
+
+    aPValMin = 4096;
+    aPValMax = 0;
+
     OPEN_SV2;
     OPEN_SV3;
     timeDelayMs(250);
     vMeasureRst();
-    timeDelayMs(250);
+    tstamp = timeGet();
+    while (!timeElapsedR(&tstamp, TIME_MS(250))) {
+        aCaptGetResult(AuxPSensor, &aPVal);
+        if (aPVal > aPValMax) {
+            aPValMax = aPVal;
+        }
+        if (aPVal < aPValMin) {
+            aPValMin = aPVal;
+        }
+    }
     // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
     openFlowRate = vMeasureGet()<<2;
     CLOSE_SV2;
     CLOSE_SV3;
 
-    sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
-    setCursor(0, 0);
-    printstrblock(lcdTopRow);
-    timeDelayMs(4000);
-
-    if (openFlowRate < 200) {
-        // Outside limits.
-        setCursor(0, 0);
-        printstrblock("FLOW TOO LOW    ");
-        timeDelayMs(1000);
-        initOk = false;
-    } else if (openFlowRate > 2500) {
-        // Outside limits.
+    if (((aPValMean<<1) + aPValMax+aPValMin)>= (0.95*8192)) {
+        // Flow sensor almost saturated. Flow too high.
         setCursor(0, 0);
         printstrblock("FLOW TOO HIGH   ");
         timeDelayMs(1000);
-        initOk = false;
+    } else {
+        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(4000);
+
+        if (openFlowRate < 200) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO LOW    ");
+            timeDelayMs(1000);
+            initOk = false;
+        } else if (openFlowRate > 2500) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO HIGH   ");
+            timeDelayMs(1000);
+            initOk = false;
+        }
     }
     
     // Wait until key depressed.
