@@ -140,6 +140,9 @@ void MonitorMsgForcedSend (monStateT state){
     // Assemble message for monitor and sent it.
     // Ensure previous message was sent.
     trfError = I2C1_Close();
+    
+    DEBUG_PRINT(("I2C1 %d", trfError));
+
     if (trfError == I2C1_FAIL) {
         // Enable buzzer and display error message on second line.
         sprintf(lcdBtnRow, "        M. ERROR");
@@ -482,6 +485,8 @@ bool InitProcedure(void) {
         }
     }
     
+    // TODO: Check flow is 0 with valves closed.
+    
     // Wait until key depressed.
     while (keyPeek() != -1)
         ;
@@ -686,7 +691,10 @@ void main(void) {
                 // Goto next.
                 if (initialSubState){
                     // IP not reached.
-                    MonitorErrorSet(MON_IPE);
+                    MonitorErrorSet(MON_IPE);                    
+                }
+                if (OSCheck) {
+                    pInspOS = (3*pInspOS)>>2;
                 }
                 break;
             } else {
@@ -847,6 +855,9 @@ void main(void) {
                 if (initialSubState){
                     // IP not reached.
                     MonitorErrorSet(MON_EPE);
+                }
+                if (OSCheck) {
+                    pExpOS = (3*pExpOS)>>2;
                 }
                 break;
             } else {

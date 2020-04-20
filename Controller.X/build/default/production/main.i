@@ -28119,6 +28119,9 @@ void MonitorMsgForcedSend (monStateT state){
 
 
     trfError = I2C1_Close();
+
+    printf ("I2C1 %d", trfError);
+
     if (trfError == I2C1_FAIL) {
 
         sprintf(lcdBtnRow, "        M. ERROR");
@@ -28570,7 +28573,7 @@ void main(void) {
     } else {
         MonitorMsgForcedSend(MONSTATE_RUNV);
     }
-# 651 "main.c"
+# 654 "main.c"
     rCycleTime = timeGet();
 
     while (1) {
@@ -28610,6 +28613,9 @@ void main(void) {
                 if (initialSubState){
 
                     MonitorErrorSet(MON_IPE);
+                }
+                if (OSCheck) {
+                    pInspOS = (3*pInspOS)>>2;
                 }
                 break;
             } else {
@@ -28722,7 +28728,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 810 "main.c"
+# 816 "main.c"
             }
 
         }
@@ -28763,6 +28769,9 @@ void main(void) {
                 if (initialSubState){
 
                     MonitorErrorSet(MON_EPE);
+                }
+                if (OSCheck) {
+                    pExpOS = (3*pExpOS)>>2;
                 }
                 break;
             } else {
