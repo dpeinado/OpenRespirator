@@ -76,7 +76,7 @@ void PIN_MANAGER_Initialize(void)
     ANSELx registers
     */
     ANSELD = 0x00;
-    ANSELC = 0xFE;
+    ANSELC = 0x0E;
     ANSELB = 0xF9;
     ANSELE = 0x07;
     ANSELA = 0xFB;
@@ -88,7 +88,7 @@ void PIN_MANAGER_Initialize(void)
     WPUE = 0x00;
     WPUB = 0x00;
     WPUA = 0x00;
-    WPUC = 0x00;
+    WPUC = 0xF0;
 
     /**
     RxyI2C registers
@@ -106,7 +106,7 @@ void PIN_MANAGER_Initialize(void)
     ODCONE = 0x00;
     ODCONA = 0x00;
     ODCONB = 0x06;
-    ODCONC = 0x18;
+    ODCONC = 0x08;
     ODCOND = 0x00;
 
     /**

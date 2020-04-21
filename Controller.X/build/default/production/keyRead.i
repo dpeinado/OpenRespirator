@@ -7,13 +7,7 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "keyRead.c" 2
-
-
-
-
-
-
-
+# 10 "keyRead.c"
 # 1 "./time.h" 1
 # 15 "./time.h"
 # 1 "./mcc_generated_files/mcc.h" 1
@@ -27040,9 +27034,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 466 "./mcc_generated_files/pin_manager.h"
+# 546 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 478 "./mcc_generated_files/pin_manager.h"
+# 558 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27823,7 +27817,7 @@ time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 void timeDelayMs(time_t delms);
-# 8 "keyRead.c" 2
+# 10 "keyRead.c" 2
 
 # 1 "./keyRead.h" 1
 # 19 "./keyRead.h"
@@ -27835,19 +27829,23 @@ int8_t keyPeek(void);
 int8_t keyReadEC();
 
 int8_t keyRead();
-# 9 "keyRead.c" 2
+# 11 "keyRead.c" 2
 
 
 
 
 
 
-int8_t keys[6] = {1,2,3,4,5,7};
+int8_t keysD[6] = {1,2,3,4,5,7};
+int8_t keysC[4] = {4,5,6,7};
 int8_t lastkey, lastkeyEC;
 time_t pressMills;
 
-uint8_t digitalRead(uint8_t pin){
+uint8_t digitalReadD(uint8_t pin){
     return (PORTD&(1<<pin))!= 0;
+}
+uint8_t digitalReadC(uint8_t pin){
+    return (PORTC&(1<<pin))!= 0;
 }
 
 void keyReadInit(void){
@@ -27859,8 +27857,13 @@ void keyReadInit(void){
 
 int8_t keyPeek(void) {
     for (int8_t n = 0; n < 6; n++) {
-        if (digitalRead(keys[n]) != 1) {
+        if (digitalReadD(keysD[n]) != 1) {
             return n;
+        }
+    }
+    for (int8_t n = 0; n < 4; n++) {
+        if (digitalReadC(keysC[n]) != 1) {
+            return n+6;
         }
     }
     return -1;

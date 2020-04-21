@@ -27040,9 +27040,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 466 "./mcc_generated_files/pin_manager.h"
+# 546 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 478 "./mcc_generated_files/pin_manager.h"
+# 558 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27957,6 +27957,10 @@ void MenuMng(void) {
 
                     IP = menuVal;
                     chIP = 1;
+                    if (VentMode == 1) {
+                        VentMode = 0;
+                        chVentMode = 1;
+                    }
                     menuStatus = CFG_IDLE;
                 } else {
 
@@ -28017,7 +28021,7 @@ void MenuMng(void) {
             case 7:
                 if (menuStatus == CFG_IDLE) {
                     menuStatus = CFG_MAXV;
-                    menuVal = MaxP;
+                    menuVal = MaxV;
                     menuTstamp = timeGet();
                     if ((MaxP != IP) && (VentMode == 0)) {
 
@@ -28032,10 +28036,6 @@ void MenuMng(void) {
                     if (VentMode == 0) {
                         VentMode = 1;
                         chVentMode = 1;
-
-
-                        MaxP = IP;
-                        chMaxP = 1;
                     }
                     menuStatus = CFG_IDLE;
                 } else {
@@ -28183,28 +28183,28 @@ void screenMng(void) {
         lcdPrintTR = 0;
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
             if (VentMode == 0) {
-                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, IP);
+                sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", BPM, PEEP, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, MaxV);
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == 0) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", menuVal, PEEP, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, MaxV);
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == 0) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- 2d % 3d", BPM, menuVal, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, MaxV);
             }
         } else if (menuStatus == CFG_IP) {
             sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
         } else if (menuStatus == CFG_MAXP) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d % 3d", BPM, PEEP, menuVal, MaxV);
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, MaxV);
         } else if (menuStatus == CFG_MAXV) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d % 3d", BPM, PEEP, MaxP, menuVal);
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, menuVal);
         }
 
         printf (lcdTopRow);
@@ -28245,6 +28245,12 @@ void screenMng(void) {
                 break;
             case CFG_IP:
                 setCursor(8, 0);
+                break;
+            case CFG_MAXP:
+                setCursor(11, 0);
+                break;
+            case CFG_MAXV:
+                setCursor(15, 0);
                 break;
             default:
 

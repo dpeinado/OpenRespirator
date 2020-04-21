@@ -3,7 +3,9 @@
 #define ESCAPE_TIME 2000
 #endif
 
-#define KEYN 6
+#define KEYN 10
+#define KEYDN 6
+#define KEYCN 4
 
 #include "time.h"
 #include "keyRead.h"
@@ -12,12 +14,16 @@
  // AND is not using a buffer either!
 
 // Pins of portd.
-int8_t keys[KEYN] = {1,2,3,4,5,7};
+int8_t keysD[6] = {1,2,3,4,5,7};
+int8_t keysC[4] = {4,5,6,7};
 int8_t lastkey, lastkeyEC;
 time_t pressMills;
 
-uint8_t digitalRead(uint8_t pin){
+uint8_t digitalReadD(uint8_t pin){
     return (PORTD&(1<<pin))!= 0;
+}
+uint8_t digitalReadC(uint8_t pin){
+    return (PORTC&(1<<pin))!= 0;
 }
 
 void keyReadInit(void){
@@ -28,9 +34,14 @@ void keyReadInit(void){
 };
 
 int8_t keyPeek(void) {
-    for (int8_t n = 0; n < KEYN; n++) {
-        if (digitalRead(keys[n]) != 1) {
+    for (int8_t n = 0; n < KEYDN; n++) {
+        if (digitalReadD(keysD[n]) != 1) {
             return n;
+        }
+    }
+    for (int8_t n = 0; n < KEYCN; n++) {
+        if (digitalReadC(keysC[n]) != 1) {
+            return n+KEYDN;
         }
     }
     return -1;

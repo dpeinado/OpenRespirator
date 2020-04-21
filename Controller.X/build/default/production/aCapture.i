@@ -27225,9 +27225,9 @@ void aCaptRstFlt(aSrcTyp sel);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 466 "./mcc_generated_files/pin_manager.h"
+# 546 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 478 "./mcc_generated_files/pin_manager.h"
+# 558 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
