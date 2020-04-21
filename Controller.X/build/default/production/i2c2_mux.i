@@ -27856,6 +27856,8 @@ i2c2_error_t lastI2C2LAckResponse;
 
 
 void I2C2_NAckCallback(void){
+    printf ("NACK %d\n", currentTrfAddr);
+
     if (currentTrfAddr == 0x50){
         lastI2C2MAckResponse = 0;
     } else {
@@ -27870,6 +27872,7 @@ void I2C2_MuxInit(void){
     lastI2C2LTrfResponse = I2C2_NOERR;
     currentTrfAddr = 0x0;
     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+    I2C2_SetAddressNackCallback(I2C2_NAckCallback, ((void*)0));
 }
 
 _Bool I2C2_MAck(void){

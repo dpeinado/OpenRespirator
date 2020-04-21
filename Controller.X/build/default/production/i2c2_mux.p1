@@ -5,8 +5,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;i2c2_mux.c: 6: i2c2_error_t lastI2C2MTrfResponse;
 [c E16385 0 1 2 .. ]
 [n E16385 . I2C2_NOERR I2C2_BUSY I2C2_FAIL  ]
-"26
-[; ;i2c2_mux.c: 26:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+"111 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\c99\stdio.h
+[v _printf `(i ~T0 @X0 0 ev`*Cuc ]
+"28 i2c2_mux.c
+[; ;i2c2_mux.c: 28:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
 [c E16390 1 2 3 4 5 .. ]
 [n E16390 . I2C2_STOP I2C2_RESTART_READ I2C2_RESTART_WRITE I2C2_CONTINUE I2C2_RESET_LINK  ]
 [v F16444 `(E16390 ~T0 @X0 0 tf1`*v ]
@@ -14,6 +16,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;./mcc_generated_files/i2c2_master.h: 194: void I2C2_SetDataNackCallback(i2c2_callback_t cb, void *ptr);
 [v _I2C2_SetDataNackCallback `(v ~T0 @X0 0 ef2`*F16444`*v ]
 [v F16698 `(E16390 ~T0 @X0 0 tf1`*v ]
+[v F16437 `(E16390 ~T0 @X0 0 tf1`*v ]
+"184
+[; ;./mcc_generated_files/i2c2_master.h: 184: void I2C2_SetAddressNackCallback(i2c2_callback_t cb, void *ptr);
+[v _I2C2_SetAddressNackCallback `(v ~T0 @X0 0 ef2`*F16437`*v ]
+[v F16701 `(E16390 ~T0 @X0 0 tf1`*v ]
 "101
 [; ;./mcc_generated_files/i2c2_master.h: 101: i2c2_error_t I2C2_Open(i2c2_address_t address);
 [v _I2C2_Open `(E16385 ~T0 @X0 0 ef1`uc ]
@@ -2280,302 +2287,310 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _I2C2_NAckCallback ]
 [f ]
 "13
-[; ;i2c2_mux.c: 13:     if (currentTrfAddr == 0x50){
+[; ;i2c2_mux.c: 13:     printf ("NACK %d\n", currentTrfAddr);
+[e ( _printf , (. :s 1C -> _currentTrfAddr `i ]
+"15
+[; ;i2c2_mux.c: 15:     if (currentTrfAddr == 0x50){
 [e $ ! == -> _currentTrfAddr `i -> 80 `i 2234  ]
 {
-"14
-[; ;i2c2_mux.c: 14:         lastI2C2MAckResponse = 0;
+"16
+[; ;i2c2_mux.c: 16:         lastI2C2MAckResponse = 0;
 [e = _lastI2C2MAckResponse -> -> 0 `i `E16385 ]
-"15
-[; ;i2c2_mux.c: 15:     } else {
+"17
+[; ;i2c2_mux.c: 17:     } else {
 }
 [e $U 2235  ]
 [e :U 2234 ]
 {
-"16
-[; ;i2c2_mux.c: 16:         lastI2C2LAckResponse = 0;
+"18
+[; ;i2c2_mux.c: 18:         lastI2C2LAckResponse = 0;
 [e = _lastI2C2LAckResponse -> -> 0 `i `E16385 ]
-"17
-[; ;i2c2_mux.c: 17:     }
+"19
+[; ;i2c2_mux.c: 19:     }
 }
 [e :U 2235 ]
-"18
-[; ;i2c2_mux.c: 18: }
+"20
+[; ;i2c2_mux.c: 20: }
 [e :UE 2233 ]
 }
-"20
-[; ;i2c2_mux.c: 20: void I2C2_MuxInit(void){
+"22
+[; ;i2c2_mux.c: 22: void I2C2_MuxInit(void){
 [v _I2C2_MuxInit `(v ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_MuxInit ]
 [f ]
-"21
-[; ;i2c2_mux.c: 21:     lastI2C2MAckResponse = 1;
-[e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
-"22
-[; ;i2c2_mux.c: 22:     lastI2C2LAckResponse = 1;
-[e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
 "23
-[; ;i2c2_mux.c: 23:     lastI2C2MTrfResponse = I2C2_NOERR;
-[e = _lastI2C2MTrfResponse . `E16385 0 ]
+[; ;i2c2_mux.c: 23:     lastI2C2MAckResponse = 1;
+[e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
 "24
-[; ;i2c2_mux.c: 24:     lastI2C2LTrfResponse = I2C2_NOERR;
-[e = _lastI2C2LTrfResponse . `E16385 0 ]
+[; ;i2c2_mux.c: 24:     lastI2C2LAckResponse = 1;
+[e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
 "25
-[; ;i2c2_mux.c: 25:     currentTrfAddr = 0x0;
-[e = _currentTrfAddr -> -> 0 `i `uc ]
+[; ;i2c2_mux.c: 25:     lastI2C2MTrfResponse = I2C2_NOERR;
+[e = _lastI2C2MTrfResponse . `E16385 0 ]
 "26
-[; ;i2c2_mux.c: 26:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
-[e ( _I2C2_SetDataNackCallback (2 , -> &U _I2C2_NAckCallback `*F16698 -> -> 0 `i `*v ]
+[; ;i2c2_mux.c: 26:     lastI2C2LTrfResponse = I2C2_NOERR;
+[e = _lastI2C2LTrfResponse . `E16385 0 ]
 "27
-[; ;i2c2_mux.c: 27: }
+[; ;i2c2_mux.c: 27:     currentTrfAddr = 0x0;
+[e = _currentTrfAddr -> -> 0 `i `uc ]
+"28
+[; ;i2c2_mux.c: 28:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+[e ( _I2C2_SetDataNackCallback (2 , -> &U _I2C2_NAckCallback `*F16698 -> -> 0 `i `*v ]
+"29
+[; ;i2c2_mux.c: 29:     I2C2_SetAddressNackCallback(I2C2_NAckCallback, ((void*)0));
+[e ( _I2C2_SetAddressNackCallback (2 , -> &U _I2C2_NAckCallback `*F16701 -> -> 0 `i `*v ]
+"30
+[; ;i2c2_mux.c: 30: }
 [e :UE 2236 ]
 }
-"29
-[; ;i2c2_mux.c: 29: _Bool I2C2_MAck(void){
+"32
+[; ;i2c2_mux.c: 32: _Bool I2C2_MAck(void){
 [v _I2C2_MAck `(a ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_MAck ]
 [f ]
-"30
-[; ;i2c2_mux.c: 30:     return lastI2C2MAckResponse;
+"33
+[; ;i2c2_mux.c: 33:     return lastI2C2MAckResponse;
 [e ) -> _lastI2C2MAckResponse `a ]
 [e $UE 2237  ]
-"31
-[; ;i2c2_mux.c: 31: }
+"34
+[; ;i2c2_mux.c: 34: }
 [e :UE 2237 ]
 }
-"32
-[; ;i2c2_mux.c: 32: _Bool I2C2_LAck(void){
+"35
+[; ;i2c2_mux.c: 35: _Bool I2C2_LAck(void){
 [v _I2C2_LAck `(a ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_LAck ]
 [f ]
-"33
-[; ;i2c2_mux.c: 33:     return lastI2C2LAckResponse;
+"36
+[; ;i2c2_mux.c: 36:     return lastI2C2LAckResponse;
 [e ) -> _lastI2C2LAckResponse `a ]
 [e $UE 2238  ]
-"34
-[; ;i2c2_mux.c: 34: }
+"37
+[; ;i2c2_mux.c: 37: }
 [e :UE 2238 ]
 }
-"37
-[; ;i2c2_mux.c: 37: i2c2_error_t I2C2_MOpen(void){
+"40
+[; ;i2c2_mux.c: 40: i2c2_error_t I2C2_MOpen(void){
 [v _I2C2_MOpen `(E16385 ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_MOpen ]
 [f ]
-"38
-[; ;i2c2_mux.c: 38:     i2c2_error_t trfRsp;
-[v _trfRsp `E16385 ~T0 @X0 1 a ]
-"40
-[; ;i2c2_mux.c: 40:     trfRsp = I2C2_Open(0x50);
-[e = _trfRsp ( _I2C2_Open (1 -> -> 80 `i `uc ]
 "41
-[; ;i2c2_mux.c: 41:     if (trfRsp != I2C2_BUSY) {
+[; ;i2c2_mux.c: 41:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"43
+[; ;i2c2_mux.c: 43:     trfRsp = I2C2_Open(0x50);
+[e = _trfRsp ( _I2C2_Open (1 -> -> 80 `i `uc ]
+"44
+[; ;i2c2_mux.c: 44:     if (trfRsp != I2C2_BUSY) {
 [e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2240  ]
 {
-"42
-[; ;i2c2_mux.c: 42:         lastI2C2MAckResponse = 1;
+"45
+[; ;i2c2_mux.c: 45:         lastI2C2MAckResponse = 1;
 [e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
-"44
-[; ;i2c2_mux.c: 44:         if (currentTrfAddr == 0x50){
+"47
+[; ;i2c2_mux.c: 47:         if (currentTrfAddr == 0x50){
 [e $ ! == -> _currentTrfAddr `i -> 80 `i 2241  ]
 {
-"45
-[; ;i2c2_mux.c: 45:             lastI2C2MTrfResponse = trfRsp;
+"48
+[; ;i2c2_mux.c: 48:             lastI2C2MTrfResponse = trfRsp;
 [e = _lastI2C2MTrfResponse _trfRsp ]
-"46
-[; ;i2c2_mux.c: 46:         } else {
+"49
+[; ;i2c2_mux.c: 49:         } else {
 }
 [e $U 2242  ]
 [e :U 2241 ]
 {
-"47
-[; ;i2c2_mux.c: 47:             lastI2C2LTrfResponse = trfRsp;
+"50
+[; ;i2c2_mux.c: 50:             lastI2C2LTrfResponse = trfRsp;
 [e = _lastI2C2LTrfResponse _trfRsp ]
-"48
-[; ;i2c2_mux.c: 48:         }
+"51
+[; ;i2c2_mux.c: 51:         }
 }
 [e :U 2242 ]
-"49
-[; ;i2c2_mux.c: 49:         currentTrfAddr = 0x50;
+"52
+[; ;i2c2_mux.c: 52:         currentTrfAddr = 0x50;
 [e = _currentTrfAddr -> -> 80 `i `uc ]
-"51
-[; ;i2c2_mux.c: 51:         return lastI2C2MTrfResponse;
+"54
+[; ;i2c2_mux.c: 54:         return lastI2C2MTrfResponse;
 [e ) _lastI2C2MTrfResponse ]
 [e $UE 2239  ]
-"52
-[; ;i2c2_mux.c: 52:     }
+"55
+[; ;i2c2_mux.c: 55:     }
 }
 [e :U 2240 ]
-"53
-[; ;i2c2_mux.c: 53:     return I2C2_BUSY;
+"56
+[; ;i2c2_mux.c: 56:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
 [e $UE 2239  ]
-"54
-[; ;i2c2_mux.c: 54: }
+"57
+[; ;i2c2_mux.c: 57: }
 [e :UE 2239 ]
 }
-"56
-[; ;i2c2_mux.c: 56: i2c2_error_t I2C2_LOpen(void){
+"59
+[; ;i2c2_mux.c: 59: i2c2_error_t I2C2_LOpen(void){
 [v _I2C2_LOpen `(E16385 ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_LOpen ]
 [f ]
-"57
-[; ;i2c2_mux.c: 57:     i2c2_error_t trfRsp;
-[v _trfRsp `E16385 ~T0 @X0 1 a ]
-"59
-[; ;i2c2_mux.c: 59:     trfRsp = I2C2_Open(0x27);
-[e = _trfRsp ( _I2C2_Open (1 -> -> 39 `i `uc ]
 "60
-[; ;i2c2_mux.c: 60:     if (trfRsp != I2C2_BUSY) {
+[; ;i2c2_mux.c: 60:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"62
+[; ;i2c2_mux.c: 62:     trfRsp = I2C2_Open(0x27);
+[e = _trfRsp ( _I2C2_Open (1 -> -> 39 `i `uc ]
+"63
+[; ;i2c2_mux.c: 63:     if (trfRsp != I2C2_BUSY) {
 [e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2244  ]
 {
-"61
-[; ;i2c2_mux.c: 61:         lastI2C2LAckResponse = 1;
+"64
+[; ;i2c2_mux.c: 64:         lastI2C2LAckResponse = 1;
 [e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
-"63
-[; ;i2c2_mux.c: 63:         if (currentTrfAddr == 0x50){
+"66
+[; ;i2c2_mux.c: 66:         if (currentTrfAddr == 0x50){
 [e $ ! == -> _currentTrfAddr `i -> 80 `i 2245  ]
 {
-"64
-[; ;i2c2_mux.c: 64:             lastI2C2MTrfResponse = trfRsp;
+"67
+[; ;i2c2_mux.c: 67:             lastI2C2MTrfResponse = trfRsp;
 [e = _lastI2C2MTrfResponse _trfRsp ]
-"65
-[; ;i2c2_mux.c: 65:         } else {
+"68
+[; ;i2c2_mux.c: 68:         } else {
 }
 [e $U 2246  ]
 [e :U 2245 ]
 {
-"66
-[; ;i2c2_mux.c: 66:             lastI2C2LTrfResponse = trfRsp;
+"69
+[; ;i2c2_mux.c: 69:             lastI2C2LTrfResponse = trfRsp;
 [e = _lastI2C2LTrfResponse _trfRsp ]
-"67
-[; ;i2c2_mux.c: 67:         }
+"70
+[; ;i2c2_mux.c: 70:         }
 }
 [e :U 2246 ]
-"68
-[; ;i2c2_mux.c: 68:         currentTrfAddr = 0x27;
+"71
+[; ;i2c2_mux.c: 71:         currentTrfAddr = 0x27;
 [e = _currentTrfAddr -> -> 39 `i `uc ]
-"70
-[; ;i2c2_mux.c: 70:         return lastI2C2LTrfResponse;
+"73
+[; ;i2c2_mux.c: 73:         return lastI2C2LTrfResponse;
 [e ) _lastI2C2LTrfResponse ]
 [e $UE 2243  ]
-"71
-[; ;i2c2_mux.c: 71:     }
+"74
+[; ;i2c2_mux.c: 74:     }
 }
 [e :U 2244 ]
-"72
-[; ;i2c2_mux.c: 72:     return I2C2_BUSY;
+"75
+[; ;i2c2_mux.c: 75:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
 [e $UE 2243  ]
-"73
-[; ;i2c2_mux.c: 73: }
+"76
+[; ;i2c2_mux.c: 76: }
 [e :UE 2243 ]
 }
-"75
-[; ;i2c2_mux.c: 75: i2c2_error_t I2C2_MClose(void){
+"78
+[; ;i2c2_mux.c: 78: i2c2_error_t I2C2_MClose(void){
 [v _I2C2_MClose `(E16385 ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_MClose ]
 [f ]
-"76
-[; ;i2c2_mux.c: 76:     i2c2_error_t trfRsp;
-[v _trfRsp `E16385 ~T0 @X0 1 a ]
-"78
-[; ;i2c2_mux.c: 78:     trfRsp = I2C2_Close();
-[e = _trfRsp ( _I2C2_Close ..  ]
 "79
-[; ;i2c2_mux.c: 79:     if (trfRsp != I2C2_BUSY) {
+[; ;i2c2_mux.c: 79:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"81
+[; ;i2c2_mux.c: 81:     trfRsp = I2C2_Close();
+[e = _trfRsp ( _I2C2_Close ..  ]
+"82
+[; ;i2c2_mux.c: 82:     if (trfRsp != I2C2_BUSY) {
 [e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2248  ]
 {
-"81
-[; ;i2c2_mux.c: 81:         if (currentTrfAddr == 0x50){
+"84
+[; ;i2c2_mux.c: 84:         if (currentTrfAddr == 0x50){
 [e $ ! == -> _currentTrfAddr `i -> 80 `i 2249  ]
 {
-"82
-[; ;i2c2_mux.c: 82:             lastI2C2MTrfResponse = trfRsp;
+"85
+[; ;i2c2_mux.c: 85:             lastI2C2MTrfResponse = trfRsp;
 [e = _lastI2C2MTrfResponse _trfRsp ]
-"83
-[; ;i2c2_mux.c: 83:         } else {
+"86
+[; ;i2c2_mux.c: 86:         } else {
 }
 [e $U 2250  ]
 [e :U 2249 ]
 {
-"84
-[; ;i2c2_mux.c: 84:             lastI2C2LTrfResponse = trfRsp;
+"87
+[; ;i2c2_mux.c: 87:             lastI2C2LTrfResponse = trfRsp;
 [e = _lastI2C2LTrfResponse _trfRsp ]
-"85
-[; ;i2c2_mux.c: 85:         }
+"88
+[; ;i2c2_mux.c: 88:         }
 }
 [e :U 2250 ]
-"87
-[; ;i2c2_mux.c: 87:         return lastI2C2MTrfResponse;
+"90
+[; ;i2c2_mux.c: 90:         return lastI2C2MTrfResponse;
 [e ) _lastI2C2MTrfResponse ]
 [e $UE 2247  ]
-"88
-[; ;i2c2_mux.c: 88:     }
+"91
+[; ;i2c2_mux.c: 91:     }
 }
 [e :U 2248 ]
-"89
-[; ;i2c2_mux.c: 89:     return I2C2_BUSY;
+"92
+[; ;i2c2_mux.c: 92:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
 [e $UE 2247  ]
-"90
-[; ;i2c2_mux.c: 90: }
+"93
+[; ;i2c2_mux.c: 93: }
 [e :UE 2247 ]
 }
-"92
-[; ;i2c2_mux.c: 92: i2c2_error_t I2C2_LClose(void){
+"95
+[; ;i2c2_mux.c: 95: i2c2_error_t I2C2_LClose(void){
 [v _I2C2_LClose `(E16385 ~T0 @X0 1 ef ]
 {
 [e :U _I2C2_LClose ]
 [f ]
-"93
-[; ;i2c2_mux.c: 93:     i2c2_error_t trfRsp;
-[v _trfRsp `E16385 ~T0 @X0 1 a ]
-"95
-[; ;i2c2_mux.c: 95:     trfRsp = I2C2_Close();
-[e = _trfRsp ( _I2C2_Close ..  ]
 "96
-[; ;i2c2_mux.c: 96:     if (trfRsp != I2C2_BUSY) {
+[; ;i2c2_mux.c: 96:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"98
+[; ;i2c2_mux.c: 98:     trfRsp = I2C2_Close();
+[e = _trfRsp ( _I2C2_Close ..  ]
+"99
+[; ;i2c2_mux.c: 99:     if (trfRsp != I2C2_BUSY) {
 [e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2252  ]
 {
-"98
-[; ;i2c2_mux.c: 98:         if (currentTrfAddr == 0x50){
+"101
+[; ;i2c2_mux.c: 101:         if (currentTrfAddr == 0x50){
 [e $ ! == -> _currentTrfAddr `i -> 80 `i 2253  ]
 {
-"99
-[; ;i2c2_mux.c: 99:             lastI2C2MTrfResponse = trfRsp;
+"102
+[; ;i2c2_mux.c: 102:             lastI2C2MTrfResponse = trfRsp;
 [e = _lastI2C2MTrfResponse _trfRsp ]
-"100
-[; ;i2c2_mux.c: 100:         } else {
+"103
+[; ;i2c2_mux.c: 103:         } else {
 }
 [e $U 2254  ]
 [e :U 2253 ]
 {
-"101
-[; ;i2c2_mux.c: 101:             lastI2C2LTrfResponse = trfRsp;
+"104
+[; ;i2c2_mux.c: 104:             lastI2C2LTrfResponse = trfRsp;
 [e = _lastI2C2LTrfResponse _trfRsp ]
-"102
-[; ;i2c2_mux.c: 102:         }
+"105
+[; ;i2c2_mux.c: 105:         }
 }
 [e :U 2254 ]
-"104
-[; ;i2c2_mux.c: 104:         return lastI2C2LTrfResponse;
+"107
+[; ;i2c2_mux.c: 107:         return lastI2C2LTrfResponse;
 [e ) _lastI2C2LTrfResponse ]
 [e $UE 2251  ]
-"105
-[; ;i2c2_mux.c: 105:     }
+"108
+[; ;i2c2_mux.c: 108:     }
 }
 [e :U 2252 ]
-"106
-[; ;i2c2_mux.c: 106:     return I2C2_BUSY;
+"109
+[; ;i2c2_mux.c: 109:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
 [e $UE 2251  ]
-"107
-[; ;i2c2_mux.c: 107: }
+"110
+[; ;i2c2_mux.c: 110: }
 [e :UE 2251 ]
 }
+[p f _printf 8388736 ]
+[a 1C 78 65 67 75 32 37 100 10 0 ]
