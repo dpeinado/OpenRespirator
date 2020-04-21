@@ -27952,6 +27952,27 @@ void screenInit(void);
 void screenMng(void);
 # 13 "main.c" 2
 
+# 1 "./i2c2_mux.h" 1
+# 18 "./i2c2_mux.h"
+extern uint8_t currentTrfAddr;
+extern i2c2_error_t lastI2C2MTrfResponse;
+extern i2c2_error_t lastI2C2LTrfResponse;
+
+
+
+
+
+
+
+void I2C2_MuxInit(void);
+_Bool I2C2_MAck(void);
+_Bool I2C2_LAck(void);
+i2c2_error_t I2C2_MOpen(void);
+i2c2_error_t I2C2_LOpen(void);
+i2c2_error_t I2C2_MClose(void);
+i2c2_error_t I2C2_LClose(void);
+# 14 "main.c" 2
+
 
 
 
@@ -27984,7 +28005,7 @@ uint8_t eBRate;
 
 uint24_t bRateHist;
 uint24_t bRatePtr;
-# 66 "main.c"
+# 67 "main.c"
 __attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
     int32_t intLVal;
 
@@ -28004,7 +28025,7 @@ enum ctrlStatusT {
 
 uint16_t lastCycleVol;
 uint16_t openFlowRate;
-# 99 "main.c"
+# 100 "main.c"
 char monitorMsg[10];
 char ctrlErrorStatus;
 
@@ -28030,6 +28051,7 @@ monStateT monState;
 
 monErrorT monError;
 time_t monTstamp;
+i2c2_error_t lastI2CMonTrfResponse;
 
 void MonitorInit(void){
     ;
@@ -28043,7 +28065,98 @@ void MonitorErrorClr(monErrorT flag){
 }
 
 void MonitorMsgForcedSend (monStateT state){
-# 227 "main.c"
+    i2c2_error_t trfError;
+    _Bool trfAck;
+    int16_t vddVal;
+
+
+
+    trfError = I2C2_MClose();
+    trfAck = I2C2_MAck();
+
+    printf ("I2C2 Close: %d\n", trfError);
+
+    if (!trfAck) {
+
+        sprintf(lcdBtnRow, "        M. ERROR");
+        lcdPrintBR = 1;
+        LATDbits.LATD0 = 1;
+        printf ("MON ERROR");
+    } else if ((LATDbits.LATD0) && trfAck) {
+
+        sprintf(lcdBtnRow, "                ");
+        lcdPrintBR = 1;
+        LATDbits.LATD0 = 0;
+        printf ("MON ERROR CLR");
+    }
+
+    if (trfError != I2C2_BUSY) {
+
+        aCaptGetResult(VddSensor, &vddVal);
+        if (vddVal > vddValMean){
+            vddVal = vddVal - vddValMean;
+        } else {
+            vddVal = vddValMean - vddVal;
+        }
+        if (vddVal > 150) {
+            MonitorErrorSet(MON_VDDE);
+        } else {
+            MonitorErrorClr(MON_VDDE);
+        }
+
+
+        if (VentMode == VMODE_VOLUME) {
+            monitorMsg[0] = state|0x4;
+        } else {
+            monitorMsg[0] = state;
+        }
+
+        monitorMsg[1] = IP;
+        if (chIP) {
+            monitorMsg[1] |= 0x80;
+        }
+
+        monitorMsg[2] = PEEP;
+        if (chPEEP) {
+            monitorMsg[2] |= 0x80;
+        }
+
+        monitorMsg[3] = BPM;
+        if (chBPM) {
+            monitorMsg[3] |= 0x80;
+        }
+
+        monitorMsg[4] = MaxP;
+        if (chMaxP){
+            monitorMsg[3] |= 0x80;
+        }
+
+        monitorMsg[5] = MaxV;
+        if (chMaxV){
+            monitorMsg[5] |= 0x80;
+        }
+
+        monitorMsg[6] = LowVAlarm;
+        if (chLowVAlarm){
+            monitorMsg[6] |= 0x80;
+        }
+
+        monitorMsg[7] = HighVAlarm;
+        if (chHighVAlarm){
+            monitorMsg[7] |= 0x80;
+        }
+
+        monitorMsg[8] = eBRate;
+        monitorMsg[9] = ctrlErrorStatus;
+
+        trfError = I2C2_MOpen();
+        printf ("I2C2 Open: %d\n", trfError);
+        I2C2_SetBuffer(monitorMsg,10);
+        trfError = I2C2_MasterOperation(0);
+        printf ("I2C2 Open: %d\n", trfError);
+        timeDelayMs(2000);
+        while (1);
+    }
 }
 
 void MonitorMsgSend (monStateT state){
@@ -28367,6 +28480,7 @@ void main(void) {
     keyReadInit();
     screenInit();
     bRateInit();
+    I2C2_MuxInit();
     MonitorInit();
 
     while (1) {
@@ -28420,7 +28534,7 @@ void main(void) {
     } else {
         MonitorMsgForcedSend(MONSTATE_RUNV);
     }
-# 660 "main.c"
+# 665 "main.c"
     rCycleTime = timeGet();
 
     while (1) {
@@ -28580,7 +28694,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 827 "main.c"
+# 832 "main.c"
             }
 
         }

@@ -11,6 +11,7 @@
 #include "keyRead.h"
 #include "LiquidCrystal_I2C.h"
 #include "menu.h"
+#include "i2c2_mux.h"
 
 #ifdef DEBUG
 
@@ -121,6 +122,7 @@ monStateT monState;
 
 monErrorT monError;
 time_t    monTstamp;
+i2c2_error_t lastI2CMonTrfResponse;
 
 void MonitorInit(void){
     ;
@@ -134,23 +136,24 @@ void MonitorErrorClr(monErrorT flag){
 }
 
 void MonitorMsgForcedSend (monStateT state){
-#if 0
-    i2c1_error_t trfError;
+    i2c2_error_t trfError;
+    bool trfAck;
     int16_t vddVal;
     
     // Assemble message for monitor and sent it.
     // Ensure previous message was sent.
-    trfError = I2C1_Close();
-    
-    DEBUG_PRINT(("I2C1 Close: %d\n", trfError));
-
-    if (trfError == I2C1_FAIL) {
+    trfError = I2C2_MClose();
+    trfAck = I2C2_MAck();
+        
+    DEBUG_PRINT(("I2C2 Close: %d\n", trfError));
+            
+    if (!trfAck) {
         // Enable buzzer and display error message on second line.
         sprintf(lcdBtnRow, "        M. ERROR");
         lcdPrintBR = true;
         BUZZER_ON;
         DEBUG_PRINT(("MON ERROR"));
-    } else if ((BUZZERISON) && (trfError == I2C1_NOERR)) {
+    } else if ((BUZZERISON) && trfAck) {
         // Disable buzzer.
         sprintf(lcdBtnRow, "                ");
         lcdPrintBR = true;
@@ -158,7 +161,7 @@ void MonitorMsgForcedSend (monStateT state){
         DEBUG_PRINT(("MON ERROR CLR"));
     }
     
-    if (trfError != I2C1_BUSY) {
+    if (trfError != I2C2_BUSY) {
         // First set VDD error flag. No more than 150mV deviation with respect to calibration value.
         aCaptGetResult(VddSensor, &vddVal);
         if (vddVal > vddValMean){
@@ -217,13 +220,14 @@ void MonitorMsgForcedSend (monStateT state){
         monitorMsg[MONIDX_BRRTV] = eBRate;        
         monitorMsg[MONIDX_ALARMV] = ctrlErrorStatus;
 
-        trfError = I2C1_Open(0x50);
-        DEBUG_PRINT(("I2C1 Open: %d\n", trfError));    
-        I2C1_SetBuffer(monitorMsg,10);
-        trfError = I2C1_MasterWrite();
-        DEBUG_PRINT(("I2C1 Open: %d\n", trfError));    
+        trfError = I2C2_MOpen();
+        DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
+        I2C2_SetBuffer(monitorMsg,10);
+        trfError = I2C2_MasterOperation(false);
+        DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
+        timeDelayMs(2000);
+        while (1);
     }
-#endif
 }
 
 void MonitorMsgSend (monStateT state){
@@ -547,6 +551,7 @@ void main(void) {
     keyReadInit();
     screenInit();
     bRateInit();
+    I2C2_MuxInit();
     MonitorInit();
 
     while (1) {

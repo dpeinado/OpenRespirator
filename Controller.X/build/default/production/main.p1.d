@@ -18,4 +18,5 @@ cmath.h  \
 vMeasure.h  \
 keyRead.h  \
 LiquidCrystal_I2C.h  \
-menu.h 
+menu.h  \
+i2c2_mux.h 

@@ -1,4 +1,4 @@
-# 1 "LiquidCrystal_I2C.c"
+# 1 "i2c2_mux.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,17 +6,9 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "LiquidCrystal_I2C.c" 2
-
-
-
-# 1 "./LiquidCrystal_I2C.h" 1
-
-
-
-
-
-
+# 1 "i2c2_mux.c" 2
+# 1 "./i2c2_mux.h" 1
+# 15 "./i2c2_mux.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27807,60 +27799,10 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 7 "./LiquidCrystal_I2C.h" 2
-# 55 "./LiquidCrystal_I2C.h"
-void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
-void clear();
-void home();
-void noDisplay();
-void display();
-void noBlink();
-void blink();
-void noCursor();
-void cursor();
-void scrollDisplayLeft();
-void scrollDisplayRight();
-void printLeft();
-void printRight();
-void leftToRight();
-void rightToLeft();
-void shiftIncrement();
-void shiftDecrement();
-void noBacklight();
-void backlight();
-void autoscroll();
-void noAutoscroll();
-void createChar(uint8_t, uint8_t[]);
-void setCursor(uint8_t, uint8_t);
-void write(uint8_t);
-void init();
-void setBacklight(_Bool new_val);
-void load_custom_character(uint8_t char_num, uint8_t *rows);
-void printstr(const char[]);
-void printstrblock(const char[]);
-_Bool PrintStrBusy(void);
-# 4 "LiquidCrystal_I2C.c" 2
-
-# 1 "./time.h" 1
-# 17 "./time.h"
-typedef uint16_t time_t;
+# 15 "./i2c2_mux.h" 2
 
 
 
-
-
-
-void timeInit(void);
-time_t timeGet(void);
-
-time_t timeDiff(time_t startT, time_t endT);
-_Bool timeElapsedR(time_t *prevTime, time_t duration);
-_Bool timeElapsed(time_t prevTime, time_t duration);
-void timeDelayMs(time_t delms);
-# 5 "LiquidCrystal_I2C.c" 2
-
-# 1 "./i2c2_mux.h" 1
-# 18 "./i2c2_mux.h"
 extern uint8_t currentTrfAddr;
 extern i2c2_error_t lastI2C2MTrfResponse;
 extern i2c2_error_t lastI2C2LTrfResponse;
@@ -27878,274 +27820,142 @@ i2c2_error_t I2C2_MOpen(void);
 i2c2_error_t I2C2_LOpen(void);
 i2c2_error_t I2C2_MClose(void);
 i2c2_error_t I2C2_LClose(void);
-# 6 "LiquidCrystal_I2C.c" 2
+# 1 "i2c2_mux.c" 2
 
 
-uint8_t _Addr;
-uint8_t _displayfunction;
-uint8_t _displaycontrol;
-uint8_t _displaymode;
-uint8_t _numlines;
-uint8_t _cols;
-uint8_t _rows;
-uint8_t _backlightval;
-uint8_t i2cBuff[80];
+# 1 "./ORespGlobal.h" 1
+# 60 "./ORespGlobal.h"
+    typedef enum {
+        VMODE_PRESSURE = 0,
+        VMODE_VOLUME = 1
+    } vmodeT;
 
 
+    extern vmodeT VentMode;
+    extern uint8_t BPM;
+    extern uint16_t IDuration, EDuration;
+    extern uint8_t IP;
+    extern uint8_t MaxP;
+    extern uint8_t MaxV;
+    extern uint8_t LowVAlarm;
+    extern uint8_t HighVAlarm;
+    extern uint8_t PEEP;
+    extern uint8_t eBRate;
+    extern int16_t vddValMean;
+
+    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern uint16_t lastCycleVol;
+# 3 "i2c2_mux.c" 2
 
 
-void expanderWrite(uint8_t data) {
-        uint8_t i2cBuff[2];
-        i2cBuff[0]=data | _backlightval;
-        I2C2_LOpen();
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_LClose());
-}
-
-void write4bits(uint8_t value) {
-        uint8_t i2cBuff[2];
-
-        I2C2_LOpen();
-        i2cBuff[0]=value | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_LClose());
-
-        I2C2_LOpen();
-        i2cBuff[0]=value | 0x4 | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_LClose());
-
-        I2C2_LOpen();
-        i2cBuff[0]=value | ~0x4 | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_LClose());
-}
-# 66 "LiquidCrystal_I2C.c"
-void send(uint8_t value, uint8_t mode) {
- uint8_t highnib=value&0xf0;
- uint8_t lownib=(value<<4)&0xf0;
-    write4bits((highnib)|mode);
- write4bits((lownib)|mode);
-}
-
-void write(uint8_t value) {
-    uint8_t i2cBuff[4];
- uint8_t highnib=value&0xf0;
- uint8_t lownib=(value<<4)&0xf0;
-    i2cBuff[0]=highnib | 0x1 | 0x4 | _backlightval;
-    i2cBuff[1]=highnib | 0x1 | ~0x4 | _backlightval;
-    i2cBuff[2]=lownib | 0x1 | 0x4 | _backlightval;
-    i2cBuff[3]=lownib | 0x1 | ~0x4 | _backlightval;
-    I2C2_LOpen();
-    I2C2_SetBuffer(i2cBuff,4);
-    I2C2_MasterWrite();
-    while(I2C2_BUSY == I2C2_LClose());
-}
-
-void printstr(const char c[]){
-    uint8_t idx;
+uint8_t currentTrfAddr;
+i2c2_error_t lastI2C2MTrfResponse;
+i2c2_error_t lastI2C2LTrfResponse;
+i2c2_error_t lastI2C2MAckResponse;
+i2c2_error_t lastI2C2LAckResponse;
 
 
-    idx=0;
-    while (*c){
-        i2cBuff[idx++]=((*c)&0xF0) | 0x1 | 0x4 | _backlightval;
-        i2cBuff[idx++]=((*c)&0xF0) | 0x1 | ~0x4 | _backlightval;
-        i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | 0x4 | _backlightval;
-        i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | ~0x4 | _backlightval;
-        c++;
-        if (idx >=80) {
-            break;
-        }
+void I2C2_NAckCallback(void){
+    if (currentTrfAddr == 0x50){
+        lastI2C2MAckResponse = 0;
+    } else {
+        lastI2C2LAckResponse = 0;
     }
-    I2C2_LOpen();
-    I2C2_SetBuffer(i2cBuff,idx);
-    I2C2_MasterWrite();
 }
 
-_Bool PrintStrBusy(void){
-    return (I2C2_BUSY == I2C2_LClose());
+void I2C2_MuxInit(void){
+    I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+    lastI2C2MAckResponse = 1;
+    lastI2C2LAckResponse = 1;
+    lastI2C2MTrfResponse = I2C2_NOERR;
+    lastI2C2LTrfResponse = I2C2_NOERR;
+    currentTrfAddr = 0x0;
 }
 
-void printstrblock(const char c[]){
-    printstr(c);
-    while(PrintStrBusy());
+_Bool I2C2_MAck(void){
+    return lastI2C2MAckResponse;
 }
-
-
-
-__attribute__((inline)) void command(uint8_t value) {
- send(value, 0);
-}
-# 142 "LiquidCrystal_I2C.c"
-void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
-  _Addr = lcd_Addr;
-  _cols = lcd_cols;
-  _rows = lcd_rows;
-  _backlightval = 0x00;
-  _numlines = 2;
-
-  _displayfunction = 0x00 | 0x08 | 0x00;
-
-
-
-
- timeDelayMs(50);
-
-
- expanderWrite(_backlightval);
- timeDelayMs(10);
-
-
-
-
-
-
-   write4bits(0x03 << 4);
-   timeDelayMs(5);
-
-
-   write4bits(0x03 << 4);
-   timeDelayMs(5);
-
-
-   write4bits(0x03 << 4);
-
-
-   write4bits(0x02 << 4);
-
-
- command(0x20 | _displayfunction);
-
-
- _displaycontrol = 0x04 | 0x00 | 0x00;
- display();
-
-
- clear();
-
-
- _displaymode = 0x02 | 0x00;
-
-
- command(0x04 | _displaymode);
-
- home();
-
-}
-
-void clear(){
- command(0x01);
- timeDelayMs(2);
-}
-
-void home(){
- command(0x02);
- timeDelayMs(2);
-}
-
-void setCursor(uint8_t col, uint8_t row){
- int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
- if ( row > _numlines ) {
-  row = _numlines-1;
- }
- command(0x80 | (col + row_offsets[row]));
+_Bool I2C2_LAck(void){
+    return lastI2C2LAckResponse;
 }
 
 
-void noDisplay() {
- _displaycontrol &= ~0x04;
- command(0x08 | _displaycontrol);
-}
-void display() {
- _displaycontrol |= 0x04;
- command(0x08 | _displaycontrol);
-}
+i2c2_error_t I2C2_MOpen(void){
+    i2c2_error_t trfRsp;
 
+    trfRsp = I2C2_Open(0x50);
+    if (trfRsp != I2C2_BUSY) {
+        lastI2C2MAckResponse = 1;
 
-void noCursor() {
- _displaycontrol &= ~0x02;
- command(0x08 | _displaycontrol);
-}
-void cursor() {
- _displaycontrol |= 0x02;
- command(0x08 | _displaycontrol);
-}
+        if (currentTrfAddr == 0x50){
+            lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
+        } else {
+            lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
+        }
+        currentTrfAddr = 0x50;
 
-
-void noBlink() {
- _displaycontrol &= ~0x01;
- command(0x08 | _displaycontrol);
-}
-void blink() {
- _displaycontrol |= 0x01;
- command(0x08 | _displaycontrol);
+        return lastI2C2MTrfResponse;
+    }
+    return I2C2_BUSY;
 }
 
+i2c2_error_t I2C2_LOpen(void){
+    i2c2_error_t trfRsp;
 
-void scrollDisplayLeft(void) {
- command(0x10 | 0x08 | 0x00);
-}
-void scrollDisplayRight(void) {
- command(0x10 | 0x08 | 0x04);
-}
+    trfRsp = I2C2_Open(0x27);
+    if (trfRsp != I2C2_BUSY) {
+        lastI2C2LAckResponse = 1;
 
+        if (currentTrfAddr == 0x50){
+            lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
+        } else {
+            lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
+        }
+        currentTrfAddr = 0x27;
 
-void leftToRight(void) {
- _displaymode |= 0x02;
- command(0x04 | _displaymode);
-}
-
-
-void rightToLeft(void) {
- _displaymode &= ~0x02;
- command(0x04 | _displaymode);
-}
-
-
-void autoscroll(void) {
- _displaymode |= 0x01;
- command(0x04 | _displaymode);
+        return lastI2C2LTrfResponse;
+    }
+    return I2C2_BUSY;
 }
 
+i2c2_error_t I2C2_MClose(void){
+    i2c2_error_t trfRsp;
 
-void noAutoscroll(void) {
- _displaymode &= ~0x01;
- command(0x04 | _displaymode);
+    trfRsp = I2C2_Close();
+    if (trfRsp != I2C2_BUSY) {
+
+        if (currentTrfAddr == 0x50){
+            lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
+        } else {
+            lastI2C2LTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
+        }
+
+        return lastI2C2MTrfResponse;
+    }
+    return I2C2_BUSY;
 }
 
+i2c2_error_t I2C2_LClose(void){
+    i2c2_error_t trfRsp;
 
+    trfRsp = I2C2_Close();
+    if (trfRsp != I2C2_BUSY) {
 
-void createChar(uint8_t location, uint8_t charmap[]) {
- location &= 0x7;
- command(0x40 | (location << 3));
- for (int i=0; i<8; i++) {
-  write(charmap[i]);
- }
-}
+        if (currentTrfAddr == 0x50){
+            lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
+        } else {
+            lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
+        }
 
-
-void noBacklight(void) {
- _backlightval=0x00;
- expanderWrite(0);
-}
-
-void backlight(void) {
- _backlightval=0x08;
- expanderWrite(0);
-}
-
-void load_custom_character(uint8_t char_num, uint8_t *rows){
-  createChar(char_num, rows);
-}
-
-void setBacklight(_Bool new_val){
- if(new_val){
-  backlight();
- }else{
-  noBacklight();
- }
+        return lastI2C2LTrfResponse;
+    }
+    return I2C2_BUSY;
 }

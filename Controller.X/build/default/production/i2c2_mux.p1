@@ -1,34 +1,27 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [v F16458 `(v ~T0 @X0 0 tf ]
 [v F16647 `(v ~T0 @X0 0 tf ]
-"24 LiquidCrystal_I2C.c
-[; ;LiquidCrystal_I2C.c: 24:         I2C2_LOpen();
+"6 i2c2_mux.c
+[; ;i2c2_mux.c: 6: i2c2_error_t lastI2C2MTrfResponse;
 [c E16385 0 1 2 .. ]
 [n E16385 . I2C2_NOERR I2C2_BUSY I2C2_FAIL  ]
-"32 ./i2c2_mux.h
-[; ;./i2c2_mux.h: 32: i2c2_error_t I2C2_LOpen(void);
-[v _I2C2_LOpen `(E16385 ~T0 @X0 0 ef ]
-"152 ./mcc_generated_files/i2c2_master.h
-[; ;./mcc_generated_files/i2c2_master.h: 152: void I2C2_SetBuffer(void *buffer, size_t bufferSize);
-[v _I2C2_SetBuffer `(v ~T0 @X0 0 ef2`*v`ui ]
-"128
-[; ;./mcc_generated_files/i2c2_master.h: 128: i2c2_error_t I2C2_MasterWrite(void);
-[v _I2C2_MasterWrite `(E16385 ~T0 @X0 0 ef ]
-"34 ./i2c2_mux.h
-[; ;./i2c2_mux.h: 34: i2c2_error_t I2C2_LClose(void);
-[v _I2C2_LClose `(E16385 ~T0 @X0 0 ef ]
-"30 ./time.h
-[; ;./time.h: 30: void timeDelayMs(time_t delms);
-[v _timeDelayMs `(v ~T0 @X0 0 ef1`us ]
-"59 ./LiquidCrystal_I2C.h
-[; ;./LiquidCrystal_I2C.h: 59: void display();
-[v _display `(v ~T0 @X0 0 e? ]
-"56
-[; ;./LiquidCrystal_I2C.h: 56: void clear();
-[v _clear `(v ~T0 @X0 0 e? ]
-"57
-[; ;./LiquidCrystal_I2C.h: 57: void home();
-[v _home `(v ~T0 @X0 0 e? ]
+"21
+[; ;i2c2_mux.c: 21:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+[c E16390 1 2 3 4 5 .. ]
+[n E16390 . I2C2_STOP I2C2_RESTART_READ I2C2_RESTART_WRITE I2C2_CONTINUE I2C2_RESET_LINK  ]
+[v F16444 `(E16390 ~T0 @X0 0 tf1`*v ]
+"194 ./mcc_generated_files/i2c2_master.h
+[; ;./mcc_generated_files/i2c2_master.h: 194: void I2C2_SetDataNackCallback(i2c2_callback_t cb, void *ptr);
+[v _I2C2_SetDataNackCallback `(v ~T0 @X0 0 ef2`*F16444`*v ]
+[v F16698 `(E16390 ~T0 @X0 0 tf1`*v ]
+"101
+[; ;./mcc_generated_files/i2c2_master.h: 101: i2c2_error_t I2C2_Open(i2c2_address_t address);
+[v _I2C2_Open `(E16385 ~T0 @X0 0 ef1`uc ]
+"111 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\c99\stdio.h
+[v _printf `(i ~T0 @X0 0 ev`*Cuc ]
+"111 ./mcc_generated_files/i2c2_master.h
+[; ;./mcc_generated_files/i2c2_master.h: 111: i2c2_error_t I2C2_Close(void);
+[v _I2C2_Close `(E16385 ~T0 @X0 0 ef ]
 "250 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 250: __asm("STATUS_CSHAD equ 03880h");
 [; <" STATUS_CSHAD equ 03880h ;# ">
@@ -2267,776 +2260,357 @@ Version 4.0 HI-TECH Software Intermediate Code
 "477 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
 [v _UART1_TxInterruptHandler `*F16647 ~T0 @X0 1 e ]
-"8 LiquidCrystal_I2C.c
-[; ;LiquidCrystal_I2C.c: 8: uint8_t _Addr;
-[v __Addr `uc ~T0 @X0 1 e ]
+"5 i2c2_mux.c
+[; ;i2c2_mux.c: 5: uint8_t currentTrfAddr;
+[v _currentTrfAddr `uc ~T0 @X0 1 e ]
+"6
+[; ;i2c2_mux.c: 6: i2c2_error_t lastI2C2MTrfResponse;
+[v _lastI2C2MTrfResponse `E16385 ~T0 @X0 1 e ]
+"7
+[; ;i2c2_mux.c: 7: i2c2_error_t lastI2C2LTrfResponse;
+[v _lastI2C2LTrfResponse `E16385 ~T0 @X0 1 e ]
+"8
+[; ;i2c2_mux.c: 8: i2c2_error_t lastI2C2MAckResponse;
+[v _lastI2C2MAckResponse `E16385 ~T0 @X0 1 e ]
 "9
-[; ;LiquidCrystal_I2C.c: 9: uint8_t _displayfunction;
-[v __displayfunction `uc ~T0 @X0 1 e ]
-"10
-[; ;LiquidCrystal_I2C.c: 10: uint8_t _displaycontrol;
-[v __displaycontrol `uc ~T0 @X0 1 e ]
-"11
-[; ;LiquidCrystal_I2C.c: 11: uint8_t _displaymode;
-[v __displaymode `uc ~T0 @X0 1 e ]
+[; ;i2c2_mux.c: 9: i2c2_error_t lastI2C2LAckResponse;
+[v _lastI2C2LAckResponse `E16385 ~T0 @X0 1 e ]
 "12
-[; ;LiquidCrystal_I2C.c: 12: uint8_t _numlines;
-[v __numlines `uc ~T0 @X0 1 e ]
-"13
-[; ;LiquidCrystal_I2C.c: 13: uint8_t _cols;
-[v __cols `uc ~T0 @X0 1 e ]
-"14
-[; ;LiquidCrystal_I2C.c: 14: uint8_t _rows;
-[v __rows `uc ~T0 @X0 1 e ]
-"15
-[; ;LiquidCrystal_I2C.c: 15: uint8_t _backlightval;
-[v __backlightval `uc ~T0 @X0 1 e ]
-"16
-[; ;LiquidCrystal_I2C.c: 16: uint8_t i2cBuff[80];
-[v _i2cBuff `uc ~T0 @X0 -> 80 `i e ]
-"21
-[; ;LiquidCrystal_I2C.c: 21: void expanderWrite(uint8_t data) {
-[v _expanderWrite `(v ~T0 @X0 1 ef1`uc ]
+[; ;i2c2_mux.c: 12: void I2C2_NAckCallback(void){
+[v _I2C2_NAckCallback `(v ~T0 @X0 1 ef ]
 {
-[e :U _expanderWrite ]
-[v _data `uc ~T0 @X0 1 r1 ]
+[e :U _I2C2_NAckCallback ]
 [f ]
-"22
-[; ;LiquidCrystal_I2C.c: 22:         uint8_t i2cBuff[2];
-[v _i2cBuff `uc ~T0 @X0 -> 2 `i a ]
-"23
-[; ;LiquidCrystal_I2C.c: 23:         i2cBuff[0]=data | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 0 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | -> _data `i -> __backlightval `i `uc ]
-"24
-[; ;LiquidCrystal_I2C.c: 24:         I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"25
-[; ;LiquidCrystal_I2C.c: 25:         I2C2_SetBuffer(i2cBuff,1);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> -> 1 `i `ui ]
-"26
-[; ;LiquidCrystal_I2C.c: 26:         I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
-"27
-[; ;LiquidCrystal_I2C.c: 27:         while(I2C2_BUSY == I2C2_LClose());
-[e $U 2234  ]
-[e :U 2235 ]
+"13
+[; ;i2c2_mux.c: 13:     if (currentTrfAddr == 0x50){
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2234  ]
+{
+"14
+[; ;i2c2_mux.c: 14:         lastI2C2MAckResponse = 0;
+[e = _lastI2C2MAckResponse -> -> 0 `i `E16385 ]
+"15
+[; ;i2c2_mux.c: 15:     } else {
+}
+[e $U 2235  ]
 [e :U 2234 ]
-[e $ == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui 2235  ]
-[e :U 2236 ]
-"28
-[; ;LiquidCrystal_I2C.c: 28: }
+{
+"16
+[; ;i2c2_mux.c: 16:         lastI2C2LAckResponse = 0;
+[e = _lastI2C2LAckResponse -> -> 0 `i `E16385 ]
+"17
+[; ;i2c2_mux.c: 17:     }
+}
+[e :U 2235 ]
+"18
+[; ;i2c2_mux.c: 18: }
 [e :UE 2233 ]
 }
-"30
-[; ;LiquidCrystal_I2C.c: 30: void write4bits(uint8_t value) {
-[v _write4bits `(v ~T0 @X0 1 ef1`uc ]
+"20
+[; ;i2c2_mux.c: 20: void I2C2_MuxInit(void){
+[v _I2C2_MuxInit `(v ~T0 @X0 1 ef ]
 {
-[e :U _write4bits ]
-[v _value `uc ~T0 @X0 1 r1 ]
+[e :U _I2C2_MuxInit ]
 [f ]
+"21
+[; ;i2c2_mux.c: 21:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+[e ( _I2C2_SetDataNackCallback (2 , -> &U _I2C2_NAckCallback `*F16698 -> -> 0 `i `*v ]
+"22
+[; ;i2c2_mux.c: 22:     lastI2C2MAckResponse = 1;
+[e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
+"23
+[; ;i2c2_mux.c: 23:     lastI2C2LAckResponse = 1;
+[e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
+"24
+[; ;i2c2_mux.c: 24:     lastI2C2MTrfResponse = I2C2_NOERR;
+[e = _lastI2C2MTrfResponse . `E16385 0 ]
+"25
+[; ;i2c2_mux.c: 25:     lastI2C2LTrfResponse = I2C2_NOERR;
+[e = _lastI2C2LTrfResponse . `E16385 0 ]
+"26
+[; ;i2c2_mux.c: 26:     currentTrfAddr = 0x0;
+[e = _currentTrfAddr -> -> 0 `i `uc ]
+"27
+[; ;i2c2_mux.c: 27: }
+[e :UE 2236 ]
+}
+"29
+[; ;i2c2_mux.c: 29: _Bool I2C2_MAck(void){
+[v _I2C2_MAck `(a ~T0 @X0 1 ef ]
+{
+[e :U _I2C2_MAck ]
+[f ]
+"30
+[; ;i2c2_mux.c: 30:     return lastI2C2MAckResponse;
+[e ) -> _lastI2C2MAckResponse `a ]
+[e $UE 2237  ]
 "31
-[; ;LiquidCrystal_I2C.c: 31:         uint8_t i2cBuff[2];
-[v _i2cBuff `uc ~T0 @X0 -> 2 `i a ]
-"33
-[; ;LiquidCrystal_I2C.c: 33:         I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"34
-[; ;LiquidCrystal_I2C.c: 34:         i2cBuff[0]=value | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 0 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | -> _value `i -> __backlightval `i `uc ]
-"35
-[; ;LiquidCrystal_I2C.c: 35:         I2C2_SetBuffer(i2cBuff,1);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> -> 1 `i `ui ]
-"36
-[; ;LiquidCrystal_I2C.c: 36:         I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
-"37
-[; ;LiquidCrystal_I2C.c: 37:         while(I2C2_BUSY == I2C2_LClose());
-[e $U 2238  ]
-[e :U 2239 ]
-[e :U 2238 ]
-[e $ == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui 2239  ]
-[e :U 2240 ]
-"39
-[; ;LiquidCrystal_I2C.c: 39:         I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"40
-[; ;LiquidCrystal_I2C.c: 40:         i2cBuff[0]=value | 0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 0 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | -> _value `i -> 4 `i -> __backlightval `i `uc ]
-"41
-[; ;LiquidCrystal_I2C.c: 41:         I2C2_SetBuffer(i2cBuff,1);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> -> 1 `i `ui ]
-"42
-[; ;LiquidCrystal_I2C.c: 42:         I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
-"43
-[; ;LiquidCrystal_I2C.c: 43:         while(I2C2_BUSY == I2C2_LClose());
-[e $U 2241  ]
-[e :U 2242 ]
-[e :U 2241 ]
-[e $ == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui 2242  ]
-[e :U 2243 ]
-"45
-[; ;LiquidCrystal_I2C.c: 45:         I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"46
-[; ;LiquidCrystal_I2C.c: 46:         i2cBuff[0]=value | ~0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 0 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | -> _value `i ~ -> 4 `i -> __backlightval `i `uc ]
-"47
-[; ;LiquidCrystal_I2C.c: 47:         I2C2_SetBuffer(i2cBuff,1);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> -> 1 `i `ui ]
-"48
-[; ;LiquidCrystal_I2C.c: 48:         I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
-"49
-[; ;LiquidCrystal_I2C.c: 49:         while(I2C2_BUSY == I2C2_LClose());
-[e $U 2244  ]
-[e :U 2245 ]
-[e :U 2244 ]
-[e $ == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui 2245  ]
-[e :U 2246 ]
-"50
-[; ;LiquidCrystal_I2C.c: 50: }
+[; ;i2c2_mux.c: 31: }
 [e :UE 2237 ]
 }
-"66
-[; ;LiquidCrystal_I2C.c: 66: void send(uint8_t value, uint8_t mode) {
-[v _send `(v ~T0 @X0 1 ef2`uc`uc ]
+"32
+[; ;i2c2_mux.c: 32: _Bool I2C2_LAck(void){
+[v _I2C2_LAck `(a ~T0 @X0 1 ef ]
 {
-[e :U _send ]
-[v _value `uc ~T0 @X0 1 r1 ]
-[v _mode `uc ~T0 @X0 1 r2 ]
+[e :U _I2C2_LAck ]
 [f ]
+"33
+[; ;i2c2_mux.c: 33:     return lastI2C2LAckResponse;
+[e ) -> _lastI2C2LAckResponse `a ]
+[e $UE 2238  ]
+"34
+[; ;i2c2_mux.c: 34: }
+[e :UE 2238 ]
+}
+"37
+[; ;i2c2_mux.c: 37: i2c2_error_t I2C2_MOpen(void){
+[v _I2C2_MOpen `(E16385 ~T0 @X0 1 ef ]
+{
+[e :U _I2C2_MOpen ]
+[f ]
+"38
+[; ;i2c2_mux.c: 38:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"40
+[; ;i2c2_mux.c: 40:     trfRsp = I2C2_Open(0x50);
+[e = _trfRsp ( _I2C2_Open (1 -> -> 80 `i `uc ]
+"41
+[; ;i2c2_mux.c: 41:     if (trfRsp != I2C2_BUSY) {
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2240  ]
+{
+"42
+[; ;i2c2_mux.c: 42:         lastI2C2MAckResponse = 1;
+[e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
+"44
+[; ;i2c2_mux.c: 44:         if (currentTrfAddr == 0x50){
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2241  ]
+{
+"45
+[; ;i2c2_mux.c: 45:             lastI2C2MTrfResponse = trfRsp;
+[e = _lastI2C2MTrfResponse _trfRsp ]
+"46
+[; ;i2c2_mux.c: 46:             printf ("MI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 1C -> _trfRsp `ui ]
+"47
+[; ;i2c2_mux.c: 47:         } else {
+}
+[e $U 2242  ]
+[e :U 2241 ]
+{
+"48
+[; ;i2c2_mux.c: 48:             lastI2C2LTrfResponse = trfRsp;
+[e = _lastI2C2LTrfResponse _trfRsp ]
+"49
+[; ;i2c2_mux.c: 49:             printf ("LI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 2C -> _trfRsp `ui ]
+"50
+[; ;i2c2_mux.c: 50:         }
+}
+[e :U 2242 ]
+"51
+[; ;i2c2_mux.c: 51:         currentTrfAddr = 0x50;
+[e = _currentTrfAddr -> -> 80 `i `uc ]
+"53
+[; ;i2c2_mux.c: 53:         return lastI2C2MTrfResponse;
+[e ) _lastI2C2MTrfResponse ]
+[e $UE 2239  ]
+"54
+[; ;i2c2_mux.c: 54:     }
+}
+[e :U 2240 ]
+"55
+[; ;i2c2_mux.c: 55:     return I2C2_BUSY;
+[e ) . `E16385 1 ]
+[e $UE 2239  ]
+"56
+[; ;i2c2_mux.c: 56: }
+[e :UE 2239 ]
+}
+"58
+[; ;i2c2_mux.c: 58: i2c2_error_t I2C2_LOpen(void){
+[v _I2C2_LOpen `(E16385 ~T0 @X0 1 ef ]
+{
+[e :U _I2C2_LOpen ]
+[f ]
+"59
+[; ;i2c2_mux.c: 59:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"61
+[; ;i2c2_mux.c: 61:     trfRsp = I2C2_Open(0x27);
+[e = _trfRsp ( _I2C2_Open (1 -> -> 39 `i `uc ]
+"62
+[; ;i2c2_mux.c: 62:     if (trfRsp != I2C2_BUSY) {
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2244  ]
+{
+"63
+[; ;i2c2_mux.c: 63:         lastI2C2LAckResponse = 1;
+[e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
+"65
+[; ;i2c2_mux.c: 65:         if (currentTrfAddr == 0x50){
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2245  ]
+{
+"66
+[; ;i2c2_mux.c: 66:             lastI2C2MTrfResponse = trfRsp;
+[e = _lastI2C2MTrfResponse _trfRsp ]
 "67
-[; ;LiquidCrystal_I2C.c: 67:  uint8_t highnib=value&0xf0;
-[v _highnib `uc ~T0 @X0 1 a ]
-[e = _highnib -> & -> _value `i -> 240 `i `uc ]
+[; ;i2c2_mux.c: 67:             printf ("MI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 3C -> _trfRsp `ui ]
 "68
-[; ;LiquidCrystal_I2C.c: 68:  uint8_t lownib=(value<<4)&0xf0;
-[v _lownib `uc ~T0 @X0 1 a ]
-[e = _lownib -> & << -> _value `i -> 4 `i -> 240 `i `uc ]
+[; ;i2c2_mux.c: 68:         } else {
+}
+[e $U 2246  ]
+[e :U 2245 ]
+{
 "69
-[; ;LiquidCrystal_I2C.c: 69:     write4bits((highnib)|mode);
-[e ( _write4bits (1 -> | -> _highnib `i -> _mode `i `uc ]
+[; ;i2c2_mux.c: 69:             lastI2C2LTrfResponse = trfRsp;
+[e = _lastI2C2LTrfResponse _trfRsp ]
 "70
-[; ;LiquidCrystal_I2C.c: 70:  write4bits((lownib)|mode);
-[e ( _write4bits (1 -> | -> _lownib `i -> _mode `i `uc ]
+[; ;i2c2_mux.c: 70:             printf ("LI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 4C -> _trfRsp `ui ]
 "71
-[; ;LiquidCrystal_I2C.c: 71: }
+[; ;i2c2_mux.c: 71:         }
+}
+[e :U 2246 ]
+"72
+[; ;i2c2_mux.c: 72:         currentTrfAddr = 0x27;
+[e = _currentTrfAddr -> -> 39 `i `uc ]
+"74
+[; ;i2c2_mux.c: 74:         return lastI2C2LTrfResponse;
+[e ) _lastI2C2LTrfResponse ]
+[e $UE 2243  ]
+"75
+[; ;i2c2_mux.c: 75:     }
+}
+[e :U 2244 ]
+"76
+[; ;i2c2_mux.c: 76:     return I2C2_BUSY;
+[e ) . `E16385 1 ]
+[e $UE 2243  ]
+"77
+[; ;i2c2_mux.c: 77: }
+[e :UE 2243 ]
+}
+"79
+[; ;i2c2_mux.c: 79: i2c2_error_t I2C2_MClose(void){
+[v _I2C2_MClose `(E16385 ~T0 @X0 1 ef ]
+{
+[e :U _I2C2_MClose ]
+[f ]
+"80
+[; ;i2c2_mux.c: 80:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
+"82
+[; ;i2c2_mux.c: 82:     trfRsp = I2C2_Close();
+[e = _trfRsp ( _I2C2_Close ..  ]
+"83
+[; ;i2c2_mux.c: 83:     if (trfRsp != I2C2_BUSY) {
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2248  ]
+{
+"85
+[; ;i2c2_mux.c: 85:         if (currentTrfAddr == 0x50){
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2249  ]
+{
+"86
+[; ;i2c2_mux.c: 86:             lastI2C2MTrfResponse = trfRsp;
+[e = _lastI2C2MTrfResponse _trfRsp ]
+"87
+[; ;i2c2_mux.c: 87:             printf ("MI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 5C -> _trfRsp `ui ]
+"88
+[; ;i2c2_mux.c: 88:         } else {
+}
+[e $U 2250  ]
+[e :U 2249 ]
+{
+"89
+[; ;i2c2_mux.c: 89:             lastI2C2LTrfResponse = trfRsp;
+[e = _lastI2C2LTrfResponse _trfRsp ]
+"90
+[; ;i2c2_mux.c: 90:             printf ("MI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 6C -> _trfRsp `ui ]
+"91
+[; ;i2c2_mux.c: 91:         }
+}
+[e :U 2250 ]
+"93
+[; ;i2c2_mux.c: 93:         return lastI2C2MTrfResponse;
+[e ) _lastI2C2MTrfResponse ]
+[e $UE 2247  ]
+"94
+[; ;i2c2_mux.c: 94:     }
+}
+[e :U 2248 ]
+"95
+[; ;i2c2_mux.c: 95:     return I2C2_BUSY;
+[e ) . `E16385 1 ]
+[e $UE 2247  ]
+"96
+[; ;i2c2_mux.c: 96: }
 [e :UE 2247 ]
 }
-"73
-[; ;LiquidCrystal_I2C.c: 73: void write(uint8_t value) {
-[v _write `(v ~T0 @X0 1 ef1`uc ]
-{
-[e :U _write ]
-[v _value `uc ~T0 @X0 1 r1 ]
-[f ]
-"74
-[; ;LiquidCrystal_I2C.c: 74:     uint8_t i2cBuff[4];
-[v _i2cBuff `uc ~T0 @X0 -> 4 `i a ]
-"75
-[; ;LiquidCrystal_I2C.c: 75:  uint8_t highnib=value&0xf0;
-[v _highnib `uc ~T0 @X0 1 a ]
-[e = _highnib -> & -> _value `i -> 240 `i `uc ]
-"76
-[; ;LiquidCrystal_I2C.c: 76:  uint8_t lownib=(value<<4)&0xf0;
-[v _lownib `uc ~T0 @X0 1 a ]
-[e = _lownib -> & << -> _value `i -> 4 `i -> 240 `i `uc ]
-"77
-[; ;LiquidCrystal_I2C.c: 77:     i2cBuff[0]=highnib | 0x1 | 0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 0 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | -> _highnib `i -> 1 `i -> 4 `i -> __backlightval `i `uc ]
-"78
-[; ;LiquidCrystal_I2C.c: 78:     i2cBuff[1]=highnib | 0x1 | ~0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 1 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | -> _highnib `i -> 1 `i ~ -> 4 `i -> __backlightval `i `uc ]
-"79
-[; ;LiquidCrystal_I2C.c: 79:     i2cBuff[2]=lownib | 0x1 | 0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 2 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | -> _lownib `i -> 1 `i -> 4 `i -> __backlightval `i `uc ]
-"80
-[; ;LiquidCrystal_I2C.c: 80:     i2cBuff[3]=lownib | 0x1 | ~0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> -> -> 3 `i `ui `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | -> _lownib `i -> 1 `i ~ -> 4 `i -> __backlightval `i `uc ]
-"81
-[; ;LiquidCrystal_I2C.c: 81:     I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"82
-[; ;LiquidCrystal_I2C.c: 82:     I2C2_SetBuffer(i2cBuff,4);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> -> 4 `i `ui ]
-"83
-[; ;LiquidCrystal_I2C.c: 83:     I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
-"84
-[; ;LiquidCrystal_I2C.c: 84:     while(I2C2_BUSY == I2C2_LClose());
-[e $U 2249  ]
-[e :U 2250 ]
-[e :U 2249 ]
-[e $ == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui 2250  ]
-[e :U 2251 ]
-"85
-[; ;LiquidCrystal_I2C.c: 85: }
-[e :UE 2248 ]
-}
-"87
-[; ;LiquidCrystal_I2C.c: 87: void printstr(const char c[]){
-[v _printstr `(v ~T0 @X0 1 ef1`*Cuc ]
-{
-[e :U _printstr ]
-[v _c `*Cuc ~T0 @X0 1 r1 ]
-[f ]
-"88
-[; ;LiquidCrystal_I2C.c: 88:     uint8_t idx;
-[v _idx `uc ~T0 @X0 1 a ]
-"91
-[; ;LiquidCrystal_I2C.c: 91:     idx=0;
-[e = _idx -> -> 0 `i `uc ]
-"92
-[; ;LiquidCrystal_I2C.c: 92:     while (*c){
-[e $U 2253  ]
-[e :U 2254 ]
-{
-"93
-[; ;LiquidCrystal_I2C.c: 93:         i2cBuff[idx++]=((*c)&0xF0) | 0x1 | 0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> ++ _idx -> -> 1 `i `uc `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | & -> *U _c `i -> 240 `i -> 1 `i -> 4 `i -> __backlightval `i `uc ]
-"94
-[; ;LiquidCrystal_I2C.c: 94:         i2cBuff[idx++]=((*c)&0xF0) | 0x1 | ~0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> ++ _idx -> -> 1 `i `uc `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | & -> *U _c `i -> 240 `i -> 1 `i ~ -> 4 `i -> __backlightval `i `uc ]
-"95
-[; ;LiquidCrystal_I2C.c: 95:         i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | 0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> ++ _idx -> -> 1 `i `uc `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | << & -> *U _c `i -> 15 `i -> 4 `i -> 1 `i -> 4 `i -> __backlightval `i `uc ]
-"96
-[; ;LiquidCrystal_I2C.c: 96:         i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | ~0x4 | _backlightval;
-[e = *U + &U _i2cBuff * -> ++ _idx -> -> 1 `i `uc `ux -> -> # *U &U _i2cBuff `ui `ux -> | | | << & -> *U _c `i -> 15 `i -> 4 `i -> 1 `i ~ -> 4 `i -> __backlightval `i `uc ]
-"97
-[; ;LiquidCrystal_I2C.c: 97:         c++;
-[e ++ _c * -> -> 1 `i `x -> -> # *U _c `i `x ]
 "98
-[; ;LiquidCrystal_I2C.c: 98:         if (idx >=80) {
-[e $ ! >= -> _idx `i -> 80 `i 2256  ]
+[; ;i2c2_mux.c: 98: i2c2_error_t I2C2_LClose(void){
+[v _I2C2_LClose `(E16385 ~T0 @X0 1 ef ]
 {
+[e :U _I2C2_LClose ]
+[f ]
 "99
-[; ;LiquidCrystal_I2C.c: 99:             break;
-[e $U 2255  ]
-"100
-[; ;LiquidCrystal_I2C.c: 100:         }
-}
-[e :U 2256 ]
+[; ;i2c2_mux.c: 99:     i2c2_error_t trfRsp;
+[v _trfRsp `E16385 ~T0 @X0 1 a ]
 "101
-[; ;LiquidCrystal_I2C.c: 101:     }
-}
-[e :U 2253 ]
-"92
-[; ;LiquidCrystal_I2C.c: 92:     while (*c){
-[e $ != -> *U _c `i -> 0 `i 2254  ]
-[e :U 2255 ]
+[; ;i2c2_mux.c: 101:     trfRsp = I2C2_Close();
+[e = _trfRsp ( _I2C2_Close ..  ]
 "102
-[; ;LiquidCrystal_I2C.c: 102:     I2C2_LOpen();
-[e ( _I2C2_LOpen ..  ]
-"103
-[; ;LiquidCrystal_I2C.c: 103:     I2C2_SetBuffer(i2cBuff,idx);
-[e ( _I2C2_SetBuffer (2 , -> &U _i2cBuff `*v -> _idx `ui ]
+[; ;i2c2_mux.c: 102:     if (trfRsp != I2C2_BUSY) {
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2252  ]
+{
 "104
-[; ;LiquidCrystal_I2C.c: 104:     I2C2_MasterWrite();
-[e ( _I2C2_MasterWrite ..  ]
+[; ;i2c2_mux.c: 104:         if (currentTrfAddr == 0x50){
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2253  ]
+{
 "105
-[; ;LiquidCrystal_I2C.c: 105: }
-[e :UE 2252 ]
-}
+[; ;i2c2_mux.c: 105:             lastI2C2MTrfResponse = trfRsp;
+[e = _lastI2C2MTrfResponse _trfRsp ]
+"106
+[; ;i2c2_mux.c: 106:             printf ("MI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 7C -> _trfRsp `ui ]
 "107
-[; ;LiquidCrystal_I2C.c: 107: _Bool PrintStrBusy(void){
-[v _PrintStrBusy `(a ~T0 @X0 1 ef ]
+[; ;i2c2_mux.c: 107:         } else {
+}
+[e $U 2254  ]
+[e :U 2253 ]
 {
-[e :U _PrintStrBusy ]
-[f ]
 "108
-[; ;LiquidCrystal_I2C.c: 108:     return (I2C2_BUSY == I2C2_LClose());
-[e ) -> -> == -> . `E16385 1 `ui -> ( _I2C2_LClose ..  `ui `i `a ]
-[e $UE 2257  ]
+[; ;i2c2_mux.c: 108:             lastI2C2LTrfResponse = trfRsp;
+[e = _lastI2C2LTrfResponse _trfRsp ]
 "109
-[; ;LiquidCrystal_I2C.c: 109: }
-[e :UE 2257 ]
+[; ;i2c2_mux.c: 109:             printf ("LI2c: %d\n", trfRsp);
+[e ( _printf , (. :s 8C -> _trfRsp `ui ]
+"110
+[; ;i2c2_mux.c: 110:         }
 }
-"111
-[; ;LiquidCrystal_I2C.c: 111: void printstrblock(const char c[]){
-[v _printstrblock `(v ~T0 @X0 1 ef1`*Cuc ]
-{
-[e :U _printstrblock ]
-[v _c `*Cuc ~T0 @X0 1 r1 ]
-[f ]
+[e :U 2254 ]
 "112
-[; ;LiquidCrystal_I2C.c: 112:     printstr(c);
-[e ( _printstr (1 _c ]
+[; ;i2c2_mux.c: 112:         return lastI2C2LTrfResponse;
+[e ) _lastI2C2LTrfResponse ]
+[e $UE 2251  ]
 "113
-[; ;LiquidCrystal_I2C.c: 113:     while(PrintStrBusy());
-[e $U 2259  ]
-[e :U 2260 ]
-[e :U 2259 ]
-[e $ != -> ( _PrintStrBusy ..  `i -> 0 `i 2260  ]
-[e :U 2261 ]
+[; ;i2c2_mux.c: 113:     }
+}
+[e :U 2252 ]
 "114
-[; ;LiquidCrystal_I2C.c: 114: }
-[e :UE 2258 ]
+[; ;i2c2_mux.c: 114:     return I2C2_BUSY;
+[e ) . `E16385 1 ]
+[e $UE 2251  ]
+"115
+[; ;i2c2_mux.c: 115: }
+[e :UE 2251 ]
 }
-[v F16754 `(v ~T0 @X0 1 tf1`uc ]
-"118
-[; ;LiquidCrystal_I2C.c: 118: __attribute__((inline)) void command(uint8_t value) {
-[v _command `TF16754 ~T0 @X0 1 e ]
-{
-[e :U _command ]
-[v _value `uc ~T0 @X0 1 r1 ]
-[f ]
-"119
-[; ;LiquidCrystal_I2C.c: 119:  send(value, 0);
-[e ( _send (2 , _value -> -> 0 `i `uc ]
-"120
-[; ;LiquidCrystal_I2C.c: 120: }
-[e :UE 2262 ]
-}
-"142
-[; ;LiquidCrystal_I2C.c: 142: void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
-[v _LcdI2CInit `(v ~T0 @X0 1 ef3`uc`uc`uc ]
-{
-[e :U _LcdI2CInit ]
-[v _lcd_Addr `uc ~T0 @X0 1 r1 ]
-[v _lcd_cols `uc ~T0 @X0 1 r2 ]
-[v _lcd_rows `uc ~T0 @X0 1 r3 ]
-[f ]
-"143
-[; ;LiquidCrystal_I2C.c: 143:   _Addr = lcd_Addr;
-[e = __Addr _lcd_Addr ]
-"144
-[; ;LiquidCrystal_I2C.c: 144:   _cols = lcd_cols;
-[e = __cols _lcd_cols ]
-"145
-[; ;LiquidCrystal_I2C.c: 145:   _rows = lcd_rows;
-[e = __rows _lcd_rows ]
-"146
-[; ;LiquidCrystal_I2C.c: 146:   _backlightval = 0x00;
-[e = __backlightval -> -> 0 `i `uc ]
-"147
-[; ;LiquidCrystal_I2C.c: 147:   _numlines = 2;
-[e = __numlines -> -> 2 `i `uc ]
-"149
-[; ;LiquidCrystal_I2C.c: 149:   _displayfunction = 0x00 | 0x08 | 0x00;
-[e = __displayfunction -> | | -> 0 `i -> 8 `i -> 0 `i `uc ]
-"154
-[; ;LiquidCrystal_I2C.c: 154:  timeDelayMs(50);
-[e ( _timeDelayMs (1 -> -> 50 `i `us ]
-"157
-[; ;LiquidCrystal_I2C.c: 157:  expanderWrite(_backlightval);
-[e ( _expanderWrite (1 __backlightval ]
-"158
-[; ;LiquidCrystal_I2C.c: 158:  timeDelayMs(10);
-[e ( _timeDelayMs (1 -> -> 10 `i `us ]
-"165
-[; ;LiquidCrystal_I2C.c: 165:    write4bits(0x03 << 4);
-[e ( _write4bits (1 -> << -> 3 `i -> 4 `i `uc ]
-"166
-[; ;LiquidCrystal_I2C.c: 166:    timeDelayMs(5);
-[e ( _timeDelayMs (1 -> -> 5 `i `us ]
-"169
-[; ;LiquidCrystal_I2C.c: 169:    write4bits(0x03 << 4);
-[e ( _write4bits (1 -> << -> 3 `i -> 4 `i `uc ]
-"170
-[; ;LiquidCrystal_I2C.c: 170:    timeDelayMs(5);
-[e ( _timeDelayMs (1 -> -> 5 `i `us ]
-"173
-[; ;LiquidCrystal_I2C.c: 173:    write4bits(0x03 << 4);
-[e ( _write4bits (1 -> << -> 3 `i -> 4 `i `uc ]
-"176
-[; ;LiquidCrystal_I2C.c: 176:    write4bits(0x02 << 4);
-[e ( _write4bits (1 -> << -> 2 `i -> 4 `i `uc ]
-"179
-[; ;LiquidCrystal_I2C.c: 179:  command(0x20 | _displayfunction);
-[e ( _command (1 -> | -> 32 `i -> __displayfunction `i `uc ]
-"182
-[; ;LiquidCrystal_I2C.c: 182:  _displaycontrol = 0x04 | 0x00 | 0x00;
-[e = __displaycontrol -> | | -> 4 `i -> 0 `i -> 0 `i `uc ]
-"183
-[; ;LiquidCrystal_I2C.c: 183:  display();
-[e ( _display ..  ]
-"186
-[; ;LiquidCrystal_I2C.c: 186:  clear();
-[e ( _clear ..  ]
-"189
-[; ;LiquidCrystal_I2C.c: 189:  _displaymode = 0x02 | 0x00;
-[e = __displaymode -> | -> 2 `i -> 0 `i `uc ]
-"192
-[; ;LiquidCrystal_I2C.c: 192:  command(0x04 | _displaymode);
-[e ( _command (1 -> | -> 4 `i -> __displaymode `i `uc ]
-"194
-[; ;LiquidCrystal_I2C.c: 194:  home();
-[e ( _home ..  ]
-"196
-[; ;LiquidCrystal_I2C.c: 196: }
-[e :UE 2263 ]
-}
-"198
-[; ;LiquidCrystal_I2C.c: 198: void clear(){
-[v _clear `(v ~T0 @X0 1 ef ]
-{
-[e :U _clear ]
-[f ]
-"199
-[; ;LiquidCrystal_I2C.c: 199:  command(0x01);
-[e ( _command (1 -> -> 1 `i `uc ]
-"200
-[; ;LiquidCrystal_I2C.c: 200:  timeDelayMs(2);
-[e ( _timeDelayMs (1 -> -> 2 `i `us ]
-"201
-[; ;LiquidCrystal_I2C.c: 201: }
-[e :UE 2264 ]
-}
-"203
-[; ;LiquidCrystal_I2C.c: 203: void home(){
-[v _home `(v ~T0 @X0 1 ef ]
-{
-[e :U _home ]
-[f ]
-"204
-[; ;LiquidCrystal_I2C.c: 204:  command(0x02);
-[e ( _command (1 -> -> 2 `i `uc ]
-"205
-[; ;LiquidCrystal_I2C.c: 205:  timeDelayMs(2);
-[e ( _timeDelayMs (1 -> -> 2 `i `us ]
-"206
-[; ;LiquidCrystal_I2C.c: 206: }
-[e :UE 2265 ]
-}
-"208
-[; ;LiquidCrystal_I2C.c: 208: void setCursor(uint8_t col, uint8_t row){
-[v _setCursor `(v ~T0 @X0 1 ef2`uc`uc ]
-{
-[e :U _setCursor ]
-[v _col `uc ~T0 @X0 1 r1 ]
-[v _row `uc ~T0 @X0 1 r2 ]
-[f ]
-[v F16765 `i ~T0 @X0 -> 4 `i s ]
-[i F16765
-:U ..
-"209
-[; ;LiquidCrystal_I2C.c: 209:  int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
--> 0 `i
--> 64 `i
--> 20 `i
--> 84 `i
-..
-]
-[v _row_offsets `i ~T0 @X0 -> 4 `i a ]
-[e = _row_offsets F16765 ]
-"210
-[; ;LiquidCrystal_I2C.c: 210:  if ( row > _numlines ) {
-[e $ ! > -> _row `i -> __numlines `i 2267  ]
-{
-"211
-[; ;LiquidCrystal_I2C.c: 211:   row = _numlines-1;
-[e = _row -> - -> __numlines `i -> 1 `i `uc ]
-"212
-[; ;LiquidCrystal_I2C.c: 212:  }
-}
-[e :U 2267 ]
-"213
-[; ;LiquidCrystal_I2C.c: 213:  command(0x80 | (col + row_offsets[row]));
-[e ( _command (1 -> | -> 128 `i + -> _col `i *U + &U _row_offsets * -> _row `ux -> -> # *U &U _row_offsets `ui `ux `uc ]
-"214
-[; ;LiquidCrystal_I2C.c: 214: }
-[e :UE 2266 ]
-}
-"217
-[; ;LiquidCrystal_I2C.c: 217: void noDisplay() {
-[v _noDisplay `(v ~T0 @X0 1 ef ]
-{
-[e :U _noDisplay ]
-[f ]
-"218
-[; ;LiquidCrystal_I2C.c: 218:  _displaycontrol &= ~0x04;
-[e =& __displaycontrol -> ~ -> 4 `i `uc ]
-"219
-[; ;LiquidCrystal_I2C.c: 219:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"220
-[; ;LiquidCrystal_I2C.c: 220: }
-[e :UE 2268 ]
-}
-"221
-[; ;LiquidCrystal_I2C.c: 221: void display() {
-[v _display `(v ~T0 @X0 1 ef ]
-{
-[e :U _display ]
-[f ]
-"222
-[; ;LiquidCrystal_I2C.c: 222:  _displaycontrol |= 0x04;
-[e =| __displaycontrol -> -> 4 `i `uc ]
-"223
-[; ;LiquidCrystal_I2C.c: 223:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"224
-[; ;LiquidCrystal_I2C.c: 224: }
-[e :UE 2269 ]
-}
-"227
-[; ;LiquidCrystal_I2C.c: 227: void noCursor() {
-[v _noCursor `(v ~T0 @X0 1 ef ]
-{
-[e :U _noCursor ]
-[f ]
-"228
-[; ;LiquidCrystal_I2C.c: 228:  _displaycontrol &= ~0x02;
-[e =& __displaycontrol -> ~ -> 2 `i `uc ]
-"229
-[; ;LiquidCrystal_I2C.c: 229:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"230
-[; ;LiquidCrystal_I2C.c: 230: }
-[e :UE 2270 ]
-}
-"231
-[; ;LiquidCrystal_I2C.c: 231: void cursor() {
-[v _cursor `(v ~T0 @X0 1 ef ]
-{
-[e :U _cursor ]
-[f ]
-"232
-[; ;LiquidCrystal_I2C.c: 232:  _displaycontrol |= 0x02;
-[e =| __displaycontrol -> -> 2 `i `uc ]
-"233
-[; ;LiquidCrystal_I2C.c: 233:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"234
-[; ;LiquidCrystal_I2C.c: 234: }
-[e :UE 2271 ]
-}
-"237
-[; ;LiquidCrystal_I2C.c: 237: void noBlink() {
-[v _noBlink `(v ~T0 @X0 1 ef ]
-{
-[e :U _noBlink ]
-[f ]
-"238
-[; ;LiquidCrystal_I2C.c: 238:  _displaycontrol &= ~0x01;
-[e =& __displaycontrol -> ~ -> 1 `i `uc ]
-"239
-[; ;LiquidCrystal_I2C.c: 239:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"240
-[; ;LiquidCrystal_I2C.c: 240: }
-[e :UE 2272 ]
-}
-"241
-[; ;LiquidCrystal_I2C.c: 241: void blink() {
-[v _blink `(v ~T0 @X0 1 ef ]
-{
-[e :U _blink ]
-[f ]
-"242
-[; ;LiquidCrystal_I2C.c: 242:  _displaycontrol |= 0x01;
-[e =| __displaycontrol -> -> 1 `i `uc ]
-"243
-[; ;LiquidCrystal_I2C.c: 243:  command(0x08 | _displaycontrol);
-[e ( _command (1 -> | -> 8 `i -> __displaycontrol `i `uc ]
-"244
-[; ;LiquidCrystal_I2C.c: 244: }
-[e :UE 2273 ]
-}
-"247
-[; ;LiquidCrystal_I2C.c: 247: void scrollDisplayLeft(void) {
-[v _scrollDisplayLeft `(v ~T0 @X0 1 ef ]
-{
-[e :U _scrollDisplayLeft ]
-[f ]
-"248
-[; ;LiquidCrystal_I2C.c: 248:  command(0x10 | 0x08 | 0x00);
-[e ( _command (1 -> | | -> 16 `i -> 8 `i -> 0 `i `uc ]
-"249
-[; ;LiquidCrystal_I2C.c: 249: }
-[e :UE 2274 ]
-}
-"250
-[; ;LiquidCrystal_I2C.c: 250: void scrollDisplayRight(void) {
-[v _scrollDisplayRight `(v ~T0 @X0 1 ef ]
-{
-[e :U _scrollDisplayRight ]
-[f ]
-"251
-[; ;LiquidCrystal_I2C.c: 251:  command(0x10 | 0x08 | 0x04);
-[e ( _command (1 -> | | -> 16 `i -> 8 `i -> 4 `i `uc ]
-"252
-[; ;LiquidCrystal_I2C.c: 252: }
-[e :UE 2275 ]
-}
-"255
-[; ;LiquidCrystal_I2C.c: 255: void leftToRight(void) {
-[v _leftToRight `(v ~T0 @X0 1 ef ]
-{
-[e :U _leftToRight ]
-[f ]
-"256
-[; ;LiquidCrystal_I2C.c: 256:  _displaymode |= 0x02;
-[e =| __displaymode -> -> 2 `i `uc ]
-"257
-[; ;LiquidCrystal_I2C.c: 257:  command(0x04 | _displaymode);
-[e ( _command (1 -> | -> 4 `i -> __displaymode `i `uc ]
-"258
-[; ;LiquidCrystal_I2C.c: 258: }
-[e :UE 2276 ]
-}
-"261
-[; ;LiquidCrystal_I2C.c: 261: void rightToLeft(void) {
-[v _rightToLeft `(v ~T0 @X0 1 ef ]
-{
-[e :U _rightToLeft ]
-[f ]
-"262
-[; ;LiquidCrystal_I2C.c: 262:  _displaymode &= ~0x02;
-[e =& __displaymode -> ~ -> 2 `i `uc ]
-"263
-[; ;LiquidCrystal_I2C.c: 263:  command(0x04 | _displaymode);
-[e ( _command (1 -> | -> 4 `i -> __displaymode `i `uc ]
-"264
-[; ;LiquidCrystal_I2C.c: 264: }
-[e :UE 2277 ]
-}
-"267
-[; ;LiquidCrystal_I2C.c: 267: void autoscroll(void) {
-[v _autoscroll `(v ~T0 @X0 1 ef ]
-{
-[e :U _autoscroll ]
-[f ]
-"268
-[; ;LiquidCrystal_I2C.c: 268:  _displaymode |= 0x01;
-[e =| __displaymode -> -> 1 `i `uc ]
-"269
-[; ;LiquidCrystal_I2C.c: 269:  command(0x04 | _displaymode);
-[e ( _command (1 -> | -> 4 `i -> __displaymode `i `uc ]
-"270
-[; ;LiquidCrystal_I2C.c: 270: }
-[e :UE 2278 ]
-}
-"273
-[; ;LiquidCrystal_I2C.c: 273: void noAutoscroll(void) {
-[v _noAutoscroll `(v ~T0 @X0 1 ef ]
-{
-[e :U _noAutoscroll ]
-[f ]
-"274
-[; ;LiquidCrystal_I2C.c: 274:  _displaymode &= ~0x01;
-[e =& __displaymode -> ~ -> 1 `i `uc ]
-"275
-[; ;LiquidCrystal_I2C.c: 275:  command(0x04 | _displaymode);
-[e ( _command (1 -> | -> 4 `i -> __displaymode `i `uc ]
-"276
-[; ;LiquidCrystal_I2C.c: 276: }
-[e :UE 2279 ]
-}
-"280
-[; ;LiquidCrystal_I2C.c: 280: void createChar(uint8_t location, uint8_t charmap[]) {
-[v _createChar `(v ~T0 @X0 1 ef2`uc`*uc ]
-{
-[e :U _createChar ]
-[v _location `uc ~T0 @X0 1 r1 ]
-[v _charmap `*uc ~T0 @X0 1 r2 ]
-[f ]
-"281
-[; ;LiquidCrystal_I2C.c: 281:  location &= 0x7;
-[e =& _location -> -> 7 `i `uc ]
-"282
-[; ;LiquidCrystal_I2C.c: 282:  command(0x40 | (location << 3));
-[e ( _command (1 -> | -> 64 `i << -> _location `i -> 3 `i `uc ]
-"283
-[; ;LiquidCrystal_I2C.c: 283:  for (int i=0; i<8; i++) {
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $ < _i -> 8 `i 2281  ]
-[e $U 2282  ]
-[e :U 2281 ]
-{
-"284
-[; ;LiquidCrystal_I2C.c: 284:   write(charmap[i]);
-[e ( _write (1 *U + _charmap * -> _i `x -> -> # *U _charmap `i `x ]
-"285
-[; ;LiquidCrystal_I2C.c: 285:  }
-}
-[e ++ _i -> 1 `i ]
-[e $ < _i -> 8 `i 2281  ]
-[e :U 2282 ]
-}
-"286
-[; ;LiquidCrystal_I2C.c: 286: }
-[e :UE 2280 ]
-}
-"289
-[; ;LiquidCrystal_I2C.c: 289: void noBacklight(void) {
-[v _noBacklight `(v ~T0 @X0 1 ef ]
-{
-[e :U _noBacklight ]
-[f ]
-"290
-[; ;LiquidCrystal_I2C.c: 290:  _backlightval=0x00;
-[e = __backlightval -> -> 0 `i `uc ]
-"291
-[; ;LiquidCrystal_I2C.c: 291:  expanderWrite(0);
-[e ( _expanderWrite (1 -> -> 0 `i `uc ]
-"292
-[; ;LiquidCrystal_I2C.c: 292: }
-[e :UE 2284 ]
-}
-"294
-[; ;LiquidCrystal_I2C.c: 294: void backlight(void) {
-[v _backlight `(v ~T0 @X0 1 ef ]
-{
-[e :U _backlight ]
-[f ]
-"295
-[; ;LiquidCrystal_I2C.c: 295:  _backlightval=0x08;
-[e = __backlightval -> -> 8 `i `uc ]
-"296
-[; ;LiquidCrystal_I2C.c: 296:  expanderWrite(0);
-[e ( _expanderWrite (1 -> -> 0 `i `uc ]
-"297
-[; ;LiquidCrystal_I2C.c: 297: }
-[e :UE 2285 ]
-}
-"299
-[; ;LiquidCrystal_I2C.c: 299: void load_custom_character(uint8_t char_num, uint8_t *rows){
-[v _load_custom_character `(v ~T0 @X0 1 ef2`uc`*uc ]
-{
-[e :U _load_custom_character ]
-[v _char_num `uc ~T0 @X0 1 r1 ]
-[v _rows `*uc ~T0 @X0 1 r2 ]
-[f ]
-"300
-[; ;LiquidCrystal_I2C.c: 300:   createChar(char_num, rows);
-[e ( _createChar (2 , _char_num _rows ]
-"301
-[; ;LiquidCrystal_I2C.c: 301: }
-[e :UE 2286 ]
-}
-"303
-[; ;LiquidCrystal_I2C.c: 303: void setBacklight(_Bool new_val){
-[v _setBacklight `(v ~T0 @X0 1 ef1`a ]
-{
-[e :U _setBacklight ]
-[v _new_val `a ~T0 @X0 1 r1 ]
-[f ]
-"304
-[; ;LiquidCrystal_I2C.c: 304:  if(new_val){
-[e $ ! != -> _new_val `i -> 0 `i 2288  ]
-{
-"305
-[; ;LiquidCrystal_I2C.c: 305:   backlight();
-[e ( _backlight ..  ]
-"306
-[; ;LiquidCrystal_I2C.c: 306:  }else{
-}
-[e $U 2289  ]
-[e :U 2288 ]
-{
-"307
-[; ;LiquidCrystal_I2C.c: 307:   noBacklight();
-[e ( _noBacklight ..  ]
-"308
-[; ;LiquidCrystal_I2C.c: 308:  }
-}
-[e :U 2289 ]
-"309
-[; ;LiquidCrystal_I2C.c: 309: }
-[e :UE 2287 ]
-}
+[p f _printf 8388736 ]
+[a 1C 77 73 50 99 58 32 37 100 10 0 ]
+[a 3C 77 73 50 99 58 32 37 100 10 0 ]
+[a 5C 77 73 50 99 58 32 37 100 10 0 ]
+[a 6C 77 73 50 99 58 32 37 100 10 0 ]
+[a 7C 77 73 50 99 58 32 37 100 10 0 ]
+[a 2C 76 73 50 99 58 32 37 100 10 0 ]
+[a 4C 76 73 50 99 58 32 37 100 10 0 ]
+[a 8C 76 73 50 99 58 32 37 100 10 0 ]
