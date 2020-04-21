@@ -28154,8 +28154,6 @@ void MonitorMsgForcedSend (monStateT state){
         I2C2_SetBuffer(monitorMsg,10);
         trfError = I2C2_MasterOperation(0);
         printf ("I2C2 Open: %d\n", trfError);
-        timeDelayMs(2000);
-        while (1);
     }
 }
 
@@ -28534,7 +28532,7 @@ void main(void) {
     } else {
         MonitorMsgForcedSend(MONSTATE_RUNV);
     }
-# 665 "main.c"
+# 663 "main.c"
     rCycleTime = timeGet();
 
     while (1) {
@@ -28694,7 +28692,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 832 "main.c"
+# 830 "main.c"
             }
 
         }

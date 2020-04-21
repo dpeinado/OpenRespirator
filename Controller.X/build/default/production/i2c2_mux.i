@@ -27864,12 +27864,12 @@ void I2C2_NAckCallback(void){
 }
 
 void I2C2_MuxInit(void){
-    I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
     lastI2C2MAckResponse = 1;
     lastI2C2LAckResponse = 1;
     lastI2C2MTrfResponse = I2C2_NOERR;
     lastI2C2LTrfResponse = I2C2_NOERR;
     currentTrfAddr = 0x0;
+    I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
 }
 
 _Bool I2C2_MAck(void){

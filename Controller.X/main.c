@@ -225,8 +225,6 @@ void MonitorMsgForcedSend (monStateT state){
         I2C2_SetBuffer(monitorMsg,10);
         trfError = I2C2_MasterOperation(false);
         DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
-        timeDelayMs(2000);
-        while (1);
     }
 }
 

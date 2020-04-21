@@ -5,8 +5,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;i2c2_mux.c: 6: i2c2_error_t lastI2C2MTrfResponse;
 [c E16385 0 1 2 .. ]
 [n E16385 . I2C2_NOERR I2C2_BUSY I2C2_FAIL  ]
-"21
-[; ;i2c2_mux.c: 21:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+"26
+[; ;i2c2_mux.c: 26:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
 [c E16390 1 2 3 4 5 .. ]
 [n E16390 . I2C2_STOP I2C2_RESTART_READ I2C2_RESTART_WRITE I2C2_CONTINUE I2C2_RESET_LINK  ]
 [v F16444 `(E16390 ~T0 @X0 0 tf1`*v ]
@@ -2310,23 +2310,23 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _I2C2_MuxInit ]
 [f ]
 "21
-[; ;i2c2_mux.c: 21:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
-[e ( _I2C2_SetDataNackCallback (2 , -> &U _I2C2_NAckCallback `*F16698 -> -> 0 `i `*v ]
-"22
-[; ;i2c2_mux.c: 22:     lastI2C2MAckResponse = 1;
+[; ;i2c2_mux.c: 21:     lastI2C2MAckResponse = 1;
 [e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
-"23
-[; ;i2c2_mux.c: 23:     lastI2C2LAckResponse = 1;
+"22
+[; ;i2c2_mux.c: 22:     lastI2C2LAckResponse = 1;
 [e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
-"24
-[; ;i2c2_mux.c: 24:     lastI2C2MTrfResponse = I2C2_NOERR;
+"23
+[; ;i2c2_mux.c: 23:     lastI2C2MTrfResponse = I2C2_NOERR;
 [e = _lastI2C2MTrfResponse . `E16385 0 ]
-"25
-[; ;i2c2_mux.c: 25:     lastI2C2LTrfResponse = I2C2_NOERR;
+"24
+[; ;i2c2_mux.c: 24:     lastI2C2LTrfResponse = I2C2_NOERR;
 [e = _lastI2C2LTrfResponse . `E16385 0 ]
-"26
-[; ;i2c2_mux.c: 26:     currentTrfAddr = 0x0;
+"25
+[; ;i2c2_mux.c: 25:     currentTrfAddr = 0x0;
 [e = _currentTrfAddr -> -> 0 `i `uc ]
+"26
+[; ;i2c2_mux.c: 26:     I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
+[e ( _I2C2_SetDataNackCallback (2 , -> &U _I2C2_NAckCallback `*F16698 -> -> 0 `i `*v ]
 "27
 [; ;i2c2_mux.c: 27: }
 [e :UE 2236 ]
