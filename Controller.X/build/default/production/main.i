@@ -27035,9 +27035,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 490 "./mcc_generated_files/pin_manager.h"
+# 466 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 502 "./mcc_generated_files/pin_manager.h"
+# 478 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27167,8 +27167,8 @@ extern void cputs(const char *);
 void INTERRUPT_Initialize (void);
 # 55 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/i2c1_master.h" 1
-# 54 "./mcc_generated_files/i2c1_master.h"
+# 1 "./mcc_generated_files/i2c2_master.h" 1
+# 54 "./mcc_generated_files/i2c2_master.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdio.h" 1 3
 # 24 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdio.h" 3
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 1 3
@@ -27307,81 +27307,11 @@ char *ctermid(char *);
 
 
 char *tempnam(const char *, const char *);
-# 54 "./mcc_generated_files/i2c1_master.h" 2
+# 54 "./mcc_generated_files/i2c2_master.h" 2
 
 
 
 
-typedef enum {
-    I2C1_NOERR,
-    I2C1_BUSY,
-    I2C1_FAIL
-
-
-} i2c1_error_t;
-
-typedef enum
-{
-    I2C1_STOP=1,
-    I2C1_RESTART_READ,
-    I2C1_RESTART_WRITE,
-    I2C1_CONTINUE,
-    I2C1_RESET_LINK
-} i2c1_operations_t;
-
-typedef uint8_t i2c1_address_t;
-typedef i2c1_operations_t (*i2c1_callback_t)(void *funPtr);
-
-
-i2c1_operations_t I2C1_CallbackReturnStop(void *funPtr);
-i2c1_operations_t I2C1_CallbackReturnReset(void *funPtr);
-i2c1_operations_t I2C1_CallbackRestartWrite(void *funPtr);
-i2c1_operations_t I2C1_CallbackRestartRead(void *funPtr);
-
-
-
-
-
-
-void I2C1_Initialize(void);
-# 101 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_Open(i2c1_address_t address);
-# 111 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_Close(void);
-# 123 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_MasterOperation(_Bool read);
-
-
-
-
-i2c1_error_t I2C1_MasterWrite(void);
-
-
-
-
-i2c1_error_t I2C1_MasterRead(void);
-# 142 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetTimeout(uint8_t timeOut);
-# 152 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetBuffer(void *buffer, size_t bufferSize);
-# 164 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetDataCompleteCallback(i2c1_callback_t cb, void *ptr);
-# 174 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetWriteCollisionCallback(i2c1_callback_t cb, void *ptr);
-# 184 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetAddressNackCallback(i2c1_callback_t cb, void *ptr);
-# 194 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetDataNackCallback(i2c1_callback_t cb, void *ptr);
-# 204 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetTimeoutCallback(i2c1_callback_t cb, void *ptr);
-# 213 "./mcc_generated_files/i2c1_master.h"
-void (*I2C1_InterruptHandler)(void);
-# 222 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetInterruptHandler(void (* InterruptHandler)(void));
-# 56 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/i2c2_master.h" 1
-# 58 "./mcc_generated_files/i2c2_master.h"
 typedef enum {
     I2C2_NOERR,
     I2C2_BUSY,
@@ -27448,7 +27378,7 @@ void I2C2_SetTimeoutCallback(i2c2_callback_t cb, void *ptr);
 void (*I2C2_InterruptHandler)(void);
 # 222 "./mcc_generated_files/i2c2_master.h"
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
-# 57 "./mcc_generated_files/mcc.h" 2
+# 56 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr1.h" 1
 # 100 "./mcc_generated_files/tmr1.h"
@@ -27469,7 +27399,7 @@ void TMR1_StartSinglePulseAcquisition(void);
 uint8_t TMR1_CheckGateValueStatus(void);
 # 387 "./mcc_generated_files/tmr1.h"
 _Bool TMR1_HasOverflowOccured(void);
-# 58 "./mcc_generated_files/mcc.h" 2
+# 57 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27716,7 +27646,7 @@ void TMR2_ISR(void);
 extern void (*TMR2_InterruptHandler)(void);
 # 882 "./mcc_generated_files/tmr2.h"
 void TMR2_DefaultInterruptHandler(void);
-# 59 "./mcc_generated_files/mcc.h" 2
+# 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr0.h" 1
 # 100 "./mcc_generated_files/tmr0.h"
@@ -27733,7 +27663,7 @@ void TMR0_WriteTimer(uint8_t timerVal);
 void TMR0_Reload(uint8_t periodVal);
 # 308 "./mcc_generated_files/tmr0.h"
 _Bool TMR0_HasOverflowOccured(void);
-# 60 "./mcc_generated_files/mcc.h" 2
+# 59 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
@@ -27812,14 +27742,14 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
-# 61 "./mcc_generated_files/mcc.h" 2
+# 60 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/fvr.h" 1
 # 93 "./mcc_generated_files/fvr.h"
  void FVR_Initialize(void);
 # 127 "./mcc_generated_files/fvr.h"
 _Bool FVR_IsOutputReady(void);
-# 62 "./mcc_generated_files/mcc.h" 2
+# 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
@@ -27864,12 +27794,12 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 void (*UART1_TxInterruptHandler)(void);
 # 498 "./mcc_generated_files/uart1.h"
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
-# 63 "./mcc_generated_files/mcc.h" 2
-# 78 "./mcc_generated_files/mcc.h"
+# 62 "./mcc_generated_files/mcc.h" 2
+# 77 "./mcc_generated_files/mcc.h"
 void SYSTEM_Initialize(void);
-# 91 "./mcc_generated_files/mcc.h"
+# 90 "./mcc_generated_files/mcc.h"
 void OSCILLATOR_Initialize(void);
-# 104 "./mcc_generated_files/mcc.h"
+# 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 5 "main.c" 2
 
@@ -28113,92 +28043,7 @@ void MonitorErrorClr(monErrorT flag){
 }
 
 void MonitorMsgForcedSend (monStateT state){
-    i2c1_error_t trfError;
-    int16_t vddVal;
-
-
-
-    trfError = I2C1_Close();
-
-    printf ("I2C1 %d", trfError);
-
-    if (trfError == I2C1_FAIL) {
-
-        sprintf(lcdBtnRow, "        M. ERROR");
-        lcdPrintBR = 1;
-        LATDbits.LATD0 = 1;
-        printf ("MON ERROR");
-    } else if ((LATDbits.LATD0) && (trfError == I2C1_NOERR)) {
-
-        sprintf(lcdBtnRow, "                ");
-        lcdPrintBR = 1;
-        LATDbits.LATD0 = 0;
-        printf ("MON ERROR CLR");
-    }
-
-    if (trfError != I2C1_BUSY) {
-
-        aCaptGetResult(VddSensor, &vddVal);
-        if (vddVal > vddValMean){
-            vddVal = vddVal - vddValMean;
-        } else {
-            vddVal = vddValMean - vddVal;
-        }
-        if (vddVal > 150) {
-            MonitorErrorSet(MON_VDDE);
-        } else {
-            MonitorErrorClr(MON_VDDE);
-        }
-
-
-        if (VentMode == VMODE_VOLUME) {
-            monitorMsg[0] = state|0x4;
-        } else {
-            monitorMsg[0] = state;
-        }
-
-        monitorMsg[1] = IP;
-        if (chIP) {
-            monitorMsg[1] |= 0x80;
-        }
-
-        monitorMsg[2] = PEEP;
-        if (chPEEP) {
-            monitorMsg[2] |= 0x80;
-        }
-
-        monitorMsg[3] = BPM;
-        if (chBPM) {
-            monitorMsg[3] |= 0x80;
-        }
-
-        monitorMsg[4] = MaxP;
-        if (chMaxP){
-            monitorMsg[3] |= 0x80;
-        }
-
-        monitorMsg[5] = MaxV;
-        if (chMaxV){
-            monitorMsg[5] |= 0x80;
-        }
-
-        monitorMsg[6] = LowVAlarm;
-        if (chLowVAlarm){
-            monitorMsg[6] |= 0x80;
-        }
-
-        monitorMsg[7] = HighVAlarm;
-        if (chHighVAlarm){
-            monitorMsg[7] |= 0x80;
-        }
-
-        monitorMsg[8] = eBRate;
-        monitorMsg[9] = ctrlErrorStatus;
-
-        I2C1_Open(0x50);
-        I2C1_SetBuffer(monitorMsg,10);
-        I2C1_MasterWrite();
-    }
+# 227 "main.c"
 }
 
 void MonitorMsgSend (monStateT state){
@@ -28261,7 +28106,7 @@ _Bool InitProcedure(void) {
 
     while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
         if (aCaptGetResult(VddSensor, &vddVal)) {
-            printf ("VDD %d\n", vddVal);
+
             if (vddVal > vddValMax) {
                 vddValMax = vddVal;
             }
@@ -28465,6 +28310,8 @@ _Bool InitProcedure(void) {
     }
 
 
+
+
     while (keyPeek() != -1)
         ;
     keyReadInit();
@@ -28573,7 +28420,7 @@ void main(void) {
     } else {
         MonitorMsgForcedSend(MONSTATE_RUNV);
     }
-# 654 "main.c"
+# 660 "main.c"
     rCycleTime = timeGet();
 
     while (1) {
@@ -28615,7 +28462,12 @@ void main(void) {
                     MonitorErrorSet(MON_IPE);
                 }
                 if (OSCheck) {
-                    pInspOS = (3*pInspOS)>>2;
+                    OSCheck = 0;
+                    aCaptGetResult(Flt1PSensor, &pAvgUShort);
+                    pTmp = pAvgUShort - pValveActuation;
+                    if (pTmp > 0){
+                        pInspOS = (3*pInspOS + pTmp)>>2;
+                    }
                 }
                 break;
             } else {
@@ -28643,7 +28495,7 @@ void main(void) {
 
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
                         pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                        if ((pNext > pTmp) || (pInst > pTmp)) {
+                        if (((pNext > pTmp) || (pInst > pTmp)) && ((VentMode == VMODE_PRESSURE) || (vMeasureGet()<MaxV))) {
                             LATAbits.LATA2 = 0;
                             initialSubState = 0;
                             rValveAcuationTstamp = timeGet();
@@ -28708,7 +28560,7 @@ void main(void) {
                                 LATAbits.LATA3 = 0;
                                 printf ("PI VO T %d OSV3\n", timeDiff(rCycleTime, rValveDelayStart));
                             }
-                            if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) {
+                            if ((timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - ((int16_t) ((0.045*4096+2)/5)*2.5)))) && ((VentMode == VMODE_PRESSURE) || (vMeasureGet()<MaxV))) {
 
                                 LATAbits.LATA2 = 1;
                                 rSubCycleTime = timeGet();
@@ -28728,7 +28580,7 @@ void main(void) {
                 aCaptGetResult(Flt1PSensor, &pAvgShort);
                 pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                 printf ("PI T %d - Vol %d Pi %d Pn %d Pd %d. R %d Pip %d OS %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1));
-# 816 "main.c"
+# 827 "main.c"
             }
 
         }

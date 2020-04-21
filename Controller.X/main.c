@@ -134,6 +134,7 @@ void MonitorErrorClr(monErrorT flag){
 }
 
 void MonitorMsgForcedSend (monStateT state){
+#if 0
     i2c1_error_t trfError;
     int16_t vddVal;
     
@@ -141,7 +142,7 @@ void MonitorMsgForcedSend (monStateT state){
     // Ensure previous message was sent.
     trfError = I2C1_Close();
     
-    DEBUG_PRINT(("I2C1 %d", trfError));
+    DEBUG_PRINT(("I2C1 Close: %d\n", trfError));
 
     if (trfError == I2C1_FAIL) {
         // Enable buzzer and display error message on second line.
@@ -216,10 +217,13 @@ void MonitorMsgForcedSend (monStateT state){
         monitorMsg[MONIDX_BRRTV] = eBRate;        
         monitorMsg[MONIDX_ALARMV] = ctrlErrorStatus;
 
-        I2C1_Open(0x50);
+        trfError = I2C1_Open(0x50);
+        DEBUG_PRINT(("I2C1 Open: %d\n", trfError));    
         I2C1_SetBuffer(monitorMsg,10);
-        I2C1_MasterWrite();
+        trfError = I2C1_MasterWrite();
+        DEBUG_PRINT(("I2C1 Open: %d\n", trfError));    
     }
+#endif
 }
 
 void MonitorMsgSend (monStateT state){
@@ -282,7 +286,7 @@ bool InitProcedure(void) {
 
     while (!timeElapsedR(&tstamp, TIME_MS(500))) {
         if (aCaptGetResult(VddSensor, &vddVal)) {
-            DEBUG_PRINT(("VDD %d\n", vddVal));
+            // DEBUG_PRINT(("VDD %d\n", vddVal));
             if (vddVal > vddValMax) {
                 vddValMax = vddVal;
             }
@@ -694,7 +698,12 @@ void main(void) {
                     MonitorErrorSet(MON_IPE);                    
                 }
                 if (OSCheck) {
-                    pInspOS = (3*pInspOS)>>2;
+                    OSCheck = false;
+                    aCaptGetResult(Flt1PSensor, &pAvgUShort);
+                    pTmp = pAvgUShort - pValveActuation;
+                    if (pTmp > 0){
+                        pInspOS = (3*pInspOS + pTmp)>>2;
+                    }
                 }
                 break;
             } else {
@@ -722,7 +731,7 @@ void main(void) {
                         // Pressure prediction computed by presPredict function.
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
                         pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                        if ((pNext > pTmp) || (pInst > pTmp)) {
+                        if (((pNext > pTmp) || (pInst > pTmp)) && ((VentMode == VMODE_PRESSURE) || (vMeasureGet()<MaxV))) {
                             CLOSE_SV2;
                             initialSubState = false;
                             rValveAcuationTstamp = timeGet();
@@ -787,7 +796,7 @@ void main(void) {
                                 CLOSE_SV3;
                                 DEBUG_PRINT(("PI VO T %d OSV3\n", timeDiff(rCycleTime, rValveDelayStart)));
                             }
-                            if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - FINECTRLHIST))) {
+                            if ((timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16) && (pInst < (intIP - FINECTRLHIST))) && ((VentMode == VMODE_PRESSURE) || (vMeasureGet()<MaxV))) {
                                 // Measure only after delay of valve actuation has elapsed, x2.
                                 OPEN_SV2;
                                 rSubCycleTime = timeGet();
