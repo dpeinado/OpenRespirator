@@ -43,10 +43,8 @@ i2c2_error_t I2C2_MOpen(void){
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
             lastI2C2MTrfResponse = trfRsp;
-            DEBUG_PRINT(("MI2c: %d\n", trfRsp));
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            DEBUG_PRINT(("LI2c: %d\n", trfRsp));
         }
         currentTrfAddr = MON_ADDR;
         // Return last response for Monitor.
@@ -64,10 +62,8 @@ i2c2_error_t I2C2_LOpen(void){
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
             lastI2C2MTrfResponse = trfRsp;
-            DEBUG_PRINT(("MI2c: %d\n", trfRsp));
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            DEBUG_PRINT(("LI2c: %d\n", trfRsp));
         }
         currentTrfAddr = LCD_ADDR;
         // Return last response for LCD.
@@ -84,10 +80,8 @@ i2c2_error_t I2C2_MClose(void){
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
             lastI2C2MTrfResponse = trfRsp;
-            DEBUG_PRINT(("MI2c: %d\n", trfRsp));
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            DEBUG_PRINT(("MI2c: %d\n", trfRsp));
         }
         // Return last response for LCD.
         return lastI2C2MTrfResponse;    
@@ -103,10 +97,8 @@ i2c2_error_t I2C2_LClose(void){
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
             lastI2C2MTrfResponse = trfRsp;
-            DEBUG_PRINT(("MI2c: %d\n", trfRsp));
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            DEBUG_PRINT(("LI2c: %d\n", trfRsp));
         }
         // Return last response for LCD.
         return lastI2C2LTrfResponse;    

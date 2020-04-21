@@ -27889,10 +27889,8 @@ i2c2_error_t I2C2_MOpen(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
-            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            printf ("LI2c: %d\n", trfRsp);
         }
         currentTrfAddr = 0x50;
 
@@ -27910,10 +27908,8 @@ i2c2_error_t I2C2_LOpen(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
-            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            printf ("LI2c: %d\n", trfRsp);
         }
         currentTrfAddr = 0x27;
 
@@ -27930,10 +27926,8 @@ i2c2_error_t I2C2_MClose(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
-            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            printf ("MI2c: %d\n", trfRsp);
         }
 
         return lastI2C2MTrfResponse;
@@ -27949,10 +27943,8 @@ i2c2_error_t I2C2_LClose(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
-            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
-            printf ("LI2c: %d\n", trfRsp);
         }
 
         return lastI2C2LTrfResponse;
