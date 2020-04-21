@@ -54,7 +54,7 @@ AR Path="/5E9339D0/5EDF6B2A" Ref="J13"  Part="1"
 F 0 "J13" H 7472 4624 50  0000 R CNN
 F 1 "BUZZER_C" H 7472 4533 50  0000 R CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 7500 4650 50  0001 C CNN
-F 3 "~" H 7500 4650 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/componentes-de-piezo-buzzer/6173097/?relevancy-data=636F3D3126696E3D4931384E525353746F636B4E756D626572266C753D656E266D6D3D6D61746368616C6C26706D3D5E2828282872737C5253295B205D3F293F285C647B337D5B5C2D5C735D3F5C647B332C347D5B705061415D3F29297C283235285C647B387D7C5C647B317D5C2D5C647B377D2929292426706F3D3126736E3D592673723D2673743D52535F53544F434B5F4E554D4245522677633D4E4F4E45267573743D3631372D33303937267374613D3631373330393726&searchHistory=%7B%22enabled%22%3Atrue%7D" H 7500 4650 50  0001 C CNN
 	1    7500 4650
 	-1   0    0    -1  
 $EndComp
@@ -82,9 +82,9 @@ AR Path="/5EA602EB/5EDF6B6B" Ref="C?"  Part="1"
 AR Path="/5EA60E89/5EDF6B6B" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5EDF6B6B" Ref="C19"  Part="1" 
 F 0 "C19" H 5315 1096 50  0000 L CNN
-F 1 "100nF" H 5315 1005 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 5238 900 50  0001 C CNN
-F 3 "~" H 5200 1050 50  0001 C CNN
+F 1 "100nF - 100V" H 5315 1005 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 5238 900 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 5200 1050 50  0001 C CNN
 	1    5200 1050
 	1    0    0    -1  
 $EndComp
@@ -104,7 +104,7 @@ F 3 "" H 5200 1300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5200 800  5200 900 
+	5200 800  5200 850 
 Wire Wire Line
 	5200 1200 5200 1300
 Text GLabel 4150 3550 0    50   BiDi ~ 0
@@ -266,9 +266,6 @@ Wire Wire Line
 	7250 4850 7250 4750
 Wire Wire Line
 	7250 4750 7300 4750
-NoConn ~ 6650 1850
-NoConn ~ 6650 1950
-NoConn ~ 5500 1850
 NoConn ~ 5500 2450
 NoConn ~ 5500 2550
 NoConn ~ 5500 2650
@@ -393,103 +390,93 @@ $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5F0B0AD3
-P 8800 1600
+P 10350 1450
 AR Path="/5E9337AC/5F0B0AD3" Ref="#PWR?"  Part="1" 
 AR Path="/5E9339D0/5F0B0AD3" Ref="#PWR065"  Part="1" 
-F 0 "#PWR065" H 8800 1350 50  0001 C CNN
-F 1 "GND" H 8805 1427 50  0000 C CNN
-F 2 "" H 8800 1600 50  0001 C CNN
-F 3 "" H 8800 1600 50  0001 C CNN
-	1    8800 1600
+F 0 "#PWR065" H 10350 1200 50  0001 C CNN
+F 1 "GND" H 10355 1277 50  0000 C CNN
+F 2 "" H 10350 1450 50  0001 C CNN
+F 3 "" H 10350 1450 50  0001 C CNN
+	1    10350 1450
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8800 1350 8950 1350
+	10350 1200 10500 1200
 Wire Wire Line
-	8950 1450 8800 1450
+	10500 1300 10350 1300
 Wire Wire Line
-	8800 1450 8800 1600
-Text Label 8400 1150 0    50   ~ 0
+	10350 1300 10350 1450
+Text Label 9950 1000 0    50   ~ 0
 LCD_SCL
-Text Label 8300 1550 0    50   ~ 0
+Text Label 9850 1400 0    50   ~ 0
 LCD_SDA
 Wire Wire Line
-	8650 1250 8950 1250
+	10200 1100 10500 1100
 Wire Wire Line
-	8350 1150 8950 1150
+	9900 1000 10500 1000
 Wire Wire Line
-	7800 950  7800 1100
+	9350 800  9350 950 
 Wire Wire Line
-	8100 950  8100 1100
+	9650 800  9650 950 
 Wire Wire Line
-	8650 1550 8650 1250
+	10200 1400 10200 1100
 Wire Wire Line
-	8350 1150 8350 1450
+	9900 1000 9900 1300
 Wire Wire Line
-	8350 1450 7800 1450
+	9900 1300 9350 1300
 Wire Wire Line
-	7800 1400 7800 1450
-Connection ~ 7800 1450
+	9350 1250 9350 1300
 Wire Wire Line
-	8100 1400 8100 1550
-Connection ~ 8100 1550
+	9650 1250 9650 1400
 Wire Wire Line
-	8100 1550 8650 1550
+	9650 1400 10200 1400
 $Comp
 L Connector:Conn_01x04_Male J?
 U 1 1 5F0B0AF0
-P 9150 1350
+P 10700 1200
 AR Path="/5E9337AC/5F0B0AF0" Ref="J?"  Part="1" 
 AR Path="/5E9339D0/5F0B0AF0" Ref="J12"  Part="1" 
-F 0 "J12" H 9122 1232 50  0000 R CNN
-F 1 "I2C Interface LCD" H 9451 1006 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 9150 1350 50  0001 C CNN
-F 3 "~" H 9150 1350 50  0001 C CNN
-	1    9150 1350
+F 0 "J12" H 10672 1082 50  0000 R CNN
+F 1 "I2C Interface LCD_C" H 11001 856 50  0000 R CNN
+F 2 "Ventilator:PH_4_pol" H 10700 1200 50  0001 C CNN
+F 3 "~" H 10700 1200 50  0001 C CNN
+	1    10700 1200
 	-1   0    0    1   
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 5F0B0AF6
-P 8100 1250
+P 9650 1100
 AR Path="/5F0B0AF6" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5F0B0AF6" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5F0B0AF6" Ref="R?"  Part="1" 
 AR Path="/5E9339D0/5F0B0AF6" Ref="R17"  Part="1" 
-F 0 "R17" V 7893 1250 50  0000 C CNN
-F 1 "470" V 7984 1250 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 8030 1250 50  0001 C CNN
-F 3 "~" H 8100 1250 50  0001 C CNN
-	1    8100 1250
+F 0 "R17" V 9443 1100 50  0000 C CNN
+F 1 "470" V 9534 1100 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 9580 1100 50  0001 C CNN
+F 3 "~" H 9650 1100 50  0001 C CNN
+	1    9650 1100
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 5F0B0AFC
-P 7800 1250
+P 9350 1100
 AR Path="/5F0B0AFC" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5F0B0AFC" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5F0B0AFC" Ref="R?"  Part="1" 
 AR Path="/5E9339D0/5F0B0AFC" Ref="R15"  Part="1" 
-F 0 "R15" V 7593 1250 50  0000 C CNN
-F 1 "470" V 7684 1250 50  0000 C CNN
-F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 7730 1250 50  0001 C CNN
-F 3 "~" H 7800 1250 50  0001 C CNN
-	1    7800 1250
+F 0 "R15" V 9143 1100 50  0000 C CNN
+F 1 "470" V 9234 1100 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 9280 1100 50  0001 C CNN
+F 3 "~" H 9350 1100 50  0001 C CNN
+	1    9350 1100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6650 2050 7300 2050
+	8850 1300 9350 1300
 Wire Wire Line
-	7300 2050 7300 1450
-Wire Wire Line
-	7300 1450 7800 1450
-Wire Wire Line
-	7400 2150 7400 1550
-Wire Wire Line
-	6650 2150 7400 2150
-Wire Wire Line
-	7400 1550 8100 1550
+	8950 1400 9650 1400
 NoConn ~ 6650 2250
 NoConn ~ 6650 2350
 NoConn ~ 6650 2450
@@ -552,9 +539,9 @@ AR Path="/5EA602EB/5F40A219" Ref="C?"  Part="1"
 AR Path="/5E9337AC/5F40A219" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5F40A219" Ref="C14"  Part="1" 
 F 0 "C14" H 1665 1396 50  0000 L CNN
-F 1 "100nF" H 1665 1305 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 1588 1200 50  0001 C CNN
-F 3 "~" H 1550 1350 50  0001 C CNN
+F 1 "100nF - 100V" H 1665 1305 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 1588 1200 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 1550 1350 50  0001 C CNN
 	1    1550 1350
 	1    0    0    -1  
 $EndComp
@@ -567,9 +554,9 @@ AR Path="/5EA602EB/5F40A21F" Ref="C?"  Part="1"
 AR Path="/5E9337AC/5F40A21F" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5F40A21F" Ref="C16"  Part="1" 
 F 0 "C16" H 3165 1396 50  0000 L CNN
-F 1 "100nF" H 3165 1305 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 3088 1200 50  0001 C CNN
-F 3 "~" H 3050 1350 50  0001 C CNN
+F 1 "100nF - 100V" H 3165 1305 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 3088 1200 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 3050 1350 50  0001 C CNN
 	1    3050 1350
 	1    0    0    -1  
 $EndComp
@@ -583,8 +570,8 @@ AR Path="/5E9337AC/5F40A225" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5F40A225" Ref="C15"  Part="1" 
 F 0 "C15" H 2115 1396 50  0000 L CNN
 F 1 "4.7uF 50V" H 2115 1305 50  0000 L CNN
-F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 2038 1200 50  0001 C CNN
-F 3 "~" H 2000 1350 50  0001 C CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm" H 2038 1200 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-aluminio/1701286/" H 2000 1350 50  0001 C CNN
 	1    2000 1350
 	1    0    0    -1  
 $EndComp
@@ -618,7 +605,7 @@ AR Path="/5E9339D0/5F40A244" Ref="J7"  Part="1"
 F 0 "J7" V 1315 1217 50  0000 C CNN
 F 1 "TE_3.5mm_Screwless_P2" V 1224 1217 50  0000 C CNN
 F 2 "Ventilator:PinHeader_1x02_Screwless_3.5mm" H 900 1600 50  0001 C CNN
-F 3 "" H 900 1600 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/bloques-terminales-para-pcb/1232052/" H 900 1600 50  0001 C CNN
 	1    900  1250
 	0    -1   -1   0   
 $EndComp
@@ -683,12 +670,12 @@ GND
 Wire Wire Line
 	1550 1100 1800 1100
 Wire Wire Line
-	7950 950  7950 850 
+	9500 800  9500 700 
 Wire Wire Line
-	7800 950  7950 950 
-Connection ~ 7950 950 
+	9350 800  9500 800 
+Connection ~ 9500 800 
 Wire Wire Line
-	7950 950  8100 950 
+	9500 800  9650 800 
 Text Label 1350 1100 0    50   ~ 0
 +12V_C
 Text Label 2850 1100 0    50   ~ 0
@@ -697,12 +684,12 @@ Text Label 5200 800  0    50   ~ 0
 +5V_C
 Text Label 6950 1500 0    50   ~ 0
 +5V_C
-Text Label 7950 850  0    50   ~ 0
+Text Label 9500 700  0    50   ~ 0
 +5V_C
-Text Label 8800 900  0    50   ~ 0
+Text Label 10350 750  0    50   ~ 0
 +5V_C
 Wire Wire Line
-	8800 900  8800 1350
+	10350 750  10350 1200
 Text Label 9400 1900 0    50   ~ 0
 +5V_C
 Text Label 4600 850  0    50   ~ 0
@@ -806,38 +793,38 @@ Wire Wire Line
 $Comp
 L Device:C C?
 U 1 1 5EBE17C9
-P 9800 1150
+P 10800 1850
 AR Path="/5EBE17C9" Ref="C?"  Part="1" 
 AR Path="/5EA602EB/5EBE17C9" Ref="C?"  Part="1" 
 AR Path="/5EA60E89/5EBE17C9" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5EBE17C9" Ref="C29"  Part="1" 
-F 0 "C29" H 9915 1196 50  0000 L CNN
-F 1 "100nF" H 9915 1105 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 9838 1000 50  0001 C CNN
-F 3 "~" H 9800 1150 50  0001 C CNN
-	1    9800 1150
+F 0 "C29" H 10915 1896 50  0000 L CNN
+F 1 "100nF - 100V" H 10915 1805 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 10838 1700 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 10800 1850 50  0001 C CNN
+	1    10800 1850
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 5EBE17CF
-P 9800 1400
+P 10800 2100
 AR Path="/5EBE17CF" Ref="#PWR?"  Part="1" 
 AR Path="/5EA602EB/5EBE17CF" Ref="#PWR?"  Part="1" 
 AR Path="/5EA60E89/5EBE17CF" Ref="#PWR?"  Part="1" 
 AR Path="/5E9339D0/5EBE17CF" Ref="#PWR048"  Part="1" 
-F 0 "#PWR048" H 9800 1150 50  0001 C CNN
-F 1 "GND" H 9805 1227 50  0000 C CNN
-F 2 "" H 9800 1400 50  0001 C CNN
-F 3 "" H 9800 1400 50  0001 C CNN
-	1    9800 1400
+F 0 "#PWR048" H 10800 1850 50  0001 C CNN
+F 1 "GND" H 10805 1927 50  0000 C CNN
+F 2 "" H 10800 2100 50  0001 C CNN
+F 3 "" H 10800 2100 50  0001 C CNN
+	1    10800 2100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9800 900  9800 1000
+	10800 1600 10800 1700
 Wire Wire Line
-	9800 1300 9800 1400
-Text Label 9800 900  0    50   ~ 0
+	10800 2000 10800 2100
+Text Label 10800 1600 0    50   ~ 0
 +5V_C
 Wire Wire Line
 	2650 4150 2650 4300
@@ -900,8 +887,8 @@ AR Path="/5E9337AC/5EC06134" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5EC06134" Ref="C22"  Part="1" 
 F 0 "C22" H 2065 4996 50  0000 L CNN
 F 1 "1uF" H 2065 4905 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 1988 4800 50  0001 C CNN
-F 3 "~" H 1950 4950 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 1988 4800 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 1950 4950 50  0001 C CNN
 	1    1950 4950
 	-1   0    0    -1  
 $EndComp
@@ -913,8 +900,8 @@ AR Path="/5E9337AC/5EC0613A" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5EC0613A" Ref="C24"  Part="1" 
 F 0 "C24" H 3065 4546 50  0000 L CNN
 F 1 "1uF" H 3065 4455 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 2988 4350 50  0001 C CNN
-F 3 "~" H 2950 4500 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 2988 4350 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 2950 4500 50  0001 C CNN
 	1    2950 4500
 	-1   0    0    -1  
 $EndComp
@@ -944,7 +931,7 @@ AR Path="/5E9339D0/5EC06146" Ref="D2"  Part="1"
 F 0 "D2" V 2604 4579 50  0000 L CNN
 F 1 "1N4007" V 2695 4579 50  0000 L CNN
 F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 2650 4325 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 2650 4500 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/diodos-schottky-y-rectificadores/6491187/" H 2650 4500 50  0001 C CNN
 	1    2650 4500
 	0    -1   1    0   
 $EndComp
@@ -1021,34 +1008,34 @@ $EndComp
 $Comp
 L Ventilator:+5V_C #PWR042
 U 1 1 5EC8ACE3
-P 7950 850
-F 0 "#PWR042" H 7950 700 50  0001 C CNN
-F 1 "+5V_C" H 7965 1023 50  0000 C CNN
-F 2 "" H 7950 850 50  0001 C CNN
-F 3 "" H 7950 850 50  0001 C CNN
-	1    7950 850 
+P 9500 700
+F 0 "#PWR042" H 9500 550 50  0001 C CNN
+F 1 "+5V_C" H 9515 873 50  0000 C CNN
+F 2 "" H 9500 700 50  0001 C CNN
+F 3 "" H 9500 700 50  0001 C CNN
+	1    9500 700 
 	1    0    0    -1  
 $EndComp
 $Comp
 L Ventilator:+5V_C #PWR047
 U 1 1 5EC94AEA
-P 9800 900
-F 0 "#PWR047" H 9800 750 50  0001 C CNN
-F 1 "+5V_C" H 9815 1073 50  0000 C CNN
-F 2 "" H 9800 900 50  0001 C CNN
-F 3 "" H 9800 900 50  0001 C CNN
-	1    9800 900 
+P 10800 1600
+F 0 "#PWR047" H 10800 1450 50  0001 C CNN
+F 1 "+5V_C" H 10815 1773 50  0000 C CNN
+F 2 "" H 10800 1600 50  0001 C CNN
+F 3 "" H 10800 1600 50  0001 C CNN
+	1    10800 1600
 	1    0    0    -1  
 $EndComp
 $Comp
 L Ventilator:+5V_C #PWR045
 U 1 1 5EC9E501
-P 8800 900
-F 0 "#PWR045" H 8800 750 50  0001 C CNN
-F 1 "+5V_C" H 8815 1073 50  0000 C CNN
-F 2 "" H 8800 900 50  0001 C CNN
-F 3 "" H 8800 900 50  0001 C CNN
-	1    8800 900 
+P 10350 750
+F 0 "#PWR045" H 10350 600 50  0001 C CNN
+F 1 "+5V_C" H 10365 923 50  0000 C CNN
+F 2 "" H 10350 750 50  0001 C CNN
+F 3 "" H 10350 750 50  0001 C CNN
+	1    10350 750 
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1123,8 +1110,8 @@ AR Path="/5E9337AC/5ECD86FF" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5ECD86FF" Ref="C23"  Part="1" 
 F 0 "C23" H 2065 6946 50  0000 L CNN
 F 1 "1uF" H 2065 6855 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 1988 6750 50  0001 C CNN
-F 3 "~" H 1950 6900 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 1988 6750 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 1950 6900 50  0001 C CNN
 	1    1950 6900
 	-1   0    0    -1  
 $EndComp
@@ -1136,8 +1123,8 @@ AR Path="/5E9337AC/5ECD8705" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5ECD8705" Ref="C25"  Part="1" 
 F 0 "C25" H 3065 6496 50  0000 L CNN
 F 1 "1uF" H 3065 6405 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 2988 6300 50  0001 C CNN
-F 3 "~" H 2950 6450 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 2988 6300 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 2950 6450 50  0001 C CNN
 	1    2950 6450
 	-1   0    0    -1  
 $EndComp
@@ -1167,7 +1154,7 @@ AR Path="/5E9339D0/5ECD8711" Ref="D3"  Part="1"
 F 0 "D3" V 2604 6529 50  0000 L CNN
 F 1 "1N4007" V 2695 6529 50  0000 L CNN
 F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 2650 6275 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 2650 6450 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/diodos-schottky-y-rectificadores/6491187/" H 2650 6450 50  0001 C CNN
 	1    2650 6450
 	0    -1   1    0   
 $EndComp
@@ -1274,9 +1261,9 @@ AR Path="/5EA602EB/5ED3CE9D" Ref="C?"  Part="1"
 AR Path="/5E9337AC/5ED3CE9D" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5ED3CE9D" Ref="C17"  Part="1" 
 F 0 "C17" H 865 2896 50  0000 L CNN
-F 1 "100nF" H 865 2805 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 788 2700 50  0001 C CNN
-F 3 "~" H 750 2850 50  0001 C CNN
+F 1 "100nF - 100V" H 865 2805 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 788 2700 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 750 2850 50  0001 C CNN
 	1    750  2850
 	1    0    0    -1  
 $EndComp
@@ -1290,8 +1277,8 @@ AR Path="/5E9337AC/5ED3CEA3" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5ED3CEA3" Ref="C18"  Part="1" 
 F 0 "C18" H 2015 2946 50  0000 L CNN
 F 1 "1uF" H 2015 2855 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 1938 2750 50  0001 C CNN
-F 3 "~" H 1900 2900 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 1938 2750 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 1900 2900 50  0001 C CNN
 	1    1900 2900
 	1    0    0    -1  
 $EndComp
@@ -1533,9 +1520,9 @@ AR Path="/5EA602EB/5EF06904" Ref="C?"  Part="1"
 AR Path="/5E9337AC/5EF06904" Ref="C?"  Part="1" 
 AR Path="/5E9339D0/5EF06904" Ref="C28"  Part="1" 
 F 0 "C28" H 7365 5896 50  0000 L CNN
-F 1 "100nF" H 7365 5805 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 7288 5700 50  0001 C CNN
-F 3 "~" H 7250 5850 50  0001 C CNN
+F 1 "100nF - 100V" H 7365 5805 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 7288 5700 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 7250 5850 50  0001 C CNN
 	1    7250 5850
 	-1   0    0    -1  
 $EndComp
@@ -1549,8 +1536,8 @@ AR Path="/5E9337AC/5EF0690A" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5EF0690A" Ref="C27"  Part="1" 
 F 0 "C27" H 6215 5946 50  0000 L CNN
 F 1 "1uF" H 6215 5855 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 6138 5750 50  0001 C CNN
-F 3 "~" H 6100 5900 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 6138 5750 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 6100 5900 50  0001 C CNN
 	1    6100 5900
 	-1   0    0    -1  
 $EndComp
@@ -1652,8 +1639,8 @@ AR Path="/5E9337AC/5EF48133" Ref="C?"  Part="1"
 AR Path="/5E9339D0/5EF48133" Ref="C26"  Part="1" 
 F 0 "C26" H 4165 1396 50  0000 L CNN
 F 1 "1uF" H 4165 1305 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L7.0mm_W2.5mm_P5.00mm" H 4088 1200 50  0001 C CNN
-F 3 "~" H 4050 1350 50  0001 C CNN
+F 2 "Capacitor_THT:C_Rect_L13.0mm_W4.0mm_P10.00mm_FKS3_FKP3_MKS4" H 4088 1200 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710733/~" H 4050 1350 50  0001 C CNN
 	1    4050 1350
 	1    0    0    -1  
 $EndComp
@@ -1721,8 +1708,8 @@ L Ventilator:Button J?
 U 1 1 5EFFEC64
 P 10100 5950
 AR Path="/5E9337AC/5EFFEC64" Ref="J?"  Part="1" 
-AR Path="/5E9339D0/5EFFEC64" Ref="J?"  Part="1" 
-F 0 "J?" H 10428 5996 50  0000 L CNN
+AR Path="/5E9339D0/5EFFEC64" Ref="J22"  Part="1" 
+F 0 "J22" H 10428 5996 50  0000 L CNN
 F 1 "VOL" H 10428 5905 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10100 5950 50  0001 C CNN
 F 3 "" H 10100 5950 50  0001 C CNN
@@ -1734,8 +1721,8 @@ L Ventilator:Button J?
 U 1 1 5EFFEC6A
 P 10500 5650
 AR Path="/5E9337AC/5EFFEC6A" Ref="J?"  Part="1" 
-AR Path="/5E9339D0/5EFFEC6A" Ref="J?"  Part="1" 
-F 0 "J?" H 10828 5696 50  0000 L CNN
+AR Path="/5E9339D0/5EFFEC6A" Ref="J23"  Part="1" 
+F 0 "J23" H 10828 5696 50  0000 L CNN
 F 1 "VOL_MAX" H 10828 5605 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10500 5650 50  0001 C CNN
 F 3 "" H 10500 5650 50  0001 C CNN
@@ -1747,8 +1734,8 @@ L Ventilator:Button J?
 U 1 1 5EFFEC70
 P 10100 5350
 AR Path="/5E9337AC/5EFFEC70" Ref="J?"  Part="1" 
-AR Path="/5E9339D0/5EFFEC70" Ref="J?"  Part="1" 
-F 0 "J?" H 10428 5396 50  0000 L CNN
+AR Path="/5E9339D0/5EFFEC70" Ref="J21"  Part="1" 
+F 0 "J21" H 10428 5396 50  0000 L CNN
 F 1 "VOL_MIN" H 10428 5305 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10100 5350 50  0001 C CNN
 F 3 "" H 10100 5350 50  0001 C CNN
@@ -1762,8 +1749,8 @@ P 9050 5000
 AR Path="/5F05FE6A" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5F05FE6A" Ref="R?"  Part="1" 
 AR Path="/5EA60E89/5F05FE6A" Ref="R?"  Part="1" 
-AR Path="/5E9339D0/5F05FE6A" Ref="R?"  Part="1" 
-F 0 "R?" H 9120 5046 50  0000 L CNN
+AR Path="/5E9339D0/5F05FE6A" Ref="R31"  Part="1" 
+F 0 "R31" H 9120 5046 50  0000 L CNN
 F 1 "10k" H 9120 4955 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 8980 5000 50  0001 C CNN
 F 3 "~" H 9050 5000 50  0001 C CNN
@@ -1777,8 +1764,8 @@ P 9350 5000
 AR Path="/5F05FE70" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5F05FE70" Ref="R?"  Part="1" 
 AR Path="/5EA60E89/5F05FE70" Ref="R?"  Part="1" 
-AR Path="/5E9339D0/5F05FE70" Ref="R?"  Part="1" 
-F 0 "R?" H 9420 5046 50  0000 L CNN
+AR Path="/5E9339D0/5F05FE70" Ref="R32"  Part="1" 
+F 0 "R32" H 9420 5046 50  0000 L CNN
 F 1 "10k" H 9420 4955 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 9280 5000 50  0001 C CNN
 F 3 "~" H 9350 5000 50  0001 C CNN
@@ -1792,8 +1779,8 @@ P 8750 5000
 AR Path="/5F05FE76" Ref="R?"  Part="1" 
 AR Path="/5EA602EB/5F05FE76" Ref="R?"  Part="1" 
 AR Path="/5EA60E89/5F05FE76" Ref="R?"  Part="1" 
-AR Path="/5E9339D0/5F05FE76" Ref="R?"  Part="1" 
-F 0 "R?" H 8820 5046 50  0000 L CNN
+AR Path="/5E9339D0/5F05FE76" Ref="R30"  Part="1" 
+F 0 "R30" H 8820 5046 50  0000 L CNN
 F 1 "10k" H 8820 4955 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 8680 5000 50  0001 C CNN
 F 3 "~" H 8750 5000 50  0001 C CNN
@@ -1818,8 +1805,8 @@ P 9600 6250
 AR Path="/5F06EE58" Ref="#PWR?"  Part="1" 
 AR Path="/5EA602EB/5F06EE58" Ref="#PWR?"  Part="1" 
 AR Path="/5EA60E89/5F06EE58" Ref="#PWR?"  Part="1" 
-AR Path="/5E9339D0/5F06EE58" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 9600 6000 50  0001 C CNN
+AR Path="/5E9339D0/5F06EE58" Ref="#PWR054"  Part="1" 
+F 0 "#PWR054" H 9600 6000 50  0001 C CNN
 F 1 "GND" H 9605 6077 50  0000 C CNN
 F 2 "" H 9600 6250 50  0001 C CNN
 F 3 "" H 9600 6250 50  0001 C CNN
@@ -1853,10 +1840,10 @@ Wire Wire Line
 Wire Wire Line
 	9350 5900 9350 5150
 $Comp
-L Ventilator:+12V_C #PWR?
+L Ventilator:+12V_C #PWR020
 U 1 1 5F10B255
 P 2650 4150
-F 0 "#PWR?" H 2650 4000 50  0001 C CNN
+F 0 "#PWR020" H 2650 4000 50  0001 C CNN
 F 1 "+12V_C" H 2665 4323 50  0000 C CNN
 F 2 "" H 2650 4150 50  0001 C CNN
 F 3 "" H 2650 4150 50  0001 C CNN
@@ -1864,10 +1851,10 @@ F 3 "" H 2650 4150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+12V_C #PWR?
+L Ventilator:+12V_C #PWR025
 U 1 1 5F11B9FA
 P 2650 6100
-F 0 "#PWR?" H 2650 5950 50  0001 C CNN
+F 0 "#PWR025" H 2650 5950 50  0001 C CNN
 F 1 "+12V_C" H 2665 6273 50  0000 C CNN
 F 2 "" H 2650 6100 50  0001 C CNN
 F 3 "" H 2650 6100 50  0001 C CNN
@@ -1875,10 +1862,10 @@ F 3 "" H 2650 6100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+12V_C #PWR?
+L Ventilator:+12V_C #PWR015
 U 1 1 5F13B86D
 P 1800 1000
-F 0 "#PWR?" H 1800 850 50  0001 C CNN
+F 0 "#PWR015" H 1800 850 50  0001 C CNN
 F 1 "+12V_C" H 1815 1173 50  0000 C CNN
 F 2 "" H 1800 1000 50  0001 C CNN
 F 3 "" H 1800 1000 50  0001 C CNN
@@ -1886,10 +1873,10 @@ F 3 "" H 1800 1000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+5V_C #PWR?
+L Ventilator:+5V_C #PWR043
 U 1 1 5F13C691
 P 5200 800
-F 0 "#PWR?" H 5200 650 50  0001 C CNN
+F 0 "#PWR043" H 5200 650 50  0001 C CNN
 F 1 "+5V_C" H 5215 973 50  0000 C CNN
 F 2 "" H 5200 800 50  0001 C CNN
 F 3 "" H 5200 800 50  0001 C CNN
@@ -1903,11 +1890,11 @@ P 6700 1100
 AR Path="/5F13F142" Ref="C?"  Part="1" 
 AR Path="/5EA602EB/5F13F142" Ref="C?"  Part="1" 
 AR Path="/5EA60E89/5F13F142" Ref="C?"  Part="1" 
-AR Path="/5E9339D0/5F13F142" Ref="C?"  Part="1" 
-F 0 "C?" H 6815 1146 50  0000 L CNN
-F 1 "100nF" H 6815 1055 50  0000 L CNN
-F 2 "Capacitor_THT:C_Rect_L9.0mm_W3.3mm_P7.50mm_MKT" H 6738 950 50  0001 C CNN
-F 3 "~" H 6700 1100 50  0001 C CNN
+AR Path="/5E9339D0/5F13F142" Ref="C30"  Part="1" 
+F 0 "C30" H 6815 1146 50  0000 L CNN
+F 1 "100nF - 100V" H 6815 1055 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L7.2mm_W2.5mm_P5.00mm_FKS2_FKP2_MKS2_MKP2" H 6738 950 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/condensadores-de-pelicula-de-poliester/1710743/" H 6700 1100 50  0001 C CNN
 	1    6700 1100
 	1    0    0    -1  
 $EndComp
@@ -1918,8 +1905,8 @@ P 6700 1350
 AR Path="/5F13F148" Ref="#PWR?"  Part="1" 
 AR Path="/5EA602EB/5F13F148" Ref="#PWR?"  Part="1" 
 AR Path="/5EA60E89/5F13F148" Ref="#PWR?"  Part="1" 
-AR Path="/5E9339D0/5F13F148" Ref="#PWR?"  Part="1" 
-F 0 "#PWR?" H 6700 1100 50  0001 C CNN
+AR Path="/5E9339D0/5F13F148" Ref="#PWR051"  Part="1" 
+F 0 "#PWR051" H 6700 1100 50  0001 C CNN
 F 1 "GND" H 6705 1177 50  0000 C CNN
 F 2 "" H 6700 1350 50  0001 C CNN
 F 3 "" H 6700 1350 50  0001 C CNN
@@ -1933,10 +1920,10 @@ Wire Wire Line
 Text Label 6700 850  0    50   ~ 0
 +5V_C
 $Comp
-L Ventilator:+5V_C #PWR?
+L Ventilator:+5V_C #PWR050
 U 1 1 5F13F151
 P 6700 850
-F 0 "#PWR?" H 6700 700 50  0001 C CNN
+F 0 "#PWR050" H 6700 700 50  0001 C CNN
 F 1 "+5V_C" H 6715 1023 50  0000 C CNN
 F 2 "" H 6700 850 50  0001 C CNN
 F 3 "" H 6700 850 50  0001 C CNN
@@ -1944,10 +1931,10 @@ F 3 "" H 6700 850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+5V_C #PWR?
+L Ventilator:+5V_C #PWR013
 U 1 1 5F14F634
 P 750 2650
-F 0 "#PWR?" H 750 2500 50  0001 C CNN
+F 0 "#PWR013" H 750 2500 50  0001 C CNN
 F 1 "+5V_C" H 765 2823 50  0000 C CNN
 F 2 "" H 750 2650 50  0001 C CNN
 F 3 "" H 750 2650 50  0001 C CNN
@@ -1955,10 +1942,10 @@ F 3 "" H 750 2650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+5V_C #PWR?
+L Ventilator:+5V_C #PWR052
 U 1 1 5F15FD33
 P 7250 5650
-F 0 "#PWR?" H 7250 5500 50  0001 C CNN
+F 0 "#PWR052" H 7250 5500 50  0001 C CNN
 F 1 "+5V_C" H 7265 5823 50  0000 C CNN
 F 2 "" H 7250 5650 50  0001 C CNN
 F 3 "" H 7250 5650 50  0001 C CNN
@@ -1966,10 +1953,10 @@ F 3 "" H 7250 5650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ventilator:+5V_C #PWR?
+L Ventilator:+5V_C #PWR053
 U 1 1 5F17030C
 P 9050 4750
-F 0 "#PWR?" H 9050 4600 50  0001 C CNN
+F 0 "#PWR053" H 9050 4600 50  0001 C CNN
 F 1 "+5V_C" H 9065 4923 50  0000 C CNN
 F 2 "" H 9050 4750 50  0001 C CNN
 F 3 "" H 9050 4750 50  0001 C CNN
@@ -1997,4 +1984,126 @@ Wire Wire Line
 Wire Wire Line
 	7950 5900 9350 5900
 Connection ~ 9350 5900
+$Comp
+L Connector_Generic:Conn_01x08 J?
+U 1 1 5F2ED7B6
+P 8050 750
+AR Path="/5E9337AC/5F2ED7B6" Ref="J?"  Part="1" 
+AR Path="/5E9339D0/5F2ED7B6" Ref="J24"  Part="1" 
+F 0 "J24" V 8014 1130 50  0000 L CNN
+F 1 "Conn_01x08" V 7923 1130 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Horizontal" H 8050 750 50  0001 C CNN
+F 3 "~" H 8050 750 50  0001 C CNN
+	1    8050 750 
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	8350 1100 8850 1100
+Wire Wire Line
+	8350 950  8350 1100
+Text Label 8400 1100 0    50   ~ 0
+nMCLR_C
+$Comp
+L power:GND #PWR?
+U 1 1 5F2ED7BF
+P 8350 1550
+AR Path="/5E9337AC/5F2ED7BF" Ref="#PWR?"  Part="1" 
+AR Path="/5E9339D0/5F2ED7BF" Ref="#PWR058"  Part="1" 
+F 0 "#PWR058" H 8350 1300 50  0001 C CNN
+F 1 "GND" H 8355 1377 50  0000 C CNN
+F 2 "" H 8350 1550 50  0001 C CNN
+F 3 "" H 8350 1550 50  0001 C CNN
+	1    8350 1550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8250 950  8250 1400
+Wire Wire Line
+	8250 1400 8350 1400
+Wire Wire Line
+	8350 1400 8350 1350
+Wire Wire Line
+	8150 950  8150 1500
+Wire Wire Line
+	8150 1500 8350 1500
+Wire Wire Line
+	8350 1500 8350 1550
+Wire Wire Line
+	6650 1850 8050 1850
+Wire Wire Line
+	8050 1850 8050 950 
+Wire Wire Line
+	6650 1950 7950 1950
+Wire Wire Line
+	7950 1950 7950 950 
+NoConn ~ 7650 950 
+NoConn ~ 7750 950 
+NoConn ~ 7850 950 
+Text Label 7350 1850 0    50   ~ 0
+ICSPDAT_C
+Text Label 7350 1950 0    50   ~ 0
+ICSPCLK_C
+Text Label 7750 650  0    50   ~ 0
+PROG_CONN
+Text Label 8350 1350 0    50   ~ 0
++5V_C
+Text Label 8350 1350 0    50   ~ 0
++5V_C
+$Comp
+L Ventilator:+5V_C #PWR056
+U 1 1 5F325C10
+P 8350 1350
+F 0 "#PWR056" H 8350 1200 50  0001 C CNN
+F 1 "+5V_C" H 8365 1523 50  0000 C CNN
+F 2 "" H 8350 1350 50  0001 C CNN
+F 3 "" H 8350 1350 50  0001 C CNN
+	1    8350 1350
+	1    0    0    -1  
+$EndComp
+Connection ~ 9350 1300
+Connection ~ 9650 1400
+Text Label 5050 1850 0    50   ~ 0
+nMCLR_C
+Wire Wire Line
+	8150 2050 8150 1800
+Wire Wire Line
+	8150 1800 8850 1800
+Wire Wire Line
+	6650 2050 8150 2050
+Wire Wire Line
+	8850 1800 8850 1300
+Wire Wire Line
+	8250 2150 8250 1900
+Wire Wire Line
+	8250 1900 8950 1900
+Wire Wire Line
+	6650 2150 8250 2150
+Wire Wire Line
+	8950 1900 8950 1400
+$Comp
+L Device:R R?
+U 1 1 5F605EAD
+P 4900 1300
+AR Path="/5F605EAD" Ref="R?"  Part="1" 
+AR Path="/5EA602EB/5F605EAD" Ref="R?"  Part="1" 
+AR Path="/5EA60E89/5F605EAD" Ref="R?"  Part="1" 
+AR Path="/5E9339D0/5F605EAD" Ref="R36"  Part="1" 
+F 0 "R36" H 4970 1346 50  0000 L CNN
+F 1 "10k" H 4970 1255 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 4830 1300 50  0001 C CNN
+F 3 "~" H 4900 1300 50  0001 C CNN
+	1    4900 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4900 850  5200 850 
+Wire Wire Line
+	4900 850  4900 1150
+Connection ~ 5200 850 
+Wire Wire Line
+	5200 850  5200 900 
+Wire Wire Line
+	4900 1450 4900 1850
+Wire Wire Line
+	4900 1850 5500 1850
 $EndSCHEMATC
