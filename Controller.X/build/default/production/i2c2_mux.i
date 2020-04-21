@@ -27855,24 +27855,12 @@ i2c2_error_t lastI2C2MAckResponse;
 i2c2_error_t lastI2C2LAckResponse;
 
 
-void I2C2_NAckCallback(void){
-    printf ("NACK %d\n", currentTrfAddr);
-
-    if (currentTrfAddr == 0x50){
-        lastI2C2MAckResponse = 0;
-    } else {
-        lastI2C2LAckResponse = 0;
-    }
-}
-
 void I2C2_MuxInit(void){
     lastI2C2MAckResponse = 1;
     lastI2C2LAckResponse = 1;
     lastI2C2MTrfResponse = I2C2_NOERR;
     lastI2C2LTrfResponse = I2C2_NOERR;
     currentTrfAddr = 0x0;
-    I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
-    I2C2_SetAddressNackCallback(I2C2_NAckCallback, ((void*)0));
 }
 
 _Bool I2C2_MAck(void){
@@ -27928,8 +27916,10 @@ i2c2_error_t I2C2_MClose(void){
     if (trfRsp != I2C2_BUSY) {
 
         if (currentTrfAddr == 0x50){
+            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2MTrfResponse = trfRsp;
         } else {
+            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2LTrfResponse = trfRsp;
         }
 
@@ -27945,8 +27935,10 @@ i2c2_error_t I2C2_LClose(void){
     if (trfRsp != I2C2_BUSY) {
 
         if (currentTrfAddr == 0x50){
+            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2MTrfResponse = trfRsp;
         } else {
+            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2LTrfResponse = trfRsp;
         }
 
