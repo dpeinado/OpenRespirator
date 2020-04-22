@@ -3,6 +3,7 @@
 
 #include "LiquidCrystal_I2C.h"
 #include "time.h"
+#include "i2c2_mux.h"
 
 uint8_t _Addr;
 uint8_t _displayfunction;
@@ -20,44 +21,44 @@ uint8_t i2cBuff[80];
 void expanderWrite(uint8_t data) {
         uint8_t i2cBuff[2];
         i2cBuff[0]=data | _backlightval;
-        I2C2_Open(_Addr);
+        I2C2_LOpen();
         I2C2_SetBuffer(i2cBuff,1);
         I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+        while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
 }
 #if 1
 void write4bits(uint8_t value) {
         uint8_t i2cBuff[2];
         
-        I2C2_Open(_Addr);
+        I2C2_LOpen();
         i2cBuff[0]=value  | _backlightval;
         I2C2_SetBuffer(i2cBuff,1);
         I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+        while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
 
-        I2C2_Open(_Addr);
+        I2C2_LOpen();
         i2cBuff[0]=value | En | _backlightval;
         I2C2_SetBuffer(i2cBuff,1);
         I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+        while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
         
-        I2C2_Open(_Addr);
+        I2C2_LOpen();
         i2cBuff[0]=value | ~En | _backlightval;
         I2C2_SetBuffer(i2cBuff,1);
         I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+        while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
 }
 #else
 void write4bits(uint8_t value) {
         uint8_t i2cBuff[3];
         
-        I2C2_Open(_Addr);
+        I2C2_LOpen(_Addr);
         i2cBuff[0]=value | _backlightval;
         i2cBuff[1]=value | En | _backlightval;
         i2cBuff[2]=value | ~En | _backlightval;
         I2C2_SetBuffer(i2cBuff,3);
         I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+        while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
 }
 #endif
 
@@ -77,10 +78,10 @@ void write(uint8_t value) {
     i2cBuff[1]=highnib | Rs | ~En | _backlightval;
     i2cBuff[2]=lownib | Rs | En | _backlightval;
     i2cBuff[3]=lownib | Rs | ~En | _backlightval;
-    I2C2_Open(_Addr);
+    I2C2_LOpen();
     I2C2_SetBuffer(i2cBuff,4);
     I2C2_MasterWrite();
-    while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+    while(I2C2_BUSY == I2C2_LClose()); // sit here until finished.
 }
 
 void printstr(const char c[]){
@@ -98,13 +99,13 @@ void printstr(const char c[]){
             break;
         }
     }
-    I2C2_Open(_Addr);
+    I2C2_LOpen();
     I2C2_SetBuffer(i2cBuff,idx);
     I2C2_MasterWrite();
 }
 
 bool PrintStrBusy(void){
-    return (I2C2_BUSY == I2C2_Close());
+    return (I2C2_BUSY == I2C2_LClose());
 }	
 
 void printstrblock(const char c[]){
