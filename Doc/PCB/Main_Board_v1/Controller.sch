@@ -914,9 +914,9 @@ AR Path="/5EA602EB/5EC06140" Ref="Q?"  Part="1"
 AR Path="/5E9337AC/5EC06140" Ref="Q?"  Part="1" 
 AR Path="/5E9339D0/5EC06140" Ref="Q2"  Part="1" 
 F 0 "Q2" H 2954 5096 50  0000 L CNN
-F 1 "IRLZ34N" H 2954 5005 50  0000 L CNN
+F 1 "STP24NF10 " H 2954 5005 50  0000 L CNN
 F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 3000 4975 50  0001 L CIN
-F 3 "http://www.infineon.com/dgdl/irlz34npbf.pdf?fileId=5546d462533600a40153567206892720" H 2750 5050 50  0001 L CNN
+F 3 "https://es.rs-online.com/web/p/mosfet/6875377/" H 2750 5050 50  0001 L CNN
 	1    2750 5050
 	-1   0    0    -1  
 $EndComp
@@ -959,7 +959,7 @@ AR Path="/5E9339D0/5EC06152" Ref="J8"  Part="1"
 F 0 "J8" V 2065 4267 50  0000 C CNN
 F 1 "SV2" V 1974 4267 50  0000 C CNN
 F 2 "Ventilator:PinHeader_1x02_Screwless_3.5mm" H 1650 4650 50  0001 C CNN
-F 3 "" H 1650 4650 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/bloques-terminales-para-pcb/1232052/" H 1650 4650 50  0001 C CNN
 	1    1650 4300
 	0    -1   1    0   
 $EndComp
@@ -1137,9 +1137,9 @@ AR Path="/5EA602EB/5ECD870B" Ref="Q?"  Part="1"
 AR Path="/5E9337AC/5ECD870B" Ref="Q?"  Part="1" 
 AR Path="/5E9339D0/5ECD870B" Ref="Q3"  Part="1" 
 F 0 "Q3" H 2954 7046 50  0000 L CNN
-F 1 "IRLZ34N" H 2954 6955 50  0000 L CNN
+F 1 "STP24NF10 " H 2954 6955 50  0000 L CNN
 F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 3000 6925 50  0001 L CIN
-F 3 "http://www.infineon.com/dgdl/irlz34npbf.pdf?fileId=5546d462533600a40153567206892720" H 2750 7000 50  0001 L CNN
+F 3 "https://es.rs-online.com/web/p/mosfet/6875377/" H 2750 7000 50  0001 L CNN
 	1    2750 7000
 	-1   0    0    -1  
 $EndComp
@@ -1182,7 +1182,7 @@ AR Path="/5E9339D0/5ECD871D" Ref="J9"  Part="1"
 F 0 "J9" V 2065 6217 50  0000 C CNN
 F 1 "SV3" V 1974 6217 50  0000 C CNN
 F 2 "Ventilator:PinHeader_1x02_Screwless_3.5mm" H 1650 6600 50  0001 C CNN
-F 3 "" H 1650 6600 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/bloques-terminales-para-pcb/1232052/" H 1650 6600 50  0001 C CNN
 	1    1650 6250
 	0    -1   1    0   
 $EndComp
@@ -1349,7 +1349,7 @@ AR Path="/5E9339D0/5EDEE534" Ref="J17"  Part="1"
 F 0 "J17" H 10628 4546 50  0000 L CNN
 F 1 "-" H 10628 4455 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10300 4500 50  0001 C CNN
-F 3 "" H 10300 4500 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10300 4500 50  0001 C CNN
 	1    10300 4500
 	1    0    0    -1  
 $EndComp
@@ -1362,7 +1362,7 @@ AR Path="/5E9339D0/5EE1C011" Ref="J20"  Part="1"
 F 0 "J20" H 11028 4246 50  0000 L CNN
 F 1 "+" H 11028 4155 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10700 4200 50  0001 C CNN
-F 3 "" H 10700 4200 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10700 4200 50  0001 C CNN
 	1    10700 4200
 	1    0    0    -1  
 $EndComp
@@ -1375,7 +1375,7 @@ AR Path="/5E9339D0/5EE26414" Ref="J16"  Part="1"
 F 0 "J16" H 10628 3946 50  0000 L CNN
 F 1 "IP" H 10628 3855 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10300 3900 50  0001 C CNN
-F 3 "" H 10300 3900 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10300 3900 50  0001 C CNN
 	1    10300 3900
 	1    0    0    -1  
 $EndComp
@@ -1388,7 +1388,7 @@ AR Path="/5E9339D0/5EE30970" Ref="J19"  Part="1"
 F 0 "J19" H 11028 3646 50  0000 L CNN
 F 1 "EP" H 11028 3555 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10700 3600 50  0001 C CNN
-F 3 "" H 10700 3600 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10700 3600 50  0001 C CNN
 	1    10700 3600
 	1    0    0    -1  
 $EndComp
@@ -1401,7 +1401,7 @@ AR Path="/5E9339D0/5EE3B122" Ref="J10"  Part="1"
 F 0 "J10" H 10628 3346 50  0000 L CNN
 F 1 "BPM" H 10628 3255 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10300 3300 50  0001 C CNN
-F 3 "" H 10300 3300 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10300 3300 50  0001 C CNN
 	1    10300 3300
 	1    0    0    -1  
 $EndComp
@@ -1712,7 +1712,7 @@ AR Path="/5E9339D0/5EFFEC64" Ref="J22"  Part="1"
 F 0 "J22" H 10428 5996 50  0000 L CNN
 F 1 "VOL" H 10428 5905 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10100 5950 50  0001 C CNN
-F 3 "" H 10100 5950 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10100 5950 50  0001 C CNN
 	1    10100 5950
 	1    0    0    -1  
 $EndComp
@@ -1725,7 +1725,7 @@ AR Path="/5E9339D0/5EFFEC6A" Ref="J23"  Part="1"
 F 0 "J23" H 10828 5696 50  0000 L CNN
 F 1 "VOL_MAX" H 10828 5605 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10500 5650 50  0001 C CNN
-F 3 "" H 10500 5650 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10500 5650 50  0001 C CNN
 	1    10500 5650
 	1    0    0    -1  
 $EndComp
@@ -1738,7 +1738,7 @@ AR Path="/5E9339D0/5EFFEC70" Ref="J21"  Part="1"
 F 0 "J21" H 10428 5396 50  0000 L CNN
 F 1 "VOL_MIN" H 10428 5305 50  0000 L CNN
 F 2 "Ventilator:PushButton" H 10100 5350 50  0001 C CNN
-F 3 "" H 10100 5350 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 10100 5350 50  0001 C CNN
 	1    10100 5350
 	1    0    0    -1  
 $EndComp
@@ -2106,4 +2106,92 @@ Wire Wire Line
 	4900 1450 4900 1850
 Wire Wire Line
 	4900 1850 5500 1850
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5F66F306
+P 5400 6200
+AR Path="/5E9337AC/5F66F306" Ref="TP?"  Part="1" 
+AR Path="/5E9339D0/5F66F306" Ref="TP12"  Part="1" 
+F 0 "TP12" H 5458 6318 50  0000 L CNN
+F 1 "TestPoint" H 5458 6227 50  0000 L CNN
+F 2 "Ventilator:LCD_DRILL" H 5600 6200 50  0001 C CNN
+F 3 "~" H 5600 6200 50  0001 C CNN
+	1    5400 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5F66F30C
+P 4950 6200
+AR Path="/5E9337AC/5F66F30C" Ref="TP?"  Part="1" 
+AR Path="/5E9339D0/5F66F30C" Ref="TP11"  Part="1" 
+F 0 "TP11" H 5008 6318 50  0000 L CNN
+F 1 "TestPoint" H 5008 6227 50  0000 L CNN
+F 2 "Ventilator:LCD_DRILL" H 5150 6200 50  0001 C CNN
+F 3 "~" H 5150 6200 50  0001 C CNN
+	1    4950 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5F66F312
+P 4500 6200
+AR Path="/5E9337AC/5F66F312" Ref="TP?"  Part="1" 
+AR Path="/5E9339D0/5F66F312" Ref="TP10"  Part="1" 
+F 0 "TP10" H 4558 6318 50  0000 L CNN
+F 1 "TestPoint" H 4558 6227 50  0000 L CNN
+F 2 "Ventilator:LCD_DRILL" H 4700 6200 50  0001 C CNN
+F 3 "~" H 4700 6200 50  0001 C CNN
+	1    4500 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP?
+U 1 1 5F66F318
+P 5850 6200
+AR Path="/5E9337AC/5F66F318" Ref="TP?"  Part="1" 
+AR Path="/5E9339D0/5F66F318" Ref="TP13"  Part="1" 
+F 0 "TP13" H 5908 6318 50  0000 L CNN
+F 1 "TestPoint" H 5908 6227 50  0000 L CNN
+F 2 "Ventilator:LCD_DRILL" H 6050 6200 50  0001 C CNN
+F 3 "~" H 6050 6200 50  0001 C CNN
+	1    5850 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5F66F31E
+P 5250 6600
+AR Path="/5F66F31E" Ref="#PWR?"  Part="1" 
+AR Path="/5EA602EB/5F66F31E" Ref="#PWR?"  Part="1" 
+AR Path="/5E9337AC/5F66F31E" Ref="#PWR?"  Part="1" 
+AR Path="/5E9339D0/5F66F31E" Ref="#PWR0127"  Part="1" 
+F 0 "#PWR0127" H 5250 6350 50  0001 C CNN
+F 1 "GND" H 5255 6427 50  0000 C CNN
+F 2 "" H 5250 6600 50  0001 C CNN
+F 3 "" H 5250 6600 50  0001 C CNN
+	1    5250 6600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4500 6200 4500 6450
+Wire Wire Line
+	4500 6450 4950 6450
+Wire Wire Line
+	5250 6450 5250 6600
+Wire Wire Line
+	5850 6450 5400 6450
+Wire Wire Line
+	5850 6200 5850 6450
+Connection ~ 5250 6450
+Wire Wire Line
+	5400 6200 5400 6450
+Connection ~ 5400 6450
+Wire Wire Line
+	5400 6450 5250 6450
+Wire Wire Line
+	4950 6200 4950 6450
+Connection ~ 4950 6450
+Wire Wire Line
+	4950 6450 5250 6450
 $EndSCHEMATC
