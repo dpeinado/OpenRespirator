@@ -15,12 +15,12 @@
     For individual peripheral handlers please see the peripheral driver for
     all modules selected in the GUI.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.03
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above or later
-        MPLAB 	          :  MPLAB X 5.30
+        MPLAB 	          :  MPLAB X 5.35
 */
 
 /*
@@ -58,7 +58,11 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
+    if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    {
+        ADCC_ISR();
+    }
+    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
     {
         TMR0_ISR();
     }
@@ -113,6 +117,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     else if(PIE7bits.TMR4IE == 1 && PIR7bits.TMR4IF == 1)
     {
         TMR4_ISR();
+    }
+    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    {
+        ADCC_ISR();
     }
     else if(PIE4bits.TMR1IE == 1 && PIR4bits.TMR1IF == 1)
     {

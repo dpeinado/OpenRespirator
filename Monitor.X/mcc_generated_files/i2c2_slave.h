@@ -13,12 +13,12 @@
   @Description
     This header file provides APIs for driver for I2C2.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  1.0.0
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above or later
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -120,12 +120,14 @@ void I2C2_SlaveSetIsrHandler(interruptHandler handler);
 void I2C2_SlaveSetAddrIntHandler(interruptHandler handler);
 void I2C2_SlaveSetReadIntHandler(interruptHandler handler);
 void I2C2_SlaveSetWriteIntHandler(interruptHandler handler);
+void I2C2_SlaveSetStopIntHandler(interruptHandler handler);
 void I2C2_SlaveSetBusColIntHandler(interruptHandler handler);
 void I2C2_SlaveSetWrColIntHandler(interruptHandler handler);
 
 void (*I2C2_InterruptHandler)(void);
 void (*I2C2_SlaveRdInterruptHandler)(void);
 void (*I2C2_SlaveWrInterruptHandler)(void);
+void (*I2C2_SlaveStopInterruptHandler)(void);
 void (*I2C2_SlaveAddrInterruptHandler)(void);
 void (*I2C2_SlaveBusColInterruptHandler)(void);
 void (*I2C2_SlaveWrColInterruptHandler)(void);

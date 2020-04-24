@@ -28,7 +28,49 @@ bool tdeTooLongAlarm = false;
 bool noPowerSupplyAlarm = false;
 
 // Alarm check functions. Called every second
-bool BatteryFailAlarm(void) { return batteryFailAlarm; }
+bool BatteryFailAlarm(void) {
+    static int timeBattery = 0;
+    static int timeBellow10 = 0;
+    static int timeFail = 0;
+#if 0
+    // Check Battery status
+    if (AdcDataReady(ADC_ID_12V)) {
+        uint32_t temp = AdcGetData(ADC_ID_12V);
+        temp = temp * 5000; // result in mV
+        temp = temp /4096; // Divide by the max ADC count
+        temp = (temp *10 ) / (22+10); // Correction factor 22k / 10k divisor
+        int bat = temp;
+        if (bat < 11300) { // BATTERY FAIL detection ( should be more than 10 min)
+            timeFail++;
+            if (timeFail>10*60) { // 10 min
+                SetBatteryFailAlarm ();
+                // TBD Disable of SV1 . // Disable LCD ?
+            }
+        } else {
+            timeFail = 0;
+        }
+        
+        if (bat < (1200-120)) { // Bellow 10% 11
+            timeBellow10++;
+        } else {
+            timeBellow10 = 0;
+        }
+        
+        if (bat < 13000) { // Battery operated
+            timeBattery++;
+            SetNoPowerSupplyAlarm();
+        }
+        else
+        {
+            timeBattery = 0;
+            ClearNoPowerSupplyAlarm();
+        }
+        return batteryFailAlarm;
+    }
+#endif
+    
+    return batteryFailAlarm;
+}
 bool MonitorFailAlarm(void) { return monitorFailAlarm; };
 bool ControlFailAlarm(void) { return controlFailAlarm; };
 bool GasFailureAlarm(void) { return gasFailureAlarm; };
@@ -65,11 +107,11 @@ bool EPAboveSetAlarm(void) {
     else return false;
 };
 bool IPBellowSetAlarm(void) {
-    if (ipBellowSetAlarm> 3) return true;
+    if (ipBellowSetAlarm> 3) { printf("IPB %d\r\n", ipBellowSetAlarm); return true; }
     else return false;
 };
 bool IPAboveSetAlarm(void) {
-    if (ipAboveSetAlarm> 3) return true;
+    if (ipAboveSetAlarm> 3) { printf("IPA %d\r\n", ipAboveSetAlarm); return true; }
     else return false;
 };
 bool TdiTooLongAlarm(void) { 

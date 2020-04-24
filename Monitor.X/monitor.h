@@ -12,6 +12,18 @@
 extern "C" {
 #endif
     
+// ADC functions
+#define ADC_ID_PRS 0
+#define ADC_ID_MIC 1
+#define ADC_ID_VOL 2
+#define ADC_ID_12V 3
+    
+#include "mcc_generated_files/adcc.h"
+    
+    
+bool AdcDataReady(int);
+adc_result_t AdcGetData(int);
+    
 // Pressure functions
 void InitializePressure (void);
 int16_t GetPressure_mbar (void);

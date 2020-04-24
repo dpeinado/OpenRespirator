@@ -13,7 +13,7 @@
   Description:
     This header file provides implementations for driver APIs for all modules selected in the GUI.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.00
 */
@@ -50,6 +50,7 @@
 #include "alarm.h"
 #include "buzzer.h"
 #include "tick.h"
+#include "controller.h"
 
 /*
                          Main application
@@ -58,12 +59,14 @@ void main(void)
 {
     // Initialize the device
     SYSTEM_Initialize();
-    PWM6CON = 0x00;
+    PWM6CON = 0x00;        // Disable BUZZER
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
     // Use the following macros to:
 
+
+    
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
 
@@ -75,6 +78,7 @@ void main(void)
     InitDisplay();
     AlarmInit();
     InitializePressure();
+    ControllerInit();   
     //tick_init();
     ButtonInit();
     
@@ -82,7 +86,9 @@ void main(void)
     
     // Interrupt driven tasks:
     //  + ADC acquisition using TIMER 0
-    //  + I2C reception
+    //  + I2C master
+    //  + I2C slave
+    //  + Buttons sampling with TIMER 1
     //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
     //  + Display message generation TIMER 5
     
@@ -106,7 +112,7 @@ void main(void)
             if (ch=='o') BuzzerTest('O');
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
-            if (ch=='i') I2CSend(1,1,1,0xF0);
+            if (ch=='i') DumpI2C();
             if (ch=='v') SetSV1(false);
             if (ch=='V') SetSV1(true);
             if (ch=='0') TestAlarm(0);

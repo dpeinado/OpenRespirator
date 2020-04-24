@@ -17,7 +17,7 @@ void ButtonInit(void) {
 void ButtonTask(void) {
     static int cnt = 0;
     cnt++;
-    if (cnt==10) { cnt = 0; printf(".\r\n"); }
+    //if (cnt==10) { cnt = 0; printf(".\r\n"); }
     muteButton = !PORTDbits.RD6 | (muteButton << 1);
     histButton = !PORTDbits.RD5 | (histButton << 1);
     if ((muteButton) == PUSHMASK) {
