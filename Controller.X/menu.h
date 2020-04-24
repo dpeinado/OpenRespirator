@@ -17,7 +17,10 @@ extern "C" {
 
 // Set to true to force lcd update.
 extern bool lcdPrintTR;
-extern bool lcdPrintBR;
+// Write to bottom row, either full row or only left half.
+// Write to bottom row, right half.
+extern bool lcdPrintBR;  
+extern bool lcdPrintBRR;
 extern char lcdTopRow[20];
 extern char lcdBtnRow[20];
     

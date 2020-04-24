@@ -1,4 +1,4 @@
-# 1 "i2c2_mux.c"
+# 1 "time.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,9 +6,156 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "i2c2_mux.c" 2
-# 1 "./i2c2_mux.h" 1
-# 15 "./i2c2_mux.h"
+# 1 "time.c" 2
+# 1 "./mcc_generated_files/tmr0.h" 1
+# 54 "./mcc_generated_files/tmr0.h"
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 1 3
+
+
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\musl_xc8.h" 1 3
+# 4 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
+# 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 1 3
+# 127 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef unsigned long uintptr_t;
+# 142 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef long intptr_t;
+# 158 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef signed char int8_t;
+
+
+
+
+typedef short int16_t;
+
+
+
+
+typedef __int24 int24_t;
+
+
+
+
+typedef long int32_t;
+
+
+
+
+
+typedef long long int64_t;
+# 188 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef long long intmax_t;
+
+
+
+
+
+typedef unsigned char uint8_t;
+
+
+
+
+typedef unsigned short uint16_t;
+
+
+
+
+typedef __uint24 uint24_t;
+
+
+
+
+typedef unsigned long uint32_t;
+
+
+
+
+
+typedef unsigned long long uint64_t;
+# 229 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef unsigned long long uintmax_t;
+# 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
+
+
+typedef int8_t int_fast8_t;
+
+typedef int64_t int_fast64_t;
+
+
+typedef int8_t int_least8_t;
+typedef int16_t int_least16_t;
+
+typedef int24_t int_least24_t;
+
+typedef int32_t int_least32_t;
+
+typedef int64_t int_least64_t;
+
+
+typedef uint8_t uint_fast8_t;
+
+typedef uint64_t uint_fast64_t;
+
+
+typedef uint8_t uint_least8_t;
+typedef uint16_t uint_least16_t;
+
+typedef uint24_t uint_least24_t;
+
+typedef uint32_t uint_least32_t;
+
+typedef uint64_t uint_least64_t;
+# 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/stdint.h" 1 3
+typedef int32_t int_fast16_t;
+typedef int32_t int_fast32_t;
+typedef uint32_t uint_fast16_t;
+typedef uint32_t uint_fast32_t;
+# 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
+# 54 "./mcc_generated_files/tmr0.h" 2
+
+# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdbool.h" 1 3
+# 55 "./mcc_generated_files/tmr0.h" 2
+# 100 "./mcc_generated_files/tmr0.h"
+void TMR0_Initialize(void);
+# 129 "./mcc_generated_files/tmr0.h"
+void TMR0_StartTimer(void);
+# 161 "./mcc_generated_files/tmr0.h"
+void TMR0_StopTimer(void);
+# 196 "./mcc_generated_files/tmr0.h"
+uint8_t TMR0_ReadTimer(void);
+# 235 "./mcc_generated_files/tmr0.h"
+void TMR0_WriteTimer(uint8_t timerVal);
+# 272 "./mcc_generated_files/tmr0.h"
+void TMR0_Reload(uint8_t periodVal);
+# 308 "./mcc_generated_files/tmr0.h"
+_Bool TMR0_HasOverflowOccured(void);
+# 1 "time.c" 2
+
+# 1 "./mcc_generated_files/tmr1.h" 1
+# 100 "./mcc_generated_files/tmr1.h"
+void TMR1_Initialize(void);
+# 129 "./mcc_generated_files/tmr1.h"
+void TMR1_StartTimer(void);
+# 161 "./mcc_generated_files/tmr1.h"
+void TMR1_StopTimer(void);
+# 196 "./mcc_generated_files/tmr1.h"
+uint16_t TMR1_ReadTimer(void);
+# 235 "./mcc_generated_files/tmr1.h"
+void TMR1_WriteTimer(uint16_t timerVal);
+# 271 "./mcc_generated_files/tmr1.h"
+void TMR1_Reload(void);
+# 310 "./mcc_generated_files/tmr1.h"
+void TMR1_StartSinglePulseAcquisition(void);
+# 349 "./mcc_generated_files/tmr1.h"
+uint8_t TMR1_CheckGateValueStatus(void);
+# 387 "./mcc_generated_files/tmr1.h"
+_Bool TMR1_HasOverflowOccured(void);
+# 2 "time.c" 2
+
+# 1 "./time.h" 1
+# 15 "./time.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -24,17 +171,7 @@ extern double __fpnormalize(double);
 
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 1 3
-
-
-
-# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\musl_xc8.h" 1 3
-# 4 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 2 3
-
-
-
-
-
-
+# 10 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 3
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\features.h" 1 3
 # 10 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 2 3
 # 21 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 3
@@ -43,10 +180,6 @@ extern double __fpnormalize(double);
 typedef long int wchar_t;
 # 122 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
 typedef unsigned size_t;
-# 168 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef __int24 int24_t;
-# 204 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef __uint24 uint24_t;
 # 21 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdlib.h" 2 3
 
 
@@ -27039,93 +27172,7 @@ void PIN_MANAGER_Initialize (void);
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
-# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 1 3
-# 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
-# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 1 3
-# 127 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef unsigned long uintptr_t;
-# 142 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef long intptr_t;
-# 158 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef signed char int8_t;
 
-
-
-
-typedef short int16_t;
-# 173 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef long int32_t;
-
-
-
-
-
-typedef long long int64_t;
-# 188 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef long long intmax_t;
-
-
-
-
-
-typedef unsigned char uint8_t;
-
-
-
-
-typedef unsigned short uint16_t;
-# 209 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef unsigned long uint32_t;
-
-
-
-
-
-typedef unsigned long long uint64_t;
-# 229 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 3
-typedef unsigned long long uintmax_t;
-# 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
-
-
-typedef int8_t int_fast8_t;
-
-typedef int64_t int_fast64_t;
-
-
-typedef int8_t int_least8_t;
-typedef int16_t int_least16_t;
-
-typedef int24_t int_least24_t;
-
-typedef int32_t int_least32_t;
-
-typedef int64_t int_least64_t;
-
-
-typedef uint8_t uint_fast8_t;
-
-typedef uint64_t uint_fast64_t;
-
-
-typedef uint8_t uint_least8_t;
-typedef uint16_t uint_least16_t;
-
-typedef uint24_t uint_least24_t;
-
-typedef uint32_t uint_least32_t;
-
-typedef uint64_t uint_least64_t;
-# 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
-# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/stdint.h" 1 3
-typedef int32_t int_fast16_t;
-typedef int32_t int_fast32_t;
-typedef uint32_t uint_fast16_t;
-typedef uint32_t uint_fast32_t;
-# 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
-# 52 "./mcc_generated_files/mcc.h" 2
-
-# 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdbool.h" 1 3
-# 53 "./mcc_generated_files/mcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\conio.h" 1 3
 
@@ -27378,26 +27425,6 @@ void (*I2C2_InterruptHandler)(void);
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/tmr1.h" 1
-# 100 "./mcc_generated_files/tmr1.h"
-void TMR1_Initialize(void);
-# 129 "./mcc_generated_files/tmr1.h"
-void TMR1_StartTimer(void);
-# 161 "./mcc_generated_files/tmr1.h"
-void TMR1_StopTimer(void);
-# 196 "./mcc_generated_files/tmr1.h"
-uint16_t TMR1_ReadTimer(void);
-# 235 "./mcc_generated_files/tmr1.h"
-void TMR1_WriteTimer(uint16_t timerVal);
-# 271 "./mcc_generated_files/tmr1.h"
-void TMR1_Reload(void);
-# 310 "./mcc_generated_files/tmr1.h"
-void TMR1_StartSinglePulseAcquisition(void);
-# 349 "./mcc_generated_files/tmr1.h"
-uint8_t TMR1_CheckGateValueStatus(void);
-# 387 "./mcc_generated_files/tmr1.h"
-_Bool TMR1_HasOverflowOccured(void);
-# 57 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27646,22 +27673,6 @@ extern void (*TMR2_InterruptHandler)(void);
 void TMR2_DefaultInterruptHandler(void);
 # 58 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/tmr0.h" 1
-# 100 "./mcc_generated_files/tmr0.h"
-void TMR0_Initialize(void);
-# 129 "./mcc_generated_files/tmr0.h"
-void TMR0_StartTimer(void);
-# 161 "./mcc_generated_files/tmr0.h"
-void TMR0_StopTimer(void);
-# 196 "./mcc_generated_files/tmr0.h"
-uint8_t TMR0_ReadTimer(void);
-# 235 "./mcc_generated_files/tmr0.h"
-void TMR0_WriteTimer(uint8_t timerVal);
-# 272 "./mcc_generated_files/tmr0.h"
-void TMR0_Reload(uint8_t periodVal);
-# 308 "./mcc_generated_files/tmr0.h"
-_Bool TMR0_HasOverflowOccured(void);
-# 59 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/fvr.h" 1
 # 93 "./mcc_generated_files/fvr.h"
@@ -27799,150 +27810,75 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./i2c2_mux.h" 2
+# 15 "./time.h" 2
 
 
-
-extern uint8_t currentTrfAddr;
-extern i2c2_error_t lastI2C2MTrfResponse;
-extern i2c2_error_t lastI2C2LTrfResponse;
-
+typedef uint16_t time_t;
 
 
 
 
 
 
-void I2C2_MuxInit(void);
-_Bool I2C2_MAck(void);
-_Bool I2C2_LAck(void);
-i2c2_error_t I2C2_MOpen(void);
-i2c2_error_t I2C2_LOpen(void);
-i2c2_error_t I2C2_MClose(void);
-i2c2_error_t I2C2_LClose(void);
-# 1 "i2c2_mux.c" 2
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 3 "time.c" 2
 
 
-# 1 "./ORespGlobal.h" 1
-# 67 "./ORespGlobal.h"
-    typedef enum {
-        VMODE_PRESSURE = 0,
-        VMODE_VOLUME = 1
-    } vmodeT;
-
-
-    extern vmodeT VentMode;
-    extern uint8_t BPM;
-    extern uint16_t IDuration, EDuration;
-    extern uint8_t IP;
-    extern uint8_t MaxP;
-    extern uint8_t MaxV;
-    extern uint8_t LowVAlarm;
-    extern uint8_t HighVAlarm;
-    extern uint8_t PEEP;
-    extern uint8_t eBRate;
-    extern int16_t vddValMean;
-
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
-    extern uint16_t lastCycleVol;
-# 3 "i2c2_mux.c" 2
-
-
-uint8_t currentTrfAddr;
-i2c2_error_t lastI2C2MTrfResponse;
-i2c2_error_t lastI2C2LTrfResponse;
-i2c2_error_t lastI2C2MAckResponse;
-i2c2_error_t lastI2C2LAckResponse;
-
-
-void I2C2_MuxInit(void){
-    lastI2C2MAckResponse = 1;
-    lastI2C2LAckResponse = 1;
-    lastI2C2MTrfResponse = I2C2_NOERR;
-    lastI2C2LTrfResponse = I2C2_NOERR;
-    currentTrfAddr = 0x0;
-}
-
-_Bool I2C2_MAck(void){
-    return lastI2C2MAckResponse;
-}
-_Bool I2C2_LAck(void){
-    return lastI2C2LAckResponse;
+void timeInit(void){
+    TMR0_StartTimer();
+    TMR1_StartTimer();
 }
 
 
-i2c2_error_t I2C2_MOpen(void){
-    i2c2_error_t trfRsp;
+time_t timeGet(void){
+    return TMR1_ReadTimer();
+}
 
-    trfRsp = I2C2_Open(0x50);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2MAckResponse = 1;
 
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
-        currentTrfAddr = 0x50;
+time_t timeDiff(time_t startT, time_t endT){
+    time_t intDur;
 
-        return lastI2C2MTrfResponse;
+    intDur = endT - startT;
+    if (intDur>0x8000){
+
+        intDur = startT-endT;
     }
-    return I2C2_BUSY;
+    return intDur;
 }
 
-i2c2_error_t I2C2_LOpen(void){
-    i2c2_error_t trfRsp;
 
-    trfRsp = I2C2_Open(0x27);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2LAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
-        currentTrfAddr = 0x27;
-
-        return lastI2C2LTrfResponse;
+_Bool timeElapsedR(time_t *prevTime, time_t duration){
+    time_t intTime, intDur;
+    intTime = TMR1_ReadTimer();
+    intDur = intTime - *prevTime;
+    if (intDur < duration) {
+        return 0;
+    } else {
+        *prevTime = intTime;
+        return 1;
     }
-    return I2C2_BUSY;
 }
 
-i2c2_error_t I2C2_MClose(void){
-    i2c2_error_t trfRsp;
 
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
-        }
-
-        return lastI2C2MTrfResponse;
+_Bool timeElapsed(time_t prevTime, time_t duration){
+    time_t intTime, intDur;
+    intTime = TMR1_ReadTimer();
+    intDur = intTime - prevTime;
+    if (intDur < duration) {
+        return 0;
+    } else {
+        return 1;
     }
-    return I2C2_BUSY;
 }
 
-i2c2_error_t I2C2_LClose(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
-        }
-
-        return lastI2C2LTrfResponse;
-    }
-    return I2C2_BUSY;
+void timeDelayMs(time_t delms){
+    time_t tstamp;
+    tstamp=timeGet();
+    while (!timeElapsed(tstamp, ((time_t) delms*1)));
 }

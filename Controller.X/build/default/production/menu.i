@@ -1,4 +1,4 @@
-# 1 "i2c2_mux.c"
+# 1 "menu.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,9 +6,16 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "i2c2_mux.c" 2
-# 1 "./i2c2_mux.h" 1
-# 15 "./i2c2_mux.h"
+# 1 "menu.c" 2
+
+
+
+
+
+
+
+# 1 "./ORespGlobal.h" 1
+# 15 "./ORespGlobal.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27799,31 +27806,7 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./i2c2_mux.h" 2
-
-
-
-extern uint8_t currentTrfAddr;
-extern i2c2_error_t lastI2C2MTrfResponse;
-extern i2c2_error_t lastI2C2LTrfResponse;
-
-
-
-
-
-
-
-void I2C2_MuxInit(void);
-_Bool I2C2_MAck(void);
-_Bool I2C2_LAck(void);
-i2c2_error_t I2C2_MOpen(void);
-i2c2_error_t I2C2_LOpen(void);
-i2c2_error_t I2C2_MClose(void);
-i2c2_error_t I2C2_LClose(void);
-# 1 "i2c2_mux.c" 2
-
-
-# 1 "./ORespGlobal.h" 1
+# 15 "./ORespGlobal.h" 2
 # 67 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
@@ -27845,104 +27828,456 @@ i2c2_error_t I2C2_LClose(void);
 
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
-# 3 "i2c2_mux.c" 2
+# 8 "menu.c" 2
+
+# 1 "./menu.h" 1
+# 19 "./menu.h"
+extern _Bool lcdPrintTR;
 
 
-uint8_t currentTrfAddr;
-i2c2_error_t lastI2C2MTrfResponse;
-i2c2_error_t lastI2C2LTrfResponse;
-i2c2_error_t lastI2C2MAckResponse;
-i2c2_error_t lastI2C2LAckResponse;
+extern _Bool lcdPrintBR;
+extern _Bool lcdPrintBRR;
+extern char lcdTopRow[20];
+extern char lcdBtnRow[20];
+
+typedef enum {
+    CFG_IDLE,
+    CFG_IP,
+    CFG_BPM,
+    CFG_PEEP,
+    CFG_MAXP,
+    CFG_MAXV,
+    CFG_LOWVA,
+    CFG_HIGHVA,
+} menuStatusT;
+
+void MenuInit(void);
+
+void MenuMng(void);
+
+void screenInit(void);
+
+void screenMng(void);
+# 9 "menu.c" 2
 
 
-void I2C2_MuxInit(void){
-    lastI2C2MAckResponse = 1;
-    lastI2C2LAckResponse = 1;
-    lastI2C2MTrfResponse = I2C2_NOERR;
-    lastI2C2LTrfResponse = I2C2_NOERR;
-    currentTrfAddr = 0x0;
+# 1 "./keyRead.h" 1
+# 20 "./keyRead.h"
+void keyReadInit(void);
+
+int8_t keyPeek(void);
+
+
+int8_t keyReadEC();
+
+int8_t keyRead();
+# 11 "menu.c" 2
+
+# 1 "./time.h" 1
+# 17 "./time.h"
+typedef uint16_t time_t;
+
+
+
+
+
+
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 12 "menu.c" 2
+
+# 1 "./LiquidCrystal_I2C.h" 1
+# 55 "./LiquidCrystal_I2C.h"
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
+void clear();
+void home();
+void noDisplay();
+void display();
+void noBlink();
+void blink();
+void noCursor();
+void cursor();
+void scrollDisplayLeft();
+void scrollDisplayRight();
+void printLeft();
+void printRight();
+void leftToRight();
+void rightToLeft();
+void shiftIncrement();
+void shiftDecrement();
+void noBacklight();
+void backlight();
+void autoscroll();
+void noAutoscroll();
+void createChar(uint8_t, uint8_t[]);
+void setCursor(uint8_t, uint8_t);
+void write(uint8_t);
+void init();
+void setBacklight(_Bool new_val);
+void load_custom_character(uint8_t char_num, uint8_t *rows);
+void printstr(const char[]);
+void printstrblock(const char[]);
+_Bool PrintStrBusy(void);
+# 13 "menu.c" 2
+
+
+
+
+
+
+_Bool lcdPrintTR, lcdPrintBR, lcdPrintBRR, lcdBlink;
+_Bool lcdMenuPrint;
+
+char lcdTopRow[20];
+char lcdBtnRow[20];
+menuStatusT menuStatus;
+uint16_t menuVal;
+time_t menuTstamp;
+
+void MenuInit(void) {
+    menuStatus = CFG_IDLE;
+    lcdMenuPrint = 1;
+    lcdPrintBR=1;
+    lcdPrintBRR=1;
+    lcdPrintTR=1;
 }
 
-_Bool I2C2_MAck(void){
-    return lastI2C2MAckResponse;
-}
-_Bool I2C2_LAck(void){
-    return lastI2C2LAckResponse;
-}
+void MenuMng(void) {
+
+    int8_t keyPress;
+    keyPress = keyRead();
+    if ((keyPress >= 0) && (keyPress != 4)) {
+        lcdMenuPrint = 1;
+        printf ("KEY! %d\n", keyPress);
+
+        switch (keyPress) {
+            case 0:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_IP;
+                    menuVal = IP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_IP) {
+
+                    IP = menuVal;
+                    chIP = 1;
+                    if (VentMode == 1) {
+                        VentMode = 0;
+                        chVentMode = 1;
+                    }
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 2:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_BPM;
+                    menuVal = BPM;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_BPM) {
+
+                    BPM = menuVal;
+                    chBPM = 1;
+                    IDuration = ((uint16_t) 60*1000)/(3*BPM);
+                    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 1:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_PEEP;
+                    menuVal = PEEP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_PEEP) {
+
+                    PEEP = menuVal;
+                    chPEEP = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 6:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_MAXP;
+                    menuVal = MaxP;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_MAXP) {
+
+                    MaxP = menuVal;
+                    chMaxP = 1;
+                    if (VentMode == 0) {
+                        VentMode = 1;
+                        chVentMode = 1;
+                    }
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 7:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_MAXV;
+                    menuVal = MaxV;
+                    menuTstamp = timeGet();
+                    if ((MaxP != IP) && (VentMode == 0)) {
 
 
-i2c2_error_t I2C2_MOpen(void){
-    i2c2_error_t trfRsp;
+                        MaxP = IP;
+                        chMaxP = 1;
+                    }
+                } else if (menuStatus == CFG_MAXV) {
 
-    trfRsp = I2C2_Open(0x50);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2MAckResponse = 1;
 
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
+                    MaxV = menuVal;
+                    chMaxV = 1;
+                    HighVAlarm = ((MaxV + (((uint16_t) 25*MaxV)/100) > (980/10))? 980 : ((MaxV + (((uint16_t) 25*MaxV)/100) < (50/10))? (50/10) : MaxV + (((uint16_t) 25*MaxV)/100)));
+                    LowVAlarm = ((MaxV - (((uint16_t) 25*MaxV)/100) > (980/10))? 980 : ((MaxV - (((uint16_t) 25*MaxV)/100) < (50/10))? (50/10) : MaxV - (((uint16_t) 25*MaxV)/100)));
+                    chHighVAlarm = 1;
+                    chLowVAlarm = 1;
+                    if (VentMode == 0) {
+                        VentMode = 1;
+                        chVentMode = 1;
+                    }
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 8:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_HIGHVA;
+                    menuVal = HighVAlarm;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_HIGHVA) {
+
+                    HighVAlarm = menuVal;
+                    chHighVAlarm = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 9:
+                if (menuStatus == CFG_IDLE) {
+                    menuStatus = CFG_LOWVA;
+                    menuVal = LowVAlarm;
+                    menuTstamp = timeGet();
+                } else if (menuStatus == CFG_LOWVA) {
+
+                    LowVAlarm = menuVal;
+                    chLowVAlarm = 1;
+                    menuStatus = CFG_IDLE;
+                } else {
+
+                    menuStatus = CFG_IDLE;
+                }
+                break;
+            case 3:
+                if (menuStatus != CFG_IDLE) {
+                    menuTstamp = timeGet();
+
+                    switch (menuStatus) {
+                        case CFG_IP:
+                        case CFG_MAXP:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 80) {
+                                menuVal = 80;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 25) {
+                                menuVal = 25;
+                            }
+                            break;
+                        case CFG_BPM:
+                            menuVal = menuVal + 1;
+                            if (menuVal > 30) {
+                                menuVal = 30;
+                            }
+                            break;
+                        case CFG_MAXV:
+                            menuVal=((menuVal + 2 > (900/10))? 900 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
+                            break;
+                        case CFG_LOWVA:
+                        case CFG_HIGHVA:
+                            menuVal=((menuVal + 2 > (980/10))? 980 : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+                break;
+            case 5:
+                if (menuStatus != CFG_IDLE) {
+                    menuTstamp = timeGet();
+
+                    switch (menuStatus) {
+                        case CFG_IP:
+                        case CFG_MAXP:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 4) {
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_PEEP:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 4) {
+                                menuVal = 4;
+                            }
+                            break;
+                        case CFG_BPM:
+                            menuVal = menuVal - 1;
+                            if (menuVal < 10) {
+                                menuVal = 10;
+                            }
+                            break;
+                        case CFG_MAXV:
+                            menuVal=((menuVal - 2 > (900/10))? 900 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
+                            break;
+                        case CFG_LOWVA:
+                        case CFG_HIGHVA:
+                            menuVal=((menuVal - 2 > (980/10))? 980 : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+                break;
         }
-        currentTrfAddr = 0x50;
 
-        return lastI2C2MTrfResponse;
+        lcdPrintBRR = 1;
+        lcdPrintTR = 1;
+        lcdMenuPrint = 1;
+    } else {
+        if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
+
+            lcdPrintTR = 1;
+            lcdPrintBRR = 1;
+            menuStatus = CFG_IDLE;
+        }
+        return;
     }
-    return I2C2_BUSY;
 }
 
-i2c2_error_t I2C2_LOpen(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Open(0x27);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2LAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
-        currentTrfAddr = 0x27;
-
-        return lastI2C2LTrfResponse;
-    }
-    return I2C2_BUSY;
+void screenInit(void) {
+    LcdI2CInit(0x27, 16, 2);
+    setCursor(0, 0);
+    printstrblock("EMERG.RESPIRATOR");
+    setCursor(0, 1);
+    printstrblock("  CONTROLLER   ");
+    timeDelayMs(((time_t) 2000*1));
+    clear();
+    lcdPrintTR = 1;
+    blink();
 }
 
-i2c2_error_t I2C2_MClose(void){
-    i2c2_error_t trfRsp;
+void screenMng(void) {
 
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
+    if (lcdPrintTR && !PrintStrBusy()) {
+        lcdPrintTR = 0;
+        if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
+            if (VentMode == VMODE_PRESSURE) {
+                sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10*((uint16_t) MaxV));
+            }
+        } else if (menuStatus == CFG_BPM) {
+            if (VentMode == VMODE_PRESSURE) {
+                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10*((uint16_t) MaxV));
+            }
+        } else if (menuStatus == CFG_PEEP) {
+            if (VentMode == VMODE_PRESSURE) {
+                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10*((uint16_t) MaxV));
+            }
+        } else if (menuStatus == CFG_IP) {
+            sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
+        } else if (menuStatus == CFG_MAXP) {
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10*((uint16_t) MaxV));
+        } else if (menuStatus == CFG_MAXV) {
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10*((uint16_t)menuVal));
         }
 
-        return lastI2C2MTrfResponse;
-    }
-    return I2C2_BUSY;
-}
+        printf (lcdTopRow);
+        setCursor(0, 0);
+        printstr(lcdTopRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = 1;
+        }
+    } else if (lcdPrintBR && !PrintStrBusy()) {
+        lcdPrintBR = 0;
 
-i2c2_error_t I2C2_LClose(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
+        printf (lcdBtnRow);
+        setCursor(0, 1);
+        printstr(lcdBtnRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = 1;
+        }
+    } else if (lcdPrintBRR && !PrintStrBusy()) {
+        lcdPrintBRR = 0;
+        lcdMenuPrint = 0;
+        if (menuStatus == CFG_LOWVA) {
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t)menuVal), 10*((uint16_t) HighVAlarm));
+        } else if (menuStatus == CFG_HIGHVA) {
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm), 10*((uint16_t) menuVal));
         } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm), 10*((uint16_t) HighVAlarm));
         }
 
-        return lastI2C2LTrfResponse;
+
+        printf (lcdBtnRow);
+        setCursor(8, 1);
+        printstr(lcdBtnRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = 1;
+        }
+    } else if (lcdBlink && !PrintStrBusy()) {
+        lcdBlink = 0;
+        switch (menuStatus) {
+            case CFG_BPM:
+                setCursor(1, 0);
+                break;
+            case CFG_PEEP:
+                setCursor(4, 0);
+                break;
+            case CFG_IP:
+                setCursor(8, 0);
+                break;
+            case CFG_MAXP:
+                setCursor(11, 0);
+                break;
+            case CFG_MAXV:
+                setCursor(15, 0);
+                break;
+            case CFG_LOWVA:
+                setCursor(11, 1);
+                break;
+            case CFG_HIGHVA:
+                setCursor(15, 1);
+                break;
+            default:
+
+                break;
+        }
     }
-    return I2C2_BUSY;
 }

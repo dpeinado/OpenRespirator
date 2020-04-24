@@ -12,7 +12,11 @@
 #include "time.h"
 #include "LiquidCrystal_I2C.h"
 
-bool lcdPrintTR, lcdPrintBR, lcdBlink;
+#define VOL_ACHK(volume) ((volume > (VOL_AMAX/10))? VOL_AMAX : ((volume < (VOL_AMIN/10))? (VOL_AMIN/10) : volume))
+
+#define VOL_CHK(volume) ((volume > (VOL_MAX/10))? VOL_MAX : ((volume < (VOL_MIN/10))? (VOL_MIN/10) : volume))
+
+bool lcdPrintTR, lcdPrintBR, lcdPrintBRR, lcdBlink;
 bool lcdMenuPrint;
 
 char lcdTopRow[20];
@@ -25,6 +29,7 @@ void MenuInit(void) {
     menuStatus = CFG_IDLE;
     lcdMenuPrint = true;
     lcdPrintBR=true;
+    lcdPrintBRR=true;
     lcdPrintTR=true;
 }
 
@@ -120,8 +125,13 @@ void MenuMng(void) {
                     }
                 } else if (menuStatus == CFG_MAXV) {
                     // Accept change and exit.
+                    // Set max and min alarms default values.
                     MaxV = menuVal;
                     chMaxV = true;
+                    HighVAlarm = VOL_ACHK(MaxV + (((uint16_t) VOL_ALRM_DFL*MaxV)/100));
+                    LowVAlarm = VOL_ACHK(MaxV - (((uint16_t) VOL_ALRM_DFL*MaxV)/100));
+                    chHighVAlarm = true;
+                    chLowVAlarm = true;
                     if (VentMode == 0) {
                         VentMode = 1;
                         chVentMode = true;
@@ -187,12 +197,11 @@ void MenuMng(void) {
                             }
                             break;
                         case CFG_MAXV:
+                            menuVal=VOL_CHK(menuVal + 2);
+                            break;
                         case CFG_LOWVA:
                         case CFG_HIGHVA:
-                            menuVal = menuVal + 20;
-                            if (menuVal > VOL_MAX) {
-                                menuVal = VOL_MAX;
-                            }
+                            menuVal=VOL_ACHK(menuVal + 2);
                             break;
                         default:
                             // No processing.
@@ -225,12 +234,11 @@ void MenuMng(void) {
                             }
                             break;
                         case CFG_MAXV:
+                            menuVal=VOL_CHK(menuVal - 2);
+                            break;
                         case CFG_LOWVA:
                         case CFG_HIGHVA:
-                            menuVal = menuVal - 20;
-                            if (menuVal < VOL_MIN) {
-                                menuVal = VOL_MIN;
-                            }
+                            menuVal=VOL_ACHK(menuVal - 2);
                             break;
                         default:
                             // No processing.
@@ -240,14 +248,14 @@ void MenuMng(void) {
                 break;
         }
         
-        lcdPrintBR = true;
+        lcdPrintBRR = true;
         lcdPrintTR = true;            
         lcdMenuPrint = true;
     } else {
         if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, MENU_TOUT))) {
             // Silently exit menu.
             lcdPrintTR = true;
-            lcdPrintBR = true;
+            lcdPrintBRR = true;
             menuStatus = CFG_IDLE;
         }
         return;
@@ -271,29 +279,29 @@ void screenMng(void) {
     if (lcdPrintTR && !PrintStrBusy()) {
         lcdPrintTR = false;
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
-            if (VentMode == 0) {
+            if (VentMode == VMODE_PRESSURE) {
                 sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP,  10*((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_BPM) {
-            if (VentMode == 0) {
+            if (VentMode == VMODE_PRESSURE) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10*((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
-            if (VentMode == 0) {
+            if (VentMode == VMODE_PRESSURE) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, MaxV);
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10*((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
             sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
         } else if (menuStatus == CFG_MAXP) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, MaxV);
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10*((uint16_t) MaxV));
         } else if (menuStatus == CFG_MAXV) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, menuVal);
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10*((uint16_t)menuVal));
         }
 
         DEBUG_PRINT((lcdTopRow));
@@ -305,20 +313,26 @@ void screenMng(void) {
     } else if (lcdPrintBR && !PrintStrBusy()) {
         lcdPrintBR = false;
 
-        if (lcdMenuPrint) {
-            lcdMenuPrint = false;
-            if (menuStatus == CFG_LOWVA) {
-                sprintf(lcdBtnRow, "LOW V. ALARM % 3d", menuVal);
-            } else if (menuStatus == CFG_HIGHVA) {
-                sprintf(lcdBtnRow, "HIGHV. ALARM % 3d", menuVal);
-            } else {
-                sprintf(lcdBtnRow, "                ");                
-            }            
-        }
-        
-        // Detect reason for latest change.
         DEBUG_PRINT((lcdBtnRow));
         setCursor(0, 1);
+        printstr(lcdBtnRow);
+        if (menuStatus != CFG_IDLE) {
+            lcdBlink = true;
+        }
+    } else if (lcdPrintBRR && !PrintStrBusy()) {
+        lcdPrintBRR = false;
+        lcdMenuPrint = false;
+        if (menuStatus == CFG_LOWVA) {
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t)menuVal), 10*((uint16_t) HighVAlarm));
+        } else if (menuStatus == CFG_HIGHVA) {
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm), 10*((uint16_t) menuVal));
+        } else {
+            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm),  10*((uint16_t) HighVAlarm));
+        }            
+                
+        // Detect reason for latest change.
+        DEBUG_PRINT((lcdBtnRow));
+        setCursor(8, 1);
         printstr(lcdBtnRow);
         if (menuStatus != CFG_IDLE) {
             lcdBlink = true;
@@ -341,6 +355,12 @@ void screenMng(void) {
             case CFG_MAXV:
                 setCursor(15, 0);
                 break;
+            case CFG_LOWVA:
+                setCursor(11, 1);
+                break;                
+            case CFG_HIGHVA:
+                setCursor(15, 1);
+                break;                
             default:
                 // No processing.
                 break;

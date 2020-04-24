@@ -3,9 +3,9 @@
 #define ESCAPE_TIME 2000
 #endif
 
-#define KEYN 10
+#define KEYN 11
 #define KEYDN 6
-#define KEYCN 4
+#define KEYCN 5
 
 #include "time.h"
 #include "keyRead.h"
@@ -14,8 +14,8 @@
  // AND is not using a buffer either!
 
 // Pins of portd.
-int8_t keysD[6] = {1,2,3,4,5,7};
-int8_t keysC[4] = {4,5,6,7};
+int8_t keysD[KEYDN] = {1,2,3,4,5,7};
+int8_t keysC[KEYCN] = {4,5,6,7,2};
 int8_t lastkey, lastkeyEC;
 time_t pressMills;
 

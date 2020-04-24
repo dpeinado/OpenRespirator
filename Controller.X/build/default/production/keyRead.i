@@ -1,4 +1,4 @@
-# 1 "i2c2_mux.c"
+# 1 "keyRead.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,9 +6,10 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "i2c2_mux.c" 2
-# 1 "./i2c2_mux.h" 1
-# 15 "./i2c2_mux.h"
+# 1 "keyRead.c" 2
+# 10 "keyRead.c"
+# 1 "./time.h" 1
+# 15 "./time.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27799,150 +27800,96 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./i2c2_mux.h" 2
+# 15 "./time.h" 2
 
 
-
-extern uint8_t currentTrfAddr;
-extern i2c2_error_t lastI2C2MTrfResponse;
-extern i2c2_error_t lastI2C2LTrfResponse;
-
+typedef uint16_t time_t;
 
 
 
 
 
 
-void I2C2_MuxInit(void);
-_Bool I2C2_MAck(void);
-_Bool I2C2_LAck(void);
-i2c2_error_t I2C2_MOpen(void);
-i2c2_error_t I2C2_LOpen(void);
-i2c2_error_t I2C2_MClose(void);
-i2c2_error_t I2C2_LClose(void);
-# 1 "i2c2_mux.c" 2
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 10 "keyRead.c" 2
+
+# 1 "./keyRead.h" 1
+# 20 "./keyRead.h"
+void keyReadInit(void);
+
+int8_t keyPeek(void);
 
 
-# 1 "./ORespGlobal.h" 1
-# 67 "./ORespGlobal.h"
-    typedef enum {
-        VMODE_PRESSURE = 0,
-        VMODE_VOLUME = 1
-    } vmodeT;
+int8_t keyReadEC();
+
+int8_t keyRead();
+# 11 "keyRead.c" 2
 
 
-    extern vmodeT VentMode;
-    extern uint8_t BPM;
-    extern uint16_t IDuration, EDuration;
-    extern uint8_t IP;
-    extern uint8_t MaxP;
-    extern uint8_t MaxV;
-    extern uint8_t LowVAlarm;
-    extern uint8_t HighVAlarm;
-    extern uint8_t PEEP;
-    extern uint8_t eBRate;
-    extern int16_t vddValMean;
-
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
-    extern uint16_t lastCycleVol;
-# 3 "i2c2_mux.c" 2
 
 
-uint8_t currentTrfAddr;
-i2c2_error_t lastI2C2MTrfResponse;
-i2c2_error_t lastI2C2LTrfResponse;
-i2c2_error_t lastI2C2MAckResponse;
-i2c2_error_t lastI2C2LAckResponse;
 
 
-void I2C2_MuxInit(void){
-    lastI2C2MAckResponse = 1;
-    lastI2C2LAckResponse = 1;
-    lastI2C2MTrfResponse = I2C2_NOERR;
-    lastI2C2LTrfResponse = I2C2_NOERR;
-    currentTrfAddr = 0x0;
+int8_t keysD[6] = {1,2,3,4,5,7};
+int8_t keysC[5] = {4,5,6,7,2};
+int8_t lastkey, lastkeyEC;
+time_t pressMills;
+
+uint8_t digitalReadD(uint8_t pin){
+    return (PORTD&(1<<pin))!= 0;
+}
+uint8_t digitalReadC(uint8_t pin){
+    return (PORTC&(1<<pin))!= 0;
 }
 
-_Bool I2C2_MAck(void){
-    return lastI2C2MAckResponse;
-}
-_Bool I2C2_LAck(void){
-    return lastI2C2LAckResponse;
-}
+void keyReadInit(void){
+    pressMills = 0;
+    lastkey = -1;
+    lastkeyEC = -1;
 
+};
 
-i2c2_error_t I2C2_MOpen(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Open(0x50);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2MAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
+int8_t keyPeek(void) {
+    for (int8_t n = 0; n < 6; n++) {
+        if (digitalReadD(keysD[n]) != 1) {
+            return n;
         }
-        currentTrfAddr = 0x50;
-
-        return lastI2C2MTrfResponse;
     }
-    return I2C2_BUSY;
+    for (int8_t n = 0; n < 5; n++) {
+        if (digitalReadC(keysC[n]) != 1) {
+            return n+6;
+        }
+    }
+    return -1;
 }
 
-i2c2_error_t I2C2_LOpen(void){
-    i2c2_error_t trfRsp;
 
-    trfRsp = I2C2_Open(0x27);
-    if (trfRsp != I2C2_BUSY) {
-        lastI2C2LAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
+int8_t keyReadEC() {
+    int8_t ch = keyPeek();
+    if (lastkeyEC == -1) {
+        lastkeyEC = ch;
+        pressMills = timeGet();
+    } else if ((ch != -1) && (ch == lastkeyEC)) {
+        _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
+        if (longPress) {
+            return -100;
         }
-        currentTrfAddr = 0x27;
-
-        return lastI2C2LTrfResponse;
+    } else if (ch == -1) {
+        lastkeyEC = -1;
     }
-    return I2C2_BUSY;
+    return -1;
 }
 
-i2c2_error_t I2C2_MClose(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
-        }
-
-        return lastI2C2MTrfResponse;
-    }
-    return I2C2_BUSY;
-}
-
-i2c2_error_t I2C2_LClose(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
-            lastI2C2LTrfResponse = trfRsp;
-        }
-
-        return lastI2C2LTrfResponse;
-    }
-    return I2C2_BUSY;
+int8_t keyRead() {
+    int8_t ch = keyPeek();
+    if (ch == lastkey) return -1;
+    int tmp = lastkey;
+    lastkey = ch;
+    return tmp;
 }
