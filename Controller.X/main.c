@@ -144,7 +144,7 @@ void MonitorMsgForcedSend (monStateT state){
     trfError = I2C2_MClose();
     trfAck = I2C2_MAck();
 
-//    DEBUG_PRINT(("I2C2 Close: %d\n", trfError));
+    DEBUG_PRINT(("I2C2 Close: %d\n", trfError));
             
     if (!trfAck) {
         // Enable buzzer and display error message on second line.
@@ -224,6 +224,9 @@ void MonitorMsgForcedSend (monStateT state){
         I2C2_SetBuffer(monitorMsg,10);
         trfError = I2C2_MasterOperation(false);
         //      DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
+    } else {
+        // TODO: in final implementation, if I2C busy generate an error.
+        // Until then, not possible.
     }
 }
 

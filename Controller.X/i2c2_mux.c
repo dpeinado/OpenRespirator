@@ -8,6 +8,15 @@ i2c2_error_t lastI2C2LTrfResponse;
 i2c2_error_t lastI2C2MAckResponse;
 i2c2_error_t lastI2C2LAckResponse;
 
+i2c2_operations_t I2C2_NackCb(void *ptr){
+    DEBUG_PRINT(("I2C2 E\n"));
+    if (currentTrfAddr == MON_ADDR) {
+        lastI2C2MAckResponse = false;
+    } else {
+        lastI2C2LAckResponse = false;        
+    }
+    return I2C2_CallbackReturnStop(NULL);
+}
 
 void I2C2_MuxInit(void){
     lastI2C2MAckResponse = true;
@@ -30,6 +39,9 @@ i2c2_error_t I2C2_MOpen(void){
 
     trfRsp = I2C2_Open(MON_ADDR);
     if (trfRsp != I2C2_BUSY) {
+        I2C2_SetAddressNackCallback(I2C2_NackCb,NULL);
+        I2C2_SetDataNackCallback(I2C2_NackCb,NULL);
+
         lastI2C2MAckResponse = true;
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
@@ -38,6 +50,7 @@ i2c2_error_t I2C2_MOpen(void){
             lastI2C2LTrfResponse = trfRsp;
         }
         currentTrfAddr = MON_ADDR;
+        lastI2C2MAckResponse = true;
         // Return last response for Monitor.
         return lastI2C2MTrfResponse;
     } 
@@ -49,6 +62,9 @@ i2c2_error_t I2C2_LOpen(void){
 
     trfRsp = I2C2_Open(LCD_ADDR);
     if (trfRsp != I2C2_BUSY) {
+        I2C2_SetAddressNackCallback(I2C2_NackCb,NULL);
+        I2C2_SetDataNackCallback(I2C2_NackCb,NULL);
+
         lastI2C2LAckResponse = true;
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
@@ -57,6 +73,7 @@ i2c2_error_t I2C2_LOpen(void){
             lastI2C2LTrfResponse = trfRsp;
         }
         currentTrfAddr = LCD_ADDR;
+        lastI2C2LAckResponse = true;
         // Return last response for LCD.
         return lastI2C2LTrfResponse;
     }
@@ -70,10 +87,8 @@ i2c2_error_t I2C2_MClose(void){
     if (trfRsp != I2C2_BUSY) {
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2MTrfResponse = trfRsp;
         } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2LTrfResponse = trfRsp;
         }
         // Return last response for LCD.
@@ -89,10 +104,8 @@ i2c2_error_t I2C2_LClose(void){
     if (trfRsp != I2C2_BUSY) {
         // Assign response to correct slave.
         if (currentTrfAddr == MON_ADDR){
-            lastI2C2MAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2MTrfResponse = trfRsp;
         } else {
-            lastI2C2LAckResponse = I2C2_MasterIsNackFlagSet();
             lastI2C2LTrfResponse = trfRsp;
         }
         // Return last response for LCD.
