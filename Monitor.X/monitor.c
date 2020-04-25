@@ -13,6 +13,76 @@
 #include "buttons.h"
 #include "tick.h"
 
+#define NUM_CHANNELS 4
+
+struct adcChannel {
+    adcc_channel_t ch;
+    volatile bool dataValid;
+    adc_result_t data;
+} ;
+static int currentChannel;
+
+static struct adcChannel adcChannels[] = {
+    {PRS, false, 0},
+    {MIC, false, 0},
+    {PRSV, false, 0},
+    {MEAS12,false, 0}
+};
+
+bool AdcReady(void) {
+    return ADCC_IsConversionDone();
+}
+
+void AdcReStartCycle(void) {
+    currentChannel = 0;
+    ADCC_StartConversion(adcChannels[currentChannel].ch);
+}
+
+bool AdcDataReady(int id) {
+    return adcChannels[id].dataValid;
+}
+
+adc_result_t AdcGetData(int id) {
+    adc_result_t data;
+    data = adcChannels[id].data;
+    adcChannels[id].dataValid=false;
+    return data;
+}
+
+void AdcHandler(void) {
+    static int cnt = 0;
+    //if (cnt==0) printf("+\r\n");
+
+    
+    if (!ADCC_IsConversionDone()) {
+        printf("\r\n Error ADC IRQ and no data ready\r\n");
+    }
+    // Interrupt received from ADC
+    adcChannels[currentChannel].data = ADCC_GetConversionResult();
+    adcChannels[currentChannel].dataValid = true;
+    
+    // New channel
+    if (currentChannel < (NUM_CHANNELS-1))
+    {
+        // Start new conversion
+        currentChannel++;
+        ADCC_StartConversion(adcChannels[currentChannel].ch);
+    } else {
+        // Wait for TIMER0 to start a new cycle
+        currentChannel = 0;    cnt++;
+        if (cnt>=1000) { cnt = 0;  }
+        if (cnt==0) printf("o\r\n");
+    }
+
+    
+}
+
+void AdcInit(void) {
+    currentChannel = 0;
+    ADCC_SetADIInterruptHandler(AdcHandler);
+    ADCC_StartConversion(adcChannels[currentChannel].ch);
+}
+
 int16_t adcOffset;
 int16_t targetHigh;
 int16_t targetLow;
@@ -119,6 +189,26 @@ void MonitorPressureTask(void) { // Every 2 ms
     ttExt++;
     ttNoAlarm++;
     
+    // Check ADC status
+    if (!AdcReady()) {
+            printf("=");
+            //AdcReStartCycle();
+            //AdcInit();)
+            return;
+    }
+    
+    if (!AdcDataReady(ADC_ID_PRS)) {
+        printf("-");
+        // Restart ADC
+        AdcReStartCycle();
+        // TBD: Add alarm
+        
+        return;
+    } 
+    // Timer 0 restart conversion cycle
+    AdcReStartCycle();
+
+    
     // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
     pr = GetPressure_mbar02();
     //tt = tick_get_slow();  
@@ -133,7 +223,7 @@ void MonitorPressureTask(void) { // Every 2 ms
         prSlow = temp/25;
 
     }
-    
+   
     // Only alarm after 12s after setting
     if (ttNoAlarm>12*500) {
         enableAlarms = true;
@@ -143,7 +233,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     if (ttExt>6*500) { // Every 6 s we should have at least one breath
         //printf("\r\n pLow: %d pHigh: %d Min: %d Max: %d pe: %d pi:%d \r\n", pLow/5, pHigh/5, minPressure/5, maxPressure/5, pe/5, pi/5);
         // Define Hi and Low limits for next cycle
-        hiLimit = maxPressure - (maxPressure-minPressure)/5;
+        hiLimit = maxPressure - (maxPressure-minPressure)/4;
         loLimit = minPressure + (maxPressure-minPressure)/4;
         // Store estimation of last cycle
         pe = pLow;
@@ -205,11 +295,13 @@ void MonitorPressureTask(void) { // Every 2 ms
         if (tt>400) { // Filter more events during ramp-up
             bp = tt; 
             if (bp!=0) bpm = 60000/(bp*2);
- //           printf("\r\nUP12: %ld pr: %d bpm: %d\r\n", tt, prSlow/5, bpm);           
+           // printf("\r\nUP12: %ld pr: %d\r\n", tt, prSlow/5, bpm);           
+        
+            tt=0; // This is the start of time
+            tt1 = tt;  // Start of event
+
         }
-        tt=0; // This is the start of time
-        tt1 = tt;
-        tt12 = tt;
+        tt12 = tt; // Last event
         // Store PE measured during TE
         measPe=false;
         measPi=false;
@@ -221,12 +313,17 @@ void MonitorPressureTask(void) { // Every 2 ms
         }
 
     }
+    static bool down = false;
     
     // Start of fall
     if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
         //TST1_SetLow();
-        tt3 = tt;
-        tt34 = tt;
+        if (!down) {
+           // printf("\r\nDOWN34: %ld pr: %d\r\n", tt, prSlow/5, bpm); 
+            tt3 = tt; // First sample
+            down = true;
+        }
+        tt34 = tt; // Last samble
         // Store PI measured during TI
         measPe=false;
         measPi=false;
@@ -236,7 +333,7 @@ void MonitorPressureTask(void) { // Every 2 ms
             if (lrpi>(targetHigh+3*5)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
             if (lrpi<(targetHigh-3*5)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
         }
-    }
+    } else if (tt>(tt3+400)) down = false;
     
     // Starting state
     if ( state == STATE_OFF) {
@@ -287,7 +384,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     // New estimators: 5*25*2 = 250 ms We will average the last 250 ms
     if (measPi) rpi = (rpi*4+prFast)/5;
     if (measPe) rpe = (rpe*4+prFast)/5;
-   
+#if 0
     // TBD: Timeout alarms of events
     if (enableAlarms) {
         if (tt>(bp+bp/2) && bp>500) {
@@ -299,7 +396,7 @@ void MonitorPressureTask(void) { // Every 2 ms
             SetCircuitFailureAlarm();
         }
     }
-    
+#endif
     
     if (state == STATE_CALIBRATE) {
         if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
@@ -314,6 +411,7 @@ void MonitorPressureTask(void) { // Every 2 ms
             //DisplayCalibrate(prFast, adcOffset);
         }
     } 
+
             
     state = next;
     
@@ -374,9 +472,10 @@ void ClearVars(void) {
 
 void InitializePressure (void) {
     //ADCC_Initialize(); // Already in mcc.c
-    ADCC_EnableContinuousConversion();
-    ADCC_StartConversion(PRS);
-    targetHigh = 30*5; // 0.2 mbar
+    AdcInit();
+    //ADCC_EnableContinuousConversion();
+    //ADCC_StartConversion(PRS);
+    targetHigh = 25*5; // 0.2 mbar
     targetLow  = 7*5; // 0.2 mbar
     adcOffset = 0; // Read from EEPROM or calibrate. ADC counts
     state = STATE_OFF;
@@ -402,7 +501,8 @@ int16_t GetPressure_kpa (void) {
 
 int16_t GetPressure_pa (void) {
     
-    adc_result_t adc = ADCC_GetConversionResult();
+    adc_result_t adc = AdcGetData(ADC_ID_PRS);
+    
     //printf("ADC: %d ", adc);
     uint32_t mv = adc;
     mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
