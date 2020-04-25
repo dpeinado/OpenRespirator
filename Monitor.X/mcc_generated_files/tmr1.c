@@ -74,11 +74,11 @@ void TMR1_Initialize(void)
     //CS FOSC/4; 
     T1CLK = 0x01;
 
-    //TMR1H 216; 
-    TMR1H = 0xD8;
+    //TMR1H 99; 
+    TMR1H = 0x63;
 
-    //TMR1L 240; 
-    TMR1L = 0xF0;
+    //TMR1L 192; 
+    TMR1L = 0xC0;
 
     // Clearing IF flag before enabling the interrupt.
     PIR4bits.TMR1IF = 0;
@@ -92,8 +92,8 @@ void TMR1_Initialize(void)
     // Set Default Interrupt Handler
     TMR1_SetInterruptHandler(TMR1_DefaultInterruptHandler);
 
-    // CKPS 1:8; NOT_SYNC synchronize; TMR1ON enabled; T1RD16 enabled; 
-    T1CON = 0x33;
+    // CKPS 1:8; NOT_SYNC synchronize; TMR1ON enabled; T1RD16 disabled; 
+    T1CON = 0x31;
 }
 
 void TMR1_StartTimer(void)

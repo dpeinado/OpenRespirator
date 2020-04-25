@@ -165,9 +165,6 @@ Wire Wire Line
 	6450 2600 6900 2600
 Wire Wire Line
 	3050 1900 5300 1900
-NoConn ~ 6450 3200
-NoConn ~ 6450 3300
-NoConn ~ 6450 3400
 NoConn ~ 5300 2500
 NoConn ~ 5300 2600
 NoConn ~ 5300 2700
@@ -1728,17 +1725,6 @@ Wire Wire Line
 Connection ~ 9850 6200
 Wire Wire Line
 	9850 6200 10150 6200
-$Comp
-L Connector:TestPoint_Alt TP9
-U 1 1 5F26F9EB
-P 10600 5850
-F 0 "TP9" H 10658 5968 50  0000 L CNN
-F 1 "TestPoint_Alt" H 10658 5877 50  0000 L CNN
-F 2 "Ventilator:pcb" H 10800 5850 50  0001 C CNN
-F 3 "~" H 10800 5850 50  0001 C CNN
-	1    10600 5850
-	1    0    0    -1  
-$EndComp
 NoConn ~ 10600 5850
 Wire Wire Line
 	7850 1550 7850 1700
@@ -2026,7 +2012,7 @@ Wire Wire Line
 Wire Wire Line
 	9200 5300 9200 4900
 Wire Wire Line
-	9300 4900 9300 5850
+	9300 4900 9300 5750
 Wire Wire Line
 	9400 4900 9400 5350
 Wire Wire Line
@@ -2100,7 +2086,7 @@ Wire Wire Line
 Wire Wire Line
 	8300 4900 8300 5050
 Wire Wire Line
-	8300 5050 9600 5050
+	8300 5050 8950 5050
 Connection ~ 9600 5050
 Wire Wire Line
 	7800 5700 7900 5700
@@ -2109,4 +2095,31 @@ Wire Wire Line
 Connection ~ 7400 5700
 Wire Wire Line
 	7400 5700 7500 5700
+$Comp
+L Device:R_POT RV1
+U 1 1 5EA73AB9
+P 8950 5550
+F 0 "RV1" H 8880 5596 50  0000 R CNN
+F 1 "1K" H 8880 5505 50  0000 R CNN
+F 2 "Ventilator:Potentiometer_409HA" H 8950 5550 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/resistencias-variables/6524546/" H 8950 5550 50  0001 C CNN
+	1    8950 5550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8950 5400 8950 5050
+Connection ~ 8950 5050
+Wire Wire Line
+	8950 5050 9600 5050
+Wire Wire Line
+	8950 5700 8950 5750
+Wire Wire Line
+	8950 5750 9300 5750
+Connection ~ 9300 5750
+Wire Wire Line
+	9300 5750 9300 5850
+Wire Wire Line
+	9500 4900 9500 5550
+Wire Wire Line
+	9500 5550 9100 5550
 $EndSCHEMATC

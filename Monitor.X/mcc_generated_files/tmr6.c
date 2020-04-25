@@ -63,8 +63,8 @@ void TMR6_Initialize(void)
 {
     // Set TMR6 to the options selected in the User Interface
 
-    // T6CS FOSC/4; 
-    T6CLKCON = 0x01;
+    // T6CS LFINTOSC; 
+    T6CLKCON = 0x04;
 
     // T6PSYNC Not Synchronized; T6MODE Software control; T6CKPOL Rising Edge; T6CKSYNC Synchronized; 
     T6HLT = 0x20;
@@ -72,8 +72,8 @@ void TMR6_Initialize(void)
     // T6RSEL T6CKIPPS pin; 
     T6RST = 0x00;
 
-    // PR6 199; 
-    T6PR = 0xC7;
+    // PR6 1; 
+    T6PR = 0x01;
 
     // TMR6 0; 
     T6TMR = 0x00;

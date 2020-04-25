@@ -243,8 +243,6 @@ Wire Wire Line
 	7250 4850 7250 4750
 Wire Wire Line
 	7250 4750 7300 4750
-NoConn ~ 5500 2450
-NoConn ~ 5500 3450
 Wire Wire Line
 	6650 2750 6950 2750
 Wire Wire Line
@@ -321,8 +319,6 @@ Wire Wire Line
 	8800 2050 9100 2050
 Wire Wire Line
 	9400 1900 9400 2050
-NoConn ~ 5500 3050
-NoConn ~ 5500 3150
 $Comp
 L Ventilator:XPRESS-40 U5
 U 1 1 5F068B72
@@ -425,8 +421,6 @@ Wire Wire Line
 Wire Wire Line
 	8950 1400 9650 1400
 NoConn ~ 6650 2250
-NoConn ~ 6650 2350
-NoConn ~ 6650 2450
 NoConn ~ 6650 2550
 $Comp
 L Connector:Conn_01x03_Male J11
@@ -2216,7 +2210,7 @@ Wire Wire Line
 Wire Wire Line
 	5100 6300 5100 5900
 Wire Wire Line
-	5200 5900 5200 6850
+	5200 5900 5200 6750
 Wire Wire Line
 	5300 5900 5300 6350
 Wire Wire Line
@@ -2271,7 +2265,7 @@ Wire Wire Line
 Wire Wire Line
 	4200 5900 4200 6050
 Wire Wire Line
-	4200 6050 5500 6050
+	4200 6050 4850 6050
 Connection ~ 5500 6050
 Wire Wire Line
 	3700 7200 3800 7200
@@ -2362,4 +2356,72 @@ Wire Wire Line
 	4100 6850 4100 7000
 Wire Wire Line
 	3150 5800 3150 6150
+$Comp
+L Device:R_POT RV?
+U 1 1 5EAE7B7C
+P 4850 6550
+AR Path="/5E9337AC/5EAE7B7C" Ref="RV?"  Part="1" 
+AR Path="/5E9339D0/5EAE7B7C" Ref="RV2"  Part="1" 
+F 0 "RV2" H 4780 6596 50  0000 R CNN
+F 1 "1K" H 4780 6505 50  0000 R CNN
+F 2 "Ventilator:Potentiometer_409HA" H 4850 6550 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/resistencias-variables/6524546/" H 4850 6550 50  0001 C CNN
+	1    4850 6550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 6700 4850 6750
+Wire Wire Line
+	5000 6550 5400 6550
+Wire Wire Line
+	5400 6550 5400 5900
+Text Label 3950 6100 0    50   ~ 0
+LD7
+Text Label 3900 6150 0    50   ~ 0
+LD6
+Text Label 3800 6200 0    50   ~ 0
+LD5
+Text Label 3700 6250 0    50   ~ 0
+LD4
+Text Label 3900 6300 0    50   ~ 0
+LDE
+Text Label 3650 6350 0    50   ~ 0
+LDRS
+Wire Wire Line
+	4950 2350 5500 2350
+Wire Wire Line
+	5500 2450 4950 2450
+Wire Wire Line
+	5500 2050 4950 2050
+Wire Wire Line
+	5500 1950 4950 1950
+Wire Wire Line
+	5500 3050 5050 3050
+Wire Wire Line
+	5500 3150 5050 3150
+Text Label 5100 1950 0    50   ~ 0
+LD7
+Text Label 5100 2050 0    50   ~ 0
+LD6
+Text Label 5100 2350 0    50   ~ 0
+LD5
+Text Label 5100 2450 0    50   ~ 0
+LD4
+Text Label 5100 3050 0    50   ~ 0
+LDE
+Text Label 5100 3150 0    50   ~ 0
+LDRS
+NoConn ~ 6650 2050
+NoConn ~ 6650 2150
+NoConn ~ 5500 3550
+Wire Wire Line
+	4850 6750 5200 6750
+Connection ~ 5200 6750
+Wire Wire Line
+	5200 6750 5200 6850
+Wire Wire Line
+	4850 6400 4850 6050
+Connection ~ 4850 6050
+Wire Wire Line
+	4850 6050 5500 6050
 $EndSCHEMATC

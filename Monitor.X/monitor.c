@@ -129,6 +129,9 @@ int16_t prFast, prFastDev;
 int32_t tt;
 
 void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
+    if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
+    if (ep!= targetLow) printf("\r\n EP: %d \r\n", ep);
+    //if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
     targetHigh = ip;
     targetLow  = ep;
     targetBp   = 60000/br;

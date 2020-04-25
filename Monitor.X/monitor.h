@@ -32,7 +32,8 @@ int16_t GetPressure_kpa (void);
 int16_t GetPressure_pa (void);
 void MonitorPressureTask(void);
 void MonitorDump(void);
-void SetCalibrateState(bool calib);
+void SetCalibrateState(bool);
+void SetTarget(int16_t ip, int16_t ep, uint16_t br);
 
 // Solenoid functions
 void SetSV1 (bool);

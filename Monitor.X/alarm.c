@@ -107,11 +107,11 @@ bool EPAboveSetAlarm(void) {
     else return false;
 };
 bool IPBellowSetAlarm(void) {
-    if (ipBellowSetAlarm> 3) { printf("IPB %d\r\n", ipBellowSetAlarm); return true; }
+    if (ipBellowSetAlarm> 3) { /*printf("IPB %d\r\n", ipBellowSetAlarm); */return true; }
     else return false;
 };
 bool IPAboveSetAlarm(void) {
-    if (ipAboveSetAlarm> 3) { printf("IPA %d\r\n", ipAboveSetAlarm); return true; }
+    if (ipAboveSetAlarm> 3) { /*printf("IPA %d\r\n", ipAboveSetAlarm);*/ return true; }
     else return false;
 };
 bool TdiTooLongAlarm(void) { 
