@@ -9,7 +9,8 @@ mcc_generated_files/i2c2_master.h  \
 mcc_generated_files/tmr1.h  \
 mcc_generated_files/tmr2.h  \
 mcc_generated_files/tmr0.h  \
-mcc_generated_files/adcc.h  \
 mcc_generated_files/fvr.h  \
+mcc_generated_files/adcc.h  \
 mcc_generated_files/uart1.h  \
-ORespGlobal.h 
+ORespGlobal.h  \
+aCapture.h 

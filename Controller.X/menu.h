@@ -17,9 +17,13 @@ extern "C" {
 
 // Set to true to force lcd update.
 extern bool lcdPrintTR;
-extern bool lcdPrintBR;
+// Write to bottom row, either full row or only left half.
+// Write to bottom row, five most right characters (to show monitor error).
+extern bool lcdPrintBR;  
+extern bool lcdPrintBRR;
 extern char lcdTopRow[20];
 extern char lcdBtnRow[20];
+extern char lcdBtnRRow[10];
     
 typedef enum {
     CFG_IDLE,
@@ -30,6 +34,7 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_POWEROFF
 } menuStatusT;
 
 void MenuInit(void);

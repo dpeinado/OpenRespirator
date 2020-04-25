@@ -3,16 +3,17 @@
 
 #include "mcc_generated_files/mcc.h"
 
-#define KEYIP     0
-#define KEYPEEP   1
-#define KEYBPM    2
-#define KEYMINUS  3
-#define KEYPLUS   5
-#define KEYBREATH 4
-#define KEYMAXP   6
-#define KEYMAXV   7
-#define KEYHIGHVA 8
-#define KEYLOWVA  9
+#define KEYIP        0
+#define KEYPEEP      1
+#define KEYBPM       2
+#define KEYMINUS     5
+#define KEYPLUS      3
+#define KEYBREATH    4
+#define KEYMAXP      6
+#define KEYMAXV      7
+#define KEYHIGHVA    8
+#define KEYLOWVA     9
+#define KEYPOWER  10
 
 #define ESCAPE_CODE -100
 

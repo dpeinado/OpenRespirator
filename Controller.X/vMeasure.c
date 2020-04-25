@@ -2,15 +2,15 @@
 #include "aCapture.h"
 #include "cmath.h"
 
-// Constant from acc diff pressure to ml (2ms acc time): 54 for 6mm orifice.
-#define VOLK 54
+// Constant from acc diff pressure to ml (2ms acc time): 65 for 6mm orifice.
+#define VOLK 65
 
 uint32_t volume;
 
 void vMeasureIsr(void) {
     int16_t instP;
     uint16_t v1, v2;
-    if (aCaptGetResult(AuxPSensor, &instP)) {
+    if (aCaptGetResult(VolPSensor, &instP)) {
         if (instP > 0) {
             v1 = instP << 4;
             v2 = isqrt(v1);
