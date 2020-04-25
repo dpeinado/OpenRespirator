@@ -27807,13 +27807,44 @@ void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 15 "./ORespGlobal.h" 2
-# 67 "./ORespGlobal.h"
+
+# 1 "./aCapture.h" 1
+# 21 "./aCapture.h"
+typedef enum{
+    MainPSensor=0,
+    VolPSensor=1,
+    VddSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
+} aSrcTyp;
+
+void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
+# 16 "./ORespGlobal.h" 2
+# 73 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
 
+    typedef enum {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN,
+    CTRL_SLEEP
+} ctrlStatusT;
 
+
+    extern ctrlStatusT ctrlStatus;
+    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode;
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;
@@ -27839,6 +27870,7 @@ extern _Bool lcdPrintBR;
 extern _Bool lcdPrintBRR;
 extern char lcdTopRow[20];
 extern char lcdBtnRow[20];
+extern char lcdBtnRRow[10];
 
 typedef enum {
     CFG_IDLE,
@@ -27849,6 +27881,7 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_POWEROFF
 } menuStatusT;
 
 void MenuInit(void);
@@ -27935,6 +27968,7 @@ _Bool lcdMenuPrint;
 
 char lcdTopRow[20];
 char lcdBtnRow[20];
+char lcdBtnRRow[10];
 menuStatusT menuStatus;
 uint16_t menuVal;
 time_t menuTstamp;
@@ -27943,7 +27977,7 @@ void MenuInit(void) {
     menuStatus = CFG_IDLE;
     lcdMenuPrint = 1;
     lcdPrintBR=1;
-    lcdPrintBRR=1;
+    lcdPrintBRR=0;
     lcdPrintTR=1;
 }
 
@@ -27955,221 +27989,237 @@ void MenuMng(void) {
         lcdMenuPrint = 1;
         printf ("KEY! %d\n", keyPress);
 
-        switch (keyPress) {
-            case 0:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_IP;
-                    menuVal = IP;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_IP) {
+        if (menuStatus == CFG_POWEROFF) {
+            menuStatus = CFG_IDLE;
+            if (keyPress == 2) {
 
-                    IP = menuVal;
-                    chIP = 1;
-                    if (VentMode == 1) {
-                        VentMode = 0;
-                        chVentMode = 1;
+                ctrlStatus = CTRL_SLEEP;
+            } else {
+
+            }
+        } else {
+            switch (keyPress) {
+                case 0:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_IP;
+                        menuVal = IP;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_IP) {
+
+                        IP = menuVal;
+                        chIP = 1;
+                        if (VentMode == 1) {
+                            VentMode = 0;
+                            chVentMode = 1;
+                        }
+                        menuStatus = CFG_IDLE;
+                    } else {
+
+                        menuStatus = CFG_IDLE;
                     }
-                    menuStatus = CFG_IDLE;
-                } else {
+                    break;
+                case 2:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_BPM;
+                        menuVal = BPM;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_BPM) {
 
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 2:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_BPM;
-                    menuVal = BPM;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_BPM) {
+                        BPM = menuVal;
+                        chBPM = 1;
+                        IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
+                        EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
+                        menuStatus = CFG_IDLE;
+                    } else {
 
-                    BPM = menuVal;
-                    chBPM = 1;
-                    IDuration = ((uint16_t) 60*1000)/(3*BPM);
-                    EDuration = ((uint16_t) 60*1000/BPM) - IDuration;
-                    menuStatus = CFG_IDLE;
-                } else {
-
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 1:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_PEEP;
-                    menuVal = PEEP;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_PEEP) {
-
-                    PEEP = menuVal;
-                    chPEEP = 1;
-                    menuStatus = CFG_IDLE;
-                } else {
-
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 6:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_MAXP;
-                    menuVal = MaxP;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_MAXP) {
-
-                    MaxP = menuVal;
-                    chMaxP = 1;
-                    if (VentMode == 0) {
-                        VentMode = 1;
-                        chVentMode = 1;
+                        menuStatus = CFG_IDLE;
                     }
-                    menuStatus = CFG_IDLE;
-                } else {
+                    break;
+                case 1:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_PEEP;
+                        menuVal = PEEP;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_PEEP) {
 
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 7:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_MAXV;
-                    menuVal = MaxV;
-                    menuTstamp = timeGet();
-                    if ((MaxP != IP) && (VentMode == 0)) {
+                        PEEP = menuVal;
+                        chPEEP = 1;
+                        menuStatus = CFG_IDLE;
+                    } else {
 
+                        menuStatus = CFG_IDLE;
+                    }
+                    break;
+                case 6:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_MAXP;
+                        menuVal = MaxP;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_MAXP) {
 
-                        MaxP = IP;
+                        MaxP = menuVal;
                         chMaxP = 1;
+                        if (VentMode == 0) {
+                            VentMode = 1;
+                            chVentMode = 1;
+                        }
+                        menuStatus = CFG_IDLE;
+                    } else {
+
+                        menuStatus = CFG_IDLE;
                     }
-                } else if (menuStatus == CFG_MAXV) {
+                    break;
+                case 7:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_MAXV;
+                        menuVal = MaxV;
+                        menuTstamp = timeGet();
+                        if ((MaxP != IP) && (VentMode == 0)) {
 
 
-                    MaxV = menuVal;
-                    chMaxV = 1;
-                    HighVAlarm = ((MaxV + (((uint16_t) 25*MaxV)/100) > (980/10))? 980 : ((MaxV + (((uint16_t) 25*MaxV)/100) < (50/10))? (50/10) : MaxV + (((uint16_t) 25*MaxV)/100)));
-                    LowVAlarm = ((MaxV - (((uint16_t) 25*MaxV)/100) > (980/10))? 980 : ((MaxV - (((uint16_t) 25*MaxV)/100) < (50/10))? (50/10) : MaxV - (((uint16_t) 25*MaxV)/100)));
-                    chHighVAlarm = 1;
-                    chLowVAlarm = 1;
-                    if (VentMode == 0) {
-                        VentMode = 1;
-                        chVentMode = 1;
+                            MaxP = IP;
+                            chMaxP = 1;
+                        }
+                    } else if (menuStatus == CFG_MAXV) {
+
+
+                        MaxV = menuVal;
+                        chMaxV = 1;
+                        HighVAlarm = ((MaxV + (((uint16_t) 25 * MaxV) / 100) > (980/10))? 980 : ((MaxV + (((uint16_t) 25 * MaxV) / 100) < (50/10))? (50/10) : MaxV + (((uint16_t) 25 * MaxV) / 100)));
+                        LowVAlarm = ((MaxV - (((uint16_t) 25 * MaxV) / 100) > (980/10))? 980 : ((MaxV - (((uint16_t) 25 * MaxV) / 100) < (50/10))? (50/10) : MaxV - (((uint16_t) 25 * MaxV) / 100)));
+                        chHighVAlarm = 1;
+                        chLowVAlarm = 1;
+                        if (VentMode == 0) {
+                            VentMode = 1;
+                            chVentMode = 1;
+                        }
+                        menuStatus = CFG_IDLE;
+                    } else {
+
+                        menuStatus = CFG_IDLE;
                     }
-                    menuStatus = CFG_IDLE;
-                } else {
+                    break;
+                case 8:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_HIGHVA;
+                        menuVal = HighVAlarm;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_HIGHVA) {
 
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 8:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_HIGHVA;
-                    menuVal = HighVAlarm;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_HIGHVA) {
+                        HighVAlarm = menuVal;
+                        chHighVAlarm = 1;
+                        menuStatus = CFG_IDLE;
+                    } else {
 
-                    HighVAlarm = menuVal;
-                    chHighVAlarm = 1;
-                    menuStatus = CFG_IDLE;
-                } else {
-
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 9:
-                if (menuStatus == CFG_IDLE) {
-                    menuStatus = CFG_LOWVA;
-                    menuVal = LowVAlarm;
-                    menuTstamp = timeGet();
-                } else if (menuStatus == CFG_LOWVA) {
-
-                    LowVAlarm = menuVal;
-                    chLowVAlarm = 1;
-                    menuStatus = CFG_IDLE;
-                } else {
-
-                    menuStatus = CFG_IDLE;
-                }
-                break;
-            case 3:
-                if (menuStatus != CFG_IDLE) {
-                    menuTstamp = timeGet();
-
-                    switch (menuStatus) {
-                        case CFG_IP:
-                        case CFG_MAXP:
-                            menuVal = menuVal + 1;
-                            if (menuVal > 80) {
-                                menuVal = 80;
-                            }
-                            break;
-                        case CFG_PEEP:
-                            menuVal = menuVal + 1;
-                            if (menuVal > 25) {
-                                menuVal = 25;
-                            }
-                            break;
-                        case CFG_BPM:
-                            menuVal = menuVal + 1;
-                            if (menuVal > 30) {
-                                menuVal = 30;
-                            }
-                            break;
-                        case CFG_MAXV:
-                            menuVal=((menuVal + 2 > (900/10))? 900 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
-                            break;
-                        case CFG_LOWVA:
-                        case CFG_HIGHVA:
-                            menuVal=((menuVal + 2 > (980/10))? 980 : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
-                            break;
-                        default:
-
-                            break;
+                        menuStatus = CFG_IDLE;
                     }
-                }
-                break;
-            case 5:
-                if (menuStatus != CFG_IDLE) {
-                    menuTstamp = timeGet();
+                    break;
+                case 9:
+                    if (menuStatus == CFG_IDLE) {
+                        menuStatus = CFG_LOWVA;
+                        menuVal = LowVAlarm;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_LOWVA) {
 
-                    switch (menuStatus) {
-                        case CFG_IP:
-                        case CFG_MAXP:
-                            menuVal = menuVal - 1;
-                            if (menuVal < 4) {
-                                menuVal = 4;
-                            }
-                            break;
-                        case CFG_PEEP:
-                            menuVal = menuVal - 1;
-                            if (menuVal < 4) {
-                                menuVal = 4;
-                            }
-                            break;
-                        case CFG_BPM:
-                            menuVal = menuVal - 1;
-                            if (menuVal < 10) {
-                                menuVal = 10;
-                            }
-                            break;
-                        case CFG_MAXV:
-                            menuVal=((menuVal - 2 > (900/10))? 900 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
-                            break;
-                        case CFG_LOWVA:
-                        case CFG_HIGHVA:
-                            menuVal=((menuVal - 2 > (980/10))? 980 : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
-                            break;
-                        default:
+                        LowVAlarm = menuVal;
+                        chLowVAlarm = 1;
+                        menuStatus = CFG_IDLE;
+                    } else {
 
-                            break;
+                        menuStatus = CFG_IDLE;
                     }
-                }
-                break;
+                    break;
+                case 3:
+                    if (menuStatus != CFG_IDLE) {
+                        menuTstamp = timeGet();
+
+                        switch (menuStatus) {
+                            case CFG_IP:
+                            case CFG_MAXP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 80) {
+                                    menuVal = 80;
+                                }
+                                break;
+                            case CFG_PEEP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 25) {
+                                    menuVal = 25;
+                                }
+                                break;
+                            case CFG_BPM:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 30) {
+                                    menuVal = 30;
+                                }
+                                break;
+                            case CFG_MAXV:
+                                menuVal = ((menuVal + 2 > (900/10))? 900 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
+                                break;
+                            case CFG_LOWVA:
+                            case CFG_HIGHVA:
+                                menuVal = ((menuVal + 2 > (980/10))? 980 : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
+                                break;
+                            default:
+
+                                break;
+                        }
+                    }
+                    break;
+                case 5:
+                    if (menuStatus != CFG_IDLE) {
+                        menuTstamp = timeGet();
+
+                        switch (menuStatus) {
+                            case CFG_IP:
+                            case CFG_MAXP:
+                                menuVal = menuVal - 1;
+                                if (menuVal < 4) {
+                                    menuVal = 4;
+                                }
+                                break;
+                            case CFG_PEEP:
+                                menuVal = menuVal - 1;
+                                if (menuVal < 4) {
+                                    menuVal = 4;
+                                }
+                                break;
+                            case CFG_BPM:
+                                menuVal = menuVal - 1;
+                                if (menuVal < 10) {
+                                    menuVal = 10;
+                                }
+                                break;
+                            case CFG_MAXV:
+                                menuVal = ((menuVal - 2 > (900/10))? 900 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
+                                break;
+                            case CFG_LOWVA:
+                            case CFG_HIGHVA:
+                                menuVal = ((menuVal - 2 > (980/10))? 980 : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
+                                break;
+                            default:
+
+                                break;
+                        }
+                    }
+                    break;
+                case 10:
+                    if (menuStatus == CFG_IDLE) {
+
+                        menuStatus = CFG_POWEROFF;
+                        menuTstamp = timeGet();
+                        LATDbits.LATD0 = 1;
+                    }
+            }
         }
-
-        lcdPrintBRR = 1;
+        lcdPrintBR = 1;
         lcdPrintTR = 1;
         lcdMenuPrint = 1;
     } else {
         if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
 
             lcdPrintTR = 1;
-            lcdPrintBRR = 1;
+            lcdPrintBR = 1;
             menuStatus = CFG_IDLE;
         }
         return;
@@ -28193,64 +28243,73 @@ void screenMng(void) {
     if (lcdPrintTR && !PrintStrBusy()) {
         lcdPrintTR = 0;
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
-            if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
+            if (ctrlStatus != CTRL_SLEEP) {
+                if (VentMode == VMODE_PRESSURE) {
+                    sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
+                } else {
+                    sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
+                }
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10*((uint16_t) MaxV));
+                sprintf(lcdTopRow, "----OFF-STATE---");
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == VMODE_PRESSURE) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10*((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == VMODE_PRESSURE) {
                 sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10*((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
             sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
         } else if (menuStatus == CFG_MAXP) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10*((uint16_t) MaxV));
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
         } else if (menuStatus == CFG_MAXV) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10*((uint16_t)menuVal));
+            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
+        } else if (menuStatus == CFG_POWEROFF) {
+            sprintf(lcdTopRow, "PRESS BPM TO    ");
         }
 
-        printf (lcdTopRow);
+
         setCursor(0, 0);
         printstr(lcdTopRow);
         if (menuStatus != CFG_IDLE) {
             lcdBlink = 1;
         }
-    } else if (lcdPrintBR && !PrintStrBusy()) {
-        lcdPrintBR = 0;
-
-        printf (lcdBtnRow);
-        setCursor(0, 1);
-        printstr(lcdBtnRow);
-        if (menuStatus != CFG_IDLE) {
-            lcdBlink = 1;
-        }
     } else if (lcdPrintBRR && !PrintStrBusy()) {
         lcdPrintBRR = 0;
-        lcdMenuPrint = 0;
-        if (menuStatus == CFG_LOWVA) {
-            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t)menuVal), 10*((uint16_t) HighVAlarm));
-        } else if (menuStatus == CFG_HIGHVA) {
-            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm), 10*((uint16_t) menuVal));
-        } else {
-            sprintf(lcdBtnRow, " %3d %3d", 10*((uint16_t) LowVAlarm), 10*((uint16_t) HighVAlarm));
-        }
 
-
-        printf (lcdBtnRow);
-        setCursor(8, 1);
-        printstr(lcdBtnRow);
+        setCursor(11, 1);
+        printstr(lcdBtnRRow);
         if (menuStatus != CFG_IDLE) {
             lcdBlink = 1;
         }
+    } else if (lcdPrintBR && !PrintStrBusy()) {
+        lcdPrintBR = 0;
+        lcdMenuPrint = 0;
+        if (menuStatus == CFG_LOWVA) {
+            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
+        } else if (menuStatus == CFG_HIGHVA) {
+            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
+        } else if (menuStatus == CFG_POWEROFF) {
+                sprintf(lcdBtnRow, "POWER OFF ");
+        } else {
+            if (ctrlStatus != CTRL_SLEEP) {
+                sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
+            } else {
+                sprintf(lcdBtnRow, "PWR TO ON ");
+            }
+        }
+
+
+
+        setCursor(0, 1);
+        printstr(lcdBtnRow);
+        lcdBlink = 1;
     } else if (lcdBlink && !PrintStrBusy()) {
         lcdBlink = 0;
         switch (menuStatus) {
@@ -28270,13 +28329,13 @@ void screenMng(void) {
                 setCursor(15, 0);
                 break;
             case CFG_LOWVA:
-                setCursor(11, 1);
+                setCursor(2, 1);
                 break;
             case CFG_HIGHVA:
-                setCursor(15, 1);
+                setCursor(6, 1);
                 break;
             default:
-
+                setCursor(21, 0);
                 break;
         }
     }

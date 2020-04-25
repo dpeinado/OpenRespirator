@@ -16,11 +16,11 @@ extern "C" {
 #define ATOT_N 7
     
 #define MPRESSURE_MBAR(x) ((int16_t) ((0.045*4096+2)/5)*x)
-#define APRESSURE_MBAR(x) ((int16_t) ((0.100*4096+2)/5)*x)
+#define VPRESSURE_MBAR(x) ((int16_t) ((0.100*4096+2)/5)*x)
     
 typedef enum{
     MainPSensor=0,
-    AuxPSensor=1,
+    VolPSensor=1,
     VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,

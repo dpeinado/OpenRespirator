@@ -13,7 +13,7 @@
 #define KEYMAXV      7
 #define KEYHIGHVA    8
 #define KEYLOWVA     9
-#define KEYPOWEROFF  10
+#define KEYPOWER  10
 
 #define ESCAPE_CODE -100
 

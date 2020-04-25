@@ -27824,13 +27824,44 @@ i2c2_error_t I2C2_LClose(void);
 
 
 # 1 "./ORespGlobal.h" 1
-# 67 "./ORespGlobal.h"
+# 16 "./ORespGlobal.h"
+# 1 "./aCapture.h" 1
+# 21 "./aCapture.h"
+typedef enum{
+    MainPSensor=0,
+    VolPSensor=1,
+    VddSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
+} aSrcTyp;
+
+void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
+# 16 "./ORespGlobal.h" 2
+# 73 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
 
+    typedef enum {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN,
+    CTRL_SLEEP
+} ctrlStatusT;
 
+
+    extern ctrlStatusT ctrlStatus;
+    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode;
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;

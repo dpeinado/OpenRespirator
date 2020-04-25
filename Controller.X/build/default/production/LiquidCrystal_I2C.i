@@ -27949,7 +27949,6 @@ void write(uint8_t value) {
 void printstr(const char c[]){
     uint8_t idx;
 
-
     idx=0;
     while (*c){
         i2cBuff[idx++]=((*c)&0xF0) | 0x1 | 0x4 | _backlightval;
@@ -27971,6 +27970,7 @@ _Bool PrintStrBusy(void){
 }
 
 void printstrblock(const char c[]){
+    while(PrintStrBusy());
     printstr(c);
     while(PrintStrBusy());
 }

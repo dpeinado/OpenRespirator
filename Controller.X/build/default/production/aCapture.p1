@@ -4,7 +4,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "8 aCapture.c
 [; ;aCapture.c: 8: aSrcTyp curASrc;
 [c E16104 0 1 2 3 4 5 6 .. ]
-[n E16104 . MainPSensor AuxPSensor VddSensor Flt0PSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
+[n E16104 . MainPSensor VolPSensor VddSensor Flt0PSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
 "24
 [; ;aCapture.c: 24: adcc_channel_t adcGetCh(aSrcTyp sel){
 [c E16053 32 33 34 59 60 61 62 63 .. ]
@@ -2370,7 +2370,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 28:             break;
 [e $U 2234  ]
 "29
-[; ;aCapture.c: 29:         case AuxPSensor:
+[; ;aCapture.c: 29:         case VolPSensor:
 [e :U 2237 ]
 "30
 [; ;aCapture.c: 30:             return channel_ANE2;
@@ -2448,7 +2448,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e :U 2241 ]
 "57
-[; ;aCapture.c: 57:     if (curASrc <= AuxPSensor ){
+[; ;aCapture.c: 57:     if (curASrc <= VolPSensor ){
 [e $ ! <= -> _curASrc `ui -> . `E16104 1 `ui 2242  ]
 {
 "58
@@ -2603,7 +2603,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 117:         mainPSensCal = offVal;
 [e = _mainPSensCal _offVal ]
 "118
-[; ;aCapture.c: 118:     } else if (sel == AuxPSensor) {
+[; ;aCapture.c: 118:     } else if (sel == VolPSensor) {
 }
 [e $U 2254  ]
 [e :U 2253 ]
@@ -2851,7 +2851,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ) -> -> 1 `i `a ]
 [e $UE 2265  ]
 "195
-[; ;aCapture.c: 195:         case AuxPSensor:
+[; ;aCapture.c: 195:         case VolPSensor:
 [e :U 2283 ]
 "196
 [; ;aCapture.c: 196:             *outVal = (lclRaw - auxPSensCal)/1;

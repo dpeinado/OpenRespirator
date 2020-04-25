@@ -377,7 +377,7 @@ uint16_t vMeasureGet(void);
 # 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
-    AuxPSensor=1,
+    VolPSensor=1,
     VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
@@ -27493,7 +27493,7 @@ uint32_t volume;
 void vMeasureIsr(void) {
     int16_t instP;
     uint16_t v1, v2;
-    if (aCaptGetResult(AuxPSensor, &instP)) {
+    if (aCaptGetResult(VolPSensor, &instP)) {
         if (instP > 0) {
             v1 = instP << 4;
             v2 = isqrt(v1);
@@ -27526,5 +27526,5 @@ uint16_t vMeasureGet(void) {
     rawV=volume;
     PIE4bits.TMR2IE = 1;
 
-    return rawV/54;
+    return rawV/65;
 }

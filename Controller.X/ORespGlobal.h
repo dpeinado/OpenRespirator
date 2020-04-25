@@ -13,8 +13,9 @@ extern "C" {
 #endif
 
 #include "mcc_generated_files/mcc.h"
+#include "aCapture.h"
 
-    // User parameter limits.
+// User parameter limits.
 #define BPM_MIN 10
 #define BPM_MAX 30
 #define IP_MIN 4
@@ -28,9 +29,14 @@ extern "C" {
 // At this moment this is only due to restriction on display.
 #define VOL_AMAX 980
 
-    // Default value for volume alarms. +-25%
+// Default value for volume alarms. +-25%
 #define VOL_ALRM_DFL 25
     
+// Max pressure overshoot. In milibars.
+#define POVERSHOOT_LIMIT MPRESSURE_MBAR(3)
+// Max Volume overshoot. In mililiters.
+#define VOVERSHOOT_LIMIT 25
+        
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
@@ -68,8 +74,17 @@ extern "C" {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
+    
+    typedef enum {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN,
+    CTRL_SLEEP
+} ctrlStatusT;
 
     // Global variables.
+    extern ctrlStatusT ctrlStatus;
+    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode; // 0 --> Pressure-control, 1 --> Volume-control.
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;

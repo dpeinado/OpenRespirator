@@ -27199,7 +27199,7 @@ void ADCC_DefaultInterruptHandler(void);
 # 21 "./aCapture.h"
 typedef enum{
     MainPSensor=0,
-    AuxPSensor=1,
+    VolPSensor=1,
     VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
@@ -27828,13 +27828,22 @@ void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 15 "./ORespGlobal.h" 2
-# 67 "./ORespGlobal.h"
+# 73 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
 
+    typedef enum {
+    CTRL_UNCAL,
+    CTRL_STOP,
+    CTRL_RUN,
+    CTRL_SLEEP
+} ctrlStatusT;
 
+
+    extern ctrlStatusT ctrlStatus;
+    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode;
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;
@@ -27873,7 +27882,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
         case MainPSensor:
             return channel_ANE1;
             break;
-        case AuxPSensor:
+        case VolPSensor:
             return channel_ANE2;
             break;
         case VddSensor:
@@ -27901,7 +27910,7 @@ void adcCaptureIsr(void){
     if (curASrc==3){
         curASrc=0;
     }
-    if (curASrc <= AuxPSensor ){
+    if (curASrc <= VolPSensor ){
         ADCON0bits.ADON = 0;
 
         ADREF = 0x00;
@@ -27962,7 +27971,7 @@ void aCaptureInit(void){
 void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
     if (sel == MainPSensor) {
         mainPSensCal = offVal;
-    } else if (sel == AuxPSensor) {
+    } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
     } else {
         LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
@@ -28039,7 +28048,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
                 *outVal=(lclRaw/1);
             }
             return 1;
-        case AuxPSensor:
+        case VolPSensor:
             *outVal = (lclRaw - auxPSensCal)/1;
             return 1;
         case VddSensor:
