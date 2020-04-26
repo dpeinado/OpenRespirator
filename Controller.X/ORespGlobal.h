@@ -43,10 +43,16 @@ extern "C" {
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
+#if 0
 #define SV2ISOPEN LATAbits.LATA2
 #define OPEN_SV2 LATAbits.LATA2 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0
-
+#else
+#define SV2ISOPEN (sv2_pwmval!=0)
+#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
+#define CLOSE_SV2 sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval)
+#endif
+    
 #define SV3ISOPEN LATAbits.LATA3
 #define OPEN_SV3 LATAbits.LATA3 = 1
 #define CLOSE_SV3 LATAbits.LATA3 = 0
@@ -102,6 +108,7 @@ extern "C" {
     // Change detection for all user settings.
     extern bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
+    extern uint16_t sv2_pwmval;
 
 #ifdef	__cplusplus
 }
