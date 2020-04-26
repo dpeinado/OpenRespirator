@@ -27033,9 +27033,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
+# 466 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
+# 478 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27663,13 +27663,6 @@ void TMR0_Reload(uint8_t periodVal);
 _Bool TMR0_HasOverflowOccured(void);
 # 59 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/fvr.h" 1
-# 93 "./mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "./mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
-# 60 "./mcc_generated_files/mcc.h" 2
-
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
 typedef uint16_t adc_result_t;
@@ -27747,6 +27740,13 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
+# 60 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/fvr.h" 1
+# 93 "./mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "./mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
 # 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
@@ -27824,44 +27824,13 @@ i2c2_error_t I2C2_LClose(void);
 
 
 # 1 "./ORespGlobal.h" 1
-# 16 "./ORespGlobal.h"
-# 1 "./aCapture.h" 1
-# 21 "./aCapture.h"
-typedef enum{
-    MainPSensor=0,
-    VolPSensor=1,
-    VddSensor=2,
-    Flt0PSensor=3,
-    Flt1PSensor=4,
-    Flt2PSensor=5,
-    Flt3PSensor=6,
-} aSrcTyp;
-
-void aCaptureInit(void);
-
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
-
-_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
-
-
-void aCaptRstFlt(aSrcTyp sel);
-# 16 "./ORespGlobal.h" 2
-# 74 "./ORespGlobal.h"
+# 60 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
 
-    typedef enum {
-    CTRL_UNCAL,
-    CTRL_STOP,
-    CTRL_RUN,
-    CTRL_SLEEP
-} ctrlStatusT;
 
-
-    extern ctrlStatusT ctrlStatus;
-    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode;
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;
@@ -27885,17 +27854,17 @@ i2c2_error_t lastI2C2LTrfResponse;
 i2c2_error_t lastI2C2MAckResponse;
 i2c2_error_t lastI2C2LAckResponse;
 
-i2c2_operations_t I2C2_NackCb(void *ptr){
-    printf ("I2C2 E\n");
-    if (currentTrfAddr == 0x50) {
+
+void I2C2_NAckCallback(void){
+    if (currentTrfAddr == 0x50){
         lastI2C2MAckResponse = 0;
     } else {
         lastI2C2LAckResponse = 0;
     }
-    return I2C2_CallbackReturnStop(((void*)0));
 }
 
 void I2C2_MuxInit(void){
+    I2C2_SetDataNackCallback(I2C2_NAckCallback, ((void*)0));
     lastI2C2MAckResponse = 1;
     lastI2C2LAckResponse = 1;
     lastI2C2MTrfResponse = I2C2_NOERR;
@@ -27916,18 +27885,16 @@ i2c2_error_t I2C2_MOpen(void){
 
     trfRsp = I2C2_Open(0x50);
     if (trfRsp != I2C2_BUSY) {
-        I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
-        I2C2_SetDataNackCallback(I2C2_NackCb,((void*)0));
-
         lastI2C2MAckResponse = 1;
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
         }
         currentTrfAddr = 0x50;
-        lastI2C2MAckResponse = 1;
 
         return lastI2C2MTrfResponse;
     }
@@ -27939,18 +27906,16 @@ i2c2_error_t I2C2_LOpen(void){
 
     trfRsp = I2C2_Open(0x27);
     if (trfRsp != I2C2_BUSY) {
-        I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
-        I2C2_SetDataNackCallback(I2C2_NackCb,((void*)0));
-
         lastI2C2LAckResponse = 1;
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
         }
         currentTrfAddr = 0x27;
-        lastI2C2LAckResponse = 1;
 
         return lastI2C2LTrfResponse;
     }
@@ -27965,8 +27930,10 @@ i2c2_error_t I2C2_MClose(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
         }
 
         return lastI2C2MTrfResponse;
@@ -27982,8 +27949,10 @@ i2c2_error_t I2C2_LClose(void){
 
         if (currentTrfAddr == 0x50){
             lastI2C2MTrfResponse = trfRsp;
+            printf ("MI2c: %d\n", trfRsp);
         } else {
             lastI2C2LTrfResponse = trfRsp;
+            printf ("LI2c: %d\n", trfRsp);
         }
 
         return lastI2C2LTrfResponse;

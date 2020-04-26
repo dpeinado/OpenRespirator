@@ -1,4 +1,4 @@
-# 1 "i2c2_mux.c"
+# 1 "aCapture.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,11 +6,12 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "i2c2_mux.c" 2
-# 1 "./i2c2_mux.h" 1
-# 15 "./i2c2_mux.h"
-# 1 "./mcc_generated_files/mcc.h" 1
-# 49 "./mcc_generated_files/mcc.h"
+# 1 "aCapture.c" 2
+
+
+
+# 1 "./mcc_generated_files/adcc.h" 1
+# 54 "./mcc_generated_files/adcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -27027,17 +27028,7 @@ extern __attribute__((nonreentrant)) void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 32 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 2 3
-# 49 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/device_config.h" 1
-# 50 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
-void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
-void PIN_MANAGER_IOC(void);
-# 51 "./mcc_generated_files/mcc.h" 2
+# 54 "./mcc_generated_files/adcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 1 3
 # 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 3
@@ -27122,10 +27113,125 @@ typedef int32_t int_fast32_t;
 typedef uint32_t uint_fast16_t;
 typedef uint32_t uint_fast32_t;
 # 139 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdint.h" 2 3
-# 52 "./mcc_generated_files/mcc.h" 2
+# 55 "./mcc_generated_files/adcc.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdbool.h" 1 3
-# 53 "./mcc_generated_files/mcc.h" 2
+# 56 "./mcc_generated_files/adcc.h" 2
+# 72 "./mcc_generated_files/adcc.h"
+typedef uint16_t adc_result_t;
+
+typedef __uint24 uint24_t;
+# 89 "./mcc_generated_files/adcc.h"
+typedef enum
+{
+    channel_ANE0 = 0x20,
+    channel_ANE1 = 0x21,
+    channel_ANE2 = 0x22,
+    channel_VSS = 0x3B,
+    channel_Temp = 0x3C,
+    channel_DAC1 = 0x3D,
+    channel_FVR_Buffer1 = 0x3E,
+    channel_FVR_Buffer2 = 0x3F
+} adcc_channel_t;
+# 133 "./mcc_generated_files/adcc.h"
+void ADCC_Initialize(void);
+# 162 "./mcc_generated_files/adcc.h"
+void ADCC_StartConversion(adcc_channel_t channel);
+# 192 "./mcc_generated_files/adcc.h"
+_Bool ADCC_IsConversionDone();
+# 224 "./mcc_generated_files/adcc.h"
+adc_result_t ADCC_GetConversionResult(void);
+# 255 "./mcc_generated_files/adcc.h"
+adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
+# 280 "./mcc_generated_files/adcc.h"
+void ADCC_StopConversion(void);
+# 307 "./mcc_generated_files/adcc.h"
+void ADCC_SetStopOnInterrupt(void);
+# 332 "./mcc_generated_files/adcc.h"
+void ADCC_DischargeSampleCapacitor(void);
+# 358 "./mcc_generated_files/adcc.h"
+void ADCC_LoadAcquisitionRegister(uint16_t);
+# 384 "./mcc_generated_files/adcc.h"
+void ADCC_SetPrechargeTime(uint16_t);
+# 409 "./mcc_generated_files/adcc.h"
+void ADCC_SetRepeatCount(uint8_t);
+# 437 "./mcc_generated_files/adcc.h"
+uint8_t ADCC_GetCurrentCountofConversions(void);
+# 461 "./mcc_generated_files/adcc.h"
+void ADCC_ClearAccumulator(void);
+# 486 "./mcc_generated_files/adcc.h"
+uint24_t ADCC_GetAccumulatorValue(void);
+# 514 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasAccumulatorOverflowed(void);
+# 539 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetFilterValue(void);
+# 567 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetPreviousResult(void);
+# 593 "./mcc_generated_files/adcc.h"
+void ADCC_DefineSetPoint(uint16_t);
+# 619 "./mcc_generated_files/adcc.h"
+void ADCC_SetUpperThreshold(uint16_t);
+# 645 "./mcc_generated_files/adcc.h"
+void ADCC_SetLowerThreshold(uint16_t);
+# 672 "./mcc_generated_files/adcc.h"
+uint16_t ADCC_GetErrorCalculation(void);
+# 699 "./mcc_generated_files/adcc.h"
+void ADCC_EnableDoubleSampling(void);
+# 723 "./mcc_generated_files/adcc.h"
+void ADCC_EnableContinuousConversion(void);
+# 747 "./mcc_generated_files/adcc.h"
+void ADCC_DisableContinuousConversion(void);
+# 775 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasErrorCrossedUpperThreshold(void);
+# 803 "./mcc_generated_files/adcc.h"
+_Bool ADCC_HasErrorCrossedLowerThreshold(void);
+# 830 "./mcc_generated_files/adcc.h"
+uint8_t ADCC_GetConversionStageStatus(void);
+# 847 "./mcc_generated_files/adcc.h"
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
+# 863 "./mcc_generated_files/adcc.h"
+void ADCC_ThresholdISR(void);
+# 881 "./mcc_generated_files/adcc.h"
+void ADCC_DefaultInterruptHandler(void);
+# 4 "aCapture.c" 2
+
+# 1 "./aCapture.h" 1
+# 21 "./aCapture.h"
+typedef enum{
+    MainPSensor=0,
+    AuxPSensor=1,
+    VddSensor=2,
+    Flt0PSensor=3,
+    Flt1PSensor=4,
+    Flt2PSensor=5,
+    Flt3PSensor=6,
+} aSrcTyp;
+
+void aCaptureInit(void);
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
+
+
+void aCaptRstFlt(aSrcTyp sel);
+# 5 "aCapture.c" 2
+
+# 1 "./ORespGlobal.h" 1
+# 15 "./ORespGlobal.h"
+# 1 "./mcc_generated_files/mcc.h" 1
+# 50 "./mcc_generated_files/mcc.h"
+# 1 "./mcc_generated_files/device_config.h" 1
+# 50 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/pin_manager.h" 1
+# 466 "./mcc_generated_files/pin_manager.h"
+void PIN_MANAGER_Initialize (void);
+# 478 "./mcc_generated_files/pin_manager.h"
+void PIN_MANAGER_IOC(void);
+# 51 "./mcc_generated_files/mcc.h" 2
+
+
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\conio.h" 1 3
 
@@ -27663,90 +27769,12 @@ void TMR0_Reload(uint8_t periodVal);
 _Bool TMR0_HasOverflowOccured(void);
 # 59 "./mcc_generated_files/mcc.h" 2
 
+
 # 1 "./mcc_generated_files/fvr.h" 1
 # 93 "./mcc_generated_files/fvr.h"
  void FVR_Initialize(void);
 # 127 "./mcc_generated_files/fvr.h"
 _Bool FVR_IsOutputReady(void);
-# 60 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/adcc.h" 1
-# 72 "./mcc_generated_files/adcc.h"
-typedef uint16_t adc_result_t;
-
-typedef __uint24 uint24_t;
-# 89 "./mcc_generated_files/adcc.h"
-typedef enum
-{
-    channel_ANE0 = 0x20,
-    channel_ANE1 = 0x21,
-    channel_ANE2 = 0x22,
-    channel_VSS = 0x3B,
-    channel_Temp = 0x3C,
-    channel_DAC1 = 0x3D,
-    channel_FVR_Buffer1 = 0x3E,
-    channel_FVR_Buffer2 = 0x3F
-} adcc_channel_t;
-# 133 "./mcc_generated_files/adcc.h"
-void ADCC_Initialize(void);
-# 162 "./mcc_generated_files/adcc.h"
-void ADCC_StartConversion(adcc_channel_t channel);
-# 192 "./mcc_generated_files/adcc.h"
-_Bool ADCC_IsConversionDone();
-# 224 "./mcc_generated_files/adcc.h"
-adc_result_t ADCC_GetConversionResult(void);
-# 255 "./mcc_generated_files/adcc.h"
-adc_result_t ADCC_GetSingleConversion(adcc_channel_t channel);
-# 280 "./mcc_generated_files/adcc.h"
-void ADCC_StopConversion(void);
-# 307 "./mcc_generated_files/adcc.h"
-void ADCC_SetStopOnInterrupt(void);
-# 332 "./mcc_generated_files/adcc.h"
-void ADCC_DischargeSampleCapacitor(void);
-# 358 "./mcc_generated_files/adcc.h"
-void ADCC_LoadAcquisitionRegister(uint16_t);
-# 384 "./mcc_generated_files/adcc.h"
-void ADCC_SetPrechargeTime(uint16_t);
-# 409 "./mcc_generated_files/adcc.h"
-void ADCC_SetRepeatCount(uint8_t);
-# 437 "./mcc_generated_files/adcc.h"
-uint8_t ADCC_GetCurrentCountofConversions(void);
-# 461 "./mcc_generated_files/adcc.h"
-void ADCC_ClearAccumulator(void);
-# 486 "./mcc_generated_files/adcc.h"
-uint24_t ADCC_GetAccumulatorValue(void);
-# 514 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasAccumulatorOverflowed(void);
-# 539 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetFilterValue(void);
-# 567 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetPreviousResult(void);
-# 593 "./mcc_generated_files/adcc.h"
-void ADCC_DefineSetPoint(uint16_t);
-# 619 "./mcc_generated_files/adcc.h"
-void ADCC_SetUpperThreshold(uint16_t);
-# 645 "./mcc_generated_files/adcc.h"
-void ADCC_SetLowerThreshold(uint16_t);
-# 672 "./mcc_generated_files/adcc.h"
-uint16_t ADCC_GetErrorCalculation(void);
-# 699 "./mcc_generated_files/adcc.h"
-void ADCC_EnableDoubleSampling(void);
-# 723 "./mcc_generated_files/adcc.h"
-void ADCC_EnableContinuousConversion(void);
-# 747 "./mcc_generated_files/adcc.h"
-void ADCC_DisableContinuousConversion(void);
-# 775 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasErrorCrossedUpperThreshold(void);
-# 803 "./mcc_generated_files/adcc.h"
-_Bool ADCC_HasErrorCrossedLowerThreshold(void);
-# 830 "./mcc_generated_files/adcc.h"
-uint8_t ADCC_GetConversionStageStatus(void);
-# 847 "./mcc_generated_files/adcc.h"
-void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
-# 863 "./mcc_generated_files/adcc.h"
-void ADCC_ThresholdISR(void);
-# 881 "./mcc_generated_files/adcc.h"
-void ADCC_DefaultInterruptHandler(void);
 # 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
@@ -27799,69 +27827,14 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./i2c2_mux.h" 2
-
-
-
-extern uint8_t currentTrfAddr;
-extern i2c2_error_t lastI2C2MTrfResponse;
-extern i2c2_error_t lastI2C2LTrfResponse;
-
-
-
-
-
-
-
-void I2C2_MuxInit(void);
-_Bool I2C2_MAck(void);
-_Bool I2C2_LAck(void);
-i2c2_error_t I2C2_MOpen(void);
-i2c2_error_t I2C2_LOpen(void);
-i2c2_error_t I2C2_MClose(void);
-i2c2_error_t I2C2_LClose(void);
-# 1 "i2c2_mux.c" 2
-
-
-# 1 "./ORespGlobal.h" 1
-# 16 "./ORespGlobal.h"
-# 1 "./aCapture.h" 1
-# 21 "./aCapture.h"
-typedef enum{
-    MainPSensor=0,
-    VolPSensor=1,
-    VddSensor=2,
-    Flt0PSensor=3,
-    Flt1PSensor=4,
-    Flt2PSensor=5,
-    Flt3PSensor=6,
-} aSrcTyp;
-
-void aCaptureInit(void);
-
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
-
-_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
-
-
-void aCaptRstFlt(aSrcTyp sel);
-# 16 "./ORespGlobal.h" 2
-# 74 "./ORespGlobal.h"
+# 15 "./ORespGlobal.h" 2
+# 60 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
     } vmodeT;
 
-    typedef enum {
-    CTRL_UNCAL,
-    CTRL_STOP,
-    CTRL_RUN,
-    CTRL_SLEEP
-} ctrlStatusT;
 
-
-    extern ctrlStatusT ctrlStatus;
-    extern ctrlStatusT ctrlStatus;
     extern vmodeT VentMode;
     extern uint8_t BPM;
     extern uint16_t IDuration, EDuration;
@@ -27876,117 +27849,204 @@ void aCaptRstFlt(aSrcTyp sel);
 
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
-# 3 "i2c2_mux.c" 2
+# 6 "aCapture.c" 2
 
 
-uint8_t currentTrfAddr;
-i2c2_error_t lastI2C2MTrfResponse;
-i2c2_error_t lastI2C2LTrfResponse;
-i2c2_error_t lastI2C2MAckResponse;
-i2c2_error_t lastI2C2LAckResponse;
+aSrcTyp curASrc;
 
-i2c2_operations_t I2C2_NackCb(void *ptr){
-    printf ("I2C2 E\n");
-    if (currentTrfAddr == 0x50) {
-        lastI2C2MAckResponse = 0;
+
+
+
+int16_t mainPSensCal = 164;
+int16_t auxPSensCal = 962;
+
+
+
+
+uint32_t resultTbl[7];
+
+uint8_t resultTblVal[7];
+
+
+adcc_channel_t adcGetCh(aSrcTyp sel){
+    switch (sel){
+        case MainPSensor:
+            return channel_ANE1;
+            break;
+        case AuxPSensor:
+            return channel_ANE2;
+            break;
+        case VddSensor:
+            return channel_ANE0;
+            break;
+        default:
+
+           LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
+           return -1;
+    }
+}
+
+void adcCaptureIsr(void){
+
+
+    uint32_t adcData;
+    aSrcTyp adcSel;
+
+    adcData = ADCC_GetFilterValue();
+
+    adcSel=curASrc;
+
+
+    curASrc++;
+    if (curASrc==3){
+        curASrc=0;
+    }
+    if (curASrc <= AuxPSensor ){
+        ADCON0bits.ADON = 0;
+
+        ADREF = 0x00;
     } else {
-        lastI2C2LAckResponse = 0;
+        ADCON0bits.ADON = 0;
+
+        ADREF = 0x03;
     }
-    return I2C2_CallbackReturnStop(((void*)0));
-}
-
-void I2C2_MuxInit(void){
-    lastI2C2MAckResponse = 1;
-    lastI2C2LAckResponse = 1;
-    lastI2C2MTrfResponse = I2C2_NOERR;
-    lastI2C2LTrfResponse = I2C2_NOERR;
-    currentTrfAddr = 0x0;
-}
-
-_Bool I2C2_MAck(void){
-    return lastI2C2MAckResponse;
-}
-_Bool I2C2_LAck(void){
-    return lastI2C2LAckResponse;
-}
+    ADCC_StartConversion(adcGetCh(curASrc));
 
 
-i2c2_error_t I2C2_MOpen(void){
-    i2c2_error_t trfRsp;
+    if (adcSel<3){
+        resultTbl[adcSel]=adcData;
 
-    trfRsp = I2C2_Open(0x50);
-    if (trfRsp != I2C2_BUSY) {
-        I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
-        I2C2_SetDataNackCallback(I2C2_NackCb,((void*)0));
-
-        lastI2C2MAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
-        currentTrfAddr = 0x50;
-        lastI2C2MAckResponse = 1;
-
-        return lastI2C2MTrfResponse;
-    }
-    return I2C2_BUSY;
-}
-
-i2c2_error_t I2C2_LOpen(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Open(0x27);
-    if (trfRsp != I2C2_BUSY) {
-        I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
-        I2C2_SetDataNackCallback(I2C2_NackCb,((void*)0));
-
-        lastI2C2LAckResponse = 1;
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
-        currentTrfAddr = 0x27;
-        lastI2C2LAckResponse = 1;
-
-        return lastI2C2LTrfResponse;
-    }
-    return I2C2_BUSY;
-}
-
-i2c2_error_t I2C2_MClose(void){
-    i2c2_error_t trfRsp;
-
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
-
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
+        resultTblVal[adcSel]++;
+        if (resultTblVal[adcSel]==0){
+            resultTblVal[adcSel]=1;
         }
 
-        return lastI2C2MTrfResponse;
+        if (adcSel == MainPSensor) {
+
+
+            resultTbl[Flt0PSensor]=(3*resultTbl[Flt0PSensor]+(adcData<<2))>>2;
+
+            resultTbl[Flt1PSensor]=(15*resultTbl[Flt1PSensor]+(adcData<<4))>>4;
+
+            resultTbl[Flt2PSensor]=(63*resultTbl[Flt2PSensor]+(adcData<<6))>>6;
+
+            resultTbl[Flt3PSensor]=(511*resultTbl[Flt3PSensor]+(adcData<<9))>>9;
+
+            resultTblVal[Flt0PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt1PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt2PSensor]=resultTblVal[MainPSensor];
+            resultTblVal[Flt3PSensor]=resultTblVal[MainPSensor];
+        }
+    } else {
+
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
     }
-    return I2C2_BUSY;
 }
 
-i2c2_error_t I2C2_LClose(void){
-    i2c2_error_t trfRsp;
 
-    trfRsp = I2C2_Close();
-    if (trfRsp != I2C2_BUSY) {
+void aCaptureInit(void){
+    int idx;
+    curASrc=MainPSensor;
 
-        if (currentTrfAddr == 0x50){
-            lastI2C2MTrfResponse = trfRsp;
-        } else {
-            lastI2C2LTrfResponse = trfRsp;
-        }
+    for (idx=0;idx<3;idx++)
+        resultTblVal[idx]=0;
 
-        return lastI2C2LTrfResponse;
+    ADCC_SetADTIInterruptHandler(adcCaptureIsr);
+
+
+    ADCC_StartConversion(adcGetCh(curASrc));
+
+    PIE1bits.ADTIE = 1;
+}
+
+void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+    if (sel == MainPSensor) {
+        mainPSensCal = offVal;
+    } else if (sel == AuxPSensor) {
+        auxPSensCal = offVal;
+    } else {
+        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
     }
-    return I2C2_BUSY;
+}
+
+void aCaptRstFlt(aSrcTyp sel) {
+    switch (sel) {
+            PIE1bits.ADTIE = 0;
+        case Flt3PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<9;
+            break;
+        case Flt2PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<6;
+            break;
+        case Flt1PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<4;
+            break;
+        case Flt0PSensor:
+            resultTbl[sel] = resultTbl[MainPSensor]<<2;
+            break;
+        default:
+
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
+    }
+            PIE1bits.ADTIE = 1;
+}
+
+
+_Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
+    uint32_t lclRaw;
+    uint8_t lclValid;
+
+
+    PIE1bits.ADTIE = 0;
+    lclRaw=resultTbl[sel];
+    lclValid=resultTblVal[sel];
+    PIE1bits.ADTIE = 1;
+
+    if (lclValid == 0) {
+        return 0;
+    }
+
+
+
+    switch (sel){
+        case Flt3PSensor:
+            lclRaw=lclRaw>>9;
+            break;
+        case Flt2PSensor:
+            lclRaw=lclRaw>>6;
+            break;
+        case Flt1PSensor:
+            lclRaw=lclRaw>>4;
+            break;
+        case Flt0PSensor:
+            lclRaw=lclRaw>>2;
+            break;
+        default:
+
+            break;
+    }
+
+    switch (sel){
+        case MainPSensor:
+        case Flt0PSensor:
+        case Flt1PSensor:
+        case Flt2PSensor:
+        case Flt3PSensor:
+            if (lclRaw < mainPSensCal) { lclRaw = mainPSensCal-lclRaw;
+                *outVal = - (lclRaw/1);
+            } else {
+                lclRaw = lclRaw - mainPSensCal;
+                *outVal=(lclRaw/1);
+            }
+            return 1;
+        case AuxPSensor:
+            *outVal = (lclRaw - auxPSensCal)/1;
+            return 1;
+        case VddSensor:
+            *outVal = lclRaw<<1;
+            return 1;
+        default:
+
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
+    }
 }

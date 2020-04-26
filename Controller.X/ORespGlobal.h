@@ -36,7 +36,8 @@ extern "C" {
 #define POVERSHOOT_LIMIT MPRESSURE_MBAR(3)
 // Max Volume overshoot. In mililiters.
 #define VOVERSHOOT_LIMIT 25
-        
+// Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
+#define PQUANTA_LIMIT    MPRESSURE_MBAR(7)
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////

@@ -853,7 +853,11 @@ void main(void) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         vQuanta = (3 * (vMeasureGet() - vValveActuation) + vQuanta) / 4;
-                                        pQuantaInsp = (3 * (pInst - pValveActuation) + pQuantaInsp) / 4;
+                                        tmpVal = (pInst - pValveActuation);
+                                        if (tmpVal > PQUANTA_LIMIT){
+                                            tmpVal = PQUANTA_LIMIT;
+                                        }
+                                        pQuantaInsp = (3 * tmpVal + pQuantaInsp) / 4;
                                         if (vQuanta < 0) {
                                             vQuanta = 0;
                                         }
@@ -1050,7 +1054,12 @@ void main(void) {
                                 if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
-                                        pQuantaExp = (3 * (bdP1 - pValveActuation) + pQuantaExp) / 4;
+                                        tmpVal = (bdP1 - pValveActuation);
+                                        if (tmpVal > PQUANTA_LIMIT){
+                                            tmpVal = PQUANTA_LIMIT;
+                                        }
+
+                                        pQuantaExp = (3 * tmpVal + pQuantaExp) / 4;
                                         if (pQuantaExp < 0) {
                                             pQuantaExp = 0;
                                         }
