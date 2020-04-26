@@ -852,7 +852,11 @@ void main(void) {
                                 if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
-                                        vQuanta = (3 * (vMeasureGet() - vValveActuation) + vQuanta) / 4;
+                                        tmpVal = vMeasureGet() - vValveActuation;
+                                        if (tmpVal > VQUANTA_LIMIT) {
+                                            tmpVal=VQUANTA_LIMIT;
+                                        }
+                                        vQuanta = (3 * tmpVal + vQuanta) / 4;
                                         tmpVal = (pInst - pValveActuation);
                                         if (tmpVal > PQUANTA_LIMIT){
                                             tmpVal = PQUANTA_LIMIT;

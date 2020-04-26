@@ -27829,7 +27829,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 16 "./ORespGlobal.h" 2
-# 74 "./ORespGlobal.h"
+# 76 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
