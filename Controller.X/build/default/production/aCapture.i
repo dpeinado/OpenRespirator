@@ -27828,7 +27828,7 @@ void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 15 "./ORespGlobal.h" 2
-# 73 "./ORespGlobal.h"
+# 76 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
