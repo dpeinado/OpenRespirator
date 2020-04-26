@@ -2029,7 +2029,7 @@ U 1 1 5EE70559
 P 8100 5700
 F 0 "Q4" H 8290 5746 50  0000 L CNN
 F 1 "2N3904" H 8290 5655 50  0000 L CNN
-F 2 "Package_TO_SOT_THT:TO-92_Inline" H 8300 5625 50  0001 L CIN
+F 2 "Ventilator:TO-92_Inline_Ventilator" H 8300 5625 50  0001 L CIN
 F 3 "https://es.rs-online.com/web/p/transistores-bipolares-y-bjt/8051056/" H 8100 5700 50  0001 L CNN
 	1    8100 5700
 	1    0    0    -1  

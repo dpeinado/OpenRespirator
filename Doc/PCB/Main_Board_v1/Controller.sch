@@ -2223,7 +2223,7 @@ AR Path="/5E9337AC/5F01906F" Ref="Q?"  Part="1"
 AR Path="/5E9339D0/5F01906F" Ref="Q5"  Part="1" 
 F 0 "Q5" H 4190 7246 50  0000 L CNN
 F 1 "2N3904" H 4190 7155 50  0000 L CNN
-F 2 "Package_TO_SOT_THT:TO-92_Inline" H 4200 7125 50  0001 L CIN
+F 2 "Ventilator:TO-92_Inline_Ventilator" H 4200 7125 50  0001 L CIN
 F 3 "https://es.rs-online.com/web/p/transistores-bipolares-y-bjt/8051056/" H 4000 7200 50  0001 L CNN
 	1    4000 7200
 	1    0    0    -1  
@@ -2400,13 +2400,13 @@ Wire Wire Line
 Wire Wire Line
 	5500 3150 5050 3150
 Text Label 5100 1950 0    50   ~ 0
-LD7
-Text Label 5100 2050 0    50   ~ 0
-LD6
-Text Label 5100 2350 0    50   ~ 0
-LD5
-Text Label 5100 2450 0    50   ~ 0
 LD4
+Text Label 5100 2050 0    50   ~ 0
+LD5
+Text Label 5100 2350 0    50   ~ 0
+LD6
+Text Label 5100 2450 0    50   ~ 0
+LD7
 Text Label 5100 3050 0    50   ~ 0
 LDE
 Text Label 5100 3150 0    50   ~ 0
