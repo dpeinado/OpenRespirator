@@ -2044,7 +2044,7 @@ AR Path="/5EE73DD7" Ref="R?"  Part="1"
 AR Path="/5EA602EB/5EE73DD7" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5EE73DD7" Ref="R39"  Part="1" 
 F 0 "R39" H 7170 5346 50  0000 L CNN
-F 1 "460" H 7170 5255 50  0000 L CNN
+F 1 "470" H 7170 5255 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 7030 5300 50  0001 C CNN
 F 3 "~" H 7100 5300 50  0001 C CNN
 	1    7100 5300
@@ -2058,7 +2058,7 @@ AR Path="/5EE87117" Ref="R?"  Part="1"
 AR Path="/5EA602EB/5EE87117" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5EE87117" Ref="R40"  Part="1" 
 F 0 "R40" H 7720 5746 50  0000 L CNN
-F 1 "460" H 7720 5655 50  0000 L CNN
+F 1 "470" H 7720 5655 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 7580 5700 50  0001 C CNN
 F 3 "~" H 7650 5700 50  0001 C CNN
 	1    7650 5700
@@ -2104,7 +2104,7 @@ F 1 "1K" H 8880 5505 50  0000 R CNN
 F 2 "Ventilator:Potentiometer_409HA" H 8950 5550 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/resistencias-variables/6524546/" H 8950 5550 50  0001 C CNN
 	1    8950 5550
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 Wire Wire Line
 	8950 5400 8950 5050
