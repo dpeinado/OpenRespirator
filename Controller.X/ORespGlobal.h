@@ -43,7 +43,7 @@ extern "C" {
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
-#if 0
+#if 1
 #define SV2ISOPEN LATAbits.LATA2
 #define OPEN_SV2 LATAbits.LATA2 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0

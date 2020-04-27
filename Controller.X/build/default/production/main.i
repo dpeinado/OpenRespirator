@@ -27380,247 +27380,6 @@ void (*I2C2_InterruptHandler)(void);
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/tmr4.h" 1
-# 79 "./mcc_generated_files/tmr4.h"
-typedef enum
-{
-# 89 "./mcc_generated_files/tmr4.h"
-   TMR4_ROP_STARTS_TMRON,
-
-
-
-
-   TMR4_ROP_STARTS_TMRON_ERSHIGH,
-
-
-
-
-   TMR4_ROP_STARTS_TMRON_ERSLOW,
-
-
-
-
-   TMR4_ROP_RESETS_ERSBOTHEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSRISINGEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSFALLINGEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSLOW,
-
-
-
-
-   TMR4_ROP_RESETS_ERSHIGH,
-# 135 "./mcc_generated_files/tmr4.h"
-   TMR4_OS_STARTS_TMRON,
-
-
-
-
-   TMR4_OS_STARTS_ERSRISINGEDGE ,
-
-
-
-
-   TMR4_OS_STARTS_ERSFALLINGEDGE ,
-
-
-
-
-   TMR4_OS_STARTS_ERSBOTHEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSFIRSTRISINGEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSFIRSTFALLINGEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSRISINGEDGEDETECT,
-
-
-
-
-   TMR4_OS_STARTS_ERSFALLINGEDGEDETECT,
-
-
-
-
-   TMR4_OS_STARTS_TMRON_ERSHIGH = 0x16,
-
-
-
-
-   TMR4_OS_STARTS_TMRON_ERSLOW = 0x17,
-# 192 "./mcc_generated_files/tmr4.h"
-   TMR4_MS_STARTS_TMRON_ERSRISINGEDGEDETECT = 0x11,
-
-
-
-
-   TMR4_MS_STARTS_TMRON_ERSFALLINGEDGEDETECT = 0x12,
-
-
-
-
-
-   TMR4_MS_STARTS_TMRON_ERSBOTHEDGE = 0x13
-
-} TMR4_HLT_MODE;
-# 220 "./mcc_generated_files/tmr4.h"
-typedef enum
-{
-
-
-    TMR4_T4INPPS,
-
-
-
-    TMR4_T2POSTSCALED,
-
-
-
-    TMR4_RESERVED,
-
-
-
-    TMR4_T6POSTSCALED,
-
-
-
-    TMR4_CCP1_OUT,
-
-
-
-    TMR4_CCP2_OUT,
-
-
-
-    TMR4_CCP3_OUT,
-
-
-
-    TMR4_CCP4_OUT,
-
-
-
-    TMR4_PWM5_OUT,
-
-
-
-    TMR4_PWM6_OUT,
-
-
-
-    TMR4_PWM7_OUT,
-
-
-
-    TMR4_PWM8_OUT,
-
-
-
-    TMR4_RESERVED_2,
-
-
-
-    TMR4_RESERVED_3,
-
-
-
-    TMR4_C1_OUT_SYNC,
-
-
-
-    TMR4_C2_OUT_SYNC,
-
-
-
-    TMR4_ZCD_OUTPUT,
-
-
-
-    TMR4_CLC1_OUT,
-
-
-
-    TMR4_CLC2_OUT,
-
-
-
-    TMR4_CLC3_OUT,
-
-
-
-    TMR4_CLC4_OUT,
-
-
-
-    TMR4_UART1_RX_EDGE,
-
-
-
-    TMR4_UART1_TX_EDGE,
-
-
-
-    TMR4_UART2_RX_EDGE,
-
-
-
-    TMR4_UART2_TX_EDGE
-
-
-} TMR4_HLT_EXT_RESET_SOURCE;
-# 365 "./mcc_generated_files/tmr4.h"
-void TMR4_Initialize(void);
-# 401 "./mcc_generated_files/tmr4.h"
-void TMR4_ModeSet(TMR4_HLT_MODE mode);
-# 436 "./mcc_generated_files/tmr4.h"
-void TMR4_ExtResetSourceSet(TMR4_HLT_EXT_RESET_SOURCE reset);
-# 465 "./mcc_generated_files/tmr4.h"
-void TMR4_Start(void);
-# 494 "./mcc_generated_files/tmr4.h"
-void TMR4_StartTimer(void);
-# 526 "./mcc_generated_files/tmr4.h"
-void TMR4_Stop(void);
-# 558 "./mcc_generated_files/tmr4.h"
-void TMR4_StopTimer(void);
-# 593 "./mcc_generated_files/tmr4.h"
-uint8_t TMR4_Counter8BitGet(void);
-# 628 "./mcc_generated_files/tmr4.h"
-uint8_t TMR4_ReadTimer(void);
-# 667 "./mcc_generated_files/tmr4.h"
-void TMR4_Counter8BitSet(uint8_t timerVal);
-# 706 "./mcc_generated_files/tmr4.h"
-void TMR4_WriteTimer(uint8_t timerVal);
-# 758 "./mcc_generated_files/tmr4.h"
-void TMR4_Period8BitSet(uint8_t periodVal);
-# 810 "./mcc_generated_files/tmr4.h"
-void TMR4_LoadPeriodRegister(uint8_t periodVal);
-# 848 "./mcc_generated_files/tmr4.h"
-_Bool TMR4_HasOverflowOccured(void);
-# 57 "./mcc_generated_files/mcc.h" 2
-
 # 1 "./mcc_generated_files/tmr1.h" 1
 # 100 "./mcc_generated_files/tmr1.h"
 void TMR1_Initialize(void);
@@ -27640,7 +27399,7 @@ void TMR1_StartSinglePulseAcquisition(void);
 uint8_t TMR1_CheckGateValueStatus(void);
 # 387 "./mcc_generated_files/tmr1.h"
 _Bool TMR1_HasOverflowOccured(void);
-# 58 "./mcc_generated_files/mcc.h" 2
+# 57 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27887,14 +27646,7 @@ void TMR2_ISR(void);
 extern void (*TMR2_InterruptHandler)(void);
 # 882 "./mcc_generated_files/tmr2.h"
 void TMR2_DefaultInterruptHandler(void);
-# 59 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/pwm5.h" 1
-# 102 "./mcc_generated_files/pwm5.h"
- void PWM5_Initialize(void);
-# 129 "./mcc_generated_files/pwm5.h"
- void PWM5_LoadDutyValue(uint16_t dutyValue);
-# 60 "./mcc_generated_files/mcc.h" 2
+# 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr0.h" 1
 # 100 "./mcc_generated_files/tmr0.h"
@@ -27911,7 +27663,14 @@ void TMR0_WriteTimer(uint8_t timerVal);
 void TMR0_Reload(uint8_t periodVal);
 # 308 "./mcc_generated_files/tmr0.h"
 _Bool TMR0_HasOverflowOccured(void);
-# 61 "./mcc_generated_files/mcc.h" 2
+# 59 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/fvr.h" 1
+# 93 "./mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "./mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
+# 60 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
@@ -27990,14 +27749,7 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
-# 62 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/fvr.h" 1
-# 93 "./mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "./mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
-# 63 "./mcc_generated_files/mcc.h" 2
+# 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
@@ -28042,12 +27794,12 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 void (*UART1_TxInterruptHandler)(void);
 # 498 "./mcc_generated_files/uart1.h"
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
-# 64 "./mcc_generated_files/mcc.h" 2
-# 79 "./mcc_generated_files/mcc.h"
+# 62 "./mcc_generated_files/mcc.h" 2
+# 77 "./mcc_generated_files/mcc.h"
 void SYSTEM_Initialize(void);
-# 92 "./mcc_generated_files/mcc.h"
+# 90 "./mcc_generated_files/mcc.h"
 void OSCILLATOR_Initialize(void);
-# 105 "./mcc_generated_files/mcc.h"
+# 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 5 "main.c" 2
 
@@ -28297,10 +28049,13 @@ typedef enum {
 } monErrorT;
 
 typedef enum {
-    MONSTATE_INIT = 0x80,
-    MONSTATE_CALP = 0xC0,
+    MONSTATE_INIT = 0x20,
+    MONSTATE_CALP = 0x40,
+    MONSTATE_SV2CHK = 0x60,
+    MONSTATE_SV1CHK = 0x80,
     MONSTATE_CALF = 0xA0,
-    MONSTATE_STOP = 0x0,
+
+    MONSTATE_STOP = 0x00,
     MONSTATE_RUNP = 0x10,
     MONSTATE_RUNV = 0x14,
     MONSTATE_SLEEP = 0x8
@@ -28332,8 +28087,6 @@ void MonitorMsgForcedSend (monStateT state){
     _Bool trfAck;
     int16_t vddVal;
 
-    return;
-
 
 
     trfError = I2C2_MClose();
@@ -28346,12 +28099,14 @@ void MonitorMsgForcedSend (monStateT state){
         sprintf(lcdBtnRRow, " M.ERR");
         lcdPrintBRR = 1;
         LATDbits.LATD0 = 1;
+        lastI2CMonTrfResponse = 1;
 
     } else if ((LATDbits.LATD0) && trfAck) {
 
         sprintf(lcdBtnRRow, "      ");
         lcdPrintBRR = 1;
         LATDbits.LATD0 = 0;
+        lastI2CMonTrfResponse = 1;
 
     }
 
@@ -28416,7 +28171,7 @@ void MonitorMsgForcedSend (monStateT state){
 
         trfError = I2C2_MOpen();
 
-        I2C2_SetBuffer(monitorMsg,10);
+        I2C2_SetBuffer(monitorMsg, 10);
         trfError = I2C2_MasterOperation(0);
 
     } else {
@@ -28425,22 +28180,28 @@ void MonitorMsgForcedSend (monStateT state){
     }
 }
 
-void MonitorMsgSend (monStateT state){
+void MonitorMsgSend(monStateT state) {
     if (timeElapsedR(&monTstamp, ((time_t) 50*1))) {
-         MonitorMsgForcedSend(state);
+        MonitorMsgForcedSend(state);
     }
 }
 
+void MonitorMsgSendBlock(monStateT state) {
+    while (MonitorMsgBusy());
+    MonitorMsgForcedSend(state);
+    while (MonitorMsgBusy());
+}
 
-void bRateInit(void){
+
+void bRateInit(void) {
     bRateHist = 0;
     bRatePtr = 1;
     eBRate = 0;
 }
 
-void bRateUpdt(_Bool triggered){
-    bRatePtr = bRatePtr<<1;
-    if (bRatePtr == 0x1L<<20){
+void bRateUpdt(_Bool triggered) {
+    bRatePtr = bRatePtr << 1;
+    if (bRatePtr == 0x1L << 20) {
         bRatePtr = 1;
     }
 
@@ -28455,17 +28216,100 @@ void bRateUpdt(_Bool triggered){
     }
 }
 
+_Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
+    int16_t mPVal, mPValMax, mPValMin, mPValMean;
+    int16_t aPVal, aPValMax, aPValMin, aPValMean;
+    time_t tstamp;
+    _Bool chkResult;
+
+    chkResult = 1;
+
+
+    mPValMin = 4096;
+    aPValMin = 4096;
+    mPValMax = 0;
+    aPValMax = 0;
+    tstamp = timeGet();
+
+    while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
+        if (aCaptGetResult(MainPSensor, &mPVal)) {
+            if (mPVal > mPValMax) {
+                mPValMax = mPVal;
+            }
+            if (mPVal < mPValMin) {
+                mPValMin = mPVal;
+            }
+        } else {
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
+            chkResult = 0;
+        }
+
+        if (aCaptGetResult(VolPSensor, &aPVal)) {
+            if (aPVal > aPValMax) {
+                aPValMax = aPVal;
+            }
+            if (aPVal < aPValMin) {
+                aPValMin = aPVal;
+            }
+        } else {
+            chkResult = 0;
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
+        }
+    }
+
+
+    mPValMean = (mPValMax + mPValMin) >> 1;
+    aPValMean = (aPValMax + aPValMin) >> 1;
+    sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+    printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+    printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+    setCursor(0, 0);
+    printstrblock(lcdTopRow);
+    timeDelayMs(1000);
+
+
+    if (offsetCal) {
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean < 40) || (aPValMean < 600) || (aPValMean > 1030)) {
+
+            setCursor(0, 0);
+            chkResult = 0;
+            printf ("PRESSURE CALIBRATION ERROR\n");
+        } else {
+
+            aCaptureSetOff(MainPSensor, mPValMean);
+            aCaptureSetOff(VolPSensor, aPValMean);
+
+            aCaptRstFlt(Flt0PSensor);
+            aCaptRstFlt(Flt1PSensor);
+            aCaptRstFlt(Flt2PSensor);
+            aCaptRstFlt(Flt3PSensor);
+            printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+            printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+            timeDelayMs(50);
+        }
+    } else {
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
+            printf ("VALVE CHECK ERROR\n");
+            chkResult = 0;
+            printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+            printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+        }
+    }
+    return chkResult;
+}
+
 
 
 _Bool InitProcedure(void) {
     int16_t vddVal, vddValMax, vddValMin;
-    int16_t mPVal, mPValMax, mPValMin, mPValMean;
     int16_t aPVal, aPValMax, aPValMin, aPValMean;
     _Bool lcdBLight;
     time_t tstamp;
     _Bool initOk;
 
     ctrlStatus = CTRL_UNCAL;
+    LATAbits.LATA2 = 0;
+    LATAbits.LATA3 = 0;
 
     setCursor(0, 0);
     printstrblock("SELF-TEST.      ");
@@ -28476,7 +28320,15 @@ _Bool InitProcedure(void) {
     vddValMin = 8000;
     vddValMax = 0;
     initOk = 1;
-    MonitorMsgForcedSend (MONSTATE_INIT);
+
+    MonitorMsgSendBlock(MONSTATE_INIT);
+    if (!lastI2CMonTrfResponse) {
+        initOk = 0;
+        printf ("Mon error");
+        setCursor(0, 0);
+        printstrblock("MONITOR ERROR");
+        timeDelayMs(500);
+    }
 
     aCaptureSetOff(MainPSensor, 0);
     aCaptureSetOff(VolPSensor, 0);
@@ -28493,7 +28345,7 @@ _Bool InitProcedure(void) {
                 vddValMin = vddVal;
             }
         } else {
-            sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",10);
+            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",10);
             initOk = 0;
         }
     }
@@ -28560,75 +28412,41 @@ _Bool InitProcedure(void) {
             }
         }
 
-        MonitorMsgForcedSend (MONSTATE_CALP);
-
-
-        mPValMin = 4096;
-        aPValMin = 4096;
-        mPValMax = 0;
-        aPValMax = 0;
-
-        while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
-            if (aCaptGetResult(MainPSensor, &mPVal)) {
-                if (mPVal > mPValMax) {
-                    mPValMax = mPVal;
-                }
-                if (mPVal < mPValMin) {
-                    mPValMin = mPVal;
-                }
-            } else {
-                sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",10);
-                initOk = 0;
-            }
-
-            if (aCaptGetResult(VolPSensor, &aPVal)) {
-                if (aPVal > aPValMax) {
-                    aPValMax = aPVal;
-                }
-                if (aPVal < aPValMin) {
-                    aPValMin = aPVal;
-                }
-            } else {
-                initOk = 0;
-                sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",10);
-            }
-        }
-
-
-        mPValMean = (mPValMax + mPValMin) >> 1;
-        aPValMean = (aPValMax + aPValMin) >> 1;
         LATDbits.LATD6 = 0;
-        sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
-        printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
-        printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
-        setCursor(0, 0);
-        printstrblock(lcdTopRow);
-        timeDelayMs(1000);
+        MonitorMsgSendBlock(MONSTATE_CALP);
 
+        if (pressureSensorChk(1, 500)) {
 
-        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean > 350) || (aPValMean < 600) || (aPValMean > 1030)) {
-
-            setCursor(0, 0);
+            ctrlStatus = CTRL_STOP;
+        } else {
             printstrblock("CAL ERROR. RETRY ");
             timeDelayMs(500);
-        } else {
-
-            aCaptureSetOff(MainPSensor, mPValMean);
-            aCaptureSetOff(VolPSensor, aPValMean);
-
-            aCaptRstFlt(Flt0PSensor);
-            aCaptRstFlt(Flt1PSensor);
-            aCaptRstFlt(Flt2PSensor);
-            aCaptRstFlt(Flt3PSensor);
-            printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
-            printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
-            timeDelayMs(50);
-            ctrlStatus = CTRL_STOP;
         }
     }
 
     if (!initOk) {
         return initOk;
+    }
+
+
+
+    MonitorMsgSendBlock(MONSTATE_SV2CHK);
+    LATAbits.LATA2 = 0;
+    timeDelayMs(100);
+    if (!pressureSensorChk(0, 100)) {
+        initOk=0;
+        printstrblock("SV2 Valve error");
+        timeDelayMs(500);
+    }
+
+
+    MonitorMsgSendBlock(MONSTATE_SV1CHK);
+    LATAbits.LATA2 = 1;
+    timeDelayMs(100);
+    if (!pressureSensorChk(0, 100)) {
+        initOk=0;
+        printstrblock("SV1 Valve error");
+        timeDelayMs(500);
     }
 
 
@@ -28641,9 +28459,9 @@ _Bool InitProcedure(void) {
     aPValMin = 4096;
     aPValMax = 0;
 
-    MonitorMsgForcedSend (MONSTATE_CALF);
+    MonitorMsgSendBlock(MONSTATE_CALF);
 
-    sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval);
+    LATAbits.LATA2 = 1;
     LATAbits.LATA3 = 1;
     timeDelayMs(250);
     vMeasureRst();
@@ -28659,8 +28477,8 @@ _Bool InitProcedure(void) {
     }
 
     openFlowRate = vMeasureGet()<<2;
-    MonitorMsgForcedSend (MONSTATE_STOP);
-    sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+    MonitorMsgSendBlock(MONSTATE_STOP);
+    LATAbits.LATA2 = 0;
     LATAbits.LATA3 = 0;
 
     if (((aPValMean<<1) + aPValMax+aPValMin)>= (0.95*8192)) {
@@ -28688,8 +28506,6 @@ _Bool InitProcedure(void) {
             initOk = 0;
         }
     }
-
-
 
 
     while (keyPeek() != -1)
@@ -28751,18 +28567,6 @@ void main(void) {
     MonitorInit();
     vMeasureInit();
 
-    while(1){
-        uint16_t dcycle;
-        for (dcycle=0;dcycle<=100;dcycle+=10){
-            PWM5_LoadDutyValue(dcycle);
-            timeDelayMs(100);
-        }
-        for (dcycle=90;dcycle>=10;dcycle-=10){
-            PWM5_LoadDutyValue(dcycle);
-            timeDelayMs(100);
-        }
-    }
-
     while (1) {
         char keyTmp;
         while (!InitProcedure())
@@ -28776,6 +28580,7 @@ void main(void) {
         keyTmp = keyRead();
         while ((keyTmp != 5)&&(keyTmp != 3)) {
             keyTmp = keyRead();
+            MonitorMsgSend(MONSTATE_STOP);
         }
         if (keyTmp == 5) {
             break;
@@ -28792,6 +28597,7 @@ void main(void) {
 
             MenuMng();
             screenMng();
+            MonitorMsgSend(MONSTATE_STOP);
 
             if (keyReadEC() == -100) {
                 if (keyPeek() == 4) {
@@ -28807,6 +28613,9 @@ void main(void) {
                 }
             }
         }
+
+
+        while(MonitorMsgBusy());
 
 
         rSV2ValveDelay = 20;
@@ -28833,7 +28642,7 @@ void main(void) {
         } else {
             MonitorMsgForcedSend(MONSTATE_RUNV);
         }
-# 698 "main.c"
+# 755 "main.c"
         rCycleTime = timeGet();
         while (ctrlStatus != CTRL_SLEEP) {
 
@@ -28851,7 +28660,7 @@ void main(void) {
             intIDuration = ((time_t) IDuration*1);
             intEDuration = ((time_t) EDuration*1);
 
-            sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval);
+            LATAbits.LATA2 = 1;
             LATAbits.LATA3 = 1;
 
 
@@ -28929,7 +28738,7 @@ void main(void) {
                                     ((pValveActuation + pInspOS) > (intIP + ((int16_t) ((0.045*4096+2)/5)*3))) ||
                                     ((pValveActuation + pInspPlatErr) > intIP) ||
                                     ((VentMode == VMODE_VOLUME) && ((vValveActuation + vInspOS) >= intMaxV))) {
-                                sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+                                LATAbits.LATA2 = 0;
                                 initialSubState = 0;
                                 rValveAcuationTstamp = timeGet();
 
@@ -28939,7 +28748,7 @@ void main(void) {
 
                                 OSCheck = 1;
                                 pPlatMax = 0;
-                                printf ("PII end T %5d - Pi %d Pn %d Vol %3d VL %3d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pValveActuation) / ((int16_t) ((0.045*4096+2)/5)*1), vValveActuation, intMaxV);
+                                printf ("PI-END T %5d - Pi %d Pn %d Vol %3d VL %3d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pValveActuation) / ((int16_t) ((0.045*4096+2)/5)*1), vValveActuation, intMaxV);
 
 
 
@@ -28965,12 +28774,12 @@ void main(void) {
                         }
                     } else {
                         MonitorErrorClr(MON_IPE);
-                        if ((sv2_pwmval!=0)) {
+                        if (LATAbits.LATA2) {
                             if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
-                                sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+                                LATAbits.LATA2 = 0;
                                 rValveAcuationTstamp = timeGet();
                                 aCaptGetResult(MainPSensor, &pInst);
-                                printf ("PI VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+                                printf ("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveAcuationTstamp), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                             }
                         } else if ((aCaptGetResult(MainPSensor, &pInst))) {
                             if (OSCheck) {
@@ -28991,7 +28800,7 @@ void main(void) {
                                     vInspOS = (3 * vInspOS + tmpVal) >> 2;
 
                                     OSCheck = 0;
-                                    printf ("PIOSE VO T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
+                                    printf ("PI-OS T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
                                 }
                             } else {
 
@@ -28999,7 +28808,7 @@ void main(void) {
                                     valveDelayCheck = 1;
                                     rValveDelayStart = timeGet();
                                     LATAbits.LATA3 = 0;
-                                    printf ("PI VO T %d OSV3\n", timeDiff(rCycleTime, rValveDelayStart));
+                                    printf ("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart));
                                 }
                                 if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16)) {
                                     if (QuantaCheck) {
@@ -29042,10 +28851,10 @@ void main(void) {
 
                                     if ((pAdj < intIP) && ((VentMode == VMODE_PRESSURE) || (vAdj < intMaxV))) {
 
-                                        sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval);
+                                        LATAbits.LATA2 = 1;
                                         rSubCycleTime = timeGet();
                                         QuantaCheck = 1;
-                                        printf ("PI VO T %d - Pi %d VOL %d VL %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), vMeasureGet(), intMaxV);
+                                        printf ("PI-VO T %d - Pi %d VOL %d VL %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), vMeasureGet(), intMaxV);
                                     }
                                 }
                             }
@@ -29062,7 +28871,7 @@ void main(void) {
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PI T %5d - V %3d Pi %3d Pn %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlatMax) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspPlatErr) / ((int16_t) ((0.045*4096+2)/5)*1), vInspOS, (10 * pQuantaInsp) / ((int16_t) ((0.045*4096+2)/5)*1), vQuanta);
-# 938 "main.c"
+# 995 "main.c"
                 }
 
             }
@@ -29081,7 +28890,7 @@ void main(void) {
             aCaptRstFlt(Flt1PSensor);
 
             rSubCycleTime = timeGet();
-            sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+            LATAbits.LATA2 = 0;
             if (LATAbits.LATA3) {
                 LATAbits.LATA3 = 0;
                 valveDelayCheck = 1;
@@ -29158,9 +28967,9 @@ void main(void) {
                         }
                     } else {
                         MonitorErrorClr(MON_EPE);
-                        if ((sv2_pwmval!=0)) {
+                        if (LATAbits.LATA2) {
                             if (timeElapsedR(&rSubCycleTime, ((time_t) 15*1))) {
-                                sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+                                LATAbits.LATA2 = 0;
                                 rValveAcuationTstamp = timeGet();
                                 aCaptGetResult(MainPSensor, &pInst);
                                 printf ("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1));
@@ -29210,7 +29019,7 @@ void main(void) {
                                         }
                                     }
                                     if ((bdP1 + (pQuantaExp >> 1)) < intPEEP) {
-                                        sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval);
+                                        LATAbits.LATA2 = 1;
                                         rSubCycleTime = timeGet();
                                         QuantaCheck = 1;
                                         pValveActuation = pInst;
@@ -29230,7 +29039,7 @@ void main(void) {
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     printf ("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV3ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pQuantaExp) / ((int16_t) ((0.045*4096+2)/5)*1) );
-# 1114 "main.c"
+# 1171 "main.c"
                 }
 
             }
@@ -29239,7 +29048,7 @@ void main(void) {
 
         LATDbits.LATD0 = 0;
         LATAbits.LATA3 = 0;
-        sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);
+        LATAbits.LATA2 = 0;
         LATDbits.LATD6 = 0;
 
         lcdPrintTR = 1;
@@ -29256,7 +29065,7 @@ void main(void) {
         while (keyRead() != 10);
 
         ctrlStatus = CTRL_STOP;
-        MonitorMsgSend(ctrlStatus);
+        MonitorMsgSend(MONSTATE_STOP);
         while (MonitorMsgBusy());
     }
 }
