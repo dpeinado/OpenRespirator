@@ -1,6 +1,6 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [v F16529 `(v ~T0 @X0 0 tf ]
-[v F16665 `(v ~T0 @X0 0 tf ]
+[v F16738 `(v ~T0 @X0 0 tf ]
 "8 aCapture.c
 [; ;aCapture.c: 8: aSrcTyp curASrc;
 [c E16104 0 1 2 3 4 5 6 .. ]
@@ -9,6 +9,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 24: adcc_channel_t adcGetCh(aSrcTyp sel){
 [c E16053 32 33 34 59 60 61 62 63 .. ]
 [n E16053 . channel_ANE0 channel_ANE1 channel_ANE2 channel_VSS channel_Temp channel_DAC1 channel_FVR_Buffer1 channel_FVR_Buffer2  ]
+"111 ./ORespGlobal.h
+[; ;./ORespGlobal.h: 111:     extern uint16_t sv2_pwmval;
+[v _sv2_pwmval `us ~T0 @X0 0 e ]
+"129 ./mcc_generated_files/pwm5.h
+[; ;./mcc_generated_files/pwm5.h: 129:  void PWM5_LoadDutyValue(uint16_t dutyValue);
+[v _PWM5_LoadDutyValue `(v ~T0 @X0 0 ef1`us ]
 "45732 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 45732:     struct {
 [s S2073 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -2326,7 +2332,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _I2C2_InterruptHandler `*F16529 ~T0 @X0 1 e ]
 "477 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
-[v _UART1_TxInterruptHandler `*F16665 ~T0 @X0 1 e ]
+[v _UART1_TxInterruptHandler `*F16738 ~T0 @X0 1 e ]
 "8 aCapture.c
 [; ;aCapture.c: 8: aSrcTyp curASrc;
 [v _curASrc `E16104 ~T0 @X0 1 e ]
@@ -2393,8 +2399,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 35:         default:
 [e :U 2239 ]
 "37
-[; ;aCapture.c: 37:            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;aCapture.c: 37:            sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",100);
+[e = _sv2_pwmval -> -> 0 `i `us ]
+[e ( _PWM5_LoadDutyValue (1 _sv2_pwmval ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 1C -> 100 `i ]
 "38
@@ -2536,8 +2543,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2244 ]
 {
 "95
-[; ;aCapture.c: 95:         LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;aCapture.c: 95:         sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",101);
+[e = _sv2_pwmval -> -> 0 `i `us ]
+[e ( _PWM5_LoadDutyValue (1 _sv2_pwmval ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 2C -> 101 `i ]
 "96
@@ -2619,8 +2627,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2255 ]
 {
 "121
-[; ;aCapture.c: 121:         LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;aCapture.c: 121:         sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",102);
+[e = _sv2_pwmval -> -> 0 `i `us ]
+[e ( _PWM5_LoadDutyValue (1 _sv2_pwmval ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 3C -> 102 `i ]
 "122
@@ -2686,8 +2695,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 140:         default:
 [e :U 2264 ]
 "142
-[; ;aCapture.c: 142:             LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;aCapture.c: 142:             sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",103);
+[e = _sv2_pwmval -> -> 0 `i `us ]
+[e ( _PWM5_LoadDutyValue (1 _sv2_pwmval ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 4C -> 103 `i ]
 "143
@@ -2874,8 +2884,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;aCapture.c: 201:         default:
 [e :U 2285 ]
 "203
-[; ;aCapture.c: 203:             LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[; ;aCapture.c: 203:             sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval);LATAbits.LATA3 = 0;printf("Fatal %d",104);
+[e = _sv2_pwmval -> -> 0 `i `us ]
+[e ( _PWM5_LoadDutyValue (1 _sv2_pwmval ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 5C -> 104 `i ]
 "204

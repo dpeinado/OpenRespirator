@@ -42,6 +42,7 @@ uint8_t PEEP = 4;
 bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
 int16_t  vddValMean;
 uint8_t  eBRate;
+uint16_t sv2_pwmval;
 
 uint24_t bRateHist;
 uint24_t bRatePtr;
@@ -555,6 +556,18 @@ void main(void) {
     MonitorInit();
     vMeasureInit();
 
+    while(1){
+        uint16_t dcycle;
+        for (dcycle=0;dcycle<=100;dcycle+=10){
+            PWM5_LoadDutyValue(dcycle);
+            timeDelayMs(100);
+        }
+        for (dcycle=90;dcycle>=10;dcycle-=10){
+            PWM5_LoadDutyValue(dcycle);
+            timeDelayMs(100);
+        }
+    }
+    
     while (1) {
         char keyTmp;
         while (!InitProcedure())

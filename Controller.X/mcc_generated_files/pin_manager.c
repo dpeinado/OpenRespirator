@@ -138,6 +138,7 @@ void PIN_MANAGER_Initialize(void)
     RB1PPS = 0x23;   //RB1->I2C2:SCL2;    
     RB2PPS = 0x24;   //RB2->I2C2:SDA2;    
     RC1PPS = 0x13;   //RC1->UART1:TX1;    
+    RA2PPS = 0x0D;   //RA2->PWM5:PWM5;    
     U1RXPPS = 0x10;   //RC0->UART1:RX1;    
     I2C2SDAPPS = 0x0A;   //RB2->I2C2:SDA2;    
 }
