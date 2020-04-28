@@ -59,6 +59,7 @@ void main(void)
 {
     // Initialize the device
     SYSTEM_Initialize();
+    SetSV1(false);
     PWM6CON = 0x00;        // Disable BUZZER
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
@@ -76,13 +77,14 @@ void main(void)
     printf ("\033c Hello world!!!\r\n New version \r\n");
     
     InitDisplay();
+    LCDOn();
     AlarmInit();
     InitializePressure();
     ControllerInit();   
     //tick_init();
     ButtonInit();
     
-    SetSV1(true); // Open air input to the system
+    //SetSV1(true); // Open air input to the system
     
     // Interrupt driven tasks:
     //  + ADC acquisition using TIMER 0

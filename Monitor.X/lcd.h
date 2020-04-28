@@ -18,6 +18,8 @@ void LCDMessage1(char *str);
 void LCDMessage2(char *str);
 void LCDMessage12(char *str1, char *str2);
 void I2CSend(bool RS, bool RW, bool E, uint8_t D74);
+void LCDOff(void);
+void LCDOn(void);
 
 
 #ifdef	__cplusplus

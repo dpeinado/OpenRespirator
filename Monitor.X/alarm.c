@@ -89,9 +89,9 @@ bool HighPressureAlarmLow(void) {
 };
 bool HighPressureAlarmHigh(void) { 
     if (highPressureAlarmHigh) {
-        SetSV1(false);
+//        SetSV1(false);
     } else {
-        SetSV1(true);
+//        SetSV1(true);
     }
     return highPressureAlarmHigh;
 };
@@ -115,14 +115,14 @@ bool IPAboveSetAlarm(void) {
     else return false;
 };
 bool TdiTooLongAlarm(void) { 
-    if (GetTdi() > 700) tdiTooLongAlarm= true;
-    else tdiTooLongAlarm = false;
+    //if (GetTdi() > 700) tdiTooLongAlarm= true;
+    //else tdiTooLongAlarm = false;
     return tdiTooLongAlarm;
 };
 
 bool TdeTooLongAlarm(void) {
-    if (GetTde() > 700) tdiTooLongAlarm= true;
-    else tdeTooLongAlarm = false;
+    //if (GetTde() > 700) tdiTooLongAlarm= true;
+    //else tdeTooLongAlarm = false;
     return tdeTooLongAlarm;
 };
 

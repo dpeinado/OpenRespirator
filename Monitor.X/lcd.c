@@ -12,6 +12,8 @@ void LCDWriteCmd(uint8_t data);
 void LCDWriteChar(char chr);
 void LCDWrite4(uint8_t data);
 
+static bool LED = false;
+
 
 void LCDInit (void) {
     TMR6_Start();
@@ -48,8 +50,16 @@ void LCDInit (void) {
     LCDWriteCmd(0xC0);      // Second Line
     LCDMessage("                ");
     LCDWriteCmd(0x02);
-    
+}
 
+void LCDOff(void) {
+    LED = false;
+    LCDWriteCmd(0x01);
+    __delay_ms(2);
+}
+
+void LCDOn(void) {
+    LED = true;
 }
 
 #define min(x,y) (x)>(y)?(y):(x)
@@ -66,21 +76,20 @@ void LCDMessage(char *str) {
 }
 void LCDMessage1(char *str) {
     LCDWriteCmd(0x02);
-    LCDMessage(str);
-
+    if (LED) LCDMessage(str);
 }
 
 void LCDMessage12(char *str1, char *str2) {
     LCDWriteCmd(0x02);
-    LCDMessage(str1);
+    if (LED) LCDMessage(str1);
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage(str2);
+    if (LED) LCDMessage(str2);
 }
 
 void LCDMessage2(char *str) {
     LCDWriteCmd(0x02);
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage(str);
+    if (LED) LCDMessage(str);
 }
 
 void LCDWriteChar(char chr)
@@ -176,7 +185,7 @@ void I2CSend(bool RS, bool RW, bool E, uint8_t D74) {
     static uint8_t writeBuffer[1];
     i2c1_error_t err;
     
-    writeBuffer[0] = (D74&0xF0) | (E<<2) | (RW<<1) | RS | 0x8; // seconds address pointer
+    writeBuffer[0] = (D74&0xF0) | (E<<2) | (RW<<1) | RS | LED<<3; // seconds address pointer
 
     //printf("\r\nI2C Send 0x%0X 0x%0X\r\n", 0x27<<1, writeBuffer[0]);
     

@@ -34,6 +34,8 @@ void MonitorPressureTask(void);
 void MonitorDump(void);
 void SetCalibrateState(bool);
 void SetTarget(int16_t ip, int16_t ep, uint16_t br);
+void MonitorEnable(void);
+void MonitorDisable(void);
 
 // Solenoid functions
 void SetSV1 (bool);
@@ -45,6 +47,8 @@ int16_t GetTi(void);
 int16_t GetTe(void);
 int16_t GetBp(void);
 int16_t GetBpm(void);
+int16_t GetTargetIp();
+int16_t GetTargetEp();
 
 int16_t GetIp(void);
 int16_t GetEp(void);

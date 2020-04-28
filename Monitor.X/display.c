@@ -42,23 +42,28 @@ void ValueDisplay() {
     int16_t ti = GetTi();
     int16_t te = GetTe();
     int8_t eti = ti/1000;
-    int8_t dti = (ti-((uint16_t) eti)*1000)/10;
+    int8_t dti = (ti-((int16_t) eti)*1000)/10;
     int8_t ete = te/1000;
-    int8_t dte = (te-((uint16_t) ete)*1000)/10;
+    int8_t dte = (te-((int16_t) ete)*1000)/10;
     int16_t bpm = GetBpm();
     int16_t pi = GetIp();
     int16_t pe = GetEp();
     int8_t etdi = tdi/1000;
-    int8_t dtdi = (tdi-((uint16_t) etdi)*1000)/10;
+    int8_t dtdi = (tdi-((int16_t) etdi)*1000)/10;
     int8_t etde = tde/1000;
-    int8_t dtde = (tde-((uint16_t) etde)*1000)/10;
+    int8_t dtde = (tde-((int16_t) etde)*1000)/10;
+    int16_t r = (te)/(ti/10);
+    int8_t er = r/10;
+    int8_t dr = (r-((int16_t) er)*10);
+    int16_t tip = GetTargetIp();
+    int16_t tep = GetTargetEp();
     
-    printf("\r%2d%% %d %d.%02d %d %d.%02d - %d/%d  %u:%u/%u ms       ", TR, tde, etde,dtde, tdi, etdi, dtdi, pe, pi, bpm, te, ti);
+    printf("\rTR:%2d%% TDE:%d %d.%02d TDI:%d %d.%02d EP/IP:%d(%d)/%d(%d)  BPM: %d TE/TI:%d/%d ms       ", TR, tde, etde,dtde, tdi, etdi, dtdi, pe, tep, pi, tip, bpm, te, ti);
     //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
     sprintf(msg1, "%2d%% %d.%02d %d.%02d %s", TR, etde,dtde, etdi, dtdi, calibrate? "Ca" : GetAlarmState() );
 //                   1234 5678  9 0123  456  
-    sprintf(msg3, "%2d %2d %2d    600 ", bpm, pe, pi);
-//                  123 456 7890123456
+    sprintf(msg3, "%2d %2d %2d %1d.%1d:1  ", bpm, pe, pi, er, dr);
+//                  123 456 7890 12 3456
 }   
 
 void AlarmDisplay(int type, char *alarm) {
