@@ -239,10 +239,12 @@ void MonitorMsgSend(monStateT state) {
     }
 }
 
-void MonitorMsgSendBlock(monStateT state) {
+// Blocking message send, returning ack of transfer.
+bool MonitorMsgSendBlock(monStateT state) {
     while (MonitorMsgBusy());
     MonitorMsgForcedSend(state);
     while (MonitorMsgBusy());
+    return I2C2_MAck(); 
 }
 
 // Keep Rate in last 20 inspirations.
@@ -336,16 +338,12 @@ bool pressureSensorChk(bool offsetCal, uint16_t time) {
             aCaptRstFlt(Flt1PSensor);
             aCaptRstFlt(Flt2PSensor);
             aCaptRstFlt(Flt3PSensor);
-            DEBUG_PRINT(("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean));
-            DEBUG_PRINT(("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean));
-            timeDelayMs(50);
+            timeDelayMs(50); // To ensure prev data flushed.
         }
     } else {
         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
             DEBUG_PRINT(("VALVE CHECK ERROR\n"));
             chkResult = false;
-            DEBUG_PRINT(("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean));
-            DEBUG_PRINT(("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean));            
         }
     }
     return chkResult;
@@ -374,8 +372,7 @@ bool InitProcedure(void) {
     vddValMax = 0;
     initOk = true;
 
-    MonitorMsgSendBlock(MONSTATE_INIT);
-    if (!lastI2CMonTrfResponse) {
+    if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
         initOk = false;
         DEBUG_PRINT(("Mon error"));
         setCursor(0, 0);
@@ -466,7 +463,14 @@ bool InitProcedure(void) {
         }
 
         BLED_OFF;
-        MonitorMsgSendBlock(MONSTATE_CALP);
+        DEBUG_PRINT(("CALP\n"));
+        if (!MonitorMsgSendBlock(MONSTATE_CALP)){
+            initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+        }
 
         if (pressureSensorChk(true, 500)) {
             // Success.
@@ -482,10 +486,18 @@ bool InitProcedure(void) {
     }
 
     // Two extra valve check steps. 
+    DEBUG_PRINT(("CHKSV2\n"));
     // First CLOSE SV2, OPEN SV1, check no pressure, no volume detected.
-    MonitorMsgSendBlock(MONSTATE_SV2CHK);
+    if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
+        initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+    }
+
     CLOSE_SV2;
-    timeDelayMs(100);    
+    timeDelayMs(200);
     if (!pressureSensorChk(false, 100)) {
         initOk=false;
         printstrblock("SV2 Valve error");
@@ -493,9 +505,12 @@ bool InitProcedure(void) {
     }
     
     // Then CLOSE SV1, OPEN SV2, check no pressure, no volume detected.
-    MonitorMsgSendBlock(MONSTATE_SV1CHK);
+    DEBUG_PRINT(("CHKSV1\n"));
+    if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
+        initOk=false;
+    }
     OPEN_SV2;
-    timeDelayMs(100);
+    timeDelayMs(200);
     if (!pressureSensorChk(false, 100)) {
         initOk=false;
         printstrblock("SV1 Valve error");
@@ -503,16 +518,22 @@ bool InitProcedure(void) {
     }
     
     // Last step, check volume. 
+    DEBUG_PRINT(("CHK VOL\n"));
     tstamp = timeGet();
 
     // Open valve, wait for 250ms, measure flow during 250ms, display result.
     setCursor(0, 0);
     printstrblock("FLOW RATE        ");
-
     aPValMin = 4096;
     aPValMax = 0;
 
-    MonitorMsgSendBlock(MONSTATE_CALF);
+    if (!MonitorMsgSendBlock(MONSTATE_CALF)){
+        initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+    }
 
     OPEN_SV2;
     OPEN_SV3;
@@ -530,7 +551,13 @@ bool InitProcedure(void) {
     }
     // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
     openFlowRate = vMeasureGet()<<2;
-    MonitorMsgSendBlock(MONSTATE_STOP);
+    if (!MonitorMsgSendBlock(MONSTATE_STOP)){
+        initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+    }
     CLOSE_SV2;
     CLOSE_SV3;
 
