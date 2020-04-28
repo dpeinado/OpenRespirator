@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
+#include "lcd.h"
 
 struct message {
     uint8_t state;
@@ -23,11 +24,10 @@ struct message {
 union { struct message cntMsg; uint8_t controllerMsg[10]; } msg;
 
 int  cntByte;
+bool commandReceived;
 
+#define STATE_INIT 0xE0
 
-#define STATE_INIT 0x80
-#define STATE_CALP 0xC0
-#define STATE_CALF 0xA0
 #define STATE_STOP 0x0
 #define STATE_RUN  0x10
 #define STATE_RUNP 0x10
@@ -36,11 +36,19 @@ int  cntByte;
 
 
 void UpdateState(void) {
-    static bool calib = false;
-    if (msg.cntMsg.state & STATE_CALP && calib ==false) SetCalibrateState(true);
-    if (!(msg.cntMsg.state & STATE_INIT) && calib ==true) SetCalibrateState(false);
-    calib = (msg.cntMsg.state & STATE_CALP)==STATE_CALP;
+    if (msg.cntMsg.state & STATE_INIT) {
+        int init = (msg.cntMsg.state & STATE_INIT)>>5;
+        printf("\r\nINIT: %d\r\n", init);
+        if (init == 5 || init==3) SetSV1(true);
+        if (init == 1 || init==2 || init==4 || init==6 || init==7) SetSV1(false);
+        if (init == 2) SetCalibrateState(true);
+        else SetCalibrateState(false);
+    }
+    if (msg.cntMsg.state & STATE_RUN) SetSV1(true);
+    if (msg.cntMsg.state & STATE_RUN) MonitorEnable(); else MonitorDisable();
+
     SetTarget(msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F);
+    if (msg.cntMsg.state & STATE_SLEEP) LCDOff(); else LCDOn();
 }
 
 void ReceiveHandler(void) {
@@ -59,13 +67,14 @@ void ReceiveHandler(void) {
         cntByte++;
         //printf("\r\nCD%02X : %02X %02X = %02X\r\n",addr, stat0, stat1, data);
     }
+    commandReceived = true;
 }
 
 void StopHandler(void) {
     uint8_t stat0,stat1;
     stat0 = I2C2STAT0;
     stat1 = I2C2STAT1;
-    //if (cntByte!=10) printf("LESS THAN 10 BYTES FROM CONTROLLER !!!");
+    if (cntByte!=10 && cntByte>0) printf("\r\nI2C: miss %d !!!\r\n", cntByte);
     //printf("\r\nSTOP: %02X %02X\r\n",stat0, stat1);
     if (cntByte!=0) {
     //    printf("\r\nCNTR: ");
@@ -83,8 +92,14 @@ void AddressHandler(void) {
     printf("\r\nCA%02X\r\n",addr);
 }
 
+void ControllerTimerHandler(void) {
+    //if (!commandReceived) printf("EC ");
+    commandReceived = false;
+}
+
 void ControllerInit(void) {
     printf("Controller init\r\n");
+    commandReceived = false;
     // Start I2C
     I2C2_Open();
     // After Open define handlers
@@ -93,6 +108,8 @@ void ControllerInit(void) {
     I2C2_SlaveSetReadIntHandler( ReceiveHandler);
     // Set write interrupt handler
     I2C2_SlaveSetStopIntHandler( StopHandler);
+    TMR6_SetInterruptHandler(ControllerTimerHandler);
+    TMR6_StartTimer();
 }
 
 void DumpI2C(void) {

@@ -87,6 +87,7 @@ int16_t adcOffset;
 int16_t targetHigh;
 int16_t targetLow;
 uint16_t targetBp;
+bool enable;
 
 #define STATE_OFF           0
 #define STATE_CALIBRATE     1
@@ -128,12 +129,20 @@ int16_t prSlow, prSlowDev, prSlowNumStable;
 int16_t prFast, prFastDev;
 int32_t tt;
 
+int16_t GetTargetIp() {
+    return targetHigh/5; 
+} 
+
+int16_t GetTargetEp() {
+    return targetLow/5; 
+} 
+
 void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
-    if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
-    if (ep!= targetLow) printf("\r\n EP: %d \r\n", ep);
+    if (ip!= targetHigh/5) printf("\r\n IP: %d \r\n", ip);
+    if (ep!= targetLow/5) printf("\r\n EP: %d \r\n", ep);
     //if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
-    targetHigh = ip;
-    targetLow  = ep;
+    targetHigh = ip*5;
+    targetLow  = ep*5;
     targetBp   = 60000/br;
 }
 
@@ -175,6 +184,9 @@ void SetCalibrateState(bool calib) {
     TMR0_StartTimer();
 }
 
+void MonitorEnable(void) { enable = true; }
+void MonitorDisable(void) { enable = false; }
+
 void MonitorPressureTask(void) { // Every 2 ms
     uint8_t pr;
     int next;
@@ -188,9 +200,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     //TST1_Toggle();
     
  //   ToggleAlarmLED();
-    tt++;
-    ttExt++;
-    ttNoAlarm++;
+
     
     // Check ADC status
     if (!AdcReady()) {
@@ -210,11 +220,36 @@ void MonitorPressureTask(void) { // Every 2 ms
     } 
     // Timer 0 restart conversion cycle
     AdcReStartCycle();
-
     
     // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
     pr = GetPressure_mbar02();
-    //tt = tick_get_slow();  
+     
+    if (state == STATE_CALIBRATE) {
+ //       if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
+            static int cnt=0;
+            adcOffset +=  pr; // prFast ( Time constant 1/5)
+            cnt++;
+            if (cnt==250) { // 500 ms
+                //printf("\r\nC: %d %d\r\n", prFast, adcOffset);
+                cnt = 0;
+                DisplayCalibrate(prFast, adcOffset);
+            }
+            //DisplayCalibrate(prFast, adcOffset);
+ //       }
+    } 
+    
+    // Return if no RUN from Controller
+    if (!enable) {
+        ClearVars();
+        return;
+    }
+    
+    // Time variables
+    tt++;
+    ttExt++;
+    ttNoAlarm++;
+    
+    // Pression filters   
     prFastBuffer[count%25]=pr;
     temp = 0;
     for (int i=0; i<25; i++) temp +=prFastBuffer[i];
@@ -296,9 +331,11 @@ void MonitorPressureTask(void) { // Every 2 ms
     if (prSlow<loLimit && prFast>= loLimit) { // Crossing low limit up
         //TST1_SetHigh();
         if (tt>400) { // Filter more events during ramp-up
-            bp = tt; 
+            bp = tt;
+            if (tt>tt4) te = tt-tt4;
+            if (tt3>tt2) ti = tt3-tt2;
             if (bp!=0) bpm = 60000/(bp*2);
-           // printf("\r\nUP12: %ld pr: %d\r\n", tt, prSlow/5, bpm);           
+//            printf("\r\nUP12: %ld pr: %d\r\n", tt, prSlow/5, bpm);           
         
             tt=0; // This is the start of time
             tt1 = tt;  // Start of event
@@ -311,18 +348,23 @@ void MonitorPressureTask(void) { // Every 2 ms
         lrpe = rpe;
         // Check alarms
         if (enableAlarms) {
-            if (lrpe>(targetLow+2*5)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
-            if (lrpe<(targetLow-2*5)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
+            if (lrpe>(targetLow+15)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+            if (lrpe<(targetLow-15)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
+        } else {
+            ClearEPAboveSetAlarm();
+            ClearEPBellowSetAlarm();
         }
 
     }
+    
+    
     static bool down = false;
     
     // Start of fall
     if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
         //TST1_SetLow();
         if (!down) {
-           // printf("\r\nDOWN34: %ld pr: %d\r\n", tt, prSlow/5, bpm); 
+  //          printf("\r\nDOWN34: %ld pr: %d\r\n", tt, prSlow/5, bpm); 
             tt3 = tt; // First sample
             down = true;
         }
@@ -333,10 +375,13 @@ void MonitorPressureTask(void) { // Every 2 ms
         lrpi = rpi;
         // Check alarms
         if (enableAlarms) {
-            if (lrpi>(targetHigh+3*5)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
-            if (lrpi<(targetHigh-3*5)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
+            if (lrpi>(targetHigh+20)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
+            if (lrpi<(targetHigh-20)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
+        } else {
+            ClearIPAboveSetAlarm();
+            ClearIPBellowSetAlarm();
         }
-    } else if (tt>(tt3+400)) down = false;
+    } else if (tt>(tt3+200)) down = false;
     
     // Starting state
     if ( state == STATE_OFF) {
@@ -351,17 +396,19 @@ void MonitorPressureTask(void) { // Every 2 ms
         next = STATE_HIGH;
         tt2 = tt;
 //        printf("\r\nUP: %ld %d\r\n", tt, prSlow/5);
-        tdiBuffer[numtdi%10] = ((tt2-tt1));
-        tdi = 0;
-        for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
-        tdi = tdi/MIN(10,numtdi+1);
-//        printf("\r\nTDI(%d): %d %d\r\n", numtdi%10, ((tt2-tt1)*2), tdi*2); 
-        //MonitorDump();
-        numtdi++;
-        if (numtdi>=100) numtdi=10;
-        // Now we can start averaging Pi
-        measPi=true;
-        rpi=pi;
+        if (tt2>tt1) {
+            tdiBuffer[numtdi%10] = ((tt2-tt1));
+            tdi = 0;
+            for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
+            tdi = tdi/MIN(10,numtdi+1);
+//            printf("\r\nTDI(%d): %d %d\r\n", numtdi%10, ((tt2-tt1)*2), tdi*2); 
+            //MonitorDump();
+            numtdi++;
+            if (numtdi>=100) numtdi=10;
+            // Now we can start averaging Pi
+            measPi=true;
+            rpi=pi;
+        }
     }
     
     // Transition to LOW at the bottom
@@ -371,25 +418,28 @@ void MonitorPressureTask(void) { // Every 2 ms
         tt4 = tt;
 //        printf("\r\nDOWN: %ld %d\r\n", tt, prSlow/5);
 
-        tdeBuffer[numtde%10] = ((tt4-tt3));
-        tde = 0;
-        for (int i=0; i<MIN(numtde+1,10); i++) tde = tde + tdeBuffer[i];                   
-        tde = tde/MIN(numtde+1,10);
-        //printf("\r\nTDE: %d %d @ %lu %d %d\r\n", ntde, tde, tt, prFast, prSlow);
-        //MonitorDump();
-        numtde++;
-        if (numtde>=100) numtde=10;
-        // Now we can start averaging Pe
-        measPe = true;
-        rpe = pe;
+        if (tt4>tt3) {
+            tdeBuffer[numtde%10] = ((tt4-tt3));
+            tde = 0;
+            for (int i=0; i<MIN(numtde+1,10); i++) tde = tde + tdeBuffer[i];                   
+            tde = tde/MIN(numtde+1,10);
+//            printf("\r\nTDE: %d %d @ %lu %d %d\r\n", numtde, tde, tt, prFast, prSlow);
+            //MonitorDump();
+            numtde++;
+            if (numtde>=100) numtde=10;
+            // Now we can start averaging Pe
+            measPe = true;
+            rpe = pe;
+        }
     }
     
     // New estimators: 5*25*2 = 250 ms We will average the last 250 ms
     if (measPi) rpi = (rpi*4+prFast)/5;
     if (measPe) rpe = (rpe*4+prFast)/5;
-#if 0
+
     // TBD: Timeout alarms of events
     if (enableAlarms) {
+#if 0
         if (tt>(bp+bp/2) && bp>500) {
             if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No breath in %d ms\r\n", bp+bp/2);
             SetCircuitFailureAlarm();
@@ -398,23 +448,13 @@ void MonitorPressureTask(void) { // Every 2 ms
             if (!CircuitFailureAlarm()) printf("\r\n CIRCUIT FAILURE: No exhalation in %d ms\r\n", tt3+tt3/2);
             SetCircuitFailureAlarm();
         }
-    }
 #endif
-    
-    if (state == STATE_CALIBRATE) {
-        if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
-            static int cnt=0;
-            adcOffset +=  prFast;
-            cnt++;
-            if (cnt==250) { // 500 ms
-                //printf("\r\nC: %d %d\r\n", prFast, adcOffset);
-                cnt = 0;
-                DisplayCalibrate(prFast, adcOffset);
-            }
-            //DisplayCalibrate(prFast, adcOffset);
-        }
-    } 
-
+        if (tde>350) SetTdeTooLongAlarm();
+        if (tdi>350) SetTdiTooLongAlarm();
+    } else {
+        ClearTdeTooLongAlarm();
+        ClearTdiTooLongAlarm();
+    }
             
     state = next;
     
@@ -480,8 +520,9 @@ void InitializePressure (void) {
     //ADCC_StartConversion(PRS);
     targetHigh = 25*5; // 0.2 mbar
     targetLow  = 7*5; // 0.2 mbar
-    adcOffset = 0; // Read from EEPROM or calibrate. ADC counts
+    adcOffset = 191; // Read from EEPROM or calibrate. ADC counts
     state = STATE_OFF;
+    enable = false;
     ClearVars();
     TMR0_SetInterruptHandler(MonitorPressureTask);
     TMR0_StartTimer();

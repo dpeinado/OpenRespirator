@@ -269,6 +269,10 @@ static void I2C2_Isr()
     if(I2C2_SlaveIsStop())
     {
  //       printf("\r\nI2C STOP\r\n");
+        if(I2C2_SlaveIsRxBufFull())
+        { 
+            I2C2_SlaveRdCallBack();
+        }    
         I2C2_SlaveClearBuff();
         I2C2_SlaveClearIrq();
         I2C2_SlaveSetCounter(0xFF);
