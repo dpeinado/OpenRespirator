@@ -28023,20 +28023,11 @@ uint16_t sv2_pwmval;
 
 uint24_t bRateHist;
 uint24_t bRatePtr;
-# 67 "main.c"
-__attribute__((inline)) int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
-    int32_t intLVal;
-
-
-    intLVal = (delay * 256) / (((time_t) 20*1));
-    intLVal = (intLVal * (pInst - pAvgShort)) / 256;
-    return pInst + ((uint16_t) intLVal);
-}
-
+# 79 "main.c"
 ctrlStatusT ctrlStatus;
 uint16_t lastCycleVol;
 uint16_t openFlowRate;
-# 93 "main.c"
+# 96 "main.c"
 char monitorMsg[10];
 char ctrlErrorStatus;
 
@@ -28548,7 +28539,7 @@ void main(void) {
     time_t printTime;
 
 
-    int16_t pInst, pNext, pAvgShort, pAvgUShort;
+    int16_t pInst, pAvgShort, pAvgUShort;
     int16_t bdP1, bdP2;
 
 
@@ -28670,7 +28661,7 @@ void main(void) {
         } else {
             MonitorMsgForcedSend(MONSTATE_RUNV);
         }
-# 783 "main.c"
+# 786 "main.c"
         rCycleTime = timeGet();
         while (ctrlStatus != CTRL_SLEEP) {
 
@@ -28751,8 +28742,6 @@ void main(void) {
 
 
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
-                        pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-
 
 
 
@@ -28782,7 +28771,7 @@ void main(void) {
 
                             OSCheck = 1;
                             pPlatMax = 0;
-                            printf ("PI-END T %5d - Pi %d Pn %d Vol %3d VL %3d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pValveActuation) / ((int16_t) ((0.045*4096+2)/5)*1), vValveActuation, intMaxV);
+                            printf ("PI-END T %5d - Pi %d Pv %d Vol %3d VL %3d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pValveActuation) / ((int16_t) ((0.045*4096+2)/5)*1), vValveActuation, intMaxV);
 
 
 
@@ -28902,8 +28891,7 @@ void main(void) {
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    printf ("PI T %5d - V %3d Pi %3d Pn %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlatMax) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspPlatErr) / ((int16_t) ((0.045*4096+2)/5)*1), vInspOS, (10 * pQuantaInsp) / ((int16_t) ((0.045*4096+2)/5)*1), vQuanta);
+                    printf ("PI T %5d - V %3d Pi %3d Pv %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pValveActuation)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV2ValveDelay, (10 * pPlatMax) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pInspPlatErr) / ((int16_t) ((0.045*4096+2)/5)*1), vInspOS, (10 * pQuantaInsp) / ((int16_t) ((0.045*4096+2)/5)*1), vQuanta);
 # 1028 "main.c"
                 }
 
@@ -29069,9 +29057,8 @@ void main(void) {
                 if (timeElapsedR(&printTime, ((time_t) 20*1))) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    printf ("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pNext)) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV3ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pQuantaExp) / ((int16_t) ((0.045*4096+2)/5)*1) );
-# 1203 "main.c"
+                    printf ("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * (pInst - pAvgShort)) / ((int16_t) ((0.045*4096+2)/5)*1), rSV3ValveDelay, (10 * pPlateau) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pExpOS) / ((int16_t) ((0.045*4096+2)/5)*1), (10 * pQuantaExp) / ((int16_t) ((0.045*4096+2)/5)*1) );
+# 1201 "main.c"
                 }
 
             }

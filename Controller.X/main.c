@@ -64,6 +64,8 @@ uint24_t bRatePtr;
 // pAvgShort assumed to have 16ms tau.
 #define PAVGSHORTTAU TIME_MS(20)
 
+#if 0
+// Not needed in the end implementation.
 inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) {
     int32_t intLVal;
 
@@ -72,6 +74,7 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) 
     intLVal = (intLVal * (pInst - pAvgShort)) / 256;
     return pInst + ((uint16_t) intLVal);
 }
+#endif
 
 ctrlStatusT ctrlStatus;
 uint16_t lastCycleVol;
@@ -601,7 +604,7 @@ void main(void) {
     time_t printTime;
 #endif
 
-    int16_t pInst, pNext, pAvgShort, pAvgUShort;
+    int16_t pInst, pAvgShort, pAvgUShort;
     int16_t bdP1, bdP2;
     // Pressure overshoot measurement variables. Both for inspiration and expiration, overshoot measures 
     // the difference between the pressure estimation that is used to close the valve (pValveActuation), and the real 
@@ -860,11 +863,9 @@ void main(void) {
 
                         // Pressure prediction computed by presPredict function.
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
-                        pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                         // Can assign variables here since there is no ongoing actuation.
                         // The lung will have an extra pressure during inspiration which is proportional to the flow rate,
                         // the higher the flow rate, the higher the extra pressure during inspiration. As in the EP phase, compensate this by using a filtered version of the pressure.
-                        // pValveActuation = pNext;
                         pValveActuation = pAvgShort;
                         vValveActuation = vMeasureGet();
                         if (vInspOS < 0) {
@@ -1011,12 +1012,11 @@ void main(void) {
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
-                    DEBUG_PRINT(("PI T %5d - V %3d Pi %3d Pn %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n",
+                    DEBUG_PRINT(("PI T %5d - V %3d Pi %3d Pv %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n",
                             timeDiff(rCycleTime, timeGet()),
                             vMeasureGet(),
                             (10 * pInst) / MPRESSURE_MBAR(1),
-                            (10 * (pNext)) / MPRESSURE_MBAR(1),
+                            (10 * (pValveActuation)) / MPRESSURE_MBAR(1),
                             rSV2ValveDelay,
                             (10 * pPlatMax) / MPRESSURE_MBAR(1),
                             (10 * pPlateau) / MPRESSURE_MBAR(1),
@@ -1189,11 +1189,9 @@ void main(void) {
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    pNext = rPressurePredict(rSV2ValveDelay, pInst, pAvgShort);
                     DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d POS %d PQ %d\n",
                             timeDiff(rCycleTime, timeGet()),
                             (10 * pInst) / MPRESSURE_MBAR(1),
-                            (10 * (pNext)) / MPRESSURE_MBAR(1),
                             (10 * (pInst - pAvgShort)) / MPRESSURE_MBAR(1),
                             rSV3ValveDelay,
                             (10 * pPlateau) / MPRESSURE_MBAR(1),
