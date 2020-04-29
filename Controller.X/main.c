@@ -981,19 +981,12 @@ void main(void) {
 
                                     // Now check if valve can be opened, taking into account the estimated pressure and volume increases during the fixed time the valve will be open.
                                     // Try to do not exceed the set overshoot limits for both pressure and volume.
-                                    if (pQuantaInsp > (2 * PMAX_DEFAULT)) {
-                                        pAdj = pAdj + pQuantaInsp - PMAX_DEFAULT;
-                                    } else {
-                                        pAdj = pAdj + (pQuantaInsp >> 1);
-                                    }
-                                    if (vQuanta > (2 * VOVERSHOOT_LIMIT)) {
-                                        vAdj = vAdj + vQuanta - VOVERSHOOT_LIMIT;
-                                    } else {
-                                        vAdj = vAdj + (vQuanta >> 1);
-                                    }
+                                    pAdj = pAdj + (pQuantaInsp >> 1);
+                                    vAdj = vAdj + (vQuanta >> 1);
 
-                                    if ((pAdj < intIP) && ((intVentMode == VMODE_PRESSURE) || (vAdj < intMaxV))) {
-                                        // Measure only after delay of valve actuation has elapsed, x2.
+                                    if (((pInst + pQuantaInsp) < intMaxP) &&
+                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < intIP)) ||
+                                             ((intVentMode == VMODE_VOLUME) || (vAdj < intMaxV)))) {
                                         OPEN_SV2;
                                         rSubCycleTime = timeGet();
                                         QuantaCheck = true;
