@@ -671,6 +671,10 @@ void main(void) {
         }
     }
 
+    // Clean screen lower line.
+    setCursor(0, 1);
+    printstrblock("                ");
+
     while (1) {
         setBacklight(true);
         // Now wait until BREATH button pressed.
