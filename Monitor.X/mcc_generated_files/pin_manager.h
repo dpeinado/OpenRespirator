@@ -65,25 +65,25 @@
 #define PULL_UP_ENABLED      1
 #define PULL_UP_DISABLED     0
 
-// get/set PRS aliases
-#define PRS_TRIS                 TRISAbits.TRISA0
-#define PRS_LAT                  LATAbits.LATA0
-#define PRS_PORT                 PORTAbits.RA0
-#define PRS_WPU                  WPUAbits.WPUA0
-#define PRS_OD                   ODCONAbits.ODCA0
-#define PRS_ANS                  ANSELAbits.ANSELA0
-#define PRS_SetHigh()            do { LATAbits.LATA0 = 1; } while(0)
-#define PRS_SetLow()             do { LATAbits.LATA0 = 0; } while(0)
-#define PRS_Toggle()             do { LATAbits.LATA0 = ~LATAbits.LATA0; } while(0)
-#define PRS_GetValue()           PORTAbits.RA0
-#define PRS_SetDigitalInput()    do { TRISAbits.TRISA0 = 1; } while(0)
-#define PRS_SetDigitalOutput()   do { TRISAbits.TRISA0 = 0; } while(0)
-#define PRS_SetPullup()          do { WPUAbits.WPUA0 = 1; } while(0)
-#define PRS_ResetPullup()        do { WPUAbits.WPUA0 = 0; } while(0)
-#define PRS_SetPushPull()        do { ODCONAbits.ODCA0 = 0; } while(0)
-#define PRS_SetOpenDrain()       do { ODCONAbits.ODCA0 = 1; } while(0)
-#define PRS_SetAnalogMode()      do { ANSELAbits.ANSELA0 = 1; } while(0)
-#define PRS_SetDigitalMode()     do { ANSELAbits.ANSELA0 = 0; } while(0)
+// get/set PRSV aliases
+#define PRSV_TRIS                 TRISAbits.TRISA0
+#define PRSV_LAT                  LATAbits.LATA0
+#define PRSV_PORT                 PORTAbits.RA0
+#define PRSV_WPU                  WPUAbits.WPUA0
+#define PRSV_OD                   ODCONAbits.ODCA0
+#define PRSV_ANS                  ANSELAbits.ANSELA0
+#define PRSV_SetHigh()            do { LATAbits.LATA0 = 1; } while(0)
+#define PRSV_SetLow()             do { LATAbits.LATA0 = 0; } while(0)
+#define PRSV_Toggle()             do { LATAbits.LATA0 = ~LATAbits.LATA0; } while(0)
+#define PRSV_GetValue()           PORTAbits.RA0
+#define PRSV_SetDigitalInput()    do { TRISAbits.TRISA0 = 1; } while(0)
+#define PRSV_SetDigitalOutput()   do { TRISAbits.TRISA0 = 0; } while(0)
+#define PRSV_SetPullup()          do { WPUAbits.WPUA0 = 1; } while(0)
+#define PRSV_ResetPullup()        do { WPUAbits.WPUA0 = 0; } while(0)
+#define PRSV_SetPushPull()        do { ODCONAbits.ODCA0 = 0; } while(0)
+#define PRSV_SetOpenDrain()       do { ODCONAbits.ODCA0 = 1; } while(0)
+#define PRSV_SetAnalogMode()      do { ANSELAbits.ANSELA0 = 1; } while(0)
+#define PRSV_SetDigitalMode()     do { ANSELAbits.ANSELA0 = 0; } while(0)
 
 // get/set VALVE aliases
 #define VALVE_TRIS                 TRISAbits.TRISA1
@@ -137,45 +137,45 @@
 #define MIC_SetAnalogMode()      do { ANSELAbits.ANSELA3 = 1; } while(0)
 #define MIC_SetDigitalMode()     do { ANSELAbits.ANSELA3 = 0; } while(0)
 
-// get/set PRSV aliases
-#define PRSV_TRIS                 TRISAbits.TRISA4
-#define PRSV_LAT                  LATAbits.LATA4
-#define PRSV_PORT                 PORTAbits.RA4
-#define PRSV_WPU                  WPUAbits.WPUA4
-#define PRSV_OD                   ODCONAbits.ODCA4
-#define PRSV_ANS                  ANSELAbits.ANSELA4
-#define PRSV_SetHigh()            do { LATAbits.LATA4 = 1; } while(0)
-#define PRSV_SetLow()             do { LATAbits.LATA4 = 0; } while(0)
-#define PRSV_Toggle()             do { LATAbits.LATA4 = ~LATAbits.LATA4; } while(0)
-#define PRSV_GetValue()           PORTAbits.RA4
-#define PRSV_SetDigitalInput()    do { TRISAbits.TRISA4 = 1; } while(0)
-#define PRSV_SetDigitalOutput()   do { TRISAbits.TRISA4 = 0; } while(0)
-#define PRSV_SetPullup()          do { WPUAbits.WPUA4 = 1; } while(0)
-#define PRSV_ResetPullup()        do { WPUAbits.WPUA4 = 0; } while(0)
-#define PRSV_SetPushPull()        do { ODCONAbits.ODCA4 = 0; } while(0)
-#define PRSV_SetOpenDrain()       do { ODCONAbits.ODCA4 = 1; } while(0)
-#define PRSV_SetAnalogMode()      do { ANSELAbits.ANSELA4 = 1; } while(0)
-#define PRSV_SetDigitalMode()     do { ANSELAbits.ANSELA4 = 0; } while(0)
-
 // get/set MEAS12 aliases
-#define MEAS12_TRIS                 TRISAbits.TRISA5
-#define MEAS12_LAT                  LATAbits.LATA5
-#define MEAS12_PORT                 PORTAbits.RA5
-#define MEAS12_WPU                  WPUAbits.WPUA5
-#define MEAS12_OD                   ODCONAbits.ODCA5
-#define MEAS12_ANS                  ANSELAbits.ANSELA5
-#define MEAS12_SetHigh()            do { LATAbits.LATA5 = 1; } while(0)
-#define MEAS12_SetLow()             do { LATAbits.LATA5 = 0; } while(0)
-#define MEAS12_Toggle()             do { LATAbits.LATA5 = ~LATAbits.LATA5; } while(0)
-#define MEAS12_GetValue()           PORTAbits.RA5
-#define MEAS12_SetDigitalInput()    do { TRISAbits.TRISA5 = 1; } while(0)
-#define MEAS12_SetDigitalOutput()   do { TRISAbits.TRISA5 = 0; } while(0)
-#define MEAS12_SetPullup()          do { WPUAbits.WPUA5 = 1; } while(0)
-#define MEAS12_ResetPullup()        do { WPUAbits.WPUA5 = 0; } while(0)
-#define MEAS12_SetPushPull()        do { ODCONAbits.ODCA5 = 0; } while(0)
-#define MEAS12_SetOpenDrain()       do { ODCONAbits.ODCA5 = 1; } while(0)
-#define MEAS12_SetAnalogMode()      do { ANSELAbits.ANSELA5 = 1; } while(0)
-#define MEAS12_SetDigitalMode()     do { ANSELAbits.ANSELA5 = 0; } while(0)
+#define MEAS12_TRIS                 TRISAbits.TRISA4
+#define MEAS12_LAT                  LATAbits.LATA4
+#define MEAS12_PORT                 PORTAbits.RA4
+#define MEAS12_WPU                  WPUAbits.WPUA4
+#define MEAS12_OD                   ODCONAbits.ODCA4
+#define MEAS12_ANS                  ANSELAbits.ANSELA4
+#define MEAS12_SetHigh()            do { LATAbits.LATA4 = 1; } while(0)
+#define MEAS12_SetLow()             do { LATAbits.LATA4 = 0; } while(0)
+#define MEAS12_Toggle()             do { LATAbits.LATA4 = ~LATAbits.LATA4; } while(0)
+#define MEAS12_GetValue()           PORTAbits.RA4
+#define MEAS12_SetDigitalInput()    do { TRISAbits.TRISA4 = 1; } while(0)
+#define MEAS12_SetDigitalOutput()   do { TRISAbits.TRISA4 = 0; } while(0)
+#define MEAS12_SetPullup()          do { WPUAbits.WPUA4 = 1; } while(0)
+#define MEAS12_ResetPullup()        do { WPUAbits.WPUA4 = 0; } while(0)
+#define MEAS12_SetPushPull()        do { ODCONAbits.ODCA4 = 0; } while(0)
+#define MEAS12_SetOpenDrain()       do { ODCONAbits.ODCA4 = 1; } while(0)
+#define MEAS12_SetAnalogMode()      do { ANSELAbits.ANSELA4 = 1; } while(0)
+#define MEAS12_SetDigitalMode()     do { ANSELAbits.ANSELA4 = 0; } while(0)
+
+// get/set PRS aliases
+#define PRS_TRIS                 TRISAbits.TRISA5
+#define PRS_LAT                  LATAbits.LATA5
+#define PRS_PORT                 PORTAbits.RA5
+#define PRS_WPU                  WPUAbits.WPUA5
+#define PRS_OD                   ODCONAbits.ODCA5
+#define PRS_ANS                  ANSELAbits.ANSELA5
+#define PRS_SetHigh()            do { LATAbits.LATA5 = 1; } while(0)
+#define PRS_SetLow()             do { LATAbits.LATA5 = 0; } while(0)
+#define PRS_Toggle()             do { LATAbits.LATA5 = ~LATAbits.LATA5; } while(0)
+#define PRS_GetValue()           PORTAbits.RA5
+#define PRS_SetDigitalInput()    do { TRISAbits.TRISA5 = 1; } while(0)
+#define PRS_SetDigitalOutput()   do { TRISAbits.TRISA5 = 0; } while(0)
+#define PRS_SetPullup()          do { WPUAbits.WPUA5 = 1; } while(0)
+#define PRS_ResetPullup()        do { WPUAbits.WPUA5 = 0; } while(0)
+#define PRS_SetPushPull()        do { ODCONAbits.ODCA5 = 0; } while(0)
+#define PRS_SetOpenDrain()       do { ODCONAbits.ODCA5 = 1; } while(0)
+#define PRS_SetAnalogMode()      do { ANSELAbits.ANSELA5 = 1; } while(0)
+#define PRS_SetDigitalMode()     do { ANSELAbits.ANSELA5 = 0; } while(0)
 
 // get/set RB2 procedures
 #define RB2_SetHigh()            do { LATBbits.LATB2 = 1; } while(0)

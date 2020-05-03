@@ -39,9 +39,11 @@ void LCDInit (void) {
     LCDWriteCmd(0x0C);      // Display on; cursor off, blink off
     LCDWriteCmd(0x02);      // Return home
     
-    LCDMessage("Open Ventilator");
+    LCDMessage("Open Respirator");
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage("Warming up ...");
+    LCDMessage("   AirVita");
+    LCDWriteCmd(0x02);
+    /*
     LCDWriteCmd(0x02);
     __delay_ms(1000);
     LCDWriteCmd(0x01);
@@ -50,12 +52,13 @@ void LCDInit (void) {
     LCDWriteCmd(0xC0);      // Second Line
     LCDMessage("                ");
     LCDWriteCmd(0x02);
+    */
 }
 
 void LCDOff(void) {
     LED = false;
-    LCDWriteCmd(0x01);
-    __delay_ms(2);
+    //LCDWriteCmd(0x01);
+    //__delay_ms(2);
 }
 
 void LCDOn(void) {

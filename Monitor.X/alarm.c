@@ -19,27 +19,27 @@ bool highPressureAlarmHigh = false;
 bool circuitFailureAlarm = false;
 bool baterryLowAlarmMed = false;
 bool baterryLowAlarmHigh = false;
-int epBellowSetAlarm = 0;
+int epBelowSetAlarm = 0;
 int epAboveSetAlarm = 0;
-int ipBellowSetAlarm = 0;
+int ipBelowSetAlarm = 0;
 int ipAboveSetAlarm = 0;
 bool tdiTooLongAlarm = false;
 bool tdeTooLongAlarm = false;
+bool vBelowMinAlarm = false;
+bool vAboveMaxAlarm = false;
 bool noPowerSupplyAlarm = false;
 
 // Alarm check functions. Called every second
 bool BatteryFailAlarm(void) {
     static int timeBattery = 0;
-    static int timeBellow10 = 0;
+    static int timeBelow10 = 0;
     static int timeFail = 0;
-#if 0
+    int16_t bat;
     // Check Battery status
+    
     if (AdcDataReady(ADC_ID_12V)) {
-        uint32_t temp = AdcGetData(ADC_ID_12V);
-        temp = temp * 5000; // result in mV
-        temp = temp /4096; // Divide by the max ADC count
-        temp = (temp *10 ) / (22+10); // Correction factor 22k / 10k divisor
-        int bat = temp;
+        bat= Get12V();
+        
         if (bat < 11300) { // BATTERY FAIL detection ( should be more than 10 min)
             timeFail++;
             if (timeFail>10*60) { // 10 min
@@ -51,9 +51,9 @@ bool BatteryFailAlarm(void) {
         }
         
         if (bat < (1200-120)) { // Bellow 10% 11
-            timeBellow10++;
+            timeBelow10++;
         } else {
-            timeBellow10 = 0;
+            timeBelow10 = 0;
         }
         
         if (bat < 13000) { // Battery operated
@@ -67,7 +67,7 @@ bool BatteryFailAlarm(void) {
         }
         return batteryFailAlarm;
     }
-#endif
+
     
     return batteryFailAlarm;
 }
@@ -76,7 +76,7 @@ bool ControlFailAlarm(void) { return controlFailAlarm; };
 bool GasFailureAlarm(void) { return gasFailureAlarm; };
 bool HighPressureAlarmLow(void) {
     static int count = 0;
-    if (GetMaxPressure()>38) {
+    if (GetMaxPressure()>40) {
         highPressureAlarmLow = true;
         count ++;
     } else
@@ -84,30 +84,30 @@ bool HighPressureAlarmLow(void) {
         highPressureAlarmLow= false;     
         count = 0;
     }
-    if (count >= 3) SetHighPressureAlarmHigh();
+    if (count >= 3 || GetMaxPressure()>80) SetHighPressureAlarmHigh();
     return highPressureAlarmLow;
 };
 bool HighPressureAlarmHigh(void) { 
     if (highPressureAlarmHigh) {
-//        SetSV1(false);
+        SetAlarmSV1(false);
     } else {
-//        SetSV1(true);
+        SetAlarmSV1(true);
     }
     return highPressureAlarmHigh;
 };
 bool CircuitFailureAlarm(void) { return circuitFailureAlarm; };
 bool BaterryLowAlarmMed(void) { return baterryLowAlarmMed; };
 bool BaterryLowAlarmHigh(void) { return baterryLowAlarmHigh; };
-bool EPBellowSetAlarm(void) {
-    if (epBellowSetAlarm> 3) return true;
+bool EPBelowSetAlarm(void) {
+    if (epBelowSetAlarm> 3) return true;
     else return false;
 };
 bool EPAboveSetAlarm(void) {
     if (epAboveSetAlarm> 3) return true;
     else return false;
 };
-bool IPBellowSetAlarm(void) {
-    if (ipBellowSetAlarm> 3) { /*printf("IPB %d\r\n", ipBellowSetAlarm); */return true; }
+bool IPBelowSetAlarm(void) {
+    if (ipBelowSetAlarm> 3) { /*printf("IPB %d\r\n", ipBelowSetAlarm); */return true; }
     else return false;
 };
 bool IPAboveSetAlarm(void) {
@@ -126,6 +126,14 @@ bool TdeTooLongAlarm(void) {
     return tdeTooLongAlarm;
 };
 
+bool VAboveMaxAlarm(void) {
+    return vAboveMaxAlarm;
+};
+
+bool VBelowMinAlarm(void) {
+    return vBelowMinAlarm;
+};
+
 bool NoPowerSupplyAlarm(void) { return noPowerSupplyAlarm; };
 
 // External function to set or clear alarms
@@ -139,12 +147,14 @@ void SetHighPressureAlarmHigh(void) { highPressureAlarmHigh = true; };
 void SetCircuitFailureAlarm(void) { circuitFailureAlarm = true; };
 void SetBaterryLowAlarmMed(void) { baterryLowAlarmMed = true; };
 void SetBaterryLowAlarmHigh(void) { baterryLowAlarmHigh = true; };
-void SetEPBellowSetAlarm(void) { epBellowSetAlarm++;  if (epBellowSetAlarm>6) epBellowSetAlarm=6; };
+void SetEPBelowSetAlarm(void) { epBelowSetAlarm++;  if (epBelowSetAlarm>6) epBelowSetAlarm=6; };
 void SetEPAboveSetAlarm(void) { epAboveSetAlarm++;   if (epAboveSetAlarm>6) epAboveSetAlarm=6; };
-void SetIPBellowSetAlarm(void) { ipBellowSetAlarm++;   if (ipBellowSetAlarm>6) ipBellowSetAlarm=6; };
+void SetIPBelowSetAlarm(void) { ipBelowSetAlarm++;   if (ipBelowSetAlarm>6) ipBelowSetAlarm=6; };
 void SetIPAboveSetAlarm(void) { ipAboveSetAlarm++;   if (ipAboveSetAlarm>6) ipAboveSetAlarm=6; };
 void SetTdiTooLongAlarm(void) { tdiTooLongAlarm = true; };
 void SetTdeTooLongAlarm(void) { tdeTooLongAlarm = true; };
+void SetVAboveMaxAlarm(void) { vAboveMaxAlarm = true; };
+void SetVBelowMinAlarm(void) { vBelowMinAlarm = true; };
 void SetNoPowerSupplyAlarm(void) { noPowerSupplyAlarm = true; };
 
 void ClearBatteryFailAlarm(void) { batteryFailAlarm = false; };
@@ -156,12 +166,14 @@ void ClearHighPressureAlarmHigh(void) { highPressureAlarmHigh = false; };
 void ClearCircuitFailureAlarm(void) { circuitFailureAlarm = false; };
 void ClearBaterryLowAlarmMed(void) { baterryLowAlarmMed = false; };
 void ClearBaterryLowAlarmHigh(void) { baterryLowAlarmHigh = false; };
-void ClearEPBellowSetAlarm(void) { epBellowSetAlarm--; if (epBellowSetAlarm<0) epBellowSetAlarm=0; };
+void ClearEPBelowSetAlarm(void) { epBelowSetAlarm--; if (epBelowSetAlarm<0) epBelowSetAlarm=0; };
 void ClearEPAboveSetAlarm(void) { epAboveSetAlarm--; if (epAboveSetAlarm<0) epAboveSetAlarm=0; };
-void ClearIPBellowSetAlarm(void) { ipBellowSetAlarm--; if (ipBellowSetAlarm<0) ipBellowSetAlarm=0; };
+void ClearIPBelowSetAlarm(void) { ipBelowSetAlarm--; if (ipBelowSetAlarm<0) ipBelowSetAlarm=0; };
 void ClearIPAboveSetAlarm(void) { ipAboveSetAlarm--; if (ipAboveSetAlarm<0) ipAboveSetAlarm=0; };
 void ClearTdiTooLongAlarm(void) { tdiTooLongAlarm = false; };
 void ClearTdeTooLongAlarm(void) { tdeTooLongAlarm = false; };
+void ClearVAboveMaxAlarm(void) { vAboveMaxAlarm = false; };
+void ClearVBelowMinAlarm(void) { vBelowMinAlarm = false; };
 void ClearNoPowerSupplyAlarm(void) { noPowerSupplyAlarm = false; };
 
 
@@ -178,12 +190,14 @@ struct alarm alarmData[] = {
     {"Circuit Failure ", ALARM_HIGH, CircuitFailureAlarm},
     {"Battery Low     ", ALARM_MED,  BaterryLowAlarmMed},
     {"Battery Low     ", ALARM_HIGH, BaterryLowAlarmHigh},
-    {"EP Bellow Set   ", ALARM_MED,  EPBellowSetAlarm},
+    {"EP Below Set    ", ALARM_MED,  EPBelowSetAlarm},
     {"EP Above Set    ", ALARM_MED,  EPAboveSetAlarm},
-    {"IP Bellow Set   ", ALARM_MED,  IPBellowSetAlarm},
+    {"IP Below Set    ", ALARM_MED,  IPBelowSetAlarm},
     {"IP Above Set    ", ALARM_MED,  IPAboveSetAlarm},
     {"Tdi too long    ", ALARM_MED,  TdiTooLongAlarm},
     {"Tde too long    ", ALARM_MED,  TdeTooLongAlarm},
+    {"Over Max Volume ", ALARM_MED,  VAboveMaxAlarm},
+    {"Below Min Volume", ALARM_MED,  VBelowMinAlarm},
     {"No Power Supply ", ALARM_LOW,  NoPowerSupplyAlarm}
 };
 
@@ -294,8 +308,8 @@ void AlarmUpdateLCD(void) {
             int id;
             SetAlarmLED();
             id = HigherAlarm();
+            //printf("\r\nAlarm: %d %s\r\n", id, alarmData[id].name);
             AlarmDisplay(alarmData[id].type,alarmData[id].name);
-            SetAlarmLED();
             displayStatus = DISPLAY_NORMAL;           
         } else {
             // Display Parameters TBD
@@ -403,6 +417,10 @@ void AlarmHandler(void) {
     if (histSec) histSec--;
     //AlarmCheckTask(); // Task is done at app level, not at IRQ
     alarmCheck = true; // Tell main loop to do checkTask
+    
+    static int16_t cnt = 0;
+    if (cnt==0) printf("A\r\n");
+    cnt = (cnt+1)%2;
 }
 
 void AlarmInit() {

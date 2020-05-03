@@ -41,12 +41,14 @@ void SetHighPressureAlarmHigh(void);
 void SetCircuitFailureAlarm(void);
 void SetBaterryLowAlarmMed(void);
 void SetBaterryLowAlarmHigh(void);
-void SetEPBellowSetAlarm(void);
+void SetEPBelowSetAlarm(void);
 void SetEPAboveSetAlarm(void);
-void SetIPBellowSetAlarm(void);
+void SetIPBelowSetAlarm(void);
 void SetIPAboveSetAlarm(void);
 void SetTdiTooLongAlarm(void);
 void SetTdeTooLongAlarm(void);
+void SetVAboveMaxAlarm(void);
+void SetVBelowMinAlarm(void);
 void SetNoPowerSupplyAlarm(void);
 
 void ClearBatteryFailAlarm(void);
@@ -58,12 +60,14 @@ void ClearHighPressureAlarmHigh(void);
 void ClearCircuitFailureAlarm(void);
 void ClearBaterryLowAlarmMed(void);
 void ClearBaterryLowAlarmHigh(void);
-void ClearEPBellowSetAlarm(void);
+void ClearEPBelowSetAlarm(void);
 void ClearEPAboveSetAlarm(void);
-void ClearIPBellowSetAlarm(void);
+void ClearIPBelowSetAlarm(void);
 void ClearIPAboveSetAlarm(void);
 void ClearTdiTooLongAlarm(void);
 void ClearTdeTooLongAlarm(void);
+void ClearVAboveMaxAlarm(void);
+void ClearVBelowMinAlarm(void);
 void ClearNoPowerSupplyAlarm(void);
 
 
