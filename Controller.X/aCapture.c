@@ -1,3 +1,4 @@
+// Author: David Ortiz
 // Analog capture handling.
 // Captures analog data and perform basic processing for direct use by rest of the software.
 

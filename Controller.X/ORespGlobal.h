@@ -1,6 +1,4 @@
-/* 
- * File:   ORespGlobal.h
- * Author: David Ortiz
+/* Author: David Ortiz
  *
  * Created on April 4, 2020, 12:56 PM
  */
@@ -40,17 +38,27 @@ extern "C" {
 #define PQUANTA_LIMIT    MPRESSURE_MBAR(7)
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
 #define VQUANTA_LIMIT    90
+    
+// Objective time for inspiration.
+#define INSP_TIME 500
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
-#if 1
+#if 0
 #define SV2ISOPEN LATAbits.LATA2
 #define OPEN_SV2 LATAbits.LATA2 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0
 #else
-#define SV2ISOPEN (sv2_pwmval!=0)
-#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
-#define CLOSE_SV2 sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval)
+#define SV2ISOPEN (LATAbits.LATA2|LATCbits.LATC3)
+#define OPEN_SV2 LATAbits.LATA2 = 1;LATCbits.LATC3 = 1
+#define CLOSE_SV2 LATAbits.LATA2 = 0;LATCbits.LATC3 = 0
+
+#define OPEN_SV2LOW LATAbits.LATA2 = 1;LATCbits.LATC3 = 0
+#define OPEN_SV2MED LATAbits.LATA2 = 0;LATCbits.LATC3 = 1
+
+//#define SV2ISOPEN (sv2_pwmval!=0)
+//#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
+//#define CLOSE_SV2 sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval)
 #endif
     
 #define SV3ISOPEN LATAbits.LATA3

@@ -1,6 +1,6 @@
 Version 4.0 HI-TECH Software Intermediate Code
-"13 vMeasure.c
-[; ;vMeasure.c: 13:     if (aCaptGetResult(VolPSensor, &instP)) {
+"15 vMeasure.c
+[; ;vMeasure.c: 15:     if (aCaptGetResult(VolPSensor, &instP)) {
 [c E114 0 1 2 3 4 5 6 .. ]
 [n E114 . MainPSensor VolPSensor VddSensor Flt0PSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
 "35 ./aCapture.h
@@ -2259,132 +2259,132 @@ Version 4.0 HI-TECH Software Intermediate Code
 "48384
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 48384: __asm("TOSU equ 03FFFh");
 [; <" TOSU equ 03FFFh ;# ">
-"8 vMeasure.c
-[; ;vMeasure.c: 8: uint32_t volume;
+"10 vMeasure.c
+[; ;vMeasure.c: 10: uint32_t volume;
 [v _volume `ul ~T0 @X0 1 e ]
-"10
-[; ;vMeasure.c: 10: void vMeasureIsr(void) {
+"12
+[; ;vMeasure.c: 12: void vMeasureIsr(void) {
 [v _vMeasureIsr `(v ~T0 @X0 1 ef ]
 {
 [e :U _vMeasureIsr ]
 [f ]
-"11
-[; ;vMeasure.c: 11:     int16_t instP;
+"13
+[; ;vMeasure.c: 13:     int16_t instP;
 [v _instP `s ~T0 @X0 1 a ]
-"12
-[; ;vMeasure.c: 12:     uint16_t v1, v2;
+"14
+[; ;vMeasure.c: 14:     uint16_t v1, v2;
 [v _v1 `us ~T0 @X0 1 a ]
 [v _v2 `us ~T0 @X0 1 a ]
-"13
-[; ;vMeasure.c: 13:     if (aCaptGetResult(VolPSensor, &instP)) {
+"15
+[; ;vMeasure.c: 15:     if (aCaptGetResult(VolPSensor, &instP)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E114 1 &U _instP `i -> 0 `i 2230  ]
 {
-"14
-[; ;vMeasure.c: 14:         if (instP > 0) {
+"16
+[; ;vMeasure.c: 16:         if (instP > 0) {
 [e $ ! > -> _instP `i -> 0 `i 2231  ]
 {
-"15
-[; ;vMeasure.c: 15:             v1 = instP << 4;
-[e = _v1 -> << -> _instP `i -> 4 `i `us ]
-"16
-[; ;vMeasure.c: 16:             v2 = isqrt(v1);
-[e = _v2 ( _isqrt (1 _v1 ]
 "17
-[; ;vMeasure.c: 17:         } else {
+[; ;vMeasure.c: 17:             v1 = instP << 4;
+[e = _v1 -> << -> _instP `i -> 4 `i `us ]
+"18
+[; ;vMeasure.c: 18:             v2 = isqrt(v1);
+[e = _v2 ( _isqrt (1 _v1 ]
+"19
+[; ;vMeasure.c: 19:         } else {
 }
 [e $U 2232  ]
 [e :U 2231 ]
 {
-"18
-[; ;vMeasure.c: 18:             v1 = 0;
-[e = _v1 -> -> 0 `i `us ]
-"19
-[; ;vMeasure.c: 19:             v2 = 0;
-[e = _v2 -> -> 0 `i `us ]
 "20
-[; ;vMeasure.c: 20:         }
+[; ;vMeasure.c: 20:             v1 = 0;
+[e = _v1 -> -> 0 `i `us ]
+"21
+[; ;vMeasure.c: 21:             v2 = 0;
+[e = _v2 -> -> 0 `i `us ]
+"22
+[; ;vMeasure.c: 22:         }
 }
 [e :U 2232 ]
-"21
-[; ;vMeasure.c: 21:         if (v2 > 20) {
+"23
+[; ;vMeasure.c: 23:         if (v2 > 20) {
 [e $ ! > -> _v2 `ui -> -> 20 `i `ui 2233  ]
 {
-"22
-[; ;vMeasure.c: 22:             volume = volume + v2;
+"24
+[; ;vMeasure.c: 24:             volume = volume + v2;
 [e = _volume + _volume -> _v2 `ul ]
-"23
-[; ;vMeasure.c: 23:         }
+"25
+[; ;vMeasure.c: 25:         }
 }
 [e :U 2233 ]
-"24
-[; ;vMeasure.c: 24:     }
+"26
+[; ;vMeasure.c: 26:     }
 }
 [e :U 2230 ]
-"25
-[; ;vMeasure.c: 25: }
+"27
+[; ;vMeasure.c: 27: }
 [e :UE 2229 ]
 }
-"27
-[; ;vMeasure.c: 27: void vMeasureRst(void) {
+"29
+[; ;vMeasure.c: 29: void vMeasureRst(void) {
 [v _vMeasureRst `(v ~T0 @X0 1 ef ]
 {
 [e :U _vMeasureRst ]
 [f ]
-"28
-[; ;vMeasure.c: 28:     PIE4bits.TMR2IE = 0;
-[e = . . _PIE4bits 0 2 -> -> 0 `i `uc ]
-"29
-[; ;vMeasure.c: 29:     volume = 0;
-[e = _volume -> -> -> 0 `i `l `ul ]
 "30
-[; ;vMeasure.c: 30:     PIE4bits.TMR2IE = 1;
-[e = . . _PIE4bits 0 2 -> -> 1 `i `uc ]
+[; ;vMeasure.c: 30:     PIE4bits.TMR2IE = 0;
+[e = . . _PIE4bits 0 2 -> -> 0 `i `uc ]
 "31
-[; ;vMeasure.c: 31: }
+[; ;vMeasure.c: 31:     volume = 0;
+[e = _volume -> -> -> 0 `i `l `ul ]
+"32
+[; ;vMeasure.c: 32:     PIE4bits.TMR2IE = 1;
+[e = . . _PIE4bits 0 2 -> -> 1 `i `uc ]
+"33
+[; ;vMeasure.c: 33: }
 [e :UE 2234 ]
 }
-"33
-[; ;vMeasure.c: 33: void vMeasureInit(void) {
+"35
+[; ;vMeasure.c: 35: void vMeasureInit(void) {
 [v _vMeasureInit `(v ~T0 @X0 1 ef ]
 {
 [e :U _vMeasureInit ]
 [f ]
-"34
-[; ;vMeasure.c: 34:     volume = 0;
-[e = _volume -> -> -> 0 `i `l `ul ]
-"35
-[; ;vMeasure.c: 35:     TMR2_SetInterruptHandler(vMeasureIsr);
-[e ( _TMR2_SetInterruptHandler (1 &U _vMeasureIsr ]
 "36
-[; ;vMeasure.c: 36:     TMR2_Start();
-[e ( _TMR2_Start ..  ]
+[; ;vMeasure.c: 36:     volume = 0;
+[e = _volume -> -> -> 0 `i `l `ul ]
 "37
-[; ;vMeasure.c: 37: }
+[; ;vMeasure.c: 37:     TMR2_SetInterruptHandler(vMeasureIsr);
+[e ( _TMR2_SetInterruptHandler (1 &U _vMeasureIsr ]
+"38
+[; ;vMeasure.c: 38:     TMR2_Start();
+[e ( _TMR2_Start ..  ]
+"39
+[; ;vMeasure.c: 39: }
 [e :UE 2235 ]
 }
-"40
-[; ;vMeasure.c: 40: uint16_t vMeasureGet(void) {
+"42
+[; ;vMeasure.c: 42: uint16_t vMeasureGet(void) {
 [v _vMeasureGet `(us ~T0 @X0 1 ef ]
 {
 [e :U _vMeasureGet ]
 [f ]
-"41
-[; ;vMeasure.c: 41:     uint32_t rawV;
-[v _rawV `ul ~T0 @X0 1 a ]
-"42
-[; ;vMeasure.c: 42:     PIE4bits.TMR2IE = 0;
-[e = . . _PIE4bits 0 2 -> -> 0 `i `uc ]
 "43
-[; ;vMeasure.c: 43:     rawV=volume;
-[e = _rawV _volume ]
+[; ;vMeasure.c: 43:     uint32_t rawV;
+[v _rawV `ul ~T0 @X0 1 a ]
 "44
-[; ;vMeasure.c: 44:     PIE4bits.TMR2IE = 1;
-[e = . . _PIE4bits 0 2 -> -> 1 `i `uc ]
+[; ;vMeasure.c: 44:     PIE4bits.TMR2IE = 0;
+[e = . . _PIE4bits 0 2 -> -> 0 `i `uc ]
+"45
+[; ;vMeasure.c: 45:     rawV=volume;
+[e = _rawV _volume ]
 "46
-[; ;vMeasure.c: 46:     return rawV/65;
+[; ;vMeasure.c: 46:     PIE4bits.TMR2IE = 1;
+[e = . . _PIE4bits 0 2 -> -> 1 `i `uc ]
+"48
+[; ;vMeasure.c: 48:     return rawV/65;
 [e ) -> / _rawV -> -> -> 65 `i `l `ul `us ]
 [e $UE 2236  ]
-"47
-[; ;vMeasure.c: 47: }
+"49
+[; ;vMeasure.c: 49: }
 [e :UE 2236 ]
 }

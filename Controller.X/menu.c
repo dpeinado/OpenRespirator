@@ -223,7 +223,7 @@ void MenuMng(void) {
                                 menuVal = menuVal - 1;
                                 if (menuVal < IP_MIN) {
                                     menuVal = IP_MIN;
-                                } else if ((VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
+                                } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
                                     menuVal = IP;
                                 }
                                 break;

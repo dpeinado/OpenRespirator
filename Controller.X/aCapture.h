@@ -1,6 +1,6 @@
 /* 
  * File:   aCapture.h
- * Author: David
+ * Author: David Ortiz
  *
  * Created on April 4, 2020, 12:19 PM
  */
