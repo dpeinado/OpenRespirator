@@ -27822,7 +27822,9 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 

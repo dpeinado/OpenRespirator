@@ -27210,7 +27210,9 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
@@ -27970,11 +27972,21 @@ void aCaptureInit(void){
     PIE1bits.ADTIE = 1;
 }
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal){
     if (sel == MainPSensor) {
         mainPSensCal = offVal;
     } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
+    } else {
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
+    }
+}
+
+int16_t aCaptureOffGet(aSrcTyp sel){
+    if (sel == MainPSensor) {
+        return mainPSensCal;
+    } else if (sel == VolPSensor) {
+        return auxPSensCal;
     } else {
         LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
     }

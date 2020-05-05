@@ -3,8 +3,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v F16647 `(v ~T0 @X0 0 tf ]
 "25 menu.c
 [; ;menu.c: 25: menuStatusT menuStatus;
-[c E16714 0 1 2 3 4 5 6 7 8 .. ]
-[n E16714 . CFG_IDLE CFG_IP CFG_BPM CFG_PEEP CFG_MAXP CFG_MAXV CFG_LOWVA CFG_HIGHVA CFG_POWEROFF  ]
+[c E16716 0 1 2 3 4 5 6 7 8 .. ]
+[n E16716 . CFG_IDLE CFG_IP CFG_BPM CFG_PEEP CFG_MAXP CFG_MAXV CFG_LOWVA CFG_HIGHVA CFG_POWEROFF  ]
 "27 ./keyRead.h
 [; ;./keyRead.h: 27: int8_t keyRead();
 [v _keyRead `(c ~T0 @X0 0 e? ]
@@ -12,11 +12,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _printf `(i ~T0 @X0 0 ev`*Cuc ]
 "49 menu.c
 [; ;menu.c: 49:                 ctrlStatus = CTRL_SLEEP;
-[c E16677 0 1 2 3 .. ]
-[n E16677 . CTRL_UNCAL CTRL_STOP CTRL_RUN CTRL_SLEEP  ]
+[c E16679 0 1 2 3 .. ]
+[n E16679 . CTRL_UNCAL CTRL_STOP CTRL_RUN CTRL_SLEEP  ]
 "104 ./ORespGlobal.h
 [; ;./ORespGlobal.h: 104:     extern ctrlStatusT ctrlStatus;
-[v _ctrlStatus `E16677 ~T0 @X0 0 e ]
+[v _ctrlStatus `E16679 ~T0 @X0 0 e ]
 "108
 [; ;./ORespGlobal.h: 108:     extern uint8_t IP;
 [v _IP `uc ~T0 @X0 0 e ]
@@ -34,11 +34,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _chMaxP `a ~T0 @X0 0 e ]
 "67 menu.c
 [; ;menu.c: 67:                         if (VentMode == VMODE_VOLUME) {
-[c E16673 0 1 .. ]
-[n E16673 . VMODE_PRESSURE VMODE_VOLUME  ]
+[c E16675 0 1 .. ]
+[n E16675 . VMODE_PRESSURE VMODE_VOLUME  ]
 "105 ./ORespGlobal.h
 [; ;./ORespGlobal.h: 105:     extern vmodeT VentMode;
-[v _VentMode `E16673 ~T0 @X0 0 e ]
+[v _VentMode `E16675 ~T0 @X0 0 e ]
 "117
 [; ;./ORespGlobal.h: 117:     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
 [v _chVentMode `a ~T0 @X0 0 e ]
@@ -2374,7 +2374,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _lcdBtnRRow `uc ~T0 @X0 -> 10 `i e ]
 "25
 [; ;menu.c: 25: menuStatusT menuStatus;
-[v _menuStatus `E16714 ~T0 @X0 1 e ]
+[v _menuStatus `E16716 ~T0 @X0 1 e ]
 "26
 [; ;menu.c: 26: uint16_t menuVal;
 [v _menuVal `us ~T0 @X0 1 e ]
@@ -2389,7 +2389,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [f ]
 "30
 [; ;menu.c: 30:     menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "31
 [; ;menu.c: 31:     lcdMenuPrint = 1;
 [e = _lcdMenuPrint -> -> 1 `i `a ]
@@ -2430,18 +2430,18 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printf , (. :s 1C -> _keyPress `i ]
 "45
 [; ;menu.c: 45:         if (menuStatus == CFG_POWEROFF) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 8 `ui 2236  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 8 `ui 2236  ]
 {
 "46
 [; ;menu.c: 46:             menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "47
 [; ;menu.c: 47:             if (keyPress == 2) {
 [e $ ! == -> _keyPress `i -> 2 `i 2237  ]
 {
 "49
 [; ;menu.c: 49:                 ctrlStatus = CTRL_SLEEP;
-[e = _ctrlStatus . `E16677 3 ]
+[e = _ctrlStatus . `E16679 3 ]
 "50
 [; ;menu.c: 50:             } else {
 }
@@ -2467,11 +2467,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2242 ]
 "56
 [; ;menu.c: 56:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2243  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2243  ]
 {
 "57
 [; ;menu.c: 57:                         menuStatus = CFG_IP;
-[e = _menuStatus . `E16714 1 ]
+[e = _menuStatus . `E16716 1 ]
 "58
 [; ;menu.c: 58:                         menuVal = IP;
 [e = _menuVal -> _IP `us ]
@@ -2483,7 +2483,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2244  ]
 [e :U 2243 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 1 `ui 2245  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 1 `ui 2245  ]
 {
 "62
 [; ;menu.c: 62:                         IP = menuVal;
@@ -2499,11 +2499,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chMaxP -> -> 1 `i `a ]
 "67
 [; ;menu.c: 67:                         if (VentMode == VMODE_VOLUME) {
-[e $ ! == -> _VentMode `ui -> . `E16673 1 `ui 2246  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 1 `ui 2246  ]
 {
 "68
 [; ;menu.c: 68:                             VentMode = VMODE_PRESSURE;
-[e = _VentMode . `E16673 0 ]
+[e = _VentMode . `E16675 0 ]
 "69
 [; ;menu.c: 69:                             chVentMode = 1;
 [e = _chVentMode -> -> 1 `i `a ]
@@ -2513,7 +2513,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2246 ]
 "71
 [; ;menu.c: 71:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "72
 [; ;menu.c: 72:                     } else {
 }
@@ -2522,7 +2522,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "74
 [; ;menu.c: 74:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "75
 [; ;menu.c: 75:                     }
 }
@@ -2536,11 +2536,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2248 ]
 "78
 [; ;menu.c: 78:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2249  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2249  ]
 {
 "79
 [; ;menu.c: 79:                         menuStatus = CFG_BPM;
-[e = _menuStatus . `E16714 2 ]
+[e = _menuStatus . `E16716 2 ]
 "80
 [; ;menu.c: 80:                         menuVal = BPM;
 [e = _menuVal -> _BPM `us ]
@@ -2552,7 +2552,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2250  ]
 [e :U 2249 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 2 `ui 2251  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 2 `ui 2251  ]
 {
 "84
 [; ;menu.c: 84:                         BPM = menuVal;
@@ -2568,7 +2568,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _EDuration -> - / * -> -> -> 60 `i `us `ui -> -> 1000 `i `ui -> _BPM `ui -> _IDuration `ui `us ]
 "88
 [; ;menu.c: 88:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "89
 [; ;menu.c: 89:                     } else {
 }
@@ -2577,7 +2577,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "91
 [; ;menu.c: 91:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "92
 [; ;menu.c: 92:                     }
 }
@@ -2591,11 +2591,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2253 ]
 "95
 [; ;menu.c: 95:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2254  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2254  ]
 {
 "96
 [; ;menu.c: 96:                         menuStatus = CFG_PEEP;
-[e = _menuStatus . `E16714 3 ]
+[e = _menuStatus . `E16716 3 ]
 "97
 [; ;menu.c: 97:                         menuVal = PEEP;
 [e = _menuVal -> _PEEP `us ]
@@ -2607,7 +2607,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2255  ]
 [e :U 2254 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 3 `ui 2256  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 3 `ui 2256  ]
 {
 "101
 [; ;menu.c: 101:                         PEEP = menuVal;
@@ -2617,7 +2617,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chPEEP -> -> 1 `i `a ]
 "103
 [; ;menu.c: 103:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "104
 [; ;menu.c: 104:                     } else {
 }
@@ -2626,7 +2626,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "106
 [; ;menu.c: 106:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "107
 [; ;menu.c: 107:                     }
 }
@@ -2640,11 +2640,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2258 ]
 "110
 [; ;menu.c: 110:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2259  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2259  ]
 {
 "111
 [; ;menu.c: 111:                         menuStatus = CFG_MAXP;
-[e = _menuStatus . `E16714 4 ]
+[e = _menuStatus . `E16716 4 ]
 "112
 [; ;menu.c: 112:                         menuVal = MaxP;
 [e = _menuVal -> _MaxP `us ]
@@ -2656,7 +2656,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2260  ]
 [e :U 2259 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 4 `ui 2261  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 4 `ui 2261  ]
 {
 "116
 [; ;menu.c: 116:                         MaxP = menuVal;
@@ -2666,7 +2666,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chMaxP -> -> 1 `i `a ]
 "118
 [; ;menu.c: 118:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "119
 [; ;menu.c: 119:                     } else {
 }
@@ -2675,7 +2675,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "121
 [; ;menu.c: 121:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "122
 [; ;menu.c: 122:                     }
 }
@@ -2689,11 +2689,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2263 ]
 "125
 [; ;menu.c: 125:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2264  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2264  ]
 {
 "126
 [; ;menu.c: 126:                         menuStatus = CFG_MAXV;
-[e = _menuStatus . `E16714 5 ]
+[e = _menuStatus . `E16716 5 ]
 "127
 [; ;menu.c: 127:                         menuVal = MaxV;
 [e = _menuVal -> _MaxV `us ]
@@ -2705,7 +2705,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2265  ]
 [e :U 2264 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 5 `ui 2266  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 5 `ui 2266  ]
 {
 "133
 [; ;menu.c: 133:                         HighVAlarm += (menuVal - MaxV);
@@ -2727,11 +2727,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chMaxV -> -> 1 `i `a ]
 "139
 [; ;menu.c: 139:                         if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16673 0 `ui 2267  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 0 `ui 2267  ]
 {
 "140
 [; ;menu.c: 140:                             VentMode = VMODE_VOLUME;
-[e = _VentMode . `E16673 1 ]
+[e = _VentMode . `E16675 1 ]
 "141
 [; ;menu.c: 141:                             chVentMode = 1;
 [e = _chVentMode -> -> 1 `i `a ]
@@ -2741,7 +2741,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2267 ]
 "143
 [; ;menu.c: 143:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "144
 [; ;menu.c: 144:                     } else {
 }
@@ -2750,7 +2750,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "146
 [; ;menu.c: 146:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "147
 [; ;menu.c: 147:                     }
 }
@@ -2764,11 +2764,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2269 ]
 "150
 [; ;menu.c: 150:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2270  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2270  ]
 {
 "151
 [; ;menu.c: 151:                         menuStatus = CFG_HIGHVA;
-[e = _menuStatus . `E16714 7 ]
+[e = _menuStatus . `E16716 7 ]
 "152
 [; ;menu.c: 152:                         menuVal = HighVAlarm;
 [e = _menuVal -> _HighVAlarm `us ]
@@ -2780,7 +2780,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2271  ]
 [e :U 2270 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 7 `ui 2272  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 7 `ui 2272  ]
 {
 "156
 [; ;menu.c: 156:                         HighVAlarm = menuVal;
@@ -2790,7 +2790,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chHighVAlarm -> -> 1 `i `a ]
 "158
 [; ;menu.c: 158:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "159
 [; ;menu.c: 159:                     } else {
 }
@@ -2799,7 +2799,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "161
 [; ;menu.c: 161:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "162
 [; ;menu.c: 162:                     }
 }
@@ -2813,11 +2813,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2274 ]
 "165
 [; ;menu.c: 165:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2275  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2275  ]
 {
 "166
 [; ;menu.c: 166:                         menuStatus = CFG_LOWVA;
-[e = _menuStatus . `E16714 6 ]
+[e = _menuStatus . `E16716 6 ]
 "167
 [; ;menu.c: 167:                         menuVal = LowVAlarm;
 [e = _menuVal -> _LowVAlarm `us ]
@@ -2829,7 +2829,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2276  ]
 [e :U 2275 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 6 `ui 2277  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 6 `ui 2277  ]
 {
 "171
 [; ;menu.c: 171:                         LowVAlarm = menuVal;
@@ -2839,7 +2839,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chLowVAlarm -> -> 1 `i `a ]
 "173
 [; ;menu.c: 173:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "174
 [; ;menu.c: 174:                     } else {
 }
@@ -2848,7 +2848,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "176
 [; ;menu.c: 176:                         menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "177
 [; ;menu.c: 177:                     }
 }
@@ -2862,7 +2862,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2279 ]
 "180
 [; ;menu.c: 180:                     if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16714 0 `ui 2280  ]
+[e $ ! != -> _menuStatus `ui -> . `E16716 0 `ui 2280  ]
 {
 "181
 [; ;menu.c: 181:                         menuTstamp = timeGet();
@@ -2966,13 +2966,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2281  ]
 [e :U 2282 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16714 1 `ui 2283
- , $ -> . `E16714 4 `ui 2284
- , $ -> . `E16714 3 `ui 2286
- , $ -> . `E16714 2 `ui 2288
- , $ -> . `E16714 5 `ui 2290
- , $ -> . `E16714 6 `ui 2291
- , $ -> . `E16714 7 `ui 2292
+[e [\ -> _menuStatus `ui , $ -> . `E16716 1 `ui 2283
+ , $ -> . `E16716 4 `ui 2284
+ , $ -> . `E16716 3 `ui 2286
+ , $ -> . `E16716 2 `ui 2288
+ , $ -> . `E16716 5 `ui 2290
+ , $ -> . `E16716 6 `ui 2291
+ , $ -> . `E16716 7 `ui 2292
  2293 ]
 [e :U 2281 ]
 "214
@@ -2987,7 +2987,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2294 ]
 "217
 [; ;menu.c: 217:                     if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16714 0 `ui 2295  ]
+[e $ ! != -> _menuStatus `ui -> . `E16716 0 `ui 2295  ]
 {
 "218
 [; ;menu.c: 218:                         menuTstamp = timeGet();
@@ -3017,7 +3017,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2301  ]
 [e :U 2300 ]
-[e $ ! && && == -> _menuStatus `ui -> . `E16714 4 `ui == -> _VentMode `ui -> . `E16673 0 `ui < -> _menuVal `ui -> _IP `ui 2302  ]
+[e $ ! && && == -> _menuStatus `ui -> . `E16716 4 `ui == -> _VentMode `ui -> . `E16675 0 `ui < -> _menuVal `ui -> _IP `ui 2302  ]
 {
 "227
 [; ;menu.c: 227:                                     menuVal = IP;
@@ -3102,13 +3102,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2296  ]
 [e :U 2297 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16714 1 `ui 2298
- , $ -> . `E16714 4 `ui 2299
- , $ -> . `E16714 3 `ui 2303
- , $ -> . `E16714 2 `ui 2305
- , $ -> . `E16714 5 `ui 2307
- , $ -> . `E16714 6 `ui 2308
- , $ -> . `E16714 7 `ui 2309
+[e [\ -> _menuStatus `ui , $ -> . `E16716 1 `ui 2298
+ , $ -> . `E16716 4 `ui 2299
+ , $ -> . `E16716 3 `ui 2303
+ , $ -> . `E16716 2 `ui 2305
+ , $ -> . `E16716 5 `ui 2307
+ , $ -> . `E16716 6 `ui 2308
+ , $ -> . `E16716 7 `ui 2309
  2310 ]
 [e :U 2296 ]
 "253
@@ -3123,11 +3123,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2311 ]
 "256
 [; ;menu.c: 256:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 0 `ui 2312  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 0 `ui 2312  ]
 {
 "258
 [; ;menu.c: 258:                         menuStatus = CFG_POWEROFF;
-[e = _menuStatus . `E16714 8 ]
+[e = _menuStatus . `E16716 8 ]
 "259
 [; ;menu.c: 259:                         menuTstamp = timeGet();
 [e = _menuTstamp ( _timeGet ..  ]
@@ -3176,7 +3176,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "268
 [; ;menu.c: 268:         if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
-[e $ ! && != -> _menuStatus `ui -> . `E16714 0 `ui != -> ( _timeElapsed (2 , _menuTstamp -> * -> 5 `i -> 1000 `i `us `i -> 0 `i 2314  ]
+[e $ ! && != -> _menuStatus `ui -> . `E16716 0 `ui != -> ( _timeElapsed (2 , _menuTstamp -> * -> 5 `i -> 1000 `i `us `i -> 0 `i 2314  ]
 {
 "270
 [; ;menu.c: 270:             lcdPrintTR = 1;
@@ -3186,7 +3186,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lcdPrintBR -> -> 1 `i `a ]
 "272
 [; ;menu.c: 272:             menuStatus = CFG_IDLE;
-[e = _menuStatus . `E16714 0 ]
+[e = _menuStatus . `E16716 0 ]
 "273
 [; ;menu.c: 273:         }
 }
@@ -3254,15 +3254,15 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lcdPrintTR -> -> 0 `i `a ]
 "294
 [; ;menu.c: 294:         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
-[e $ ! || || == -> _menuStatus `ui -> . `E16714 0 `ui == -> _menuStatus `ui -> . `E16714 6 `ui == -> _menuStatus `ui -> . `E16714 7 `ui 2318  ]
+[e $ ! || || == -> _menuStatus `ui -> . `E16716 0 `ui == -> _menuStatus `ui -> . `E16716 6 `ui == -> _menuStatus `ui -> . `E16716 7 `ui 2318  ]
 {
 "295
 [; ;menu.c: 295:             if (ctrlStatus != CTRL_SLEEP) {
-[e $ ! != -> _ctrlStatus `ui -> . `E16677 3 `ui 2319  ]
+[e $ ! != -> _ctrlStatus `ui -> . `E16679 3 `ui 2319  ]
 {
 "296
 [; ;menu.c: 296:                 if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16673 0 `ui 2320  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 0 `ui 2320  ]
 {
 "297
 [; ;menu.c: 297:                     sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, MaxP);
@@ -3298,11 +3298,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2323  ]
 [e :U 2318 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 2 `ui 2324  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 2 `ui 2324  ]
 {
 "305
 [; ;menu.c: 305:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16673 0 `ui 2325  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 0 `ui 2325  ]
 {
 "306
 [; ;menu.c: 306:                 sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", menuVal, PEEP, IP, MaxP);
@@ -3325,11 +3325,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2327  ]
 [e :U 2324 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 3 `ui 2328  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 3 `ui 2328  ]
 {
 "311
 [; ;menu.c: 311:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16673 0 `ui 2329  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 0 `ui 2329  ]
 {
 "312
 [; ;menu.c: 312:                 sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, menuVal, IP, MaxP);
@@ -3352,7 +3352,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2331  ]
 [e :U 2328 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 1 `ui 2332  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 1 `ui 2332  ]
 {
 "317
 [; ;menu.c: 317:             sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, menuVal, MaxP);
@@ -3362,11 +3362,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2333  ]
 [e :U 2332 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 4 `ui 2334  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 4 `ui 2334  ]
 {
 "319
 [; ;menu.c: 319:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16673 0 `ui 2335  ]
+[e $ ! == -> _VentMode `ui -> . `E16675 0 `ui 2335  ]
 {
 "320
 [; ;menu.c: 320:                 sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, menuVal);
@@ -3389,7 +3389,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2337  ]
 [e :U 2334 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 5 `ui 2338  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 5 `ui 2338  ]
 {
 "325
 [; ;menu.c: 325:             sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
@@ -3399,7 +3399,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2339  ]
 [e :U 2338 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 8 `ui 2340  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 8 `ui 2340  ]
 {
 "327
 [; ;menu.c: 327:             sprintf(lcdTopRow, "PRESS BPM TO    ");
@@ -3422,7 +3422,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printstr (1 -> &U _lcdTopRow `*Cuc ]
 "333
 [; ;menu.c: 333:         if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16714 0 `ui 2341  ]
+[e $ ! != -> _menuStatus `ui -> . `E16716 0 `ui 2341  ]
 {
 "334
 [; ;menu.c: 334:             lcdBlink = 1;
@@ -3449,7 +3449,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printstr (1 -> &U _lcdBtnRRow `*Cuc ]
 "341
 [; ;menu.c: 341:         if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16714 0 `ui 2344  ]
+[e $ ! != -> _menuStatus `ui -> . `E16716 0 `ui 2344  ]
 {
 "342
 [; ;menu.c: 342:             lcdBlink = 1;
@@ -3473,7 +3473,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lcdMenuPrint -> -> 0 `i `a ]
 "347
 [; ;menu.c: 347:         if (menuStatus == CFG_LOWVA) {
-[e $ ! == -> _menuStatus `ui -> . `E16714 6 `ui 2347  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 6 `ui 2347  ]
 {
 "348
 [; ;menu.c: 348:             sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
@@ -3483,7 +3483,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2348  ]
 [e :U 2347 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 7 `ui 2349  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 7 `ui 2349  ]
 {
 "350
 [; ;menu.c: 350:             sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
@@ -3493,7 +3493,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2350  ]
 [e :U 2349 ]
-[e $ ! == -> _menuStatus `ui -> . `E16714 8 `ui 2351  ]
+[e $ ! == -> _menuStatus `ui -> . `E16716 8 `ui 2351  ]
 {
 "352
 [; ;menu.c: 352:                 sprintf(lcdBtnRow, "POWER OFF ");
@@ -3506,7 +3506,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 "354
 [; ;menu.c: 354:             if (ctrlStatus != CTRL_SLEEP) {
-[e $ ! != -> _ctrlStatus `ui -> . `E16677 3 `ui 2353  ]
+[e $ ! != -> _ctrlStatus `ui -> . `E16679 3 `ui 2353  ]
 {
 "355
 [; ;menu.c: 355:                 sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
@@ -3630,13 +3630,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2357  ]
 [e :U 2358 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16714 2 `ui 2359
- , $ -> . `E16714 3 `ui 2360
- , $ -> . `E16714 1 `ui 2361
- , $ -> . `E16714 4 `ui 2362
- , $ -> . `E16714 5 `ui 2363
- , $ -> . `E16714 6 `ui 2364
- , $ -> . `E16714 7 `ui 2365
+[e [\ -> _menuStatus `ui , $ -> . `E16716 2 `ui 2359
+ , $ -> . `E16716 3 `ui 2360
+ , $ -> . `E16716 1 `ui 2361
+ , $ -> . `E16716 4 `ui 2362
+ , $ -> . `E16716 5 `ui 2363
+ , $ -> . `E16716 6 `ui 2364
+ , $ -> . `E16716 7 `ui 2365
  2366 ]
 [e :U 2357 ]
 "394
@@ -3650,8 +3650,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;menu.c: 395: }
 [e :UE 2316 ]
 }
-[p f _printf 8388736 ]
 [p f _sprintf 8421504 ]
+[p f _printf 8388736 ]
 [a 5C 37 50 100 32 37 50 100 32 32 45 45 32 37 50 100 32 37 51 100 0 ]
 [a 8C 37 50 100 32 37 50 100 32 32 45 45 32 37 50 100 32 37 51 100 0 ]
 [a 10C 37 50 100 32 37 50 100 32 32 45 45 32 37 50 100 32 37 51 100 0 ]

@@ -113,11 +113,21 @@ void aCaptureInit(void){
     PIE1bits.ADTIE = 1;
 }
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal){
     if (sel == MainPSensor) {
         mainPSensCal = offVal;
     } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
+    } else {
+        ERROR_CONDITION(102);
+    }
+}
+
+int16_t aCaptureOffGet(aSrcTyp sel){
+    if (sel == MainPSensor) {
+        return mainPSensCal;
+    } else if (sel == VolPSensor) {
+        return auxPSensCal;
     } else {
         ERROR_CONDITION(102);
     }
