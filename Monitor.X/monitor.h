@@ -43,6 +43,8 @@ int16_t Get12V(void);
 int16_t GetVolume(void);
 int16_t GetPmax(void);
 void SetAlarmSV1(bool);
+bool GetAlarmSV1(void);
+void SetVolumeControl(bool);
 
 // Solenoid functions
 void SetSV1 (bool);

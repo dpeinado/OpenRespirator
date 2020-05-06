@@ -22,6 +22,7 @@ bool enable = false;
 void InitDisplay(void) {
     LCDInit();
     calibrate=false;
+    LCDMessage12("Open Respirator ","    AirVita    ");
 }
 
 void DisplayEnable(void) {
@@ -75,8 +76,8 @@ void ValueDisplay(void) {
     //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
     sprintf(msg1, "%2d%% %d.%02d %d.%02d %s", spr, etde,dtde, etdi, dtdi, calibrate? "Ca" : GetAlarmState() );
 //                   1234  56 78  90  12  3456  
-    sprintf(msg3, "%2d %2d %2d %3d %1d.%1d", pe, pi, pmax, vol, er, dr);
-//                  123 456 7890123 456
+    sprintf(msg3, "%1d.%1d %2d %2d %2d %3d", er, dr, pe, pi, pmax, vol);
+//                   12  34 567 890 123456
     cnt++;
     cnt=cnt%10;
 }   
@@ -94,7 +95,14 @@ void AlarmDisplay(int type, char *alarm) {
 }
 
 void DisplayTask(void) {
-    if (!enable) return;
+    if (!enable) {
+        if (msg2[0]) {
+            //printf("\r\nAlarm \"%s\\r\n", msg2);
+            LCDMessage2(msg2);
+            msg2[0]=0;
+        }
+        return;
+    }
     
     if (msg1[0] && msg2[0]) {
         //printf("\r\nData+Alarm \"%s\" \"%s\"\r\n", msg1, msg2);

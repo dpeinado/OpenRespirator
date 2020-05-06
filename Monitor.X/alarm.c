@@ -16,6 +16,7 @@ bool controlFailAlarm = false;
 bool gasFailureAlarm = false;
 bool highPressureAlarmLow = false;
 bool highPressureAlarmHigh = false;
+bool veryHighPressureAlarmHigh = false;
 bool circuitFailureAlarm = false;
 bool baterryLowAlarmMed = false;
 bool baterryLowAlarmHigh = false;
@@ -28,6 +29,12 @@ bool tdeTooLongAlarm = false;
 bool vBelowMinAlarm = false;
 bool vAboveMaxAlarm = false;
 bool noPowerSupplyAlarm = false;
+int16_t alarmPmax = 40;
+
+bool veryHighSV1 = true;
+bool batterySV1  = true;
+bool controlSV1  = true;
+bool monitorSV1  = true;
 
 // Alarm check functions. Called every second
 bool BatteryFailAlarm(void) {
@@ -35,8 +42,7 @@ bool BatteryFailAlarm(void) {
     static int timeBelow10 = 0;
     static int timeFail = 0;
     int16_t bat;
-    // Check Battery status
-    
+    // Check Battery status  
     if (AdcDataReady(ADC_ID_12V)) {
         bat= Get12V();
         
@@ -44,16 +50,25 @@ bool BatteryFailAlarm(void) {
             timeFail++;
             if (timeFail>10*60) { // 10 min
                 SetBatteryFailAlarm ();
-                // TBD Disable of SV1 . // Disable LCD ?
+                batterySV1=false;           
             }
         } else {
             timeFail = 0;
+            batterySV1=true;
+            ClearBatteryFailAlarm ();
         }
         
-        if (bat < (1200-120)) { // Bellow 10% 11
+        if (bat < 11500) { // Bellow 10% 11
             timeBelow10++;
+            SetBaterryLowAlarmMed();
+            if (timeBelow10>3*60) { // 3min
+                SetBaterryLowAlarmHigh();
+                ClearBaterryLowAlarmHigh();
+            }
         } else {
             timeBelow10 = 0;
+            ClearBaterryLowAlarmMed();
+            ClearBaterryLowAlarmHigh();
         }
         
         if (bat < 13000) { // Battery operated
@@ -71,12 +86,21 @@ bool BatteryFailAlarm(void) {
     
     return batteryFailAlarm;
 }
-bool MonitorFailAlarm(void) { return monitorFailAlarm; };
-bool ControlFailAlarm(void) { return controlFailAlarm; };
+bool MonitorFailAlarm(void) { monitorSV1 = true; return monitorFailAlarm; };
+bool ControlFailAlarm(void) {
+    if (controlFailAlarm) {
+        controlSV1=false;
+    }  
+    return controlFailAlarm;
+};
 bool GasFailureAlarm(void) { return gasFailureAlarm; };
+void SetMaxPressure(int16_t pr) { alarmPmax = pr; }
+
 bool HighPressureAlarmLow(void) {
     static int count = 0;
-    if (GetMaxPressure()>40) {
+    static int countVery = 0;
+    int16_t max = GetMaxPressure();
+    if (max>alarmPmax) {
         highPressureAlarmLow = true;
         count ++;
     } else
@@ -84,18 +108,37 @@ bool HighPressureAlarmLow(void) {
         highPressureAlarmLow= false;     
         count = 0;
     }
-    if (count >= 3 || GetMaxPressure()>80) SetHighPressureAlarmHigh();
+    if (count >= 3) {
+        SetHighPressureAlarmHigh();
+        count = 3;
+    }
+    //else ClearHighPressureAlarmHigh(); // MUTE to clear
+    
+    if (max>70){
+        countVery++;
+    } else countVery=0;
+    
+    if (countVery>=3) {
+        SetVeryHighPressureAlarmHigh();
+        veryHighSV1 = false;
+        countVery = 3;
+    }
+    //else ClearVeryHighPressureAlarmHigh(); // MUTE to clear
     return highPressureAlarmLow;
 };
 bool HighPressureAlarmHigh(void) { 
+
+    return highPressureAlarmHigh;
+};
+bool VeryHighPressureAlarmHigh(void) { 
     if (highPressureAlarmHigh) {
-        SetAlarmSV1(false);
-    } else {
-        SetAlarmSV1(true);
+        
     }
     return highPressureAlarmHigh;
 };
-bool CircuitFailureAlarm(void) { return circuitFailureAlarm; };
+bool CircuitFailureAlarm(void) {
+    return circuitFailureAlarm;
+};
 bool BaterryLowAlarmMed(void) { return baterryLowAlarmMed; };
 bool BaterryLowAlarmHigh(void) { return baterryLowAlarmHigh; };
 bool EPBelowSetAlarm(void) {
@@ -144,6 +187,7 @@ void SetControlFailAlarm(void) { controlFailAlarm = true; };
 void SetGasFailureAlarm(void) { gasFailureAlarm = true; };
 void SetHighPressureAlarmLow(void) { highPressureAlarmLow = true; };
 void SetHighPressureAlarmHigh(void) { highPressureAlarmHigh = true; };
+void SetVeryHighPressureAlarmHigh(void) { veryHighPressureAlarmHigh = true; };
 void SetCircuitFailureAlarm(void) { circuitFailureAlarm = true; };
 void SetBaterryLowAlarmMed(void) { baterryLowAlarmMed = true; };
 void SetBaterryLowAlarmHigh(void) { baterryLowAlarmHigh = true; };
@@ -163,6 +207,7 @@ void ClearControlFailAlarm(void) { controlFailAlarm = false; };
 void ClearGasFailureAlarm(void) { gasFailureAlarm = false; };
 void ClearHighPressureAlarmLow(void) { highPressureAlarmLow = false; };
 void ClearHighPressureAlarmHigh(void) { highPressureAlarmHigh = false; };
+void ClearVeryHighPressureAlarmHigh(void) { veryHighPressureAlarmHigh = false; };
 void ClearCircuitFailureAlarm(void) { circuitFailureAlarm = false; };
 void ClearBaterryLowAlarmMed(void) { baterryLowAlarmMed = false; };
 void ClearBaterryLowAlarmHigh(void) { baterryLowAlarmHigh = false; };
@@ -176,18 +221,17 @@ void ClearVAboveMaxAlarm(void) { vAboveMaxAlarm = false; };
 void ClearVBelowMinAlarm(void) { vBelowMinAlarm = false; };
 void ClearNoPowerSupplyAlarm(void) { noPowerSupplyAlarm = false; };
 
-
-
 struct alarm { char name[17]; int type; bool (* func)(void); } a;
 
 struct alarm alarmData[] = {
     {"Battery Fail    ", ALARM_HIGH, BatteryFailAlarm },
     {"Monitor Fail    ", ALARM_HIGH, MonitorFailAlarm },
     {"Control Fail    ", ALARM_HIGH, ControlFailAlarm },
-    {"Gas Failure     ", ALARM_HIGH, GasFailureAlarm},
-    {"High Pressure   ", ALARM_LOW,  HighPressureAlarmLow},
+    {"Very High Pressu", ALARM_HIGH, VeryHighPressureAlarmHigh},
     {"High Pressure   ", ALARM_HIGH, HighPressureAlarmHigh},
+    {"High Pressure   ", ALARM_LOW,  HighPressureAlarmLow},   
     {"Circuit Failure ", ALARM_HIGH, CircuitFailureAlarm},
+    {"Gas Failure     ", ALARM_HIGH, GasFailureAlarm},
     {"Battery Low     ", ALARM_MED,  BaterryLowAlarmMed},
     {"Battery Low     ", ALARM_HIGH, BaterryLowAlarmHigh},
     {"EP Below Set    ", ALARM_MED,  EPBelowSetAlarm},
@@ -272,6 +316,9 @@ void MuteAlarm(void) {
         if (alarmData[HigherAlarm()].func==HighPressureAlarmHigh) {
             ClearHighPressureAlarmHigh();
         }
+        if (alarmData[HigherAlarm()].func==VeryHighPressureAlarmHigh) {
+            ClearVeryHighPressureAlarmHigh();
+        }
         if (alarmData[HigherAlarm()].func==MonitorFailAlarm) {
             ClearMonitorFailAlarm();
         }
@@ -285,6 +332,11 @@ void MuteAlarm(void) {
             ClearCircuitFailureAlarm();
         }
     }
+    controlSV1 = true;
+    monitorSV1 = true;
+    veryHighSV1 = true;
+    
+    SetAlarmSV1(controlSV1 || monitorSV1 || veryHighSV1 || batterySV1);
 }
 
 char *GetAlarmState(void) {
@@ -366,6 +418,7 @@ void HistAlarm(void) {
 }
 
 void AlarmCheckTask(void) {
+    SetAlarmSV1(controlSV1 || monitorSV1 || veryHighSV1 || batterySV1);
     if (alarmCheck == false) return;
     alarmCheck = false;
     // Current buzzer state
@@ -411,6 +464,7 @@ void AlarmCheckTask(void) {
 
 
 void AlarmHandler(void) {
+
     //printf("AH %d %d\r\n", muteSec, histSec);
     if (muteSec && AnyAlarm()) muteSec--;
     else muteSec = 0;
@@ -430,6 +484,7 @@ void AlarmInit() {
         testAlarm[i] =0;
     }
     displayStatus = DISPLAY_NORMAL;
+    alarmPmax = 40;
     
     TMR5_SetInterruptHandler(AlarmHandler);
     TMR5_StartTimer();

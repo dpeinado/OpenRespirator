@@ -29,6 +29,7 @@ void HistAlarm(void);
 
 void TestAlarm(int);
 char *GetAlarmState(void);
+void SetMaxPressure(int16_t);
 
 bool CircuitFailureAlarm(void);
 
@@ -38,6 +39,7 @@ void SetControlFailAlarm(void);
 void SetGasFailureAlarm(void);
 void SetHighPressureAlarmLow(void);
 void SetHighPressureAlarmHigh(void);
+void SetVeryHighPressureAlarmHigh(void);
 void SetCircuitFailureAlarm(void);
 void SetBaterryLowAlarmMed(void);
 void SetBaterryLowAlarmHigh(void);
@@ -57,6 +59,7 @@ void ClearControlFailAlarm(void);
 void ClearGasFailureAlarm(void);
 void ClearHighPressureAlarmLow(void);
 void ClearHighPressureAlarmHigh(void);
+void ClearVeryHighPressureAlarmHigh(void);
 void ClearCircuitFailureAlarm(void);
 void ClearBaterryLowAlarmMed(void);
 void ClearBaterryLowAlarmHigh(void);

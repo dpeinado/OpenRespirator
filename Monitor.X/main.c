@@ -103,6 +103,7 @@ void main(void)
         DisplayTask();
         AlarmCheckTask();
         
+        if (PCON0&0xC0) printf("\r\nStack:%02X\r\n");
         static uint32_t cnt = 0;
         if (cnt==0) printf("m\r\n");
         cnt = (cnt+1)%300000;
@@ -137,7 +138,7 @@ void main(void)
             if (ch=='R') MonitorEnable();
             if (ch=='r') MonitorDisable();
 
-            if (ch=='l') printf("\r\nPRS: %d pa PRSV: %d pa 12V: %d mV\r\n", GetPressure_pa(), GetPressureV_pa(), Get12V());
+            if (ch=='l') printf("\r\nPRS: %d %d pa PRSV: %d pa 12V: %d mV\r\n", GetPressure_pa(), GetPressure_pa(), GetPressureV_pa(), Get12V());
             if (ch=='p') MonitorDump();
             if (ch=='z') SetCalibrateState(false);
             if (ch=='Z') SetCalibrateState(true);
