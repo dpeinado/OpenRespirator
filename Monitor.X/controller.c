@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
+#include "display.h"
+#include "alarm.h"
 #include "lcd.h"
 
 struct message {
@@ -34,32 +36,71 @@ bool commandReceived;
 #define STATE_RUNV 0x14
 #define STATE_SLEEP 0x8
 
+void StopHandler(void);
+int16_t spr = 0;
+int16_t GetSpr(void) { return spr; }
+bool init;
+bool run;
+bool volumeControl;
 
 void UpdateState(void) {
-    if (msg.cntMsg.state & STATE_INIT) {
-        int init = (msg.cntMsg.state & STATE_INIT)>>5;
-        printf("\r\nINIT: %d\r\n", init);
-        if (init == 5 || init==3) SetSV1(true);
-        if (init == 1 || init==2 || init==4 || init==6 || init==7) SetSV1(false);
-        if (init == 2) SetCalibrateState(true);
-        else SetCalibrateState(false);
+    static uint8_t old;
+    if (msg.cntMsg.state!=old) printf("\r\nNew state: %02X\r\n", msg.cntMsg.state);
+    old= msg.cntMsg.state;
+    init = (msg.cntMsg.state & STATE_INIT);
+    if (init) {
+        int initPhase = (msg.cntMsg.state & STATE_INIT)>>5;
+        printf("\r\nINIT: %d\r\n", initPhase);
+        if (initPhase == 5 || initPhase==3) SetSV1(true);
+        if (initPhase == 1 || initPhase==2 || initPhase==4 || initPhase==6 || initPhase==7) SetSV1(false);
+        if (initPhase == 2) SetCalibrateState(true); else SetCalibrateState(false);
+        
+        if (initPhase == 5) {
+            //printf("\r\nFlow: %d pa Pressure: %d pa\r\n", GetPressureV_pa(), GetPressure_pa());
+        }
     }
-    if (msg.cntMsg.state & STATE_RUN) SetSV1(true);
-    if (msg.cntMsg.state & STATE_RUN) MonitorEnable(); else MonitorDisable();
-
-    SetTarget(msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F);
-    if (msg.cntMsg.state & STATE_SLEEP) LCDOff(); else LCDOn();
+    run = (msg.cntMsg.state & STATE_RUN) == STATE_RUN;
+    if (run) SetSV1(true);
+    if (run) MonitorEnable(); else MonitorDisable();
+    if (run) DisplayEnable(); else DisplayDisable();
+    volumeControl = (msg.cntMsg.state & STATE_RUNV) == STATE_RUNV;
+    SetVolumeControl(volumeControl);
+    
+    SetTarget(msg.cntMsg.pmax & 0x7F, msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F, (msg.cntMsg.vhigh&0x7F)*10, (msg.cntMsg.vlow&0x7F)*10);
+    SetMaxPressure(msg.cntMsg.pmax & 0x7F);
+    
+    if (msg.cntMsg.state & STATE_SLEEP) {
+        LCDOff(); 
+        printf("\r\n SLEEP MODE\r\n");
+    } else { LCDOn(); }
+    spr = msg.cntMsg.spr;
+    
+    static int cnt=0;
+    if (msg.cntMsg.alarm & 0x80) {
+        printf("\r\nControl Alarm: %02X\r\n", msg.cntMsg.alarm);
+        
+        cnt++;
+        if (cnt>10) SetControlFailAlarm();
+    } else {
+        ClearControlFailAlarm();
+        cnt = 0;
+    }
 }
 
 void ReceiveHandler(void) {
     uint8_t data;
     uint8_t addr,stat0,stat1;
+    //I2C2_SendAck();
+    //data = I2C2_Read();
+    //printf("\r\nD:%02X\r\n", data);
+    //return;
         
     stat0 = I2C2STAT0;
     stat1 = I2C2STAT1;
     addr = I2C2ADB0;
     if (!I2C2STAT1bits.RXBF) return;
     while (I2C2STAT1bits.RXBF) {
+        //I2C2_SendAck();
         //stat0 = I2C2STAT0;
         //stat1 = I2C2STAT1;
         data = I2C2_Read();
@@ -68,21 +109,32 @@ void ReceiveHandler(void) {
         //printf("\r\nCD%02X : %02X %02X = %02X\r\n",addr, stat0, stat1, data);
     }
     commandReceived = true;
+    //if (cntByte>=10) UpdateState();
 }
 
 void StopHandler(void) {
     uint8_t stat0,stat1;
     stat0 = I2C2STAT0;
     stat1 = I2C2STAT1;
-    if (cntByte!=10 && cntByte>0) printf("\r\nI2C: miss %d !!!\r\n", cntByte);
-    //printf("\r\nSTOP: %02X %02X\r\n",stat0, stat1);
+    //if (I2C2STAT1bits.RXBF) ReceiveHandler();
+    if (cntByte!=10 && cntByte>0) {
+        ReceiveHandler();
+        printf("\r\nI2C: miss %d !!!\r\n", cntByte);
+    }
+    //printf("\r\nSTOP: %02X %02X C:%d\r\n",stat0, stat1, cntByte);
     if (cntByte!=0) {
     //    printf("\r\nCNTR: ");
     //    for (int i= 0; i< cntByte; i++) printf ("%02X ", mag.controllerMsg[i]);
     //    printf("\r\n");
     }
+    
+    if (cntByte==10) {
+    //    printf("\r\nCNTR: ");
+    //    for (int i= 0; i< cntByte; i++) printf ("%02X ", msg.controllerMsg[i]);
+    //    printf("\r\n");
+        UpdateState();
+    }
     cntByte = 0;
-    UpdateState();
     
 }
 
@@ -93,17 +145,36 @@ void AddressHandler(void) {
 }
 
 void ControllerTimerHandler(void) {
-    //if (!commandReceived) printf("EC ");
+    static int errors=0;
+    if (!commandReceived) {
+        //
+        if (run) {
+            printf("EC ");
+            errors++;
+            if (errors>10) SetControlFailAlarm();
+        } else {
+            ClearControlFailAlarm();
+        }
+    } else {
+        ClearControlFailAlarm();
+        errors = 0;
+    }
+    static int16_t cnt=0;
+    cnt = (cnt+1)%100;
+    if (cnt==0) printf("&\r\n");
     commandReceived = false;
 }
 
 void ControllerInit(void) {
     printf("Controller init\r\n");
     commandReceived = false;
+    init = false;
+    run = false;
+            
     // Start I2C
     I2C2_Open();
     // After Open define handlers
-    I2C2_SlaveSetAddrIntHandler( AddressHandler);
+    //I2C2_SlaveSetAddrIntHandler( AddressHandler);
     // Set write interrupt handler
     I2C2_SlaveSetReadIntHandler( ReceiveHandler);
     // Set write interrupt handler

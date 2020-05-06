@@ -12,21 +12,23 @@
 #include "alarm.h"
 #include "buttons.h"
 #include "tick.h"
+#include "../Controller.X/cmath.h"
 
 #define NUM_CHANNELS 4
 
 struct adcChannel {
     adcc_channel_t ch;
     volatile bool dataValid;
-    adc_result_t data;
+    volatile adc_result_t data;
+    uint8_t ref;
 } ;
 static int currentChannel;
 
 static struct adcChannel adcChannels[] = {
-    {PRS, false, 0},
-    {MIC, false, 0},
-    {PRSV, false, 0},
-    {MEAS12,false, 0}
+    {PRS, false, 0, 0}, // #define ADC_ID_PRS 0
+    {MIC, false, 0, 3}, // #define ADC_ID_MIC 1
+    {PRSV, false, 0, 0},// #define ADC_ID_VOL 2
+    {MEAS12,false, 0, 3}// #define ADC_ID_12V 3
 };
 
 bool AdcReady(void) {
@@ -35,6 +37,8 @@ bool AdcReady(void) {
 
 void AdcReStartCycle(void) {
     currentChannel = 0;
+    ADCON0bits.ADON = 0;  // Disable
+    ADREF = adcChannels[currentChannel].ref; // Change reference
     ADCC_StartConversion(adcChannels[currentChannel].ch);
 }
 
@@ -66,26 +70,32 @@ void AdcHandler(void) {
     {
         // Start new conversion
         currentChannel++;
-        ADCC_StartConversion(adcChannels[currentChannel].ch);
+        ADCON0bits.ADON = 0;  // Disable
+        ADREF = adcChannels[currentChannel].ref; // Change reference
+        ADCC_StartConversion(adcChannels[currentChannel].ch); // Enable & Start
     } else {
         // Wait for TIMER0 to start a new cycle
-        currentChannel = 0;    cnt++;
+        currentChannel = 0;
+        // ADC Signal every two seconds
+        cnt++;
         if (cnt>=1000) { cnt = 0;  }
         if (cnt==0) printf("o\r\n");
-    }
-
-    
+    }   
 }
 
 void AdcInit(void) {
     currentChannel = 0;
     ADCC_SetADIInterruptHandler(AdcHandler);
+    
+    ADCON0bits.ADON = 0;
+    ADREF = adcChannels[currentChannel].ref;
     ADCC_StartConversion(adcChannels[currentChannel].ch);
 }
 
-int16_t adcOffset;
+int16_t adcOffset, adcVOffset;
 int16_t targetHigh;
 int16_t targetLow;
+int16_t targetPmax;
 uint16_t targetBp;
 bool enable;
 
@@ -96,10 +106,18 @@ bool enable;
 
 int state;
 
-int32_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34, ttNoAlarm;
+uint32_t volumeAcc;
+int16_t volume;
+int16_t volumeMax, volumeMin;
+int16_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34, ttNoAlarm, ttAlarm;
 bool enableAlarms;
+bool volumeControl;
 int16_t tdi, tde, ti, te, bp, bpm;
-int16_t pi,pe, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
+int16_t pi,pe, pmax, pmin, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
+int32_t pHighAcc, pLowAcc;
+int16_t numHigh, numLow;
+bool alarmSV1;
+bool normalSV1;
 int16_t rpi, rpe, lrpi, lrpe;
 int16_t hiLimit, loLimit;
 
@@ -110,7 +128,9 @@ int16_t GetTe(void) { return te*2; } // Time in ms
 int16_t GetBp(void) { return bp*2; } // Time in ms
 int16_t GetBpm(void) { return bpm; } // Breaths per minute
 int16_t GetEp(void) { return (lrpe/5); } // 
-int16_t GetIp(void) { return (lrpi/5); } // 
+int16_t GetIp(void) { return (pHigh/5); } // 
+int16_t GetVolume(void) { return volume; }
+int16_t GetPmax(void) { return pmax/5; }
 int16_t GetMaxPressure(void) {
     int temp = alarmMaxPressure/5;
     //printf("\r\n MAXP: %d\r\n", temp);
@@ -135,15 +155,23 @@ int16_t GetTargetIp() {
 
 int16_t GetTargetEp() {
     return targetLow/5; 
-} 
+}
 
-void SetTarget(int16_t ip, int16_t ep, uint16_t br) {
+void SetVolumeControl(bool vc) { volumeControl = vc; }
+
+void SetTarget(int16_t pmax, int16_t ip, int16_t ep, uint16_t br, int16_t vmax, int16_t vmin) {
     if (ip!= targetHigh/5) printf("\r\n IP: %d \r\n", ip);
     if (ep!= targetLow/5) printf("\r\n EP: %d \r\n", ep);
+    if (vmax!= volumeMax) printf("\r\n Vmax: %d \r\n", vmax);
+    if (vmin!= volumeMin) printf("\r\n Vmin: %d \r\n", vmin);
+    if (pmax!= targetPmax/5) printf("\r\n Pmax: %d \r\n", pmax);
     //if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
     targetHigh = ip*5;
     targetLow  = ep*5;
     targetBp   = 60000/br;
+    targetPmax = pmax*5;
+    volumeMax = vmax;
+    volumeMin = vmin;
 }
 
 void MonitorDump(void) {
@@ -176,19 +204,33 @@ void SetCalibrateState(bool calib) {
         state = STATE_CALIBRATE;
     } else {
         //printf("\r\nSTOP CALIBRATE\r\n");
-        printf("\r\nC: %d %d\r\n", GetPressure_mbar02(), adcOffset);
+        if (adcOffset/8>300 || adcOffset/8<-300) {
+            printf("\r\nBAD CALIBRATION.\r\n");
+            adcOffset = 42*8;
+        } 
+        if (adcVOffset/8>300 || adcVOffset/8<-300) {
+            printf("\r\nBAD VOLUME CALIBRATION.\r\n");
+            adcOffset = 228*8;
+        }
+        //state = STATE_CALIBRATE;
+        //printf("\r\nPreCalib: Pres:%d Off:%d //Volume pres:%d Off:%d\r\n", GetPressure_pa(), adcOffset/8, GetPressureV_pa(), adcVOffset/8);
         state = STATE_OFF;
+        printf("\r\nCalibrated: Pres:%d Off:%d //Volume pres:%d Off:%d\r\n", GetPressure_pa(), adcOffset/8, GetPressureV_pa(), adcVOffset/8);
+        
         UnDisplayCalibrate();
     }
     ClearVars();
     TMR0_StartTimer();
 }
 
-void MonitorEnable(void) { enable = true; }
+void MonitorEnable(void) { enable = false; }
 void MonitorDisable(void) { enable = false; }
 
 void MonitorPressureTask(void) { // Every 2 ms
-    uint8_t pr;
+    int16_t pr,v12, adcv;
+    uint32_t sqpr;
+
+    
     int next;
     static bool measPi=false;
     static bool measPe=false;
@@ -197,10 +239,14 @@ void MonitorPressureTask(void) { // Every 2 ms
     
     uint16_t temp;
     
-    //TST1_Toggle();
+    // Define Valve state
+    if (alarmSV1 & normalSV1) VALVE_SetHigh();
+    else VALVE_SetLow();
     
- //   ToggleAlarmLED();
-
+    // Timer0 signal every 2 seconds
+    static int16_t cnt=0;
+    if (cnt==0) printf("0\r\n");
+    cnt = (cnt+1)%1000;
     
     // Check ADC status
     if (!AdcReady()) {
@@ -211,43 +257,76 @@ void MonitorPressureTask(void) { // Every 2 ms
     }
     
     if (!AdcDataReady(ADC_ID_PRS)) {
-        printf("-");
+        printf(" (ErrDR) ");
         // Restart ADC
         AdcReStartCycle();
         // TBD: Add alarm
         
         return;
     } 
-    // Timer 0 restart conversion cycle
-    AdcReStartCycle();
-    
-    // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
-    pr = GetPressure_mbar02();
+ 
+
      
     if (state == STATE_CALIBRATE) {
- //       if (prFast == prSlow && prFast < ((targetLow+targetHigh)/2)) {
-            static int cnt=0;
-            adcOffset +=  pr; // prFast ( Time constant 1/5)
-            cnt++;
-            if (cnt==250) { // 500 ms
-                //printf("\r\nC: %d %d\r\n", prFast, adcOffset);
-                cnt = 0;
-                DisplayCalibrate(prFast, adcOffset);
-            }
-            //DisplayCalibrate(prFast, adcOffset);
- //       }
-    } 
+        static int cnt=0;
+        adc_result_t tmp, tmp2;
+        tmp = GetPressure_pa();
+        adcOffset  = (7*adcOffset + 8*tmp)/8; //
+        tmp2 = GetPressureV_pa();
+        adcVOffset = (7*adcVOffset + 8*tmp2)/8;
+
+        //cnt++;
+        //if (cnt==250) { // 500 ms
+        //    printf("\r\nC: %d %d %d %d\r\n", tmp, adcOffset/8, tmp2, adcVOffset/8);
+        //    cnt = 0;
+            //DisplayCalibrate(tmp, adcOffset, tmp2, adcVOffset);
+        //}
+        //DisplayCalibrate(prFast, adcOffset);
+        
+        // Timer 0 restart conversion cycle
+        AdcReStartCycle();
+        return;
+    } else {
+        // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
+        pr  = GetPressure_mbar02();
+        if (pr<0) pr = 0;
+        if (pr>100*5) pr = 0;
+        
+        v12 = Get12V();
+        // Timer 0 restart conversion cycle
+        AdcReStartCycle();
+    }
+    
     
     // Return if no RUN from Controller
     if (!enable) {
         ClearVars();
+        ClearVAboveMaxAlarm();
+        ClearVBelowMinAlarm();
+        ClearTdiTooLongAlarm();
+        ClearTdeTooLongAlarm();
+        ClearEPBelowSetAlarm();
+        ClearEPAboveSetAlarm();
+        ClearIPBelowSetAlarm();
+        ClearIPAboveSetAlarm();
+        ClearCircuitFailureAlarm();
+        ClearGasFailureAlarm();
+        alarmSV1=true;
+        enableAlarms=false;
         return;
     }
+    
+    // Pressure signal every 2 seconds
+    static int16_t cnt2=0;
+    if (cnt2==0) printf("P\r\n");
+    cnt2 = (cnt2+1)%1000;
+    
     
     // Time variables
     tt++;
     ttExt++;
     ttNoAlarm++;
+    ttAlarm++;
     
     // Pression filters   
     prFastBuffer[count%25]=pr;
@@ -262,24 +341,53 @@ void MonitorPressureTask(void) { // Every 2 ms
 
     }
    
-    // Only alarm after 12s after setting
-    if (ttNoAlarm>12*500) {
-        enableAlarms = true;
+    // Alarm if no breath in 6s
+    if (ttAlarm>6*500) {
+        if (enableAlarms) SetCircuitFailureAlarm();
+    } else {
+        ClearCircuitFailureAlarm();
     }
+    // Only alarm after 15s after setting
+    if (ttNoAlarm>15*500) {
+        enableAlarms = true;
+        ttNoAlarm=15*500+1;
+    }
+    
+    // Calculate volume
+    
+    adcv = GetPressureV_pa();
+    
+    uint16_t v1 = adcv > 0 ? adcv<<4 : 0;
+    uint16_t v2 = isqrt(v1); 
+    volumeAcc += v2 > 20 ? v2 : 0;
 
     // Limits of pressure estimations
     if (ttExt>6*500) { // Every 6 s we should have at least one breath
         //printf("\r\n pLow: %d pHigh: %d Min: %d Max: %d pe: %d pi:%d \r\n", pLow/5, pHigh/5, minPressure/5, maxPressure/5, pe/5, pi/5);
         // Define Hi and Low limits for next cycle
-        hiLimit = maxPressure - (maxPressure-minPressure)/4;
-        loLimit = minPressure + (maxPressure-minPressure)/4;
+        //hiLimit = maxPressure - (maxPressure-minPressure)/3;
+        hiLimit = minPressure + 2*(maxPressure-minPressure)/5;
+        loLimit = minPressure + (maxPressure-minPressure)/3;
+        
+        // Correct limits in rare conditions
+        if (loLimit<(targetLow+5*5)) {
+            printf("\r\nCorrected loLimit = %d (%d) \r\n", targetLow/5+5, loLimit/5);
+            loLimit = targetLow+5*5;
+        }
+            
+        if (hiLimit<loLimit) hiLimit = loLimit;
+        
         // Store estimation of last cycle
         pe = pLow;
         pi = pHigh; 
+        pmax = maxPressure;
+        pmin = minPressure;
+        
+        if (pmax< targetLow) SetGasFailureAlarm();
         
         // Reset maximum and minimum periodically
-        pLow = minPressure;
-        pHigh = maxPressure;
+        //pLow = minPressure;
+        //pHigh = maxPressure;
         maxPressure = 0;
         minPressure = 40*5;
         ttExt=0;
@@ -288,100 +396,46 @@ void MonitorPressureTask(void) { // Every 2 ms
     count ++;   
     if (count>=6*25) count =0; // 25*6 time for both filters to go around
     
-    if (tt>45000) {
-        printf("\r\n No breath detected in 1 min\r\n");
+    if (tt>30000) {
+        //printf("\r\n No breath detected in 1 min\r\n");
         ClearVars() ; // No breaths for more than 1 min
         measPe = false;
         measPi = false;
     }
     
     // Absolute maximum for the alarm. Max is cleared every second by alarmtask
-    if (prSlow>alarmMaxPressure) {
-        alarmMaxPressure = prSlow;
+    if (prFast>alarmMaxPressure) {
+        alarmMaxPressure = prFast;
         //printf("\r\n MAXP: %d\r\n", pr/5);
     }
     
     // Get absolute maximum / minimum breaths during the 6 seconds period
-    if (prSlow>maxPressure) {
-        maxPressure = prSlow;
+    if (pr>maxPressure) {
+        maxPressure = pr;
         //printf("\r\n MAXP: %d\r\n", pr/5);
     }
-    if (prSlow<minPressure) {
-        minPressure = prFast;
-        //printf("\r\n MAXP: %d\r\n", pr/5);
+    if (pr<minPressure) {
+        minPressure = pr;
+        //printf("\r\n MINP: %d\r\n", pr/5);
     }
    
     // Average signals within limits. This will average last 10*25*6 samples: 3 seconds of samples (Between 1 and 2 extra breaths)
     if (prSlow>hiLimit) {
         //TST1_SetHigh();
-        pHigh = (pHigh*9+prSlow)/10;
+        //pHigh = (pHigh*39+prSlow)/40;
+        pHighAcc += prSlow;
+        numHigh++;
     }
     if (prSlow<loLimit) {
         //TST1_SetLow();
-        pLow = (pLow*9+prSlow)/10;    
+        //pLow = (pLow*39+prSlow)/40;    
+        pLowAcc += prSlow;
+        numLow++;
     }
 
     // Calc start of breath 
     int16_t halfLimit;
     halfLimit = (hiLimit+loLimit)/2;
-    
-    // Use limits and Pe / PI to identify rise and falls
-    
-    // Start of rise
-    if (prSlow<loLimit && prFast>= loLimit) { // Crossing low limit up
-        //TST1_SetHigh();
-        if (tt>400) { // Filter more events during ramp-up
-            bp = tt;
-            if (tt>tt4) te = tt-tt4;
-            if (tt3>tt2) ti = tt3-tt2;
-            if (bp!=0) bpm = 60000/(bp*2);
-//            printf("\r\nUP12: %ld pr: %d\r\n", tt, prSlow/5, bpm);           
-        
-            tt=0; // This is the start of time
-            tt1 = tt;  // Start of event
-
-        }
-        tt12 = tt; // Last event
-        // Store PE measured during TE
-        measPe=false;
-        measPi=false;
-        lrpe = rpe;
-        // Check alarms
-        if (enableAlarms) {
-            if (lrpe>(targetLow+15)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
-            if (lrpe<(targetLow-15)) SetEPBellowSetAlarm(); else ClearEPBellowSetAlarm();
-        } else {
-            ClearEPAboveSetAlarm();
-            ClearEPBellowSetAlarm();
-        }
-
-    }
-    
-    
-    static bool down = false;
-    
-    // Start of fall
-    if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
-        //TST1_SetLow();
-        if (!down) {
-  //          printf("\r\nDOWN34: %ld pr: %d\r\n", tt, prSlow/5, bpm); 
-            tt3 = tt; // First sample
-            down = true;
-        }
-        tt34 = tt; // Last samble
-        // Store PI measured during TI
-        measPe=false;
-        measPi=false;
-        lrpi = rpi;
-        // Check alarms
-        if (enableAlarms) {
-            if (lrpi>(targetHigh+20)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
-            if (lrpi<(targetHigh-20)) SetIPBellowSetAlarm(); else ClearIPBellowSetAlarm(); 
-        } else {
-            ClearIPAboveSetAlarm();
-            ClearIPBellowSetAlarm();
-        }
-    } else if (tt>(tt3+200)) down = false;
     
     // Starting state
     if ( state == STATE_OFF) {
@@ -390,25 +444,123 @@ void MonitorPressureTask(void) { // Every 2 ms
         }
     }
     
+    // Use limits and Pe / PI to identify rise and falls
+    
+    // Start of rise
+    if (prSlow<loLimit && prFast>= loLimit) { // Crossing low limit up
+        //TST1_SetHigh();
+        //printf("\r\nUP12: %ld pr: %d\r\n", tt, prSlow/5); 
+        if (tt>400) { // Filter more events during ramp-up
+            bp = tt;
+            if (tt3>tt2) ti = tt3-tt2;
+            
+            if (tt>tt4) te = tt-tt4;
+            
+            if (bp!=0) bpm = 60000/(bp*2);
+            if (numHigh>0) {
+                pHigh = pHighAcc / numHigh;
+                pHighAcc = 0;
+                numHigh = 0;
+            }
+            if (numLow>0) {
+                pLow = pLowAcc / numLow;
+                numLow = 0;
+                pLowAcc = 0;
+            }
+
+            tt1 = tt;  // Start of event
+            
+            printf("\r\nNew Breath: TT12: %d TT2: %d TT3: %d TT34: %d TT4: %d TT1: %d ", tt12*2, tt2*2, tt3*2, tt34*2, tt4*2, tt1*2);
+            printf("TI: %d TE: %d TDI: %d TDE: %d\r\n", ti*2, te*2, tdi*2,  tde*2);
+            printf("   Pmax: %d lIP: %d IP: %d Phigh: %d -- ", pmax/5, lrpi/5, pi/5, pHigh/5);
+            printf("Pmin: %d lEP: %d EP: %d Plow:%d -- ", pmin/5, lrpe/5, pe/5, pLow/5 );
+            printf("HiLimit: %d LoLimit: %d -- Volume: %d\r\n", hiLimit/5, loLimit/5, volume);
+            printf("        ADCoffset: %d   ADCVoffset: %d 12V: %d mV -- ", adcOffset/8, adcVOffset/8, v12);
+            printf("Targets: Pmax: %d IP: %d EP: %d V: %d/%d\r\n", targetPmax/5, targetHigh/5, targetLow/5, volumeMax, volumeMin);
+
+            
+            tt=0; // This is the start of time
+            
+            tt2=0;
+            tt3=0;
+            tt4=0;
+            tt34=0;
+            if (tt1<=500) volumeAcc = v2 > 20 ? v2 : 0;;
+            ttAlarm = 0;
+        }
+        tt12 = tt; // Last event of rising below lolimit
+        // Store PE measured during TE
+        measPe=false;
+        measPi=false;
+        lrpe = rpe;
+        // Check alarms
+        if (enableAlarms) {
+            if (lrpe>(targetLow+15)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+            if (lrpe<(targetLow-15)) SetEPBelowSetAlarm(); else ClearEPBelowSetAlarm();
+        } else {
+            ClearEPAboveSetAlarm();
+            ClearEPBelowSetAlarm();
+        }
+
+    }
+    
+    // Define start of Volume capture at 90% of cycle
+    if (tt1>500 && tt==(tt1*9)/10) volumeAcc=0;
+    
+    
+    static bool down = false;
+    
+    // Start of fall
+    if (prSlow>hiLimit && prFast<= hiLimit) { // Crossing high limit down
+        //TST1_SetLow();
+        if (!down) {
+            //printf("\r\nDOWN34: %ld pr: %d\r\n", tt, prSlow/5, bpm); 
+            tt3 = tt; // First sample going down
+            down = true;
+//            printf("\r\nTest D34: TT12:%d TT2:%d TT3:%d TT34:%d TT4:%d TI:%d TE:%d TDI: %d TDE:%d\r\n", tt12*2, tt2*2, tt3*2, tt34*2, tt4*2, ti*2, te*2, tdi*2, tde*2);
+            
+        }
+        tt34 = tt; // Last sample
+        // Store PI measured during TI
+        measPe=false;
+        measPi=false;
+        lrpi = rpi;
+        // Check alarms
+        if (enableAlarms && !volumeControl) {
+            //if (lrpi>(targetHigh+20)) SetIPAboveSetAlarm(); else ClearIPAboveSetAlarm();
+            //if (lrpi<(targetHigh-20)) SetIPBelowSetAlarm(); else ClearIPBelowSetAlarm(); 
+            if (pHigh>(targetHigh+20) && lrpi>(targetHigh+20) ) SetIPAboveSetAlarm();
+            if (pHigh<(targetHigh+20) || lrpi<(targetHigh+20) ) ClearIPAboveSetAlarm();
+            if (pHigh<(targetHigh-20) && lrpi<(targetHigh-20) ) SetIPBelowSetAlarm(); 
+            if (pHigh>(targetHigh-20) || lrpi>(targetHigh-20) ) ClearIPBelowSetAlarm();
+ 
+        } else {
+            ClearIPAboveSetAlarm();
+            ClearIPBelowSetAlarm();
+        }
+    } else if (tt>(tt3+200)) down = false;
+    
     // Transition to HIGH at the top
     if (prSlow>=(pi-3*5) && state == STATE_LOW) { // State is LOW and I am at the top
         //TST2_SetHigh();
         next = STATE_HIGH;
         tt2 = tt;
-//        printf("\r\nUP: %ld %d\r\n", tt, prSlow/5);
-        if (tt2>tt1) {
-            tdiBuffer[numtdi%10] = ((tt2-tt1));
+//        printf("\r\nUP: %d %d\r\n", tt2, prSlow/5);
+        if (tt2>0) {
+            tdiBuffer[numtdi%10] = ((tt2-0));
             tdi = 0;
             for (int i=0; i<MIN(10,numtdi+1); i++) tdi = tdi + tdiBuffer[i];                   
             tdi = tdi/MIN(10,numtdi+1);
-//            printf("\r\nTDI(%d): %d %d\r\n", numtdi%10, ((tt2-tt1)*2), tdi*2); 
+//            printf("\r\nTDI(%d): %d %d\r\n", numtdi%10, ((tt2-0)*2), tdi*2); 
             //MonitorDump();
-            numtdi++;
+            if (enableAlarms) numtdi++;
             if (numtdi>=100) numtdi=10;
             // Now we can start averaging Pi
             measPi=true;
             rpi=pi;
         }
+
+//        printf("\r\nUP: %d %d\r\n", tt2, prSlow/5);
     }
     
     // Transition to LOW at the bottom
@@ -416,7 +568,7 @@ void MonitorPressureTask(void) { // Every 2 ms
         //TST2_SetLow();
         next = STATE_LOW;
         tt4 = tt;
-//        printf("\r\nDOWN: %ld %d\r\n", tt, prSlow/5);
+//        printf("\r\nDOWN: %d %d\r\n", tt4, prSlow/5);
 
         if (tt4>tt3) {
             tdeBuffer[numtde%10] = ((tt4-tt3));
@@ -425,17 +577,21 @@ void MonitorPressureTask(void) { // Every 2 ms
             tde = tde/MIN(numtde+1,10);
 //            printf("\r\nTDE: %d %d @ %lu %d %d\r\n", numtde, tde, tt, prFast, prSlow);
             //MonitorDump();
-            numtde++;
+            if (enableAlarms) numtde++;
             if (numtde>=100) numtde=10;
             // Now we can start averaging Pe
             measPe = true;
             rpe = pe;
         }
+        volume = (volumeAcc)/65;
+        volumeAcc = 0;
+
+//        printf("\r\nDOWN: %d %d\r\n", tt4, prSlow/5);
     }
     
     // New estimators: 5*25*2 = 250 ms We will average the last 250 ms
-    if (measPi) rpi = (rpi*4+prFast)/5;
-    if (measPe) rpe = (rpe*4+prFast)/5;
+    if (measPi) rpi = (rpi*4+prSlow)/5;
+    if (measPe) rpe = (rpe*4+prSlow)/5;
 
     // TBD: Timeout alarms of events
     if (enableAlarms) {
@@ -449,11 +605,16 @@ void MonitorPressureTask(void) { // Every 2 ms
             SetCircuitFailureAlarm();
         }
 #endif
-        if (tde>350) SetTdeTooLongAlarm();
-        if (tdi>350) SetTdiTooLongAlarm();
+        if (tde>350) SetTdeTooLongAlarm(); else ClearTdeTooLongAlarm();
+        if (tdi>350) SetTdiTooLongAlarm(); else ClearTdiTooLongAlarm();
+        if (volume>volumeMax) SetVAboveMaxAlarm(); else ClearVAboveMaxAlarm();
+        if (volume<volumeMin) SetVBelowMinAlarm(); else ClearVBelowMinAlarm();
+
     } else {
         ClearTdeTooLongAlarm();
         ClearTdiTooLongAlarm();
+        ClearVAboveMaxAlarm();
+        ClearVBelowMinAlarm();
     }
             
     state = next;
@@ -480,6 +641,7 @@ void ClearVars(void) {
     tt  = 0;
     ttExt = 0;
     ttNoAlarm = 0;
+    ttAlarm = 0;
     enableAlarms = false;
     tt1 = 0;
     tt2 = 0;
@@ -492,35 +654,45 @@ void ClearVars(void) {
     
     pi = 0;
     pe = 0;
-    rpi = targetHigh;
-    rpe = targetLow;
-    lrpi = targetHigh;
-    lrpe = targetLow;
+    rpi = 0;
+    rpe = 0;
+    lrpi = 0;
+    lrpe = 0;
     maxPressure = 0;
     minPressure = 40*5;
+    pHighAcc = 0;
+    pLowAcc = 0;
+
     alarmMaxPressure = 0;
     prSlow = 0;
     prSlowDev = 0;
     prSlowNumStable = 0;
     hiLimit = 40*5;
     loLimit = 0;
-
+    volumeAcc = 0;
+    volume = 0;
+    
+    alarmSV1=true;
     
     ClearEPAboveSetAlarm();
-    ClearEPBellowSetAlarm();
+    ClearEPBelowSetAlarm();
     ClearIPAboveSetAlarm();
-    ClearIPBellowSetAlarm();
- 
+    ClearIPBelowSetAlarm();
+    ClearCircuitFailureAlarm();
 }
 
-void InitializePressure (void) {
+void MonitorInit (void) {
     //ADCC_Initialize(); // Already in mcc.c
     AdcInit();
     //ADCC_EnableContinuousConversion();
     //ADCC_StartConversion(PRS);
-    targetHigh = 25*5; // 0.2 mbar
+    targetHigh = 20*5; // 0.2 mbar
     targetLow  = 7*5; // 0.2 mbar
-    adcOffset = 191; // Read from EEPROM or calibrate. ADC counts
+    targetPmax = 25*5;
+    adcVOffset = 228*8; // Read from EEPROM or calibrate. ADC counts
+    adcOffset = 42*8;
+    volumeMax = 500;
+    volumeMin = 100;
     state = STATE_OFF;
     enable = false;
     ClearVars();
@@ -551,13 +723,48 @@ int16_t GetPressure_pa (void) {
     uint32_t mv = adc;
     mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
     //printf("V: %d mV ", mv);
-    int16_t p = mv;
-    p = p - 1000 - adcOffset; // remove offset of 1V
+    int32_t p32 = ((mv-200)*100)/45;
+    int16_t p = ((int16_t) p32)  - (state == STATE_CALIBRATE ? 0 : adcOffset/8); 
     // if (p<0) p=0;
     return p;
 }
 
-void SetSV1(bool value) {
-    if (value) VALVE_SetHigh();
-    else VALVE_SetLow();
+int16_t GetPressureV_pa (void) {
+    
+    adc_result_t adc = AdcGetData(ADC_ID_VOL);
+    
+    //printf("ADC: %d ", adc);
+    uint32_t mv = adc;
+    mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
+    //printf("V: %d mV ", mv);
+    int16_t p = mv;
+    p = p - 1000  - (state == STATE_CALIBRATE ? 0 : adcVOffset/8); // remove offset of 1V
+    // if (p<0) p=0;
+    return p;
 }
+
+int16_t Get12V (void) {
+    adc_result_t adc = AdcGetData(ADC_ID_12V);
+    uint32_t mv = adc;
+    mv = ( mv*4096) / 4096;
+    int16_t v12 = (mv*33)/10;
+    return v12;
+}
+
+
+void SetAlarmSV1(bool value) {
+    static bool last= false;
+    if (last!=value) printf("\r\nAlSV1: %d\r\n", value);
+    alarmSV1 = value;
+    last = value;
+}
+
+void SetSV1(bool value) {
+    static bool last= false;
+    if (last!=value) printf("\r\nSV1: %d\r\n", value);
+    last = value;
+    normalSV1 = value;
+}
+
+bool GetAlarmSV1(void) { return alarmSV1; }
+

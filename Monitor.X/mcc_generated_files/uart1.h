@@ -85,7 +85,7 @@ typedef union {
 /**
  Section: Global variables
  */
-extern volatile uint8_t uart1TxBufferRemaining;
+extern volatile uint16_t uart1TxBufferRemaining;
 extern volatile uint8_t uart1RxCount;
 
 /**

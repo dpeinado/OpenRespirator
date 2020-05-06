@@ -25,7 +25,7 @@ bool AdcDataReady(int);
 adc_result_t AdcGetData(int);
     
 // Pressure functions
-void InitializePressure (void);
+void MonitorInit (void);
 int16_t GetPressure_mbar (void);
 int16_t GetPressure_mbar02 (void); // 20 ubar units
 int16_t GetPressure_kpa (void);
@@ -33,9 +33,18 @@ int16_t GetPressure_pa (void);
 void MonitorPressureTask(void);
 void MonitorDump(void);
 void SetCalibrateState(bool);
-void SetTarget(int16_t ip, int16_t ep, uint16_t br);
+void SetTarget(int16_t pmax, int16_t ip, int16_t ep, uint16_t br, int16_t vmax, int16_t vmin);
 void MonitorEnable(void);
 void MonitorDisable(void);
+int16_t GetTargetIp(void);
+int16_t GetTargetEp(void);
+int16_t GetPressureV_pa(void);
+int16_t Get12V(void);
+int16_t GetVolume(void);
+int16_t GetPmax(void);
+void SetAlarmSV1(bool);
+bool GetAlarmSV1(void);
+void SetVolumeControl(bool);
 
 // Solenoid functions
 void SetSV1 (bool);
