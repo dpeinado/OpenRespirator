@@ -61,9 +61,6 @@ void MenuMng(void) {
                         // Accept change and exit.
                         IP = menuVal;
                         chIP = true;
-                        // Whenever IP is changed, update also MaxP
-                        MaxP = menuVal + PMAX_DEFAULT;
-                        chMaxP = true;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = true;
@@ -182,6 +179,13 @@ void MenuMng(void) {
                         // Should also check limits.
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > IP_MAX) {
+                                    menuVal = IP_MAX;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
                                 if (menuVal > IP_MAX) {

@@ -27831,7 +27831,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 90 "./ORespGlobal.h"
+# 99 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28011,9 +28011,6 @@ void MenuMng(void) {
 
                         IP = menuVal;
                         chIP = 1;
-
-                        MaxP = menuVal + 5;
-                        chMaxP = 1;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = 1;
@@ -28132,6 +28129,13 @@ void MenuMng(void) {
 
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 70) {
+                                    menuVal = 70;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
                                 if (menuVal > 70) {

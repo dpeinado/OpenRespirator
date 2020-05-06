@@ -30,8 +30,6 @@ extern "C" {
 // Default value for volume alarms. +-25%
 #define VOL_ALRM_DFL 25
     
-// Max pressure default value over set IP value. In milibars.
-#define PMAX_DEFAULT 5
 // Max Volume overshoot. In mililiters.
 #define VOVERSHOOT_LIMIT 25
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
@@ -40,7 +38,7 @@ extern "C" {
 #define VQUANTA_LIMIT    90
     
 // Objective time for inspiration.
-#define INSP_TIME 500
+#define INSP_TIME 400
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
@@ -55,6 +53,8 @@ extern "C" {
 
 #define OPEN_SV2LOW LATAbits.LATA2 = 1;LATCbits.LATC3 = 0
 #define OPEN_SV2MED LATAbits.LATA2 = 0;LATCbits.LATC3 = 1
+#define SV2LOWISOPEN LATAbits.LATA2
+#define SV2MEDISOPEN LATCbits.LATC3
 
 //#define SV2ISOPEN (sv2_pwmval!=0)
 //#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
@@ -73,6 +73,7 @@ extern "C" {
 #define BUZZER_OFF LATDbits.LATD0 = 0
 
 #define DEBUG
+// #define OCTAVE
 
 #ifdef DEBUG
 #define ERROR_CONDITION(k) CLOSE_SV2;CLOSE_SV3;printf("Fatal %d",k)
@@ -81,11 +82,19 @@ extern "C" {
 #endif
 
 
+
 #ifdef DEBUG
+#ifdef OCTAVE
+#define OCTAVE_PRINT(x) printf x
+#define DEBUG_PRINT(x) do {} while (0)
+#else
+#define OCTAVE_PRINT(x) do {} while (0)
 #define DEBUG_PRINT(x) printf x
+#endif
 #else
 #define DEBUG_PRINT(x) do {} while (0)
 #endif
+
 
     typedef enum {
         VMODE_PRESSURE = 0,
