@@ -1,3 +1,5 @@
+// Author: David Ortiz
+
 #include "i2c2_mux.h"
 #include "mcc_generated_files/mcc.h"
 #include "ORespGlobal.h"

@@ -13,8 +13,10 @@ extern "C" {
 #endif
 
 void InitDisplay(void);
+void DisplayEnable(void);
+void DisplayDisable(void);
 void DisplayTask(void);
-void ValueDisplay();
+void ValueDisplay(void);
 void AlarmDisplay(int, char *);
 void DisplayCalibrate(int16_t, int16_t);
 void UnDisplayCalibrate(void);

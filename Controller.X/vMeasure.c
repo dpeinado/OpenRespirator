@@ -1,3 +1,5 @@
+// Author: David Ortiz
+
 #include "vMeasure.h"
 #include "aCapture.h"
 #include "cmath.h"

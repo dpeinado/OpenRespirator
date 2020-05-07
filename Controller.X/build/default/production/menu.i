@@ -15,7 +15,7 @@
 
 
 # 1 "./ORespGlobal.h" 1
-# 15 "./ORespGlobal.h"
+# 13 "./ORespGlobal.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27040,9 +27040,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
+# 586 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
+# 598 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27385,247 +27385,6 @@ void (*I2C2_InterruptHandler)(void);
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/tmr4.h" 1
-# 79 "./mcc_generated_files/tmr4.h"
-typedef enum
-{
-# 89 "./mcc_generated_files/tmr4.h"
-   TMR4_ROP_STARTS_TMRON,
-
-
-
-
-   TMR4_ROP_STARTS_TMRON_ERSHIGH,
-
-
-
-
-   TMR4_ROP_STARTS_TMRON_ERSLOW,
-
-
-
-
-   TMR4_ROP_RESETS_ERSBOTHEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSRISINGEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSFALLINGEDGE,
-
-
-
-
-   TMR4_ROP_RESETS_ERSLOW,
-
-
-
-
-   TMR4_ROP_RESETS_ERSHIGH,
-# 135 "./mcc_generated_files/tmr4.h"
-   TMR4_OS_STARTS_TMRON,
-
-
-
-
-   TMR4_OS_STARTS_ERSRISINGEDGE ,
-
-
-
-
-   TMR4_OS_STARTS_ERSFALLINGEDGE ,
-
-
-
-
-   TMR4_OS_STARTS_ERSBOTHEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSFIRSTRISINGEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSFIRSTFALLINGEDGE,
-
-
-
-
-
-   TMR4_OS_STARTS_ERSRISINGEDGEDETECT,
-
-
-
-
-   TMR4_OS_STARTS_ERSFALLINGEDGEDETECT,
-
-
-
-
-   TMR4_OS_STARTS_TMRON_ERSHIGH = 0x16,
-
-
-
-
-   TMR4_OS_STARTS_TMRON_ERSLOW = 0x17,
-# 192 "./mcc_generated_files/tmr4.h"
-   TMR4_MS_STARTS_TMRON_ERSRISINGEDGEDETECT = 0x11,
-
-
-
-
-   TMR4_MS_STARTS_TMRON_ERSFALLINGEDGEDETECT = 0x12,
-
-
-
-
-
-   TMR4_MS_STARTS_TMRON_ERSBOTHEDGE = 0x13
-
-} TMR4_HLT_MODE;
-# 220 "./mcc_generated_files/tmr4.h"
-typedef enum
-{
-
-
-    TMR4_T4INPPS,
-
-
-
-    TMR4_T2POSTSCALED,
-
-
-
-    TMR4_RESERVED,
-
-
-
-    TMR4_T6POSTSCALED,
-
-
-
-    TMR4_CCP1_OUT,
-
-
-
-    TMR4_CCP2_OUT,
-
-
-
-    TMR4_CCP3_OUT,
-
-
-
-    TMR4_CCP4_OUT,
-
-
-
-    TMR4_PWM5_OUT,
-
-
-
-    TMR4_PWM6_OUT,
-
-
-
-    TMR4_PWM7_OUT,
-
-
-
-    TMR4_PWM8_OUT,
-
-
-
-    TMR4_RESERVED_2,
-
-
-
-    TMR4_RESERVED_3,
-
-
-
-    TMR4_C1_OUT_SYNC,
-
-
-
-    TMR4_C2_OUT_SYNC,
-
-
-
-    TMR4_ZCD_OUTPUT,
-
-
-
-    TMR4_CLC1_OUT,
-
-
-
-    TMR4_CLC2_OUT,
-
-
-
-    TMR4_CLC3_OUT,
-
-
-
-    TMR4_CLC4_OUT,
-
-
-
-    TMR4_UART1_RX_EDGE,
-
-
-
-    TMR4_UART1_TX_EDGE,
-
-
-
-    TMR4_UART2_RX_EDGE,
-
-
-
-    TMR4_UART2_TX_EDGE
-
-
-} TMR4_HLT_EXT_RESET_SOURCE;
-# 365 "./mcc_generated_files/tmr4.h"
-void TMR4_Initialize(void);
-# 401 "./mcc_generated_files/tmr4.h"
-void TMR4_ModeSet(TMR4_HLT_MODE mode);
-# 436 "./mcc_generated_files/tmr4.h"
-void TMR4_ExtResetSourceSet(TMR4_HLT_EXT_RESET_SOURCE reset);
-# 465 "./mcc_generated_files/tmr4.h"
-void TMR4_Start(void);
-# 494 "./mcc_generated_files/tmr4.h"
-void TMR4_StartTimer(void);
-# 526 "./mcc_generated_files/tmr4.h"
-void TMR4_Stop(void);
-# 558 "./mcc_generated_files/tmr4.h"
-void TMR4_StopTimer(void);
-# 593 "./mcc_generated_files/tmr4.h"
-uint8_t TMR4_Counter8BitGet(void);
-# 628 "./mcc_generated_files/tmr4.h"
-uint8_t TMR4_ReadTimer(void);
-# 667 "./mcc_generated_files/tmr4.h"
-void TMR4_Counter8BitSet(uint8_t timerVal);
-# 706 "./mcc_generated_files/tmr4.h"
-void TMR4_WriteTimer(uint8_t timerVal);
-# 758 "./mcc_generated_files/tmr4.h"
-void TMR4_Period8BitSet(uint8_t periodVal);
-# 810 "./mcc_generated_files/tmr4.h"
-void TMR4_LoadPeriodRegister(uint8_t periodVal);
-# 848 "./mcc_generated_files/tmr4.h"
-_Bool TMR4_HasOverflowOccured(void);
-# 57 "./mcc_generated_files/mcc.h" 2
-
 # 1 "./mcc_generated_files/tmr1.h" 1
 # 100 "./mcc_generated_files/tmr1.h"
 void TMR1_Initialize(void);
@@ -27645,7 +27404,7 @@ void TMR1_StartSinglePulseAcquisition(void);
 uint8_t TMR1_CheckGateValueStatus(void);
 # 387 "./mcc_generated_files/tmr1.h"
 _Bool TMR1_HasOverflowOccured(void);
-# 58 "./mcc_generated_files/mcc.h" 2
+# 57 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27892,14 +27651,7 @@ void TMR2_ISR(void);
 extern void (*TMR2_InterruptHandler)(void);
 # 882 "./mcc_generated_files/tmr2.h"
 void TMR2_DefaultInterruptHandler(void);
-# 59 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/pwm5.h" 1
-# 102 "./mcc_generated_files/pwm5.h"
- void PWM5_Initialize(void);
-# 129 "./mcc_generated_files/pwm5.h"
- void PWM5_LoadDutyValue(uint16_t dutyValue);
-# 60 "./mcc_generated_files/mcc.h" 2
+# 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr0.h" 1
 # 100 "./mcc_generated_files/tmr0.h"
@@ -27916,7 +27668,14 @@ void TMR0_WriteTimer(uint8_t timerVal);
 void TMR0_Reload(uint8_t periodVal);
 # 308 "./mcc_generated_files/tmr0.h"
 _Bool TMR0_HasOverflowOccured(void);
-# 61 "./mcc_generated_files/mcc.h" 2
+# 59 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/fvr.h" 1
+# 93 "./mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "./mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
+# 60 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
@@ -27995,14 +27754,7 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
-# 62 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/fvr.h" 1
-# 93 "./mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "./mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
-# 63 "./mcc_generated_files/mcc.h" 2
+# 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
@@ -28047,14 +27799,14 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 void (*UART1_TxInterruptHandler)(void);
 # 498 "./mcc_generated_files/uart1.h"
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
-# 64 "./mcc_generated_files/mcc.h" 2
-# 79 "./mcc_generated_files/mcc.h"
+# 62 "./mcc_generated_files/mcc.h" 2
+# 77 "./mcc_generated_files/mcc.h"
 void SYSTEM_Initialize(void);
-# 92 "./mcc_generated_files/mcc.h"
+# 90 "./mcc_generated_files/mcc.h"
 void OSCILLATOR_Initialize(void);
-# 105 "./mcc_generated_files/mcc.h"
+# 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./ORespGlobal.h" 2
+# 13 "./ORespGlobal.h" 2
 
 # 1 "./aCapture.h" 1
 # 21 "./aCapture.h"
@@ -28070,14 +27822,16 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 
 void aCaptRstFlt(aSrcTyp sel);
-# 16 "./ORespGlobal.h" 2
-# 82 "./ORespGlobal.h"
+# 14 "./ORespGlobal.h" 2
+# 99 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28257,8 +28011,8 @@ void MenuMng(void) {
 
                         IP = menuVal;
                         chIP = 1;
-                        if (VentMode == 1) {
-                            VentMode = 0;
+                        if (VentMode == VMODE_VOLUME) {
+                            VentMode = VMODE_PRESSURE;
                             chVentMode = 1;
                         }
                         menuStatus = CFG_IDLE;
@@ -28308,10 +28062,6 @@ void MenuMng(void) {
 
                         MaxP = menuVal;
                         chMaxP = 1;
-                        if (VentMode == 0) {
-                            VentMode = 1;
-                            chVentMode = 1;
-                        }
                         menuStatus = CFG_IDLE;
                     } else {
 
@@ -28323,23 +28073,18 @@ void MenuMng(void) {
                         menuStatus = CFG_MAXV;
                         menuVal = MaxV;
                         menuTstamp = timeGet();
-                        if ((MaxP != IP) && (VentMode == 0)) {
-
-
-                            MaxP = IP;
-                            chMaxP = 1;
-                        }
                     } else if (menuStatus == CFG_MAXV) {
 
 
+
+                        HighVAlarm += (menuVal - MaxV);
+                        LowVAlarm += (menuVal - MaxV);
                         MaxV = menuVal;
-                        chMaxV = 1;
-                        HighVAlarm = ((MaxV + (((uint16_t) 25 * MaxV) / 100) > (980/10))? 980 : ((MaxV + (((uint16_t) 25 * MaxV) / 100) < (50/10))? (50/10) : MaxV + (((uint16_t) 25 * MaxV) / 100)));
-                        LowVAlarm = ((MaxV - (((uint16_t) 25 * MaxV) / 100) > (980/10))? 980 : ((MaxV - (((uint16_t) 25 * MaxV) / 100) < (50/10))? (50/10) : MaxV - (((uint16_t) 25 * MaxV) / 100)));
                         chHighVAlarm = 1;
                         chLowVAlarm = 1;
-                        if (VentMode == 0) {
-                            VentMode = 1;
+                        chMaxV = 1;
+                        if (VentMode == VMODE_PRESSURE) {
+                            VentMode = VMODE_VOLUME;
                             chVentMode = 1;
                         }
                         menuStatus = CFG_IDLE;
@@ -28384,10 +28129,17 @@ void MenuMng(void) {
 
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 70) {
+                                    menuVal = 70;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
-                                if (menuVal > 80) {
-                                    menuVal = 80;
+                                if (menuVal > 70) {
+                                    menuVal = 70;
                                 }
                                 break;
                             case CFG_PEEP:
@@ -28403,7 +28155,7 @@ void MenuMng(void) {
                                 }
                                 break;
                             case CFG_MAXV:
-                                menuVal = ((menuVal + 2 > (900/10))? 900 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
+                                menuVal = ((menuVal + 2 > (800/10))? 800 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
                                 break;
                             case CFG_LOWVA:
                             case CFG_HIGHVA:
@@ -28425,6 +28177,8 @@ void MenuMng(void) {
                                 menuVal = menuVal - 1;
                                 if (menuVal < 4) {
                                     menuVal = 4;
+                                } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
+                                    menuVal = IP;
                                 }
                                 break;
                             case CFG_PEEP:
@@ -28440,7 +28194,7 @@ void MenuMng(void) {
                                 }
                                 break;
                             case CFG_MAXV:
-                                menuVal = ((menuVal - 2 > (900/10))? 900 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
+                                menuVal = ((menuVal - 2 > (800/10))? 800 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
                                 break;
                             case CFG_LOWVA:
                             case CFG_HIGHVA:
@@ -28494,7 +28248,7 @@ void screenMng(void) {
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
             if (ctrlStatus != CTRL_SLEEP) {
                 if (VentMode == VMODE_PRESSURE) {
-                    sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
+                    sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, MaxP);
                 } else {
                     sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
                 }
@@ -28503,20 +28257,24 @@ void screenMng(void) {
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", menuVal, PEEP, IP, MaxP);
             } else {
                 sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, menuVal, IP, MaxP);
             } else {
                 sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
-            sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
+            sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, menuVal, MaxP);
         } else if (menuStatus == CFG_MAXP) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
+            if (VentMode == VMODE_PRESSURE) {
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, menuVal);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
+            }
         } else if (menuStatus == CFG_MAXV) {
             sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {

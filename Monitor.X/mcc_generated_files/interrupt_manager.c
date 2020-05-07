@@ -110,6 +110,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C2_InterruptHandler();
     }
+    else if(PIE9bits.TMR6IE == 1 && PIR9bits.TMR6IF == 1)
+    {
+        TMR6_ISR();
+    }
     else if(PIE8bits.TMR5IE == 1 && PIR8bits.TMR5IF == 1)
     {
         TMR5_ISR();

@@ -2055,7 +2055,7 @@ AR Path="/5E9337AC/5F000112" Ref="J?"  Part="1"
 AR Path="/5E9339D0/5F000112" Ref="J25"  Part="1" 
 F 0 "J25" H 3278 3546 50  0000 L CNN
 F 1 "POWEROFF" H 3278 3455 50  0000 L CNN
-F 2 "Ventilator:PushButton" H 2950 3500 50  0001 C CNN
+F 2 "Ventilator:PH_2_pol" H 2950 3500 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/botones-pulsadores/7346827/" H 2950 3500 50  0001 C CNN
 	1    2950 3500
 	-1   0    0    1   
@@ -2237,7 +2237,7 @@ AR Path="/5EA602EB/5F019076" Ref="R?"  Part="1"
 AR Path="/5E9337AC/5F019076" Ref="R?"  Part="1" 
 AR Path="/5E9339D0/5F019076" Ref="R41"  Part="1" 
 F 0 "R41" H 3220 6346 50  0000 L CNN
-F 1 "460" H 3220 6255 50  0000 L CNN
+F 1 "470" H 3220 6255 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3080 6300 50  0001 C CNN
 F 3 "~" H 3150 6300 50  0001 C CNN
 	1    3150 6300
@@ -2252,7 +2252,7 @@ AR Path="/5EA602EB/5F01907C" Ref="R?"  Part="1"
 AR Path="/5E9337AC/5F01907C" Ref="R?"  Part="1" 
 AR Path="/5E9339D0/5F01907C" Ref="R42"  Part="1" 
 F 0 "R42" H 3620 7246 50  0000 L CNN
-F 1 "460" H 3620 7155 50  0000 L CNN
+F 1 "470" H 3620 7155 50  0000 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal" V 3480 7200 50  0001 C CNN
 F 3 "~" H 3550 7200 50  0001 C CNN
 	1    3550 7200
@@ -2367,7 +2367,7 @@ F 1 "1K" H 4780 6505 50  0000 R CNN
 F 2 "Ventilator:Potentiometer_409HA" H 4850 6550 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/resistencias-variables/6524546/" H 4850 6550 50  0001 C CNN
 	1    4850 6550
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 Wire Wire Line
 	4850 6700 4850 6750

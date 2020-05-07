@@ -61,8 +61,8 @@ void MenuMng(void) {
                         // Accept change and exit.
                         IP = menuVal;
                         chIP = true;
-                        if (VentMode == 1) {
-                            VentMode = 0;
+                        if (VentMode == VMODE_VOLUME) {
+                            VentMode = VMODE_PRESSURE;
                             chVentMode = true;
                         }
                         menuStatus = CFG_IDLE;
@@ -112,10 +112,6 @@ void MenuMng(void) {
                         // Accept change and exit.
                         MaxP = menuVal;
                         chMaxP = true;
-                        if (VentMode == 0) {
-                            VentMode = 1;
-                            chVentMode = true;
-                        }
                         menuStatus = CFG_IDLE;
                     } else {
                         // Any other case, abort setting.
@@ -127,23 +123,18 @@ void MenuMng(void) {
                         menuStatus = CFG_MAXV;
                         menuVal = MaxV;
                         menuTstamp = timeGet();
-                        if ((MaxP != IP) && (VentMode == 0)) {
-                            // If vent mode was previously pressure, set maxp to previous ip
-                            // This is to avoid sudden changes.
-                            MaxP = IP;
-                            chMaxP = true;
-                        }
                     } else if (menuStatus == CFG_MAXV) {
                         // Accept change and exit.
                         // Set max and min alarms default values.
+                        // Track changes on high and low alarms.
+                        HighVAlarm += (menuVal - MaxV);
+                        LowVAlarm  += (menuVal - MaxV);
                         MaxV = menuVal;
-                        chMaxV = true;
-                        HighVAlarm = VOL_ACHK(MaxV + (((uint16_t) VOL_ALRM_DFL * MaxV) / 100));
-                        LowVAlarm = VOL_ACHK(MaxV - (((uint16_t) VOL_ALRM_DFL * MaxV) / 100));
                         chHighVAlarm = true;
                         chLowVAlarm = true;
-                        if (VentMode == 0) {
-                            VentMode = 1;
+                        chMaxV = true;
+                        if (VentMode == VMODE_PRESSURE) {
+                            VentMode = VMODE_VOLUME;
                             chVentMode = true;
                         }
                         menuStatus = CFG_IDLE;
@@ -188,6 +179,13 @@ void MenuMng(void) {
                         // Should also check limits.
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > IP_MAX) {
+                                    menuVal = IP_MAX;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
                                 if (menuVal > IP_MAX) {
@@ -229,6 +227,8 @@ void MenuMng(void) {
                                 menuVal = menuVal - 1;
                                 if (menuVal < IP_MIN) {
                                     menuVal = IP_MIN;
+                                } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
+                                    menuVal = IP;
                                 }
                                 break;
                             case CFG_PEEP:
@@ -298,7 +298,7 @@ void screenMng(void) {
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
             if (ctrlStatus != CTRL_SLEEP) {
                 if (VentMode == VMODE_PRESSURE) {
-                    sprintf(lcdTopRow, "%2d %2d  % 2d -- ---", BPM, PEEP, IP);
+                    sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, MaxP);
                 } else {
                     sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
                 }
@@ -307,20 +307,24 @@ void screenMng(void) {
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", menuVal, PEEP, IP);
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", menuVal, PEEP, IP, MaxP);
             } else {
                 sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, menuVal, IP);
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, menuVal, IP, MaxP);
             } else {
                 sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
-            sprintf(lcdTopRow, "%2d %2d  %2d -- ---", BPM, PEEP, menuVal);
+            sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, menuVal, MaxP);
         } else if (menuStatus == CFG_MAXP) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
+            if (VentMode == VMODE_PRESSURE) {
+                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, menuVal);
+            } else {
+                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));            
+            }
         } else if (menuStatus == CFG_MAXV) {
             sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {

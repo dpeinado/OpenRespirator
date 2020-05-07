@@ -15,6 +15,7 @@ extern "C" {
 void ControllerInit(void);
 void ControllerCheckTask(void);
 void DumpI2C(void);
+int16_t GetSpr(void);
 
 
 #ifdef	__cplusplus

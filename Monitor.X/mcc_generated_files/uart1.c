@@ -53,17 +53,17 @@
 /**
   Section: Macro Declarations
 */
-#define UART1_TX_BUFFER_SIZE 245
+#define UART1_TX_BUFFER_SIZE 1200
 #define UART1_RX_BUFFER_SIZE 8
 
 /**
   Section: Global Variables
 */
 
-static volatile uint8_t uart1TxHead = 0;
-static volatile uint8_t uart1TxTail = 0;
+static volatile uint16_t uart1TxHead = 0;
+static volatile uint16_t uart1TxTail = 0;
 static volatile uint8_t uart1TxBuffer[UART1_TX_BUFFER_SIZE];
-volatile uint8_t uart1TxBufferRemaining;
+volatile uint16_t uart1TxBufferRemaining;
 
 static volatile uint8_t uart1RxHead = 0;
 static volatile uint8_t uart1RxTail = 0;

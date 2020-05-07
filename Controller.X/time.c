@@ -1,3 +1,5 @@
+// Author: David Ortiz
+
 #include "mcc_generated_files/tmr0.h"
 #include "mcc_generated_files/tmr1.h"
 #include "time.h"

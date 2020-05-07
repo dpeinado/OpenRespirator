@@ -1,6 +1,4 @@
-/* 
- * File:   ORespGlobal.h
- * Author: David Ortiz
+/* Author: David Ortiz
  *
  * Created on April 4, 2020, 12:56 PM
  */
@@ -19,12 +17,12 @@ extern "C" {
 #define BPM_MIN 10
 #define BPM_MAX 30
 #define IP_MIN 4
-#define IP_MAX 80
+#define IP_MAX 70
 #define PEEP_MIN 4
 #define PEEP_MAX 25
 // Volume limit. With limitations of this equipment volume below 100ml can not be provided with accuracy. Probably lower limit should be higher.
 #define VOL_MIN 100
-#define VOL_MAX 900
+#define VOL_MAX 800
 #define VOL_AMIN 50
 // At this moment this is only due to restriction on display.
 #define VOL_AMAX 980
@@ -32,14 +30,15 @@ extern "C" {
 // Default value for volume alarms. +-25%
 #define VOL_ALRM_DFL 25
     
-// Max pressure overshoot. In milibars.
-#define POVERSHOOT_LIMIT MPRESSURE_MBAR(3)
 // Max Volume overshoot. In mililiters.
 #define VOVERSHOOT_LIMIT 25
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
 #define PQUANTA_LIMIT    MPRESSURE_MBAR(7)
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
 #define VQUANTA_LIMIT    90
+    
+// Objective time for inspiration.
+#define INSP_TIME 400
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
@@ -48,9 +47,18 @@ extern "C" {
 #define OPEN_SV2 LATAbits.LATA2 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0
 #else
-#define SV2ISOPEN (sv2_pwmval!=0)
-#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
-#define CLOSE_SV2 sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval)
+#define SV2ISOPEN (LATAbits.LATA2|LATCbits.LATC3)
+#define OPEN_SV2 LATAbits.LATA2 = 1;LATCbits.LATC3 = 1
+#define CLOSE_SV2 LATAbits.LATA2 = 0;LATCbits.LATC3 = 0
+
+#define OPEN_SV2LOW LATAbits.LATA2 = 1;LATCbits.LATC3 = 0
+#define OPEN_SV2MED LATAbits.LATA2 = 0;LATCbits.LATC3 = 1
+#define SV2LOWISOPEN LATAbits.LATA2
+#define SV2MEDISOPEN LATCbits.LATC3
+
+//#define SV2ISOPEN (sv2_pwmval!=0)
+//#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)
+//#define CLOSE_SV2 sv2_pwmval=0;PWM5_LoadDutyValue(sv2_pwmval)
 #endif
     
 #define SV3ISOPEN LATAbits.LATA3
@@ -65,6 +73,7 @@ extern "C" {
 #define BUZZER_OFF LATDbits.LATD0 = 0
 
 #define DEBUG
+// #define OCTAVE
 
 #ifdef DEBUG
 #define ERROR_CONDITION(k) CLOSE_SV2;CLOSE_SV3;printf("Fatal %d",k)
@@ -73,11 +82,19 @@ extern "C" {
 #endif
 
 
+
 #ifdef DEBUG
+#ifdef OCTAVE
+#define OCTAVE_PRINT(x) printf x
+#define DEBUG_PRINT(x) do {} while (0)
+#else
+#define OCTAVE_PRINT(x) do {} while (0)
 #define DEBUG_PRINT(x) printf x
+#endif
 #else
 #define DEBUG_PRINT(x) do {} while (0)
 #endif
+
 
     typedef enum {
         VMODE_PRESSURE = 0,
