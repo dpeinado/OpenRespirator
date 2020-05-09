@@ -17,6 +17,8 @@
 
 #ifdef DEBUG
 
+#define DBGPCONVERT(pValue) (((320/MPRESSURE_MBAR(1))*pValue)>>5)
+
 void putch(char byte) {
     while (!UART1_is_tx_ready());
     UART1_Write(byte);
@@ -32,7 +34,7 @@ vmodeT intVentMode;
 // User parameters.
 ///////////////////
 vmodeT   VentMode = 0; // 0 --> Pressure-control, 1 --> Volume-control.
-uint8_t  MaxP = 35;
+uint8_t  MaxP = 6;
 // Volume is in units of 10ml.
 uint8_t  MaxV = 16;
 uint8_t  LowVAlarm = 10;
@@ -149,6 +151,7 @@ void bRateUpdt(bool triggered) {
     }
     if (triggered) {
         eBRate += 5;
+        bRateHist |= bRatePtr;
     } else {
         bRateHist &= ~bRatePtr;
     }
@@ -738,7 +741,7 @@ int16_t pCtrl, pValveActuation, pPlatMax, pPlatInsp, pPlatExp, pPeepActual, pExp
 // Best way to decide when to determine SV2 close time, even in pressure-mode is to measure the volume that produces the desired IP.
 // Estimate lung compliance, multiplied by the desired IP it gives the estimated volume for it.
 uint16_t lungC;
-uint16_t pInspOS3, pInspOS2; // Pressure overshoot during inhalation for each intermediate valve setting.
+int16_t pInspOS3, pInspOS2; // Pressure overshoot during inhalation for each intermediate valve setting.
 int16_t vValveActuation, vPlateau, vInspOS;
 // Volume quanta. Volume injected on each fixed-time SV2 opening after initial subState.
 int pInspVSet, pInspOSVSet;
@@ -772,9 +775,9 @@ void inspOSMeasure(void) {
     
     tmpVal = vMeasureGet();
     // Constant is volume at inspiration. Scale for precision.
-    if ((pPlatInsp > MPRESSURE_MBAR(4)) && (tmpVal < 1023)) {
+    if ((pPlatInsp > MPRESSURE_MBAR(4)) && (tmpVal < 2047)) {
         tmpUVal = (pPlatInsp - pPeepActual) >> 1;
-        tmpUVal = (((uint16_t) tmpVal) << 6) / tmpUVal;
+        tmpUVal = (((uint24_t) tmpVal) << 6) / tmpUVal;
         // Now IIR.
         if (lungC == 0){
             lungC = (3*tmpUVal)>>2;
@@ -795,7 +798,7 @@ void inspOSMeasure(void) {
 void main(void) {
     uint16_t tmpUVal;
     int16_t tmpVal;
-    uint16_t pInspOSScale, vInspOSScale;
+    int16_t pInspOSScale, vInspOSScale;
 #ifdef DEBUG
     time_t printTime;
 #endif
@@ -1004,6 +1007,11 @@ void main(void) {
                     if (initialSubState) {
                         // IP not reached.
                         MonitorErrorSet(MON_IPE);
+                        // It is needed to do estimations at least of LungC.
+                        pPlatInsp = pInst;
+                        pValveActuation = pInst;
+                        pPlatMax = pInst;
+                        inspOSMeasure();
                     }
                     if (OSCheck) {
                         OSCheck = false;
@@ -1040,7 +1048,7 @@ void main(void) {
                         // Can assign variables here since there is no ongoing actuation.
                         // The lung will have an extra pressure during inspiration which is proportional to the flow rate,
                         // the higher the flow rate, the higher the extra pressure during inspiration. As in the EP phase, compensate this by using a filtered version of the pressure.
-                        pCtrl = pInst;
+                        pCtrl = pAvgShort;
                         vValveActuation = vMeasureGet();
 
                         tmpVal = INSP_TIME - timeDiff(rCycleTime, timeGet());
@@ -1058,7 +1066,7 @@ void main(void) {
                             rVMedActuationTstamp = timeGet();
                             rValveActuationTstamp = rVMedActuationTstamp;
                             pValveActuation = pCtrl;
-                            DEBUG_PRINT(("PI-MED T %5d - Pi %d Pc %d Vol %3d OS %d RF %d\n", timeDiff(rCycleTime, timeGet()), (10*pInst)/MPRESSURE_MBAR(1), (10*pCtrl)/MPRESSURE_MBAR(1), vValveActuation, (10*pInspOS3)/MPRESSURE_MBAR(1), effectiveFlowRate));
+                            DEBUG_PRINT(("PI-MED T %5d - Pi %d Pc %d Vol %3d OS %d RF %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS3), effectiveFlowRate));
                         } else if (!OSCheckInt && (pInspVSet == 2) &&
                                     (((pCtrl+pInspOS2) > ((7*intMaxP)>>3)) ||
                                     ((((int24_t) 3000*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
@@ -1069,7 +1077,7 @@ void main(void) {
                             rVLowActuationTstamp = timeGet();
                             rValveActuationTstamp = rVLowActuationTstamp;                            
                             pValveActuation = pCtrl;                            
-                            DEBUG_PRINT(("PI-LOW T %5d - Pi %d Pc %d Vol %3d OS %d\n", timeDiff(rCycleTime, timeGet()), (10*pInst)/MPRESSURE_MBAR(1), (10*pCtrl)/MPRESSURE_MBAR(1), vValveActuation, (10*pInspOS2)/MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PI-LOW T %5d - Pi %d Pc %d Vol %3d OS %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS2)));
                         }
                         
                         if (pPlatMax < pCtrl) {
@@ -1085,12 +1093,19 @@ void main(void) {
                             }
                         }
                         
-                        pInspOSScale = (pInspVSet*pInspOS)/3;
-                        vInspOSScale = (pInspVSet*vInspOS)/3;
-                        if ((pInst > (intMaxP)) ||
+                        if (OSCheckInt){
+                            pInspOSScale = ((1+pInspVSet)*pInspOS)/3;
+                            vInspOSScale = ((1+pInspVSet)*vInspOS)/3;                            
+                        } else {
+                            pInspOSScale = (pInspVSet*pInspOS)/3;
+                            vInspOSScale = (pInspVSet*vInspOS)/3;
+                        }
+                        
+                        if ((pInst > (intMaxP+MPRESSURE_MBAR(4))) ||
+                                (pCtrl > intMaxP) ||
                                 ((pCtrl + pInspOSScale) > intMaxP) ||
                                 ((intVentMode == VMODE_PRESSURE) && ((pCtrl + pInspOSScale) > intIP) && (vValveActuation + vInspOSScale) >= intMaxV) ||
-                                ((intVentMode == VMODE_VOLUME) && ((vValveActuation + vInspOS) >= intMaxV))) {
+                                ((intVentMode == VMODE_VOLUME) && ((vValveActuation + vInspOSScale) >= intMaxV))) {
                             CLOSE_SV2;
                             pValveActuation = pCtrl;
                             initialSubState = false;
@@ -1102,7 +1117,11 @@ void main(void) {
                             // The other option is to compute OS over pressure prediction, and apply also over the prediction.
                             // The theoretical advantage of the second case is that the OS calculated will be smaller, so it will be less sensitive to the changing conditions.
                             OSCheck = true;
-                            pInspOSVSet = pInspVSet;
+                            if (OSCheckInt) {
+                                pInspOSVSet = pInspVSet+1;
+                            } else {
+                                pInspOSVSet = pInspVSet;
+                            }
                             pPlatMax = pInst;
                             if ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP)) {
                                 // Should never stop due to pressure, if this is the case --> increment the OS value of the valves.
@@ -1124,18 +1143,25 @@ void main(void) {
                                 tmpUVal = timeDiff(rVHighActuationTstamp, timeGet());    
                             } else if (pInspVSet == 2){
                                 tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, timeGet()))/3;    
-                            } else if (pInspVSet == 2){
-                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, rVLowActuationTstamp)) + timeDiff(rVLowActuationTstamp, timeGet())/3;
+                            } else if (pInspVSet == 1){
+                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, rVLowActuationTstamp))/3 + timeDiff(rVLowActuationTstamp, timeGet())/3;
                             }
 
-                            if (tmpUVal >= 100) {
+                            if (tmpUVal >= 60) {
                                 effectiveFlowRate=(3*effectiveFlowRate+(((uint24_t) 1000*vValveActuation)/tmpUVal))>>2;
+                            }   
+                            
+                            // Avoid too big errors in flow measurement.
+                            if (effectiveFlowRate < 100){
+                                effectiveFlowRate = 100;
+                            } else if (effectiveFlowRate > 2000){
+                                effectiveFlowRate = 2000;
                             }
                             
-                            DEBUG_PRINT(("PI-END T %5d - Pi %d Pc %d Vol %3d VL %3d VOS %d POS %d FR %d UV %d\n",
+                            DEBUG_PRINT(("PI-END T %d - Pi %d Pc %d Vol %3d PMax %d VL %d VOS %d POS %d FR %d UV %d\n",
                                     timeDiff(rCycleTime, timeGet()),
                                     (10 * pInst) / MPRESSURE_MBAR(1), (10 * pValveActuation) / MPRESSURE_MBAR(1),
-                                    vValveActuation, intMaxV, vInspOS, (10*pInspOS)/MPRESSURE_MBAR(1), effectiveFlowRate, tmpUVal));
+                                    vValveActuation, DBGPCONVERT(intMaxP), intMaxV, vInspOS, DBGPCONVERT(pInspOSScale), effectiveFlowRate, tmpUVal));
                         }
                         if (valveDelayCheck) {
                             // Measure response time of valve.
