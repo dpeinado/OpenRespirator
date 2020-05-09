@@ -38,7 +38,7 @@ extern "C" {
 #define VQUANTA_LIMIT    90
     
 // Objective time for inspiration.
-#define INSP_TIME 400
+#define INSP_TIME 500
     //////////////////////////////////////
     // Actuation pins.
     //////////////////////////////////////
