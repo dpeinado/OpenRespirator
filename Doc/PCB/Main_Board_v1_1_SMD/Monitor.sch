@@ -1362,7 +1362,7 @@ P 6200 2150
 F 0 "U3" H 5875 3265 50  0000 C CNN
 F 1 "XPRESS-40" H 5875 3174 50  0000 C CNN
 F 2 "Package_DFN_QFN:UQFN-40-1EP_5x5mm_P0.4mm_EP3.8x3.8mm_ThermalVias" H 6200 2150 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/kits-de-desarrollo-de-procesador-y-microcontrolador/1744238/" H 6200 2150 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/microcontroladores/1717862/" H 6200 2150 50  0001 C CNN
 	1    6200 2150
 	1    0    0    -1  
 $EndComp
@@ -1419,7 +1419,7 @@ P 8800 4900
 F 0 "U7" H 9003 5815 50  0000 C CNN
 F 1 "LCD" H 9003 5724 50  0000 C CNN
 F 2 "Ventilator:LCD_2x16" H 8800 4900 50  0001 C CNN
-F 3 "" H 8800 4900 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/displays-monocromos-lcd/1631922/" H 8800 4900 50  0001 C CNN
 	1    8800 4900
 	1    0    0    -1  
 $EndComp
@@ -1461,7 +1461,7 @@ AR Path="/5E9337AC/5EC4241C" Ref="C10"  Part="1"
 F 0 "C10" H 5015 7146 50  0000 L CNN
 F 1 "1uF" H 5015 7055 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4938 6950 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 4900 7100 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 4900 7100 50  0001 C CNN
 	1    4900 7100
 	-1   0    0    -1  
 $EndComp
@@ -1511,7 +1511,7 @@ P 1050 4550
 F 0 "C2" H 1165 4596 50  0000 L CNN
 F 1 "1uF" H 1165 4505 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1088 4400 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 1050 4550 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1050 4550 50  0001 C CNN
 	1    1050 4550
 	-1   0    0    -1  
 $EndComp
@@ -1522,7 +1522,7 @@ P 2050 4100
 F 0 "C6" H 2165 4146 50  0000 L CNN
 F 1 "1uF" H 2165 4055 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2088 3950 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 2050 4100 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2050 4100 50  0001 C CNN
 	1    2050 4100
 	-1   0    0    -1  
 $EndComp
@@ -1574,7 +1574,7 @@ U 3 1 5EEF28DB
 P 4000 6500
 F 0 "U1" H 3958 6546 50  0000 L CNN
 F 1 "LM358" H 3958 6455 50  0000 L CNN
-F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias" H 4000 6500 50  0001 C CNN
+F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm" H 4000 6500 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/amplificadores-operacionales/1787509/" H 4000 6500 50  0001 C CNN
 	3    4000 6500
 	1    0    0    -1  
@@ -1630,7 +1630,7 @@ P 1550 6350
 F 0 "C3" H 1665 6396 50  0000 L CNN
 F 1 "1uF" H 1665 6305 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1588 6200 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 1550 6350 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1550 6350 50  0001 C CNN
 	1    1550 6350
 	1    0    0    -1  
 $EndComp
@@ -1651,7 +1651,7 @@ U 2 1 5EE454F8
 P 2250 6400
 F 0 "U1" H 2250 6767 50  0000 C CNN
 F 1 "LM358" H 2250 6676 50  0000 C CNN
-F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias" H 2250 6400 50  0001 C CNN
+F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm" H 2250 6400 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/amplificadores-operacionales/1787509/" H 2250 6400 50  0001 C CNN
 	2    2250 6400
 	1    0    0    1   
@@ -1662,7 +1662,7 @@ U 1 1 5EE3E54C
 P 3150 6500
 F 0 "U1" H 3150 6867 50  0000 C CNN
 F 1 "LM358" H 3150 6776 50  0000 C CNN
-F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm_ThermalVias" H 3150 6500 50  0001 C CNN
+F 2 "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm" H 3150 6500 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/amplificadores-operacionales/1787509/" H 3150 6500 50  0001 C CNN
 	1    3150 6500
 	1    0    0    -1  
@@ -1803,7 +1803,7 @@ AR Path="/5E9337AC/5EB0722D" Ref="C4"  Part="1"
 F 0 "C4" H 1865 2896 50  0000 L CNN
 F 1 "1uF" H 1865 2805 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1788 2700 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 1750 2850 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 1750 2850 50  0001 C CNN
 	1    1750 2850
 	1    0    0    -1  
 $EndComp
@@ -1903,7 +1903,7 @@ AR Path="/5E9337AC/5F85615D" Ref="C20"  Part="1"
 F 0 "C20" H 2815 3846 50  0000 L CNN
 F 1 "1uF" H 2815 3755 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2738 3650 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/mlccs-condensadores-ceramicos-multicapa/1364396/" H 2700 3800 50  0001 C CNN
+F 3 "Capacitor_SMD:C_1206_3216Metric_Pad1.42x1.75mm_HandSolder" H 2700 3800 50  0001 C CNN
 	1    2700 3800
 	1    0    0    -1  
 $EndComp
@@ -2054,9 +2054,9 @@ L Device:R_POT RV1
 U 1 1 5EA73AB9
 P 8950 5550
 F 0 "RV1" H 8880 5596 50  0000 R CNN
-F 1 "1K" H 8880 5505 50  0000 R CNN
-F 2 "Ventilator:Potentiometer_409HA" H 8950 5550 50  0001 C CNN
-F 3 "https://es.rs-online.com/web/p/resistencias-variables/6524546/" H 8950 5550 50  0001 C CNN
+F 1 "5K" H 8880 5505 50  0000 R CNN
+F 2 "Potentiometer_SMD:Potentiometer_Vishay_TS53YJ_Vertical" H 8950 5550 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/resistencias-variables/1679441/" H 8950 5550 50  0001 C CNN
 	1    8950 5550
 	1    0    0    -1  
 $EndComp
@@ -2067,7 +2067,7 @@ P 2650 950
 F 0 "U2" H 2650 1192 50  0000 C CNN
 F 1 "LM78M05_TO252" H 2650 1101 50  0000 C CNN
 F 2 "Package_TO_SOT_SMD:TO-252-2" H 2650 1175 50  0001 C CIN
-F 3 "http://www.fairchildsemi.com/ds/LM/LM78M05.pdf" H 2650 900 50  0001 C CNN
+F 3 "https://es.rs-online.com/web/p/reguladores-de-tension-lineal/8578558/" H 2650 900 50  0001 C CNN
 	1    2650 950 
 	1    0    0    -1  
 $EndComp
@@ -2078,7 +2078,7 @@ P 8100 6000
 F 0 "Q4" H 8290 6046 50  0000 L CNN
 F 1 "BSR19A" H 8290 5955 50  0000 L CNN
 F 2 "Package_TO_SOT_SMD:TSOT-23" H 8300 5925 50  0001 L CIN
-F 3 "https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf" H 8100 6000 50  0001 L CNN
+F 3 "https://es.rs-online.com/web/p/transistores-bipolares-y-bjt/1821856/" H 8100 6000 50  0001 L CNN
 	1    8100 6000
 	1    0    0    -1  
 $EndComp
@@ -2092,7 +2092,7 @@ AR Path="/5EB637BA" Ref="R?"  Part="1"
 AR Path="/5EA602EB/5EB637BA" Ref="R?"  Part="1" 
 AR Path="/5E9337AC/5EB637BA" Ref="R44"  Part="1" 
 F 0 "R44" H 8270 5596 50  0000 L CNN
-F 1 "4.7" H 8270 5505 50  0000 L CNN
+F 1 "1k" H 8270 5505 50  0000 L CNN
 F 2 "Resistor_SMD:R_0603_1608Metric_Pad1.05x0.95mm_HandSolder" V 8130 5550 50  0001 C CNN
 F 3 "~" H 8200 5550 50  0001 C CNN
 	1    8200 5550
@@ -2110,7 +2110,7 @@ L Device:LED D5
 U 1 1 5F677EB2
 P 10450 2450
 F 0 "D5" V 10489 2333 50  0000 R CNN
-F 1 "LED" V 10398 2333 50  0000 R CNN
+F 1 "ALARM" V 10398 2333 50  0000 R CNN
 F 2 "LED_THT:LED_D3.0mm" H 10450 2450 50  0001 C CNN
 F 3 "~" H 10450 2450 50  0001 C CNN
 	1    10450 2450
