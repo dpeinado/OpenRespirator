@@ -10,6 +10,7 @@
 
 
 
+
 # 1 "./mcc_generated_files/adcc.h" 1
 # 54 "./mcc_generated_files/adcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27193,7 +27194,7 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
-# 4 "aCapture.c" 2
+# 5 "aCapture.c" 2
 
 # 1 "./aCapture.h" 1
 # 21 "./aCapture.h"
@@ -27209,25 +27210,27 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 
 void aCaptRstFlt(aSrcTyp sel);
-# 5 "aCapture.c" 2
+# 6 "aCapture.c" 2
 
 # 1 "./ORespGlobal.h" 1
-# 15 "./ORespGlobal.h"
+# 13 "./ORespGlobal.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 50 "./mcc_generated_files/mcc.h"
 # 1 "./mcc_generated_files/device_config.h" 1
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
+# 586 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
+# 598 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27827,8 +27830,8 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./ORespGlobal.h" 2
-# 82 "./ORespGlobal.h"
+# 13 "./ORespGlobal.h" 2
+# 99 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -27859,7 +27862,7 @@ void PMD_Initialize(void);
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
-# 6 "aCapture.c" 2
+# 7 "aCapture.c" 2
 
 
 aSrcTyp curASrc;
@@ -27891,7 +27894,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
             break;
         default:
 
-           LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
+           LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
            return -1;
     }
 }
@@ -27949,7 +27952,7 @@ void adcCaptureIsr(void){
         }
     } else {
 
-        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
     }
 }
 
@@ -27969,13 +27972,23 @@ void aCaptureInit(void){
     PIE1bits.ADTIE = 1;
 }
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal){
     if (sel == MainPSensor) {
         mainPSensCal = offVal;
     } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
     } else {
-        LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
+    }
+}
+
+int16_t aCaptureOffGet(aSrcTyp sel){
+    if (sel == MainPSensor) {
+        return mainPSensCal;
+    } else if (sel == VolPSensor) {
+        return auxPSensCal;
+    } else {
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
     }
 }
 
@@ -27996,7 +28009,7 @@ void aCaptRstFlt(aSrcTyp sel) {
             break;
         default:
 
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
     }
             PIE1bits.ADTIE = 1;
 }
@@ -28057,6 +28070,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            LATAbits.LATA2 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
     }
 }

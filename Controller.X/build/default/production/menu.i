@@ -15,7 +15,7 @@
 
 
 # 1 "./ORespGlobal.h" 1
-# 15 "./ORespGlobal.h"
+# 13 "./ORespGlobal.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -27040,9 +27040,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
+# 586 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
+# 598 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27806,7 +27806,7 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 103 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 15 "./ORespGlobal.h" 2
+# 13 "./ORespGlobal.h" 2
 
 # 1 "./aCapture.h" 1
 # 21 "./aCapture.h"
@@ -27822,14 +27822,16 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 
 void aCaptRstFlt(aSrcTyp sel);
-# 16 "./ORespGlobal.h" 2
-# 82 "./ORespGlobal.h"
+# 14 "./ORespGlobal.h" 2
+# 99 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28009,9 +28011,6 @@ void MenuMng(void) {
 
                         IP = menuVal;
                         chIP = 1;
-
-                        MaxP = menuVal + 5;
-                        chMaxP = 1;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = 1;
@@ -28130,6 +28129,13 @@ void MenuMng(void) {
 
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 70) {
+                                    menuVal = 70;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
                                 if (menuVal > 70) {
@@ -28171,7 +28177,7 @@ void MenuMng(void) {
                                 menuVal = menuVal - 1;
                                 if (menuVal < 4) {
                                     menuVal = 4;
-                                } else if ((VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
+                                } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
                                     menuVal = IP;
                                 }
                                 break;

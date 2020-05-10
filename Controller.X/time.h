@@ -1,6 +1,6 @@
 /* 
  * File:   time.h
- * Author: David
+ * Author: David Ortiz
  *
  * Created on April 4, 2020, 4:27 PM
  */

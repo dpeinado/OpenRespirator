@@ -12,9 +12,9 @@
 #include "time.h"
 #include "LiquidCrystal_I2C.h"
 
-#define VOL_ACHK(volume) ((volume > (VOL_AMAX/10))? VOL_AMAX : ((volume < (VOL_AMIN/10))? (VOL_AMIN/10) : volume))
+#define VOL_ACHK(volume) ((volume > (VOL_AMAX/10))? (VOL_AMAX/10) : ((volume < (VOL_AMIN/10))? (VOL_AMIN/10) : volume))
 
-#define VOL_CHK(volume) ((volume > (VOL_MAX/10))? VOL_MAX : ((volume < (VOL_MIN/10))? (VOL_MIN/10) : volume))
+#define VOL_CHK(volume) ((volume > (VOL_MAX/10))? (VOL_MAX/10) : ((volume < (VOL_MIN/10))? (VOL_MIN/10) : volume))
 
 bool lcdPrintTR, lcdPrintBR, lcdPrintBRR, lcdBlink;
 bool lcdMenuPrint;
@@ -61,13 +61,13 @@ void MenuMng(void) {
                         // Accept change and exit.
                         IP = menuVal;
                         chIP = true;
-                        // Whenever IP is changed, update also MaxP
-                        MaxP = menuVal + PMAX_DEFAULT;
-                        chMaxP = true;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
-                            chVentMode = true;
+                            chVentMode = true;                            
                         }
+                        // By default MaxP 2mbar higher than IP in pressure mode.
+                        MaxP = menuVal + 2;
+                        chMaxP = true;                       
                         menuStatus = CFG_IDLE;
                     } else {
                         // Any other case, abort setting.
@@ -139,6 +139,9 @@ void MenuMng(void) {
                         if (VentMode == VMODE_PRESSURE) {
                             VentMode = VMODE_VOLUME;
                             chVentMode = true;
+                            // By default MaxP set to 35 in volume mode.
+                            MaxP = 35;
+                            chMaxP = true;                       
                         }
                         menuStatus = CFG_IDLE;
                     } else {
@@ -182,6 +185,11 @@ void MenuMng(void) {
                         // Should also check limits.
                         switch (menuStatus) {
                             case CFG_IP:
+                                menuVal = menuVal + 1;
+                                if (menuVal > IP_MAX) {
+                                    menuVal = IP_MAX;
+                                }
+                                break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
                                 if (menuVal > IP_MAX) {
@@ -223,7 +231,7 @@ void MenuMng(void) {
                                 menuVal = menuVal - 1;
                                 if (menuVal < IP_MIN) {
                                     menuVal = IP_MIN;
-                                } else if ((VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
+                                } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
                                     menuVal = IP;
                                 }
                                 break;

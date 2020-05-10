@@ -13,7 +13,11 @@
 #include "menu.h"
 #include "i2c2_mux.h"
 
+#define FORCEMONOK 0
+
 #ifdef DEBUG
+
+#define DBGPCONVERT(pValue) (((320/MPRESSURE_MBAR(1))*pValue)>>5)
 
 void putch(char byte) {
     while (!UART1_is_tx_ready());
@@ -30,7 +34,7 @@ vmodeT intVentMode;
 // User parameters.
 ///////////////////
 vmodeT   VentMode = 0; // 0 --> Pressure-control, 1 --> Volume-control.
-uint8_t  MaxP = 9;
+uint8_t  MaxP = 6;
 // Volume is in units of 10ml.
 uint8_t  MaxV = 16;
 uint8_t  LowVAlarm = 10;
@@ -46,6 +50,7 @@ uint16_t sv2_pwmval;
 
 uint24_t bRateHist;
 uint24_t bRatePtr;
+uint8_t  bRateCnt = 0;
 
 // CONTROLLER INTERNAL PARAMETERS.
 #define BLED_ONTIME TIME_MS(500)
@@ -78,7 +83,7 @@ inline int16_t rPressurePredict(time_t delay, int16_t pInst, int16_t pAvgShort) 
 
 ctrlStatusT ctrlStatus;
 uint16_t lastCycleVol;
-uint16_t openFlowRate;
+uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
 
 // FUNCTIONS TO COMMUNICATE WITH MONITOR.
 // Message to sent to monitor.
@@ -123,6 +128,39 @@ monErrorT monError;
 time_t    monTstamp;
 i2c2_error_t lastI2CMonTrfResponse;
 
+// Keep Rate in last 20 inspirations.
+void bRateInit(void) {
+    bRateHist = 0;
+    bRatePtr = 1;
+    eBRate = 0;
+    bRateCnt = 0;
+}
+
+void bRateUpdt(bool triggered) {
+    bRatePtr = bRatePtr << 1;
+    bRateCnt++;
+    if (bRateCnt > 20){
+        bRateCnt = 20;
+    }
+    if (bRatePtr == (0x1L << 20)) {
+        bRatePtr = 1;
+    }
+
+    if (bRateHist & bRatePtr) {
+        eBRate -= 5;
+    }
+    if (triggered) {
+        eBRate += 5;
+        bRateHist |= bRatePtr;
+    } else {
+        bRateHist &= ~bRatePtr;
+    }
+}
+
+uint8_t bRateGet(void) {
+    return eBRate*20/bRateCnt;
+}
+
 void MonitorInit(void){
     ;
 }
@@ -148,8 +186,6 @@ void MonitorMsgForcedSend (monStateT state){
     trfError = I2C2_MClose();
     trfAck = I2C2_MAck();
 
-//    DEBUG_PRINT(("I2C2 Close: %d\n", trfError));
-            
     if (!trfAck) {
         // Enable buzzer and display error message on second line.
         sprintf(lcdBtnRRow, " M.ERR");
@@ -222,14 +258,12 @@ void MonitorMsgForcedSend (monStateT state){
             monitorMsg[MONIDX_HVAV]  |= 0x80;
         }
         
-        monitorMsg[MONIDX_BRRTV] = eBRate;
+        monitorMsg[MONIDX_BRRTV] = bRateGet();
         monitorMsg[MONIDX_ALARMV] = ctrlErrorStatus;
 
         trfError = I2C2_MOpen();
-        //      DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
         I2C2_SetBuffer(monitorMsg, 10);
         trfError = I2C2_MasterOperation(false);
-        //      DEBUG_PRINT(("I2C2 Open: %d\n", trfError));    
     } else {
         // TODO: in final implementation, if I2C busy generate an error.
         // Until then, not possible.
@@ -247,36 +281,17 @@ bool MonitorMsgSendBlock(monStateT state) {
     while (MonitorMsgBusy());
     MonitorMsgForcedSend(state);
     while (MonitorMsgBusy());
+#if FORCEMONOK
+    return true;
+#else
     return I2C2_MAck(); 
-}
-
-// Keep Rate in last 20 inspirations.
-void bRateInit(void) {
-    bRateHist = 0;
-    bRatePtr = 1;
-    eBRate = 0;
-}
-
-void bRateUpdt(bool triggered) {
-    bRatePtr = bRatePtr << 1;
-    if (bRatePtr == 0x1L << 20) {
-        bRatePtr = 1;
-    }
-
-    if (bRateHist && bRatePtr) {
-        eBRate -= 5;
-    }
-    if (triggered) {
-        bRateHist |= bRatePtr;
-        eBRate += 5;
-    } else {
-        bRateHist &= ~bRatePtr;
-    }
+#endif
 }
 
 bool pressureSensorChk(bool offsetCal, uint16_t time) {
-    int16_t mPVal, mPValMax, mPValMin, mPValMean;
-    int16_t aPVal, aPValMax, aPValMin, aPValMean;
+    int16_t mPVal, mPValMax, mPValMin;
+    int32_t mPValMean, aPValMean;
+    int16_t aPVal, aPValMax, aPValMin;
     time_t tstamp;
     bool chkResult;
 
@@ -297,6 +312,7 @@ bool pressureSensorChk(bool offsetCal, uint16_t time) {
             if (mPVal < mPValMin) {
                 mPValMin = mPVal;
             }
+            mPValMean = (31*mPValMean + 32*mPVal)>>5;
         } else {
             ERROR_CONDITION(10);
             chkResult = false;
@@ -309,6 +325,7 @@ bool pressureSensorChk(bool offsetCal, uint16_t time) {
             if (aPVal < aPValMin) {
                 aPValMin = aPVal;
             }
+            aPValMean = (31*aPValMean + 32*aPVal)>>5;
         } else {
             chkResult = false;
             ERROR_CONDITION(10);
@@ -316,8 +333,8 @@ bool pressureSensorChk(bool offsetCal, uint16_t time) {
     }
 
     // Cal mean values.
-    mPValMean = (mPValMax + mPValMin) >> 1;
-    aPValMean = (aPValMax + aPValMin) >> 1;
+    mPValMean = mPValMean>>5;
+    aPValMean = aPValMean>>5;
     sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
     DEBUG_PRINT(("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean));
     DEBUG_PRINT(("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean));
@@ -334,8 +351,8 @@ bool pressureSensorChk(bool offsetCal, uint16_t time) {
             DEBUG_PRINT(("PRESSURE CALIBRATION ERROR\n"));
         } else {
             // Set cal values.
-            aCaptureSetOff(MainPSensor, mPValMean);
-            aCaptureSetOff(VolPSensor, aPValMean);
+            aCaptureOffSet(MainPSensor, mPValMean);
+            aCaptureOffSet(VolPSensor, aPValMean);
             // Reset filters.
             aCaptRstFlt(Flt0PSensor);
             aCaptRstFlt(Flt1PSensor);
@@ -383,8 +400,8 @@ bool InitProcedure(void) {
         timeDelayMs(500);
     }
     
-    aCaptureSetOff(MainPSensor, 0);
-    aCaptureSetOff(VolPSensor, 0);
+    aCaptureOffSet(MainPSensor, 0);
+    aCaptureOffSet(VolPSensor, 0);
     // First check VDD stability.
     tstamp = timeGet();
 
@@ -539,6 +556,120 @@ bool InitProcedure(void) {
             timeDelayMs(500);
     }
 
+    OPEN_SV2LOW;
+    OPEN_SV3;
+    timeDelayMs(250);
+    vMeasureRst();
+    tstamp = timeGet();
+    while (!timeElapsedR(&tstamp, TIME_MS(250))) {
+        aCaptGetResult(VolPSensor, &aPVal);
+        if (aPVal > aPValMax) {
+            aPValMax = aPVal;
+        }
+        if (aPVal < aPValMin) {
+            aPValMin = aPVal;
+        }
+    }
+    // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
+    freeFlowRateL = vMeasureGet()<<2;
+    if (!MonitorMsgSendBlock(MONSTATE_STOP)){
+        initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+    }
+    CLOSE_SV2;
+    CLOSE_SV3;
+
+    aPValMean=aCaptureOffGet(VolPSensor);
+    
+    if ((aPValMean + aPValMax)>= (0.95*8192)) {
+        // Flow sensor almost saturated. Flow too high.
+        setCursor(0, 0);
+        printstrblock("FLOW TOO HIGH   ");
+        timeDelayMs(1000);
+        initOk = false;
+    } else {
+        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateL) / 1000));
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(4000);
+
+        if (freeFlowRateL < 120) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO LOW    ");
+            timeDelayMs(1000);
+            initOk = false;
+        } else if (freeFlowRateL > 600) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO HIGH   ");
+            timeDelayMs(1000);
+            initOk = false;
+        }
+    }
+
+
+
+
+    OPEN_SV2MED;
+    OPEN_SV3;
+    timeDelayMs(250);
+    vMeasureRst();
+    tstamp = timeGet();
+    while (!timeElapsedR(&tstamp, TIME_MS(250))) {
+        aCaptGetResult(VolPSensor, &aPVal);
+        if (aPVal > aPValMax) {
+            aPValMax = aPVal;
+        }
+        if (aPVal < aPValMin) {
+            aPValMin = aPVal;
+        }
+    }
+    // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
+    freeFlowRateM = vMeasureGet()<<2;
+    if (!MonitorMsgSendBlock(MONSTATE_STOP)){
+        initOk=false;
+            DEBUG_PRINT(("Mon error"));
+            setCursor(0, 0);
+            printstrblock("MONITOR ERROR");
+            timeDelayMs(500);
+    }
+    CLOSE_SV2;
+    CLOSE_SV3;
+
+    if ((aPValMean + aPValMax)>= (0.95*8192)) {
+        // Flow sensor almost saturated. Flow too high.
+        setCursor(0, 0);
+        printstrblock("FLOW TOO HIGH   ");
+        timeDelayMs(1000);
+    } else {
+        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateM) / 1000));
+        setCursor(0, 0);
+        printstrblock(lcdTopRow);
+        timeDelayMs(4000);
+
+        if (freeFlowRateM < 200) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO LOW    ");
+            timeDelayMs(1000);
+            initOk = false;
+        } else if (freeFlowRateM > 2000) {
+            // Outside limits.
+            setCursor(0, 0);
+            printstrblock("FLOW TOO HIGH   ");
+            timeDelayMs(1000);
+            initOk = false;
+        }
+    }
+    
+
+
+
+
     OPEN_SV2;
     OPEN_SV3;
     timeDelayMs(250);
@@ -554,7 +685,7 @@ bool InitProcedure(void) {
         }
     }
     // Open Flow Rate in ml/sec. Do it in 250ms to avoid patient damage even if patient is connected.
-    openFlowRate = vMeasureGet()<<2;
+    freeFlowRateF = vMeasureGet()<<2;
     if (!MonitorMsgSendBlock(MONSTATE_STOP)){
         initOk=false;
             DEBUG_PRINT(("Mon error"));
@@ -565,24 +696,24 @@ bool InitProcedure(void) {
     CLOSE_SV2;
     CLOSE_SV3;
 
-    if (((aPValMean<<1) + aPValMax+aPValMin)>= (0.95*8192)) {
+    if ((aPValMean + aPValMax) >= (0.95*8192)) {
         // Flow sensor almost saturated. Flow too high.
         setCursor(0, 0);
         printstrblock("FLOW TOO HIGH   ");
         timeDelayMs(1000);
     } else {
-        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * openFlowRate) / 1000));
+        sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateF) / 1000));
         setCursor(0, 0);
         printstrblock(lcdTopRow);
         timeDelayMs(4000);
 
-        if (openFlowRate < 200) {
+        if (freeFlowRateF < 300) {
             // Outside limits.
             setCursor(0, 0);
             printstrblock("FLOW TOO LOW    ");
             timeDelayMs(1000);
             initOk = false;
-        } else if (openFlowRate > 2500) {
+        } else if (freeFlowRateF > 2500) {
             // Outside limits.
             setCursor(0, 0);
             printstrblock("FLOW TOO HIGH   ");
@@ -590,6 +721,7 @@ bool InitProcedure(void) {
             initOk = false;
         }
     }
+    
     
     // Wait until key depressed.
     while (keyPeek() != -1)
@@ -599,31 +731,78 @@ bool InitProcedure(void) {
     return initOk;
 }
 
+int16_t pInst, pAvgShort, pAvgUShort;
+int16_t bdP1, bdP2;
+// Pressure overshoot measurement variables. Both for inspiration and expiration, overshoot measures 
+// the difference between the pressure estimation that is used to close the valve (pValveActuation), and the real 
+// pressure reached some time after valve is closed (pPlateau).
+int16_t pCtrl, pValveActuation, pPlatMax, pPlatInsp, pPlatExp, pPeepActual, pExpOS, pInspOS; // Variables for overshoot measurement.
+// Volume overshoot measurement variables. Measure volume difference between valve close time and after valve actuation time.
+// Best way to decide when to determine SV2 close time, even in pressure-mode is to measure the volume that produces the desired IP.
+// Estimate lung compliance, multiplied by the desired IP it gives the estimated volume for it.
+uint16_t lungC;
+int16_t pInspOS3, pInspOS2; // Pressure overshoot during inhalation for each intermediate valve setting.
+int16_t vValveActuation, vPlateau, vInspOS;
+// Volume quanta. Volume injected on each fixed-time SV2 opening after initial subState.
+int pInspVSet, pInspOSVSet;
+int16_t vQuanta;
+int16_t pQuantaInsp, pQuantaExp;
+int16_t pAdj, vAdj;
+uint16_t tInsp;
+uint16_t effectiveFlowRate;
+time_t rCycleTime, rValveActuationTstamp, rVHighActuationTstamp, rVMedActuationTstamp, rVLowActuationTstamp;
+time_t rSV2ValveDelay, rSV3ValveDelay;
+time_t rValveDelayStart, rTimeTmp;
+bool initialSubState, valveDelayCheck, OSCheck, QuantaCheck;
+bool OSCheckInt;
+
+void inspOSMeasure(void) {
+    uint16_t tmpUVal;
+    int16_t tmpVal;
+
+    // Valve setting when measuring OS. Normalize OS for both valves open (3x).
+    // Then scale down in use for the actual setting. This produces no difference in constant conditions, but would enhance the behaviour in changing conditions.
+    tmpVal = (3*(pPlatMax - pValveActuation))/pInspOSVSet;
+    if (pInspOS == 0){
+        pInspOS = (3*tmpVal)>>2;
+    } else {
+        pInspOS = (3 * pInspOS + tmpVal) >> 2;
+    }
+    if (vInspOS < 0) {
+        // Volume overshoot should always be > 0.
+        vInspOS = 0;
+    }
+    
+    tmpVal = vMeasureGet();
+    // Constant is volume at inspiration. Scale for precision.
+    if ((pPlatInsp > MPRESSURE_MBAR(4)) && (tmpVal < 2047)) {
+        tmpUVal = (pPlatInsp - pPeepActual) >> 1;
+        tmpUVal = (((uint24_t) tmpVal) << 6) / tmpUVal;
+        // Now IIR.
+        if (lungC == 0){
+            lungC = (3*tmpUVal)>>2;
+        } else {
+            lungC = (3 * lungC + tmpUVal) >> 2;
+        }
+    }
+
+    tmpVal = (3*(tmpVal - vValveActuation))/pInspOSVSet;
+    if (vInspOS == 0){
+        vInspOS = (3*tmpVal)>>2;
+    } else {
+        vInspOS = (3 * vInspOS + tmpVal) >> 2;
+    }
+    DEBUG_PRINT(("\nIPOS LC %d\n", lungC));
+}
+
 void main(void) {
+    uint16_t tmpUVal;
+    int16_t tmpVal;
+    int16_t pInspOSScale, vInspOSScale;
 #ifdef DEBUG
     time_t printTime;
 #endif
 
-    int16_t pInst, pAvgShort, pAvgUShort;
-    int16_t bdP1, bdP2;
-    // Pressure overshoot measurement variables. Both for inspiration and expiration, overshoot measures 
-    // the difference between the pressure estimation that is used to close the valve (pValveActuation), and the real 
-    // pressure reached some time after valve is closed (pPlateau).
-    int16_t pValveActuation, pPlatMax, pPlateau, pExpOS, pInspOS, pInspPlatErr; // Variables for overshoot measurement.
-    // Volume overshoot measurement variables. Measure volume difference between valve close time and after valve actuation time.
-    int16_t vValveActuation, vPlateau, vInspOS;
-    // Volume quanta. Volume injected on each fixed-time SV2 opening after initial subState.
-    int16_t vQuanta;
-    int16_t pQuantaInsp, pQuantaExp;
-    int16_t pAdj, vAdj;
-
-
-
-    int16_t tmpVal;
-    time_t rCycleTime, rSubCycleTime, rValveAcuationTstamp;
-    time_t rSV2ValveDelay, rSV3ValveDelay;
-    time_t rValveDelayStart, rTimeTmp;
-    bool initialSubState, valveDelayCheck, OSCheck, QuantaCheck;
 
     // Initialize the device
     SYSTEM_Initialize();
@@ -651,6 +830,14 @@ void main(void) {
     MonitorInit();
     vMeasureInit();
     
+    while (0) {
+        OPEN_SV3;
+        OPEN_SV2;
+        timeDelayMs(500);
+        CLOSE_SV3;
+        CLOSE_SV2;
+        timeDelayMs(500);
+    }
     while (1) {
         char keyTmp;
         while (!InitProcedure())
@@ -671,8 +858,17 @@ void main(void) {
         }
     }
 
+    // Clean screen lower line.
+    setCursor(0, 1);
+    printstrblock("                ");
+
     while (1) {
+        setCursor(0, 1);
+        printstrblock("                ");
+        timeDelayMs(10);
         setBacklight(true);
+        timeDelayMs(10);
+
         // Now wait until BREATH button pressed.
         lcdPrintTR = true;
         lcdPrintBR = true;
@@ -709,11 +905,16 @@ void main(void) {
         QuantaCheck = false;
         pExpOS = 0;
         pInspOS = 0;
-        pInspPlatErr = 0;
+        pInspOS3 = 0;
+        pInspOS2 = 0;
         vInspOS = 0;
         vQuanta = 0;
         pQuantaInsp = 0;
         pQuantaExp = 0;
+        lungC = 0;
+        // Flow rate in ml/sec.
+        effectiveFlowRate=freeFlowRateF;
+        pPeepActual = 0;
         IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
         EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
         lastCycleVol = 0;
@@ -727,89 +928,70 @@ void main(void) {
             MonitorMsgForcedSend(MONSTATE_RUNV);
         }
 
-#if 0
-        if (0) {
-            time_t tstamp1, tstamp2, tstamp3;
-            tstamp1 = timeGet();
-            printTime = timeGet();
-            uint16_t v1, v2;
-            int16_t auxP;
-            uint32_t volume;
-
-            volume = 0;
-
-            // Flow sensor calibration.
-            tstamp3 = timeGet();
-            while (1) {
-                if (timeElapsedR(&tstamp1, TIME_MS(2))) {
-                    aCaptGetResult(VolPSensor, &auxP);
-                    if (auxP > 0) {
-                        v1 = auxP << 4;
-                        v2 = isqrt(v1);
-                    } else {
-                        v1 = 0;
-                        v2 = 0;
-                    }
-                    if (v2 > 20) {
-                        volume = volume + v2;
-                    }
-                    tstamp2 = timeGet();
-                }
-
-                if (timeElapsedR(&printTime, TIME_MS(100))) {
-                    // Scale up for maximum resolution.
-                    DEBUG_PRINT(("T %d VP %d SVP %d, SQRT %d. VolumeIrq %ld Volume %ld Del %d\n",
-                            timeDiff(tstamp3, timeGet()), auxP, v1, v2, vMeasureGet(), volume, timeDiff(tstamp1, tstamp2)));
-                }
-            }
-            // Code with constant on-off to debug pressure sensor noise.
-            while (1) {
-                if (timeElapsedR(&tstamp1, TIME_MS(100))) {
-                    if (aCaptGetResult(MainPSensor, &pInst)) {
-                        DEBUG_PRINT(("P %d  \r", pInst / MPRESSURE_MBAR(1)));
-                    }
-
-                    // DORDBG. SET RA2 TO 1.
-                    IO_RA2_Toggle();
-                }
-            }
-        } else {
-            // Normal code. 
-            rCycleTime = timeGet();
-#ifdef DEBUG
-            printTime = timeGet();
-#endif
-        }
-#endif
-
         // Start.
         rCycleTime = timeGet();
         while (ctrlStatus != CTRL_SLEEP) {
             /////////////////////////////////////////////
             // Inspiration part of the cycle.
             /////////////////////////////////////////////
+            // Now three different pressure settings are possible. Optimize time expended on each one.
+            // Pressure due to lung compliance and lung resistance can be simplified as:
+            // P(t) = LC*Integral(Flow(t)) + LR*Flow(t). Being LC the lung compliance, and LR the lung resistance.
+            // With fixed flow(t) values, the integral of flow becomes F1*T1+F2*T2+F3*T3 being F1, F2, F3 the flow at the three settings, and T1, T2, T3 the total time at each setting.
+            // To minimize the maximum pressure reached, this pressure should be reached the end of each stage (of filling the lung with one of the three settings)
+            // If this is done, then T2 and T3 have fixed durations that can be expressed as T2=LR/2LC, T3=LR/LC. T1 would account for the rest of the time.
+            // In this expression the time is unrestricted. If time must be minimized, above values would represent max values.
             DEBUG_PRINT(("\nIP\n"));
             intVentMode = VentMode;
             intMaxP = MPRESSURE_MBAR(MaxP);
-
-            if (intVentMode == VMODE_PRESSURE) {
-                intIP = MPRESSURE_MBAR(IP);
-                intMaxV = 0;
-            } else {
-                intIP = 0;
-                intMaxV = 10 * ((uint16_t) MaxV);
-            }
             intPEEP = MPRESSURE_MBAR(PEEP);
             intIDuration = TIME_MS(IDuration);
             intEDuration = TIME_MS(EDuration);
-            // Set valves initial values.
-            OPEN_SV2;
+            if (intVentMode == VMODE_PRESSURE) {
+                intIP = MPRESSURE_MBAR(IP);
+                // Get target volume to reach desired IP.
+                intMaxV = ((((uint24_t) intIP-pPeepActual)*((uint24_t) lungC))>>7);
+                // Check do not exceed max volume.
+                if (intMaxV > (10*HighVAlarm)) {
+                    intMaxV = 10*HighVAlarm;
+                }
+            } else {
+                // In volume mode --> Target volume implies starting from the setted PEEP. If PEEP is higher --> lower the volume to avoid damage.
+                intIP = 0;
+                if (pPeepActual > ((MPRESSURE_MBAR(1) + intPEEP))) {
+                    intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP)*lungC)>>7);
+                } else  {
+                    intMaxV = 10 * ((uint16_t) MaxV);
+                }
+            }
+            DEBUG_PRINT(("\nIP. MaxV %d EBRate %d\n", intMaxV, bRateGet()));
+                        
+            // Set valves initial value.
+            if ((((uint24_t) 3000*intMaxV)/effectiveFlowRate) < INSP_TIME) {
+                OPEN_SV2LOW;
+                rVLowActuationTstamp = timeGet();
+                rVMedActuationTstamp = rCycleTime;
+                rVHighActuationTstamp = rCycleTime;
+                pInspVSet = 1;
+                DEBUG_PRINT(("\nVLow\n"));
+            } else if ((((uint24_t) 1500*intMaxV)/effectiveFlowRate) < INSP_TIME) {
+                OPEN_SV2MED;
+                rVMedActuationTstamp = timeGet();
+                rVHighActuationTstamp = rCycleTime;
+                pInspVSet = 2;
+                DEBUG_PRINT(("\nVMed\n"));
+            } else {
+                OPEN_SV2;
+                pInspVSet = 3;
+                rVHighActuationTstamp = timeGet();
+            }            
             OPEN_SV3;
 
             // Init variables for new cycle.
             initialSubState = true;
             valveDelayCheck = true;
             OSCheck = false;
+            OSCheckInt = false;
             QuantaCheck = false;
             rValveDelayStart = timeGet();
             vMeasureRst();
@@ -825,20 +1007,20 @@ void main(void) {
                     if (initialSubState) {
                         // IP not reached.
                         MonitorErrorSet(MON_IPE);
+                        // It is needed to do estimations at least of LungC.
+                        pPlatInsp = pInst;
+                        pValveActuation = pInst;
+                        pPlatMax = pInst;
+                        inspOSMeasure();
                     }
                     if (OSCheck) {
                         OSCheck = false;
                         aCaptGetResult(Flt1PSensor, &pAvgUShort);
-                        pPlateau = pAvgUShort;
+                        pPlatInsp = pAvgUShort;
                         if (pPlatMax < pAvgUShort) {
                             pPlatMax = pAvgUShort;
                         }
-                        tmpVal = pPlatMax - pValveActuation;
-                        pInspOS = (3 * pInspOS + tmpVal) >> 2;
-                        tmpVal = pPlateau - pValveActuation;
-                        pInspPlatErr = (3 * pInspPlatErr + tmpVal) >> 2;
-                        tmpVal = vMeasureGet() - vValveActuation;
-                        vInspOS = (3 * vInspOS + tmpVal) >> 2;
+                        inspOSMeasure();
                     }
                     break;
                 } else {
@@ -866,36 +1048,120 @@ void main(void) {
                         // Can assign variables here since there is no ongoing actuation.
                         // The lung will have an extra pressure during inspiration which is proportional to the flow rate,
                         // the higher the flow rate, the higher the extra pressure during inspiration. As in the EP phase, compensate this by using a filtered version of the pressure.
-                        pValveActuation = pAvgShort;
+                        pCtrl = pAvgShort;
                         vValveActuation = vMeasureGet();
-                        if (vInspOS < 0) {
-                            // Volume overshoot should always be > 0.
-                            vInspOS = 0;
+
+                        tmpVal = INSP_TIME - timeDiff(rCycleTime, timeGet());
+                        
+                        // Two reasons for switching to med flow:
+                        //   Pressure limit.
+                        //   Volume is very low, so possible to fill-in at lower rate.
+                        if ((pInspVSet == 3) &&
+                            (((pCtrl+pInspOS3) > ((7*intMaxP)>>3)) ||
+                            ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
+                            OPEN_SV2MED;
+                            pInspVSet = 2;
+                            OSCheckInt = true;
+                            pPlatMax = pCtrl;
+                            rVMedActuationTstamp = timeGet();
+                            rValveActuationTstamp = rVMedActuationTstamp;
+                            pValveActuation = pCtrl;
+                            DEBUG_PRINT(("PI-MED T %5d - Pi %d Pc %d Vol %3d OS %d RF %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS3), effectiveFlowRate));
+                        } else if (!OSCheckInt && (pInspVSet == 2) &&
+                                    (((pCtrl+pInspOS2) > ((7*intMaxP)>>3)) ||
+                                    ((((int24_t) 3000*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
+                            OPEN_SV2LOW;
+                            pInspVSet = 1;
+                            OSCheckInt = true;
+                            pPlatMax = pCtrl;
+                            rVLowActuationTstamp = timeGet();
+                            rValveActuationTstamp = rVLowActuationTstamp;                            
+                            pValveActuation = pCtrl;                            
+                            DEBUG_PRINT(("PI-LOW T %5d - Pi %d Pc %d Vol %3d OS %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS2)));
+                        }
+                        
+                        if (pPlatMax < pCtrl) {
+                            pPlatMax = pCtrl;
                         }
 
-                        if ((pInspOS < MPRESSURE_MBAR(5)) && (pInspOS > MPRESSURE_MBAR(-5))) {
-                            tmpVal = intIP - pInspOS;
-                        } else {
-                            tmpVal = intIP;
+                        if (OSCheckInt && timeElapsed(rValveActuationTstamp, rSV2ValveDelay<<2)) {
+                            OSCheckInt=false;
+                            if (pInspVSet == 2){
+                                pInspOS3 = (3*pInspOS3 + pPlatMax - pValveActuation)>>2;
+                            } else if (pInspVSet == 1) {
+                                pInspOS2 = (3*pInspOS2 + pPlatMax - pValveActuation)>>2;                                
+                            }
                         }
-                        if ((pInst > (intMaxP)) ||
-                                ((pValveActuation + pInspOS) > (intMaxP)) ||
-                                ((intVentMode == VMODE_PRESSURE) && ((pValveActuation + pInspPlatErr) > intIP)) ||
-                                ((intVentMode == VMODE_VOLUME) && ((vValveActuation + vInspOS) >= intMaxV))) {
+                        
+                        if (OSCheckInt){
+                            pInspOSScale = ((1+pInspVSet)*pInspOS)/3;
+                            vInspOSScale = ((1+pInspVSet)*vInspOS)/3;                            
+                        } else {
+                            pInspOSScale = (pInspVSet*pInspOS)/3;
+                            vInspOSScale = (pInspVSet*vInspOS)/3;
+                        }
+                        
+                        if ((pInst > (intMaxP+MPRESSURE_MBAR(4))) ||
+                                (pCtrl > intMaxP) ||
+                                ((pCtrl + pInspOSScale) > intMaxP) ||
+                                ((intVentMode == VMODE_PRESSURE) && ((pCtrl + pInspOSScale) > intIP) && (vValveActuation + vInspOSScale) >= intMaxV) ||
+                                ((intVentMode == VMODE_VOLUME) && ((vValveActuation + vInspOSScale) >= intMaxV))) {
                             CLOSE_SV2;
+                            pValveActuation = pCtrl;
                             initialSubState = false;
-                            rValveAcuationTstamp = timeGet();
+                            rValveActuationTstamp = timeGet();
+                            tInsp = timeDiff(rCycleTime, timeGet());
                             // Here two possibilities exist:
                             // Do like in EP, calculate overshoot respect to instantaneous pressure, and apply to it.
                             // In this case, no need to compute pressure prediction.
                             // The other option is to compute OS over pressure prediction, and apply also over the prediction.
                             // The theoretical advantage of the second case is that the OS calculated will be smaller, so it will be less sensitive to the changing conditions.
                             OSCheck = true;
-                            pPlatMax = 0;
-                            DEBUG_PRINT(("PI-END T %5d - Pi %d Pv %d Vol %3d VL %3d\n",
+                            if (OSCheckInt) {
+                                pInspOSVSet = pInspVSet+1;
+                            } else {
+                                pInspOSVSet = pInspVSet;
+                            }
+                            pPlatMax = pInst;
+                            if ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP)) {
+                                // Should never stop due to pressure, if this is the case --> increment the OS value of the valves.
+                                if ((pInspVSet == 2) || (pInspVSet == 3)) {
+                                    pInspOS3 += MPRESSURE_MBAR(5);
+                                } else {
+                                    // In this case two situations might appear: 
+                                    // OS2 is too low, then solution is to increase it.
+                                    // But it might also happen that the problem is that OS3 is closing too late, and there is no time to put SV2 in low flow.
+                                    if (timeElapsed(rVMedActuationTstamp, rSV2ValveDelay<<3)) {
+                                        pInspOS2 += MPRESSURE_MBAR(5);
+                                    } else {
+                                        pInspOS3 += MPRESSURE_MBAR(5);     
+                                    }
+                                }
+                            }
+
+                            if (pInspVSet == 3) {
+                                tmpUVal = timeDiff(rVHighActuationTstamp, timeGet());    
+                            } else if (pInspVSet == 2){
+                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, timeGet()))/3;    
+                            } else if (pInspVSet == 1){
+                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, rVLowActuationTstamp))/3 + timeDiff(rVLowActuationTstamp, timeGet())/3;
+                            }
+
+                            if (tmpUVal >= 60) {
+                                effectiveFlowRate=(3*effectiveFlowRate+(((uint24_t) 1000*vValveActuation)/tmpUVal))>>2;
+                            }   
+                            
+                            // Avoid too big errors in flow measurement.
+                            if (effectiveFlowRate < 100){
+                                effectiveFlowRate = 100;
+                            } else if (effectiveFlowRate > 2000){
+                                effectiveFlowRate = 2000;
+                            }
+                            
+                            DEBUG_PRINT(("PI-END T %d - Pi %d Pc %d Vol %3d PMax %d VL %d VOS %d POS %d FR %d UV %d\n",
                                     timeDiff(rCycleTime, timeGet()),
                                     (10 * pInst) / MPRESSURE_MBAR(1), (10 * pValveActuation) / MPRESSURE_MBAR(1),
-                                    vValveActuation, intMaxV));
+                                    vValveActuation, DBGPCONVERT(intMaxP), intMaxV, vInspOS, DBGPCONVERT(pInspOSScale), effectiveFlowRate, tmpUVal));
                         }
                         if (valveDelayCheck) {
                             // Measure response time of valve.
@@ -919,41 +1185,26 @@ void main(void) {
                         // Hold IP.
                         aCaptGetResult(MainPSensor, &pInst);
                         MonitorErrorClr(MON_IPE);
-                        if (SV2ISOPEN && (timeElapsedR(&rSubCycleTime, SV2OTIME) || (pInst > intMaxP))) {
+                        if (SV2ISOPEN && (timeElapsedR(&rValveActuationTstamp, SV2OTIME) || (pInst > intMaxP))) {
                             CLOSE_SV2;
-                            rValveAcuationTstamp = timeGet();
+                            rValveActuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            DEBUG_PRINT(("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveAcuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1)));
                         } else {
                             if (OSCheck) {
                                 // Keep tracking of pressure, take as plateau max value of pressure during 60ms after valve closing.
                                 aCaptGetResult(Flt1PSensor, &pAvgUShort);
-                                pPlateau = pAvgUShort;
+                                pPlatInsp = pAvgUShort;
                                 if (pPlatMax < pAvgUShort) {
                                     pPlatMax = pAvgUShort;
                                 }
 
-                                if (timeElapsed(rValveAcuationTstamp, PIPLATEAUMDEL + rSV2ValveDelay)) {
-                                    // Filtered pExpOS.
-                                    tmpVal = pPlatMax - pValveActuation;
-                                    pInspOS = (3 * pInspOS + tmpVal) >> 2;
-                                    tmpVal = pPlateau - pValveActuation;
-                                    pInspPlatErr = (3 * pInspPlatErr + tmpVal) >> 2;
-                                    tmpVal = vMeasureGet() - vValveActuation;
-                                    vInspOS = (3 * vInspOS + tmpVal) >> 2;
-
+                                if (timeElapsed(rValveActuationTstamp, PIPLATEAUMDEL + rSV2ValveDelay)) {
                                     OSCheck = false;
-                                    DEBUG_PRINT(("PI-OS T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
+                                    inspOSMeasure();
                                 }
                             } else {
-                                // Partially compensate for SV3 opening time, once inhalation part has been reached.
-                                if ((SV3ISOPEN) && (rSV3ValveDelay > TIME_MS(100)) && ((intIDuration < (rSV3ValveDelay - TIME_MS(100))) || timeElapsed(rCycleTime, intIDuration - (rSV3ValveDelay - TIME_MS(100))))) {
-                                    valveDelayCheck = true;
-                                    rValveDelayStart = timeGet();
-                                    CLOSE_SV3;
-                                    DEBUG_PRINT(("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart)));
-                                }
-                                if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16)) {
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveDelay<<1)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = vMeasureGet() - vValveActuation;
@@ -986,11 +1237,11 @@ void main(void) {
 
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
                                             (((intVentMode == VMODE_PRESSURE) && (pAdj < intIP)) ||
-                                             ((intVentMode == VMODE_VOLUME) || (vAdj < intMaxV)))) {
-                                        OPEN_SV2;
-                                        rSubCycleTime = timeGet();
+                                             ((intVentMode == VMODE_VOLUME) && (vAdj < intMaxV  )))) {
+                                        OPEN_SV2LOW;
+                                        rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
-                                        DEBUG_PRINT(("PI-VO T %d - Pi %d VOL %d VL %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), vMeasureGet(), intMaxV));
+                                        DEBUG_PRINT(("PI-VO T %d - Pi %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1), vMeasureGet()));
                                     }
                                 }
                             }
@@ -1001,23 +1252,49 @@ void main(void) {
                     MenuMng();
                 }
 
+                // Partially compensate for SV3 opening time.
+                if ((SV3ISOPEN) && (rSV3ValveDelay > TIME_MS(50)) &&
+                        ((intIDuration < (rSV3ValveDelay - TIME_MS(50))) || timeElapsed(rCycleTime, intIDuration - (rSV3ValveDelay - TIME_MS(50))))) {
+                    valveDelayCheck = true;
+                    rValveDelayStart = timeGet();
+                    CLOSE_SV3;
+                    DEBUG_PRINT(("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart)));
+                }
+
 #ifdef DEBUG
                 if (timeElapsedR(&printTime, PRINTTIME)) {
-                    aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    DEBUG_PRINT(("PI T %5d - V %3d Pi %3d Pv %3d R %2d PlatMax %3d Plat %3d POS %3d PPE %3d VOS %d PQ %d VQ %d.\n",
-                            timeDiff(rCycleTime, timeGet()),
-                            vMeasureGet(),
-                            (10 * pInst) / MPRESSURE_MBAR(1),
-                            (10 * (pValveActuation)) / MPRESSURE_MBAR(1),
-                            rSV2ValveDelay,
-                            (10 * pPlatMax) / MPRESSURE_MBAR(1),
-                            (10 * pPlateau) / MPRESSURE_MBAR(1),
-                            (10 * pInspOS) / MPRESSURE_MBAR(1),
-                            (10 * pInspPlatErr) / MPRESSURE_MBAR(1),
-                            vInspOS,
-                            (10 * pQuantaInsp) / MPRESSURE_MBAR(1),
-                            vQuanta));
+                        // User dump.
+                        DEBUG_PRINT(("PI T %5d - V %3d Pi %3d Pc %3d R %2d PlatMax %3d Plat %3d PQ %d VQ %d.\n",
+                                timeDiff(rCycleTime, timeGet()),
+                                vMeasureGet(),
+                                (10 * pInst) / MPRESSURE_MBAR(1),
+                                (10 * (pCtrl)) / MPRESSURE_MBAR(1),
+                                rSV2ValveDelay,
+                                (10 * pPlatMax) / MPRESSURE_MBAR(1),
+                                (10 * pPlatInsp) / MPRESSURE_MBAR(1),
+                                (10 * pQuantaInsp) / MPRESSURE_MBAR(1),
+                                vQuanta));
+                        // For octave...
+                        // User dump.
+                        OCTAVE_PRINT(("-: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+                                timeGet(),
+                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
+                                pInst,
+                                pAvgShort,
+                                pInspOS,
+                                pInspOS2,
+                                pInspOS3,
+                                pPlatInsp,
+                                pExpOS,
+                                pPlatExp,
+                                lungC,
+                                effectiveFlowRate,
+                                pPlatMax,
+                                pQuantaInsp,
+                                pQuantaExp,
+                                vQuanta,
+                                vMeasureGet()));
                 }
 #endif
             }
@@ -1034,8 +1311,6 @@ void main(void) {
             // Clear filters.
             aCaptRstFlt(Flt0PSensor);
             aCaptRstFlt(Flt1PSensor);
-
-            rSubCycleTime = timeGet();
             CLOSE_SV2;
             if (SV3ISOPEN) {
                 CLOSE_SV3;
@@ -1066,13 +1341,14 @@ void main(void) {
                     }
                     break;
                 } else {
+                    aCaptGetResult(MainPSensor, &pInst);
+                    pPeepActual = pInst;
                     if (initialSubState) {
                         // Exhale.
                         // During exhalation, the pressure that is measured is lower than the pressure once SV3 opens,
                         // and the effect is higher the faster the pressure drops during the exhalation.
                         // To compensate for this, and ensure the system converges to the set value, use 
                         // a filtered version of the pressure, instead of the instantaneous pressure.
-                        aCaptGetResult(MainPSensor, &pInst);
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
                         // Compensation of pre-measured difference between plateu pressure and pressure at closing of valve.
                         // Due to overshoot after OPEN of SV3.
@@ -1084,18 +1360,18 @@ void main(void) {
                         if (pAvgShort < tmpVal) {
                             OPEN_SV3;
                             initialSubState = 0;
-                            rValveAcuationTstamp = timeGet();
+                            rValveActuationTstamp = timeGet();
                             pValveActuation = pInst;
                             OSCheck = true;
                             DEBUG_PRINT(("PEI end T %d - Pi %d OS %d\n",
-                                    timeDiff(rCycleTime, rValveAcuationTstamp),
+                                    timeDiff(rCycleTime, rValveActuationTstamp),
                                     (10 * pInst) / MPRESSURE_MBAR(1),
                                     (10 * pExpOS) / MPRESSURE_MBAR(1)));
                         }
                         if (valveDelayCheck) {
                             // Measure response time of valve.
                             // When detect a change of 1mBar on pInst-pAvgShort.
-                            if (pInst < (pAvgShort - MPRESSURE_MBAR(1))) {
+                            if (pInst < (pAvgShort - MPRESSURE_MBAR(3))) {
                                 valveDelayCheck = false;
                                 // Minimum reached. Store response time.
                                 rTimeTmp = timeDiff(rValveDelayStart, timeGet());
@@ -1105,7 +1381,7 @@ void main(void) {
                                     // Clear alarm.
                                     MonitorErrorClr(MON_SV3E);
                                 } else {
-                                    // Clear alarm.
+                                    // Set alarm.
                                     MonitorErrorSet(MON_SV3E);
                                 }
                             }
@@ -1113,20 +1389,19 @@ void main(void) {
                     } else {
                         // Hold PEEP.
                         MonitorErrorClr(MON_EPE);
-                        aCaptGetResult(MainPSensor, &pInst);
-                        if (SV2ISOPEN && (timeElapsedR(&rSubCycleTime, SV2OTIME) || (pInst > intMaxP))) {
+                        if (SV2ISOPEN && (timeElapsedR(&rValveActuationTstamp, SV2OTIME) || (pInst > intMaxP))) {
                             CLOSE_SV2;
-                            rValveAcuationTstamp = timeGet();
+                            rValveActuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
                             DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
                         } else {
                             if (OSCheck) {
-                                if (timeElapsed(rValveAcuationTstamp, PEPLATEAUMDEL + rSV2ValveDelay)) {
+                                if (timeElapsed(rValveActuationTstamp, PEPLATEAUMDEL + rSV2ValveDelay)) {
                                     // Take averaged pressure measurement as mean value.
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
-                                    pPlateau = pAvgUShort;
+                                    pPlatExp = pAvgUShort;
                                     // Filtered pExpOS.
-                                    tmpVal = pPlateau - pValveActuation;
+                                    tmpVal = pPlatExp - pValveActuation;
                                     pExpOS = (3 * pExpOS + tmpVal) / 4;
                                     // Clear long filters.
                                     aCaptRstFlt(Flt2PSensor);
@@ -1150,7 +1425,7 @@ void main(void) {
                                 }
                                 // Then PEEP level maintenance.
                                 // Measure only after delay of valve actuation has elapsed, x2.
-                                if (timeElapsed(rValveAcuationTstamp, 32 * rSV2ValveDelay / 16)) {
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveDelay<<1)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = (bdP1 - pValveActuation);
@@ -1164,11 +1439,13 @@ void main(void) {
                                         }
                                     }
                                     if ((bdP1 + (pQuantaExp >> 1)) < intPEEP) {
-                                        OPEN_SV2;
-                                        rSubCycleTime = timeGet();
+                                        OPEN_SV2LOW;
+                                        rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
                                         pValveActuation = pInst;
-                                        DEBUG_PRINT(("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rSubCycleTime), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
+                                        DEBUG_PRINT(
+                                                
+                                                ("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
                                     }
                                 }
                             }
@@ -1182,19 +1459,43 @@ void main(void) {
                 if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    DEBUG_PRINT(("PE T %d - Pi %d Pn %d Pd %d. R %d Pep %d POS %d PQ %d\n",
+                    DEBUG_PRINT(("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n",
                             timeDiff(rCycleTime, timeGet()),
                             (10 * pInst) / MPRESSURE_MBAR(1),
                             (10 * (pInst - pAvgShort)) / MPRESSURE_MBAR(1),
                             rSV3ValveDelay,
-                            (10 * pPlateau) / MPRESSURE_MBAR(1),
+                            (10 * pPlatExp) / MPRESSURE_MBAR(1),
                             (10 * pExpOS) / MPRESSURE_MBAR(1),
                             (10 * pQuantaExp) / MPRESSURE_MBAR(1)
                             ));
+
+                    // For octave...
+                    // User dump.
+                    OCTAVE_PRINT(("-: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+                                timeGet(),
+                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
+                                pInst,
+                                pAvgShort,
+                                pInspOS,
+                                pInspOS2,
+                                pInspOS3,
+                                pPlatInsp,
+                                pExpOS,
+                                pPlatExp,
+                                lungC,
+                                effectiveFlowRate,
+                                pPlatMax,
+                                pQuantaInsp,
+                                pQuantaExp,
+                                vQuanta,
+                                vMeasureGet()));
                 }
 #endif
             }
         }
+        // Clean screen lower line.
+        setCursor(0, 1);
+        printstrblock("                ");
         DEBUG_PRINT(("POWER-OFF\n"));
         // Now ensure at least once to update monitor with new state.
         BUZZER_OFF;
@@ -1206,18 +1507,18 @@ void main(void) {
         screenMng();
         while (PrintStrBusy());
         screenMng();
+        timeDelayMs(10);
         // Wait until I2C idle, then send message.
-        while (PrintStrBusy());
-        MonitorMsgSend(MONSTATE_SLEEP);
-        while (MonitorMsgBusy());
+        MonitorMsgSendBlock(MONSTATE_SLEEP);
+        timeDelayMs(10);
         setBacklight(false);        
         // Now wait until power button pressed again.
         DEBUG_PRINT(("Wait for key press\n"));
         while (keyRead() != KEYPOWER);
         // Go back to stop.
         ctrlStatus = CTRL_STOP;
-        MonitorMsgSend(MONSTATE_STOP);
-        while (MonitorMsgBusy());
+        timeDelayMs(10);
+        MonitorMsgSendBlock(MONSTATE_STOP);
     }
 }
 /**

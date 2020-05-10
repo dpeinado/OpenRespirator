@@ -1,6 +1,6 @@
 /* 
  * File:   aCapture.h
- * Author: David
+ * Author: David Ortiz
  *
  * Created on April 4, 2020, 12:19 PM
  */
@@ -30,7 +30,9 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 

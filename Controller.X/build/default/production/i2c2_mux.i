@@ -7,6 +7,8 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "i2c2_mux.c" 2
+
+
 # 1 "./i2c2_mux.h" 1
 # 15 "./i2c2_mux.h"
 # 1 "./mcc_generated_files/mcc.h" 1
@@ -27033,9 +27035,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 566 "./mcc_generated_files/pin_manager.h"
+# 586 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 578 "./mcc_generated_files/pin_manager.h"
+# 598 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27820,11 +27822,11 @@ i2c2_error_t I2C2_MOpen(void);
 i2c2_error_t I2C2_LOpen(void);
 i2c2_error_t I2C2_MClose(void);
 i2c2_error_t I2C2_LClose(void);
-# 1 "i2c2_mux.c" 2
+# 3 "i2c2_mux.c" 2
 
 
 # 1 "./ORespGlobal.h" 1
-# 16 "./ORespGlobal.h"
+# 14 "./ORespGlobal.h"
 # 1 "./aCapture.h" 1
 # 21 "./aCapture.h"
 typedef enum{
@@ -27839,14 +27841,16 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 
 void aCaptRstFlt(aSrcTyp sel);
-# 16 "./ORespGlobal.h" 2
-# 82 "./ORespGlobal.h"
+# 14 "./ORespGlobal.h" 2
+# 99 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -27877,7 +27881,7 @@ void aCaptRstFlt(aSrcTyp sel);
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
-# 3 "i2c2_mux.c" 2
+# 5 "i2c2_mux.c" 2
 
 
 uint8_t currentTrfAddr;
