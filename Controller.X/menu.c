@@ -302,35 +302,35 @@ void screenMng(void) {
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
             if (ctrlStatus != CTRL_SLEEP) {
                 if (VentMode == VMODE_PRESSURE) {
-                    sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, MaxP);
+                    sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, MaxP);
                 } else {
-                    sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
+                    sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
                 }
             } else {
                 sprintf(lcdTopRow, "----OFF-STATE---");
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", menuVal, PEEP, IP, MaxP);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", menuVal, PEEP, IP, MaxP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, menuVal, IP, MaxP);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, menuVal, IP, MaxP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
-            sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, menuVal, MaxP);
+            sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, menuVal, MaxP);
         } else if (menuStatus == CFG_MAXP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, menuVal);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, menuVal);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));            
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));            
             }
         } else if (menuStatus == CFG_MAXV) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
+            sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
             sprintf(lcdTopRow, "PRESS BPM TO    ");
         }
@@ -353,14 +353,14 @@ void screenMng(void) {
         lcdPrintBR = false;
         lcdMenuPrint = false;
         if (menuStatus == CFG_LOWVA) {
-            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
+            sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
         } else if (menuStatus == CFG_HIGHVA) {
-            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
+            sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
                 sprintf(lcdBtnRow, "POWER OFF ");
         } else {
             if (ctrlStatus != CTRL_SLEEP) {
-                sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
+                sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
             } else {
                 sprintf(lcdBtnRow, "PWR TO ON ");
             }
@@ -381,19 +381,19 @@ void screenMng(void) {
                 setCursor(4, 0);
                 break;
             case CFG_IP:
-                setCursor(8, 0);
+                setCursor(7, 0);
                 break;
             case CFG_MAXP:
-                setCursor(11, 0);
+                setCursor(10, 0);
                 break;
             case CFG_MAXV:
                 setCursor(15, 0);
                 break;
             case CFG_LOWVA:
-                setCursor(2, 1);
+                setCursor(3, 1);
                 break;
             case CFG_HIGHVA:
-                setCursor(6, 1);
+                setCursor(8, 1);
                 break;
             default:
                 setCursor(21, 0);

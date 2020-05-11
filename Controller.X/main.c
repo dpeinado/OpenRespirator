@@ -17,7 +17,7 @@
 
 #ifdef DEBUG
 
-#define DBGPCONVERT(pValue) (((320/MPRESSURE_MBAR(1))*pValue)>>5)
+#define DBGPCONVERT(pValue) ((int16_t) (((2560/MPRESSURE_MBAR(1))*((int24_t) pValue))>>8))
 
 void putch(char byte) {
     while (!UART1_is_tx_ready());
@@ -61,8 +61,8 @@ uint8_t  bRateCnt = 0;
 
 #define PIPLATEAUMDEL TIME_MS(150)
 #define PEPLATEAUMDEL TIME_MS(350)
-#define PRINTTIME TIME_MS(20)
 #define SV2OTIME TIME_MS(15)
+#define PRINTTIME TIME_MS(1)
 ///////////////////
 ///////////////////
 
@@ -243,17 +243,17 @@ void MonitorMsgForcedSend (monStateT state){
             monitorMsg[MONIDX_BPMV] |= 0x80;
         }
 
-        monitorMsg[MONIDX_VMAXV] = MaxV;
+        monitorMsg[MONIDX_VMAXV] = MaxV>>1;
         if (chMaxV){
             monitorMsg[MONIDX_VMAXV] |= 0x80;
         }
         
-        monitorMsg[MONIDX_LVAV]  = LowVAlarm;
+        monitorMsg[MONIDX_LVAV]  = LowVAlarm>>1;
         if (chLowVAlarm){
             monitorMsg[MONIDX_LVAV] |= 0x80;
         }
         
-        monitorMsg[MONIDX_HVAV]  = HighVAlarm;
+        monitorMsg[MONIDX_HVAV]  = HighVAlarm>>1;
         if (chHighVAlarm){
             monitorMsg[MONIDX_HVAV]  |= 0x80;
         }
@@ -1160,7 +1160,7 @@ void main(void) {
                             
                             DEBUG_PRINT(("PI-END T %d - Pi %d Pc %d Vol %3d PMax %d VL %d VOS %d POS %d FR %d UV %d\n",
                                     timeDiff(rCycleTime, timeGet()),
-                                    (10 * pInst) / MPRESSURE_MBAR(1), (10 * pValveActuation) / MPRESSURE_MBAR(1),
+                                    DBGPCONVERT(pInst), DBGPCONVERT(pValveActuation),
                                     vValveActuation, DBGPCONVERT(intMaxP), intMaxV, vInspOS, DBGPCONVERT(pInspOSScale), effectiveFlowRate, tmpUVal));
                         }
                         if (valveDelayCheck) {
@@ -1189,7 +1189,7 @@ void main(void) {
                             CLOSE_SV2;
                             rValveActuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            DEBUG_PRINT(("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst)));
                         } else {
                             if (OSCheck) {
                                 // Keep tracking of pressure, take as plateau max value of pressure during 60ms after valve closing.
@@ -1241,7 +1241,7 @@ void main(void) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
-                                        DEBUG_PRINT(("PI-VO T %d - Pi %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1), vMeasureGet()));
+                                        DEBUG_PRINT(("PI-VO T %d - Pi %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst), vMeasureGet()));
                                     }
                                 }
                             }
@@ -1268,15 +1268,16 @@ void main(void) {
                         DEBUG_PRINT(("PI T %5d - V %3d Pi %3d Pc %3d R %2d PlatMax %3d Plat %3d PQ %d VQ %d.\n",
                                 timeDiff(rCycleTime, timeGet()),
                                 vMeasureGet(),
-                                (10 * pInst) / MPRESSURE_MBAR(1),
-                                (10 * (pCtrl)) / MPRESSURE_MBAR(1),
+                                DBGPCONVERT(pInst),
+                                DBGPCONVERT(pCtrl),
                                 rSV2ValveDelay,
-                                (10 * pPlatMax) / MPRESSURE_MBAR(1),
-                                (10 * pPlatInsp) / MPRESSURE_MBAR(1),
-                                (10 * pQuantaInsp) / MPRESSURE_MBAR(1),
+                                DBGPCONVERT(pPlatMax),
+                                DBGPCONVERT(pPlatInsp),
+                                DBGPCONVERT(pQuantaInsp),
                                 vQuanta));
                         // For octave...
                         // User dump.
+#if 0
                         OCTAVE_PRINT(("-: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
                                 timeGet(),
                                 (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
@@ -1295,13 +1296,20 @@ void main(void) {
                                 pQuantaExp,
                                 vQuanta,
                                 vMeasureGet()));
+#else
+                        // User dump.
+                        OCTAVE_PRINT(("-: %d %d %d\n",
+                                timeGet(),
+                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
+                                pInst));
                 }
+#endif
 #endif
             }
 
             // Update last cycle inspiration volume. Temporal, should be removed once this is implemented on Monitor.
             lastCycleVol = vMeasureGet();
-            sprintf(lcdBtnRRow, "V % 3d", lastCycleVol);
+            sprintf(lcdBtnRRow, "V% 4d", lastCycleVol);
             lcdPrintBRR = true;
 
             /////////////////////////////////////////////
@@ -1365,8 +1373,8 @@ void main(void) {
                             OSCheck = true;
                             DEBUG_PRINT(("PEI end T %d - Pi %d OS %d\n",
                                     timeDiff(rCycleTime, rValveActuationTstamp),
-                                    (10 * pInst) / MPRESSURE_MBAR(1),
-                                    (10 * pExpOS) / MPRESSURE_MBAR(1)));
+                                    DBGPCONVERT(pInst),
+                                    DBGPCONVERT(pExpOS)));
                         }
                         if (valveDelayCheck) {
                             // Measure response time of valve.
@@ -1393,7 +1401,7 @@ void main(void) {
                             CLOSE_SV2;
                             rValveActuationTstamp = timeGet();
                             aCaptGetResult(MainPSensor, &pInst);
-                            DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1)));
+                            DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst)));
                         } else {
                             if (OSCheck) {
                                 if (timeElapsed(rValveActuationTstamp, PEPLATEAUMDEL + rSV2ValveDelay)) {
@@ -1407,7 +1415,7 @@ void main(void) {
                                     aCaptRstFlt(Flt2PSensor);
                                     aCaptRstFlt(Flt3PSensor);
                                     OSCheck = false;
-                                    DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * pAvgUShort) / MPRESSURE_MBAR(1)));
+                                    DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pAvgUShort)));
                                 }
                             } else {
                                 // Breath detection.
@@ -1417,7 +1425,7 @@ void main(void) {
                                 aCaptGetResult(Flt3PSensor, &bdP2);
                                 if (((bdP1 + BDTECT_THRL) < bdP2) || (keyPeek() == KEYBREATH)) {
                                     // Detected breath, or pressed breath button
-                                    DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
+                                    DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(bdP1), DBGPCONVERT(bdP1)));
                                     BLED_ON;
                                     rCycleTime = timeGet();
                                     bRateUpdt(true);
@@ -1445,7 +1453,7 @@ void main(void) {
                                         pValveActuation = pInst;
                                         DEBUG_PRINT(
                                                 
-                                                ("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), (10 * pInst) / MPRESSURE_MBAR(1), (10 * bdP1) / MPRESSURE_MBAR(1)));
+                                                ("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst), DBGPCONVERT(bdP1)));
                                     }
                                 }
                             }
@@ -1461,14 +1469,15 @@ void main(void) {
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     DEBUG_PRINT(("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n",
                             timeDiff(rCycleTime, timeGet()),
-                            (10 * pInst) / MPRESSURE_MBAR(1),
-                            (10 * (pInst - pAvgShort)) / MPRESSURE_MBAR(1),
+                            DBGPCONVERT(pInst),
+                            DBGPCONVERT(pInst - pAvgShort),
                             rSV3ValveDelay,
-                            (10 * pPlatExp) / MPRESSURE_MBAR(1),
-                            (10 * pExpOS) / MPRESSURE_MBAR(1),
-                            (10 * pQuantaExp) / MPRESSURE_MBAR(1)
+                            DBGPCONVERT(pPlatExp),
+                            DBGPCONVERT(pExpOS),
+                            DBGPCONVERT(pQuantaExp)
                             ));
 
+#if 0
                     // For octave...
                     // User dump.
                     OCTAVE_PRINT(("-: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
@@ -1489,6 +1498,14 @@ void main(void) {
                                 pQuantaExp,
                                 vQuanta,
                                 vMeasureGet()));
+                    
+#else
+                    // User dump.
+                    OCTAVE_PRINT(("-: %d %d %d\n",
+                                 timeGet(),
+                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
+                                pInst));
+#endif
                 }
 #endif
             }

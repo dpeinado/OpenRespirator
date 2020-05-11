@@ -27891,7 +27891,7 @@ i2c2_error_t lastI2C2MAckResponse;
 i2c2_error_t lastI2C2LAckResponse;
 
 i2c2_operations_t I2C2_NackCb(void *ptr){
-    printf ("I2C2 E\n");
+    do {} while (0);
     if (currentTrfAddr == 0x50) {
         lastI2C2MAckResponse = 0;
     } else {

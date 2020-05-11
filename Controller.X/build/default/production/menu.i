@@ -27990,7 +27990,7 @@ void MenuMng(void) {
     keyPress = keyRead();
     if ((keyPress >= 0) && (keyPress != 4)) {
         lcdMenuPrint = 1;
-        printf ("KEY! %d\n", keyPress);
+        do {} while (0);
 
         if (menuStatus == CFG_POWEROFF) {
             menuStatus = CFG_IDLE;
@@ -28015,6 +28015,9 @@ void MenuMng(void) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = 1;
                         }
+
+                        MaxP = menuVal + 2;
+                        chMaxP = 1;
                         menuStatus = CFG_IDLE;
                     } else {
 
@@ -28086,6 +28089,9 @@ void MenuMng(void) {
                         if (VentMode == VMODE_PRESSURE) {
                             VentMode = VMODE_VOLUME;
                             chVentMode = 1;
+
+                            MaxP = 35;
+                            chMaxP = 1;
                         }
                         menuStatus = CFG_IDLE;
                     } else {
@@ -28132,8 +28138,6 @@ void MenuMng(void) {
                                 menuVal = menuVal + 1;
                                 if (menuVal > 70) {
                                     menuVal = 70;
-                                } else if (menuVal > MaxP) {
-                                    menuVal = MaxP;
                                 }
                                 break;
                             case CFG_MAXP:
@@ -28155,11 +28159,11 @@ void MenuMng(void) {
                                 }
                                 break;
                             case CFG_MAXV:
-                                menuVal = ((menuVal + 2 > (800/10))? 800 : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
+                                menuVal = ((menuVal + 2 > (1500/10))? (1500/10) : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
                                 break;
                             case CFG_LOWVA:
                             case CFG_HIGHVA:
-                                menuVal = ((menuVal + 2 > (980/10))? 980 : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
+                                menuVal = ((menuVal + 2 > (1500/10))? (1500/10) : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
                                 break;
                             default:
 
@@ -28194,11 +28198,11 @@ void MenuMng(void) {
                                 }
                                 break;
                             case CFG_MAXV:
-                                menuVal = ((menuVal - 2 > (800/10))? 800 : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
+                                menuVal = ((menuVal - 2 > (1500/10))? (1500/10) : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
                                 break;
                             case CFG_LOWVA:
                             case CFG_HIGHVA:
-                                menuVal = ((menuVal - 2 > (980/10))? 980 : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
+                                menuVal = ((menuVal - 2 > (1500/10))? (1500/10) : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
                                 break;
                             default:
 
@@ -28248,35 +28252,35 @@ void screenMng(void) {
         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
             if (ctrlStatus != CTRL_SLEEP) {
                 if (VentMode == VMODE_PRESSURE) {
-                    sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, MaxP);
+                    sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, MaxP);
                 } else {
-                    sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
+                    sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
                 }
             } else {
                 sprintf(lcdTopRow, "----OFF-STATE---");
             }
         } else if (menuStatus == CFG_BPM) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", menuVal, PEEP, IP, MaxP);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", menuVal, PEEP, IP, MaxP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_PEEP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, menuVal, IP, MaxP);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, menuVal, IP, MaxP);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_IP) {
-            sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, menuVal, MaxP);
+            sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, menuVal, MaxP);
         } else if (menuStatus == CFG_MAXP) {
             if (VentMode == VMODE_PRESSURE) {
-                sprintf(lcdTopRow, "%2d %2d  %2d %2d ---", BPM, PEEP, IP, menuVal);
+                sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, menuVal);
             } else {
-                sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
+                sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
             }
         } else if (menuStatus == CFG_MAXV) {
-            sprintf(lcdTopRow, "%2d %2d  -- %2d %3d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
+            sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
             sprintf(lcdTopRow, "PRESS BPM TO    ");
         }
@@ -28299,14 +28303,14 @@ void screenMng(void) {
         lcdPrintBR = 0;
         lcdMenuPrint = 0;
         if (menuStatus == CFG_LOWVA) {
-            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
+            sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
         } else if (menuStatus == CFG_HIGHVA) {
-            sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
+            sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
                 sprintf(lcdBtnRow, "POWER OFF ");
         } else {
             if (ctrlStatus != CTRL_SLEEP) {
-                sprintf(lcdBtnRow, "%3d %3d    ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
+                sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
             } else {
                 sprintf(lcdBtnRow, "PWR TO ON ");
             }
@@ -28327,19 +28331,19 @@ void screenMng(void) {
                 setCursor(4, 0);
                 break;
             case CFG_IP:
-                setCursor(8, 0);
+                setCursor(7, 0);
                 break;
             case CFG_MAXP:
-                setCursor(11, 0);
+                setCursor(10, 0);
                 break;
             case CFG_MAXV:
                 setCursor(15, 0);
                 break;
             case CFG_LOWVA:
-                setCursor(2, 1);
+                setCursor(3, 1);
                 break;
             case CFG_HIGHVA:
-                setCursor(6, 1);
+                setCursor(8, 1);
                 break;
             default:
                 setCursor(21, 0);
