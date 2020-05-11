@@ -2547,7 +2547,7 @@ P 1350 3350
 AR Path="/5E9337AC/5ED22175" Ref="J?"  Part="1" 
 AR Path="/5E9339D0/5ED22175" Ref="J27"  Part="1" 
 F 0 "J27" V 1765 3317 50  0000 C CNN
-F 1 "SV2" V 1674 3317 50  0000 C CNN
+F 1 "SV4" V 1674 3317 50  0000 C CNN
 F 2 "Ventilator:PinHeader_1x02_Screwless_3.5mm" H 1350 3700 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/bloques-terminales-para-pcb/1232052/" H 1350 3700 50  0001 C CNN
 	1    1350 3350
