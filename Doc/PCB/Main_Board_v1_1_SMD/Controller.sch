@@ -323,7 +323,7 @@ U 1 1 5F068B72
 P 6400 2200
 F 0 "U5" H 6075 3315 50  0000 C CNN
 F 1 "XPRESS-40" H 6075 3224 50  0000 C CNN
-F 2 "Package_DFN_QFN:UQFN-40-1EP_5x5mm_P0.4mm_EP3.8x3.8mm_ThermalVias" H 6400 2200 50  0001 C CNN
+F 2 "Package_DFN_QFN:UQFN-40-1EP_5x5mm_P0.4mm_EP3.8x3.8mm" H 6400 2200 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/microcontroladores/1717862/" H 6400 2200 50  0001 C CNN
 	1    6400 2200
 	1    0    0    -1  

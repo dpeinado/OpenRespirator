@@ -1361,7 +1361,7 @@ U 1 1 5F04BBA8
 P 6200 2150
 F 0 "U3" H 5875 3265 50  0000 C CNN
 F 1 "XPRESS-40" H 5875 3174 50  0000 C CNN
-F 2 "Package_DFN_QFN:UQFN-40-1EP_5x5mm_P0.4mm_EP3.8x3.8mm_ThermalVias" H 6200 2150 50  0001 C CNN
+F 2 "Package_DFN_QFN:UQFN-40-1EP_5x5mm_P0.4mm_EP3.8x3.8mm" H 6200 2150 50  0001 C CNN
 F 3 "https://es.rs-online.com/web/p/microcontroladores/1717862/" H 6200 2150 50  0001 C CNN
 	1    6200 2150
 	1    0    0    -1  
