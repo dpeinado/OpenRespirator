@@ -36,6 +36,8 @@ extern "C" {
 #define PQUANTA_LIMIT    MPRESSURE_MBAR(7)
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
 #define VQUANTA_LIMIT    90
+// Zero volume threshold for aux sensor.
+#define ZVOLTH 20
     
 // Objective time for inspiration.
 #define INSP_TIME 500
@@ -73,7 +75,7 @@ extern "C" {
 #define BUZZER_OFF LATDbits.LATD0 = 0
 
 #define DEBUG
-#define OCTAVE
+//#define OCTAVE
 
 #ifdef DEBUG
 #define ERROR_CONDITION(k) CLOSE_SV2;CLOSE_SV3;printf("Fatal %d",k)

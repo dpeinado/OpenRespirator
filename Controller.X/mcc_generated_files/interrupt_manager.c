@@ -78,6 +78,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C2_InterruptHandler();
     }
+    else if(PIE7bits.TMR4IE == 1 && PIR7bits.TMR4IF == 1)
+    {
+        TMR4_ISR();
+    }
     else if(PIE1bits.ADTIE == 1 && PIR1bits.ADTIF == 1)
     {
         ADCC_ThresholdISR();

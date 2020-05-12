@@ -27385,6 +27385,253 @@ void (*I2C2_InterruptHandler)(void);
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
 # 56 "./mcc_generated_files/mcc.h" 2
 
+# 1 "./mcc_generated_files/tmr4.h" 1
+# 79 "./mcc_generated_files/tmr4.h"
+typedef enum
+{
+# 89 "./mcc_generated_files/tmr4.h"
+   TMR4_ROP_STARTS_TMRON,
+
+
+
+
+   TMR4_ROP_STARTS_TMRON_ERSHIGH,
+
+
+
+
+   TMR4_ROP_STARTS_TMRON_ERSLOW,
+
+
+
+
+   TMR4_ROP_RESETS_ERSBOTHEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSRISINGEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSFALLINGEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSLOW,
+
+
+
+
+   TMR4_ROP_RESETS_ERSHIGH,
+# 135 "./mcc_generated_files/tmr4.h"
+   TMR4_OS_STARTS_TMRON,
+
+
+
+
+   TMR4_OS_STARTS_ERSRISINGEDGE ,
+
+
+
+
+   TMR4_OS_STARTS_ERSFALLINGEDGE ,
+
+
+
+
+   TMR4_OS_STARTS_ERSBOTHEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSFIRSTRISINGEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSFIRSTFALLINGEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSRISINGEDGEDETECT,
+
+
+
+
+   TMR4_OS_STARTS_ERSFALLINGEDGEDETECT,
+
+
+
+
+   TMR4_OS_STARTS_TMRON_ERSHIGH = 0x16,
+
+
+
+
+   TMR4_OS_STARTS_TMRON_ERSLOW = 0x17,
+# 192 "./mcc_generated_files/tmr4.h"
+   TMR4_MS_STARTS_TMRON_ERSRISINGEDGEDETECT = 0x11,
+
+
+
+
+   TMR4_MS_STARTS_TMRON_ERSFALLINGEDGEDETECT = 0x12,
+
+
+
+
+
+   TMR4_MS_STARTS_TMRON_ERSBOTHEDGE = 0x13
+
+} TMR4_HLT_MODE;
+# 220 "./mcc_generated_files/tmr4.h"
+typedef enum
+{
+
+
+    TMR4_T4INPPS,
+
+
+
+    TMR4_T2POSTSCALED,
+
+
+
+    TMR4_RESERVED,
+
+
+
+    TMR4_T6POSTSCALED,
+
+
+
+    TMR4_CCP1_OUT,
+
+
+
+    TMR4_CCP2_OUT,
+
+
+
+    TMR4_CCP3_OUT,
+
+
+
+    TMR4_CCP4_OUT,
+
+
+
+    TMR4_PWM5_OUT,
+
+
+
+    TMR4_PWM6_OUT,
+
+
+
+    TMR4_PWM7_OUT,
+
+
+
+    TMR4_PWM8_OUT,
+
+
+
+    TMR4_RESERVED_2,
+
+
+
+    TMR4_RESERVED_3,
+
+
+
+    TMR4_C1_OUT_SYNC,
+
+
+
+    TMR4_C2_OUT_SYNC,
+
+
+
+    TMR4_ZCD_OUTPUT,
+
+
+
+    TMR4_CLC1_OUT,
+
+
+
+    TMR4_CLC2_OUT,
+
+
+
+    TMR4_CLC3_OUT,
+
+
+
+    TMR4_CLC4_OUT,
+
+
+
+    TMR4_UART1_RX_EDGE,
+
+
+
+    TMR4_UART1_TX_EDGE,
+
+
+
+    TMR4_UART2_RX_EDGE,
+
+
+
+    TMR4_UART2_TX_EDGE
+
+
+} TMR4_HLT_EXT_RESET_SOURCE;
+# 365 "./mcc_generated_files/tmr4.h"
+void TMR4_Initialize(void);
+# 401 "./mcc_generated_files/tmr4.h"
+void TMR4_ModeSet(TMR4_HLT_MODE mode);
+# 436 "./mcc_generated_files/tmr4.h"
+void TMR4_ExtResetSourceSet(TMR4_HLT_EXT_RESET_SOURCE reset);
+# 465 "./mcc_generated_files/tmr4.h"
+void TMR4_Start(void);
+# 494 "./mcc_generated_files/tmr4.h"
+void TMR4_StartTimer(void);
+# 526 "./mcc_generated_files/tmr4.h"
+void TMR4_Stop(void);
+# 558 "./mcc_generated_files/tmr4.h"
+void TMR4_StopTimer(void);
+# 593 "./mcc_generated_files/tmr4.h"
+uint8_t TMR4_Counter8BitGet(void);
+# 628 "./mcc_generated_files/tmr4.h"
+uint8_t TMR4_ReadTimer(void);
+# 667 "./mcc_generated_files/tmr4.h"
+void TMR4_Counter8BitSet(uint8_t timerVal);
+# 706 "./mcc_generated_files/tmr4.h"
+void TMR4_WriteTimer(uint8_t timerVal);
+# 758 "./mcc_generated_files/tmr4.h"
+void TMR4_Period8BitSet(uint8_t periodVal);
+# 810 "./mcc_generated_files/tmr4.h"
+void TMR4_LoadPeriodRegister(uint8_t periodVal);
+# 828 "./mcc_generated_files/tmr4.h"
+void TMR4_ISR(void);
+# 846 "./mcc_generated_files/tmr4.h"
+ void TMR4_SetInterruptHandler(void (* InterruptHandler)(void));
+# 864 "./mcc_generated_files/tmr4.h"
+extern void (*TMR4_InterruptHandler)(void);
+# 882 "./mcc_generated_files/tmr4.h"
+void TMR4_DefaultInterruptHandler(void);
+# 57 "./mcc_generated_files/mcc.h" 2
+
 # 1 "./mcc_generated_files/tmr1.h" 1
 # 100 "./mcc_generated_files/tmr1.h"
 void TMR1_Initialize(void);
@@ -27404,7 +27651,7 @@ void TMR1_StartSinglePulseAcquisition(void);
 uint8_t TMR1_CheckGateValueStatus(void);
 # 387 "./mcc_generated_files/tmr1.h"
 _Bool TMR1_HasOverflowOccured(void);
-# 57 "./mcc_generated_files/mcc.h" 2
+# 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27651,7 +27898,7 @@ void TMR2_ISR(void);
 extern void (*TMR2_InterruptHandler)(void);
 # 882 "./mcc_generated_files/tmr2.h"
 void TMR2_DefaultInterruptHandler(void);
-# 58 "./mcc_generated_files/mcc.h" 2
+# 59 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr0.h" 1
 # 100 "./mcc_generated_files/tmr0.h"
@@ -27668,13 +27915,6 @@ void TMR0_WriteTimer(uint8_t timerVal);
 void TMR0_Reload(uint8_t periodVal);
 # 308 "./mcc_generated_files/tmr0.h"
 _Bool TMR0_HasOverflowOccured(void);
-# 59 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/fvr.h" 1
-# 93 "./mcc_generated_files/fvr.h"
- void FVR_Initialize(void);
-# 127 "./mcc_generated_files/fvr.h"
-_Bool FVR_IsOutputReady(void);
 # 60 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/adcc.h" 1
@@ -27756,6 +27996,13 @@ void ADCC_ThresholdISR(void);
 void ADCC_DefaultInterruptHandler(void);
 # 61 "./mcc_generated_files/mcc.h" 2
 
+# 1 "./mcc_generated_files/fvr.h" 1
+# 93 "./mcc_generated_files/fvr.h"
+ void FVR_Initialize(void);
+# 127 "./mcc_generated_files/fvr.h"
+_Bool FVR_IsOutputReady(void);
+# 62 "./mcc_generated_files/mcc.h" 2
+
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
 typedef union {
@@ -27799,12 +28046,12 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 void (*UART1_TxInterruptHandler)(void);
 # 498 "./mcc_generated_files/uart1.h"
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
-# 62 "./mcc_generated_files/mcc.h" 2
-# 77 "./mcc_generated_files/mcc.h"
+# 63 "./mcc_generated_files/mcc.h" 2
+# 78 "./mcc_generated_files/mcc.h"
 void SYSTEM_Initialize(void);
-# 90 "./mcc_generated_files/mcc.h"
+# 91 "./mcc_generated_files/mcc.h"
 void OSCILLATOR_Initialize(void);
-# 103 "./mcc_generated_files/mcc.h"
+# 104 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 13 "./ORespGlobal.h" 2
 
@@ -27831,7 +28078,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 99 "./ORespGlobal.h"
+# 101 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -27990,7 +28237,7 @@ void MenuMng(void) {
     keyPress = keyRead();
     if ((keyPress >= 0) && (keyPress != 4)) {
         lcdMenuPrint = 1;
-        do {} while (0);
+        printf ("KEY! %d\n", keyPress);
 
         if (menuStatus == CFG_POWEROFF) {
             menuStatus = CFG_IDLE;
