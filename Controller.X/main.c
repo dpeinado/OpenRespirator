@@ -1091,8 +1091,9 @@ void main(void) {
                         //   Pressure limit.
                         //   Volume is very low, so possible to fill-in at lower rate.
                         if ((pInspVSet == 3) &&
-                            (((pCtrl+pInspOS3) > ((7*intMaxP)>>3)) ||
-                            ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
+                            (((pCtrl+pInspOS3+pInspOS2) > ((7*intMaxP)>>3)) ||
+//                             ((pCtrl+pInspOS2) > ((7*intMaxP)>>3)) ||
+                             ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
                             OPEN_SV2MED;
                             pInspVSet = 2;
                             OSCheckInt = true;
@@ -1170,26 +1171,21 @@ void main(void) {
                             // The other option is to compute OS over pressure prediction, and apply also over the prediction.
                             // The theoretical advantage of the second case is that the OS calculated will be smaller, so it will be less sensitive to the changing conditions.
                             OSCheck = true;
+                            pPlatMax = pInst;
+                            if (((pInspVSet != 1) || OSCheckInt) && ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP))) {
+                                // Should never stop due to pressure, unless already in lowest volume setting from 'long time' ago.
+                                // If this is the case --> increment the OS value of the valves.
+                                if ((pInspVSet == 2) || (pInspVSet == 3)) {
+                                    pInspOS3 += MPRESSURE_MBAR(5);
+                                } else {
+                                    pInspOS2 += MPRESSURE_MBAR(5);
+                                }
+                            }
+
                             if (OSCheckInt) {
                                 pInspOSVSet = pInspVSet+1;
                             } else {
                                 pInspOSVSet = pInspVSet;
-                            }
-                            pPlatMax = pInst;
-                            if ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP)) {
-                                // Should never stop due to pressure, if this is the case --> increment the OS value of the valves.
-                                if ((pInspVSet == 2) || (pInspVSet == 3)) {
-                                    pInspOS3 += MPRESSURE_MBAR(5);
-                                } else {
-                                    // In this case two situations might appear: 
-                                    // OS2 is too low, then solution is to increase it.
-                                    // But it might also happen that the problem is that OS3 is closing too late, and there is no time to put SV2 in low flow.
-                                    if (timeElapsed(rVMedActuationTstamp, rSV2ValveCRT+TIME_MS(15))) {
-                                        pInspOS2 += MPRESSURE_MBAR(5);
-                                    } else {
-                                        pInspOS3 += MPRESSURE_MBAR(5);     
-                                    }
-                                }
                             }
 
                             if (pInspVSet == 3) {
@@ -1517,7 +1513,7 @@ void main(void) {
                     }
                 }
 #ifdef DEBUG
-                if (timeElapsedR(&printTime, PRINTTIME)) {
+                if (timeElapsedR(&printTime, PRINTTIME<<3)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     DEBUG_PRINT(("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n",

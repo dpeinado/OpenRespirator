@@ -29266,8 +29266,9 @@ void main(void) {
 
 
                         if ((pInspVSet == 3) &&
-                            (((pCtrl+pInspOS3) > ((7*intMaxP)>>3)) ||
-                            ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
+                            (((pCtrl+pInspOS3+pInspOS2) > ((7*intMaxP)>>3)) ||
+
+                             ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
                             LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
                             pInspVSet = 2;
                             OSCheckInt = 1;
@@ -29345,26 +29346,21 @@ void main(void) {
 
 
                             OSCheck = 1;
-                            if (OSCheckInt) {
-                                pInspOSVSet = pInspVSet+1;
-                            } else {
-                                pInspOSVSet = pInspVSet;
-                            }
                             pPlatMax = pInst;
-                            if ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP)) {
+                            if (((pInspVSet != 1) || OSCheckInt) && ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP))) {
+
 
                                 if ((pInspVSet == 2) || (pInspVSet == 3)) {
                                     pInspOS3 += ((int16_t) ((0.045*4096+2)/5)*5);
                                 } else {
-
-
-
-                                    if (timeElapsed(rVMedActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
-                                        pInspOS2 += ((int16_t) ((0.045*4096+2)/5)*5);
-                                    } else {
-                                        pInspOS3 += ((int16_t) ((0.045*4096+2)/5)*5);
-                                    }
+                                    pInspOS2 += ((int16_t) ((0.045*4096+2)/5)*5);
                                 }
+                            }
+
+                            if (OSCheckInt) {
+                                pInspOSVSet = pInspVSet+1;
+                            } else {
+                                pInspOSVSet = pInspVSet;
                             }
 
                             if (pInspVSet == 3) {
@@ -29494,7 +29490,7 @@ void main(void) {
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
 
                         printf ("PI T %5d - V %3d Pi %3d Pc %3d Ro %2d Rc %2d PlatMax %3d Plat %3d PQ %d VQ %d.\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pCtrl))>>8)), rSV2ValveORT,rSV2ValveCRT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatMax))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatInsp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaInsp))>>8)), vQuanta);
-# 1354 "main.c"
+# 1350 "main.c"
                         do {} while (0);
 
 
@@ -29661,11 +29657,11 @@ void main(void) {
                     }
                 }
 
-                if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                if (timeElapsedR(&printTime, ((time_t) 20*1)<<3)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     printf ("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst - pAvgShort))>>8)), rSV3ValveORT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatExp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaExp))>>8)) );
-# 1557 "main.c"
+# 1553 "main.c"
                     do {} while (0);
 
 
