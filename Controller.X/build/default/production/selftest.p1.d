@@ -1,5 +1,6 @@
-build/default/production/main.p1:  \
-main.c  \
+build/default/production/selftest.p1:  \
+selftest.c  \
+selftest.h  \
 mcc_generated_files/mcc.h  \
 mcc_generated_files/device_config.h  \
 mcc_generated_files/pin_manager.h  \
@@ -15,12 +16,8 @@ mcc_generated_files/uart1.h  \
 ORespGlobal.h  \
 aCapture.h  \
 time.h  \
-cmath.h  \
-vMeasure.h  \
-keyRead.h  \
-LiquidCrystal_I2C.h  \
 menu.h  \
-brate.h  \
-selftest.h  \
 monComm.h  \
-i2c2_mux.h 
+keyRead.h  \
+vMeasure.h  \
+LiquidCrystal_I2C.h 

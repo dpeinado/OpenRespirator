@@ -1,4 +1,4 @@
-# 1 "main.c"
+# 1 "selftest.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,11 +6,15 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "main.c" 2
+# 1 "selftest.c" 2
 
 
 
 
+
+
+# 1 "./selftest.h" 1
+# 14 "./selftest.h"
 # 1 "./mcc_generated_files/mcc.h" 1
 # 49 "./mcc_generated_files/mcc.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\xc.h" 1 3
@@ -28048,8 +28052,14 @@ void SYSTEM_Initialize(void);
 void OSCILLATOR_Initialize(void);
 # 104 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
-# 5 "main.c" 2
+# 15 "./selftest.h" 2
 
+extern uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
+
+
+
+_Bool SelfTest(void);
+# 8 "selftest.c" 2
 # 1 "./ORespGlobal.h" 1
 # 14 "./ORespGlobal.h"
 # 1 "./aCapture.h" 1
@@ -28106,9 +28116,7 @@ void aCaptRstFlt(aSrcTyp sel);
     extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
-# 6 "main.c" 2
-
-
+# 9 "selftest.c" 2
 # 1 "./time.h" 1
 # 17 "./time.h"
 typedef uint16_t time_t;
@@ -28125,66 +28133,7 @@ time_t timeDiff(time_t startT, time_t endT);
 _Bool timeElapsedR(time_t *prevTime, time_t duration);
 _Bool timeElapsed(time_t prevTime, time_t duration);
 void timeDelayMs(time_t delms);
-# 8 "main.c" 2
-
-# 1 "./cmath.h" 1
-# 17 "./cmath.h"
-uint16_t isqrt(uint16_t x);
-# 9 "main.c" 2
-
-# 1 "./vMeasure.h" 1
-# 19 "./vMeasure.h"
-void vMeasureRst(void);
-void vMeasureInit(void);
-uint16_t vMeasureGet(void);
-# 10 "main.c" 2
-
-# 1 "./keyRead.h" 1
-# 20 "./keyRead.h"
-void keyReadInit(void);
-
-int8_t keyPeek(void);
-
-
-int8_t keyReadEC();
-
-int8_t keyRead();
-# 11 "main.c" 2
-
-# 1 "./LiquidCrystal_I2C.h" 1
-# 55 "./LiquidCrystal_I2C.h"
-void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
-void clear();
-void home();
-void noDisplay();
-void display();
-void noBlink();
-void blink();
-void noCursor();
-void cursor();
-void scrollDisplayLeft();
-void scrollDisplayRight();
-void printLeft();
-void printRight();
-void leftToRight();
-void rightToLeft();
-void shiftIncrement();
-void shiftDecrement();
-void noBacklight();
-void backlight();
-void autoscroll();
-void noAutoscroll();
-void createChar(uint8_t, uint8_t[]);
-void setCursor(uint8_t, uint8_t);
-void write(uint8_t);
-void init();
-void setBacklight(_Bool new_val);
-void load_custom_character(uint8_t char_num, uint8_t *rows);
-void printstr(const char[]);
-void printstrblock(const char[]);
-_Bool PrintStrBusy(void);
-# 12 "main.c" 2
-
+# 10 "selftest.c" 2
 # 1 "./menu.h" 1
 # 19 "./menu.h"
 extern _Bool lcdPrintTR;
@@ -28215,24 +28164,7 @@ void MenuMng(void);
 void screenInit(void);
 
 void screenMng(void);
-# 13 "main.c" 2
-
-# 1 "./brate.h" 1
-# 16 "./brate.h"
-  void bRateInit(void);
-  void bRateUpdt(_Bool triggered);
-  uint8_t bRateGet(void);
-# 14 "main.c" 2
-
-# 1 "./selftest.h" 1
-# 16 "./selftest.h"
-extern uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
-
-
-
-_Bool SelfTest(void);
-# 15 "main.c" 2
-
+# 11 "selftest.c" 2
 # 1 "./monComm.h" 1
 # 33 "./monComm.h"
   char monitorMsg[10];
@@ -28270,848 +28202,444 @@ _Bool SelfTest(void);
   void MonitorMsgForcedSend (monStateT state);
   void MonitorMsgSend(monStateT state);
   _Bool MonitorMsgSendBlock(monStateT state);
-# 16 "main.c" 2
+# 12 "selftest.c" 2
+# 1 "./keyRead.h" 1
+# 20 "./keyRead.h"
+void keyReadInit(void);
 
-# 1 "./i2c2_mux.h" 1
-# 18 "./i2c2_mux.h"
-extern uint8_t currentTrfAddr;
-extern i2c2_error_t lastI2C2MTrfResponse;
-extern i2c2_error_t lastI2C2LTrfResponse;
-
+int8_t keyPeek(void);
 
 
+int8_t keyReadEC();
+
+int8_t keyRead();
+# 13 "selftest.c" 2
+
+# 1 "./vMeasure.h" 1
+# 19 "./vMeasure.h"
+void vMeasureRst(void);
+void vMeasureInit(void);
+uint16_t vMeasureGet(void);
+# 15 "selftest.c" 2
+# 1 "./LiquidCrystal_I2C.h" 1
+# 55 "./LiquidCrystal_I2C.h"
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
+void clear();
+void home();
+void noDisplay();
+void display();
+void noBlink();
+void blink();
+void noCursor();
+void cursor();
+void scrollDisplayLeft();
+void scrollDisplayRight();
+void printLeft();
+void printRight();
+void leftToRight();
+void rightToLeft();
+void shiftIncrement();
+void shiftDecrement();
+void noBacklight();
+void backlight();
+void autoscroll();
+void noAutoscroll();
+void createChar(uint8_t, uint8_t[]);
+void setCursor(uint8_t, uint8_t);
+void write(uint8_t);
+void init();
+void setBacklight(_Bool new_val);
+void load_custom_character(uint8_t char_num, uint8_t *rows);
+void printstr(const char[]);
+void printstrblock(const char[]);
+_Bool PrintStrBusy(void);
+# 16 "selftest.c" 2
+
+uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
+
+typedef enum
+  {
+   FCHK_LOW,
+   FCHK_MED,
+   FCHK_HIGH
+  } fchk_val;
+
+_Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
+    int16_t mPVal, mPValMax, mPValMin;
+    int32_t mPValMean, aPValMean;
+    int16_t aPVal, aPValMax, aPValMin;
+    time_t tstamp;
+    _Bool chkResult;
+
+    chkResult = 1;
 
 
+    mPValMin = 4096;
+    aPValMin = 4096;
+    mPValMax = 0;
+    aPValMax = 0;
+    tstamp = timeGet();
 
-
-void I2C2_MuxInit(void);
-_Bool I2C2_MAck(void);
-_Bool I2C2_LAck(void);
-i2c2_error_t I2C2_MOpen(void);
-i2c2_error_t I2C2_LOpen(void);
-i2c2_error_t I2C2_MClose(void);
-i2c2_error_t I2C2_LClose(void);
-# 17 "main.c" 2
-
-
-
-
-
-
-void putch(char byte) {
-    while (!UART1_is_tx_ready());
-    UART1_Write(byte);
-}
-
-
-
-int16_t intIP, intMaxP, intPEEP, intIDuration, intEDuration, intMaxV;
-vmodeT intVentMode;
-
-
-
-
-vmodeT VentMode = 0;
-uint8_t MaxP = 6;
-
-uint8_t MaxV = 16;
-uint8_t LowVAlarm = 10;
-uint8_t HighVAlarm = 22;
-uint8_t BPM = 10;
-uint16_t IDuration, EDuration;
-uint8_t IP = 4;
-uint8_t PEEP = 4;
-_Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
-int16_t vddValMean;
-uint16_t sv2_pwmval;
-# 67 "main.c"
-ctrlStatusT ctrlStatus;
-uint16_t lastCycleVol;
-
-int16_t pInst, pAvgShort, pAvgUShort;
-
-int16_t bdP1, bdP2;
-
-
-
-
-int16_t pCtrl, pValveActuation, pPlatMax, pPlatInsp, pPlatExp, pPeepActual, pExpOS, pInspOS;
-
-
-
-uint16_t lungC;
-int16_t pInspOS3, pInspOS2;
-int16_t vValveActuation, vPlateau, vInspOS;
-
-int pInspVSet, pInspOSVSet;
-int16_t vQuanta;
-int16_t pQuantaInsp, pQuantaExp;
-int16_t pAdj, vAdj;
-uint16_t tInsp;
-uint16_t effectiveFlowRate;
-time_t rCycleTime, rValveActuationTstamp, rVHighActuationTstamp, rVMedActuationTstamp, rVLowActuationTstamp;
-
-time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
-time_t rValveDelayStart, rTimeTmp;
-_Bool initExpSubState, initInspSubState, sv2DelayCheck, sv3DelayCheck, OSCheck, QuantaCheck;
-_Bool OSCheckInt;
-
-void inspOSMeasure(void) {
-    uint16_t tmpUVal;
-    int16_t tmpVal;
-
-
-
-    tmpVal = (3*(pPlatMax - pValveActuation))/pInspOSVSet;
-    if (pInspOS == 0){
-        pInspOS = (3*tmpVal)>>2;
-    } else {
-        pInspOS = (3 * pInspOS + tmpVal) >> 2;
-    }
-    if (vInspOS < 0) {
-
-        vInspOS = 0;
-    }
-
-    tmpVal = vMeasureGet();
-
-    if ((pPlatInsp > ((int16_t) ((0.045*4096+2)/5)*4)) && (tmpVal < 2047)) {
-        tmpUVal = (pPlatInsp - pPeepActual) >> 1;
-        tmpUVal = (((uint24_t) tmpVal) << 6) / tmpUVal;
-
-        if (lungC == 0){
-            lungC = (3*tmpUVal)>>2;
+    while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
+        if (aCaptGetResult(MainPSensor, &mPVal)) {
+            if (mPVal > mPValMax) {
+                mPValMax = mPVal;
+            }
+            if (mPVal < mPValMin) {
+                mPValMin = mPVal;
+            }
+            mPValMean = (31*mPValMean + 32*mPVal)>>5;
         } else {
-            lungC = (3 * lungC + tmpUVal) >> 2;
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",20);
+            chkResult = 0;
         }
-    }
 
-    tmpVal = (3*(tmpVal - vValveActuation))/pInspOSVSet;
-    if (vInspOS == 0){
-        vInspOS = (3*tmpVal)>>2;
-    } else {
-        vInspOS = (3 * vInspOS + tmpVal) >> 2;
-    }
-    printf ("\nIPOS LC %d Plat %d\n", lungC,((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatInsp))>>8)));
-}
-
-
-
-void SV2DelayOpen(void){
-    if (initInspSubState) {
-        LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-    }
-}
-
-void main(void) {
-    uint16_t tmpUVal;
-    int16_t tmpVal;
-    int16_t pInspOSScale, vInspOSScale;
-
-    time_t printTime;
-
-
-
-
-    SYSTEM_Initialize();
-
-    PIE1bits.ADIE = 0;
-    PIE1bits.ADTIE = 0;
-
-    TMR4_SetInterruptHandler(SV2DelayOpen);
-
-
-
-
-    (INTCON0bits.GIE = 1);
-
-
-
-
-    aCaptureInit();
-    timeInit();
-
-
-    timeDelayMs(50);
-
-    keyReadInit();
-    screenInit();
-    I2C2_MuxInit();
-    MonitorInit();
-    vMeasureInit();
-
-    while (0) {
-        LATAbits.LATA3 = 1;
-        LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
-        timeDelayMs(500);
-        LATAbits.LATA3 = 0;
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-        timeDelayMs(500);
-    }
-    while (1) {
-        char keyTmp;
-        while (!SelfTest())
-            ;
-
-        setCursor(0, 0);
-        printstrblock("PRESS + TO REPEAT ");
-        setCursor(0, 1);
-        printstrblock("PRESS - TO EXIT ");
-
-        keyTmp = keyRead();
-        while ((keyTmp != 5)&&(keyTmp != 3)) {
-            keyTmp = keyRead();
-            MonitorMsgSend(MONSTATE_STOP);
-        }
-        if (keyTmp == 5) {
-            break;
-        }
-    }
-
-
-    setCursor(0, 1);
-    printstrblock("                ");
-
-    while (1) {
-        setCursor(0, 1);
-        printstrblock("                ");
-        timeDelayMs(10);
-        setBacklight(1);
-        timeDelayMs(10);
-
-
-        lcdPrintTR = 1;
-        lcdPrintBR = 1;
-        LATDbits.LATD6 = 1;
-        while (ctrlStatus != CTRL_RUN) {
-
-            MenuMng();
-            screenMng();
-            MonitorMsgSend(MONSTATE_STOP);
-
-            if (keyReadEC() == -100) {
-                if (keyPeek() == 4) {
-
-                    LATDbits.LATD6 = 0;
-                    ctrlStatus = CTRL_RUN;
-
-
-                    while (keyPeek() != -1)
-                        ;
-                    keyReadInit();
-                    break;
-                }
+        if (aCaptGetResult(VolPSensor, &aPVal)) {
+            if (aPVal > aPValMax) {
+                aPValMax = aPVal;
             }
-        }
-
-
-        while(MonitorMsgBusy());
-
-
-        rSV2ValveORT = 20;
-        rSV2ValveCRT = 50;
-        rSV3ValveORT = 40;
-        sv2DelayCheck = 0;
-        OSCheck = 0;
-        QuantaCheck = 0;
-        pExpOS = 10;
-        pInspOS = 50;
-        pInspOS3 = 50;
-        pInspOS2 = 50;
-        vInspOS = 50;
-        vQuanta = 30;
-        pQuantaInsp = 20;
-        pQuantaExp = 20;
-        lungC = 0;
-
-        effectiveFlowRate=freeFlowRateF;
-        pPeepActual = 0;
-        IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
-        EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
-        lastCycleVol = 0;
-        bRateInit();
-
-
-        if (VentMode == VMODE_PRESSURE) {
-            MonitorMsgSendBlock(MONSTATE_RUNP);
+            if (aPVal < aPValMin) {
+                aPValMin = aPVal;
+            }
+            aPValMean = (31*aPValMean + 32*aPVal)>>5;
         } else {
-            MonitorMsgSendBlock(MONSTATE_RUNV);
+            chkResult = 0;
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",21);
         }
+    }
 
 
-        rCycleTime = timeGet();
-        while (ctrlStatus != CTRL_SLEEP) {
-# 294 "main.c"
-            intVentMode = VentMode;
-            intMaxP = ((int16_t) ((0.045*4096+2)/5)*MaxP);
-            intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
-            intIDuration = ((time_t) IDuration*1);
-            intEDuration = ((time_t) EDuration*1);
-            if (intVentMode == VMODE_PRESSURE) {
-                intIP = ((int16_t) ((0.045*4096+2)/5)*IP);
+    mPValMean = mPValMean>>5;
+    aPValMean = aPValMean>>5;
+    sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+    printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+    printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+    setCursor(0, 0);
+    printstrblock(lcdTopRow);
+    timeDelayMs(1000);
 
-                intMaxV = ((((uint24_t) intIP-pPeepActual)*((uint24_t) lungC))>>7);
 
-                if (intMaxV > (10*HighVAlarm)) {
-                    intMaxV = 10*HighVAlarm;
-                }
-            } else {
+    if (offsetCal) {
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean < 40) || (aPValMean < 600) || (aPValMean > 1030)) {
 
-                intIP = 0;
-                if (pPeepActual > ((((int16_t) ((0.045*4096+2)/5)*1) + intPEEP))) {
-                    intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP)*lungC)>>7);
-                } else {
-                    intMaxV = 10 * ((uint16_t) MaxV);
-                }
-            }
-            printf ("\nIP. MaxV %d EBRate %d SV2RO %d SV2RC %d PQ %d VQ %d.\n", intMaxV, bRateGet(),rSV2ValveORT,rSV2ValveCRT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaInsp))>>8)), vQuanta);
+            setCursor(0, 0);
+            chkResult = 0;
+            printf ("PRESSURE CALIBRATION ERROR\n");
+        } else {
 
-
-
-            if ((((uint24_t) 3000*intMaxV)/effectiveFlowRate) < 500) {
-                LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-                rVLowActuationTstamp = timeGet();
-                rVMedActuationTstamp = rCycleTime;
-                rVHighActuationTstamp = rCycleTime;
-                pInspVSet = 1;
-                printf ("\nVLow\n");
-            } else if ((((uint24_t) 1500*intMaxV)/effectiveFlowRate) < 500) {
-                LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
-                rVMedActuationTstamp = timeGet();
-                rVHighActuationTstamp = rCycleTime;
-                pInspVSet = 2;
-                printf ("\nVMed\n");
-            } else {
-                LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
-                pInspVSet = 3;
-                rVHighActuationTstamp = timeGet();
-            }
-            LATAbits.LATA3 = 1;
-
-
-            initInspSubState = 1;
-            sv2DelayCheck = 1;
-            OSCheck = 0;
-            OSCheckInt = 0;
-            QuantaCheck = 0;
-            rValveDelayStart = timeGet();
-            vMeasureRst();
-            while (1) {
-                if (intVentMode == VMODE_PRESSURE) {
-                    MonitorMsgSend(MONSTATE_RUNP);
-                } else {
-                    MonitorMsgSend(MONSTATE_RUNV);
-                }
-
-                if (timeElapsedR(&rCycleTime, intIDuration)) {
-
-                    if (initInspSubState) {
-
-                        MonitorErrorSet(MON_IPE);
-
-                        pPlatInsp = pInst;
-                        pValveActuation = pInst;
-                        pPlatMax = pInst;
-                        inspOSMeasure();
-                    }
-                    if (OSCheck) {
-                        OSCheck = 0;
-                        aCaptGetResult(Flt1PSensor, &pAvgUShort);
-                        pPlatInsp = pAvgUShort;
-                        if (pPlatMax < pAvgUShort) {
-                            pPlatMax = pAvgUShort;
-                        }
-                        inspOSMeasure();
-                    }
-                    initInspSubState = 0;
-                    break;
-                } else {
-
-
-
-
-
-
-                    if (timeElapsed(rCycleTime, ((time_t) 500*1))) {
-
-                        LATDbits.LATD6 = 0;
-                    }
-                    if (initInspSubState) {
-
-                        aCaptGetResult(MainPSensor, &pInst);
-
-                        if (sv2DelayCheck) {
-
-                            aCaptGetResult(VolPSensor, &tmpVal);
-                            if (tmpVal > (20<<2)) {
-                                sv2DelayCheck = 0;
-
-                                rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-                                if (rTimeTmp < ((time_t) 100*1)) {
-
-                                    rSV2ValveORT = (rSV2ValveORT + rTimeTmp) >> 1;
-
-                                    MonitorErrorClr(MON_SV2E);
-                                } else {
-
-                                    MonitorErrorSet(MON_SV2E);
-                                }
-                            }
-                        }
-
-
-
-
-
-
-
-                        aCaptGetResult(Flt1PSensor, &pAvgShort);
-
-
-
-                        pCtrl = pAvgShort;
-                        vValveActuation = vMeasureGet();
-
-                        tmpVal = 500 - timeDiff(rCycleTime, timeGet());
-
-
-
-
-                        if ((pInspVSet == 3) &&
-                            (((pCtrl+pInspOS3+pInspOS2) > ((7*intMaxP)>>3)) ||
-
-                             ((((int24_t) 1500*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
-                            LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
-                            pInspVSet = 2;
-                            OSCheckInt = 1;
-                            pPlatMax = pCtrl;
-                            rVMedActuationTstamp = timeGet();
-                            rValveActuationTstamp = rVMedActuationTstamp;
-                            pValveActuation = pCtrl;
-                            printf ("PI-MED T %d - Pi %d Pc %d Vol %3x OS %d RF %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pCtrl))>>8)), vValveActuation, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInspOS3))>>8)), effectiveFlowRate);
-                        } else if ((pInspVSet == 2) &&
-                                    (((pCtrl+pInspOS2) > ((7*intMaxP)>>3)) ||
-                                    ((((int24_t) 3000*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
-                            if (rSV2ValveCRT > rSV2ValveORT){
-                                LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-                                T4PR = 4+rSV2ValveCRT-rSV2ValveORT;
-                                TMR4_Start();
-                            } else {
-                                LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-                            }
-                            if (OSCheckInt && (pInspOS3 < intMaxP)){
-
-                                pInspOS3 = pInspOS3 + ((int16_t) ((0.045*4096+2)/5)*1);
-                            }
-                            pInspVSet = 1;
-                            OSCheckInt = 1;
-                            pPlatMax = pCtrl;
-                            rVLowActuationTstamp = timeGet();
-                            rValveActuationTstamp = rVLowActuationTstamp;
-                            pValveActuation = pCtrl;
-                            printf ("PI-LOW T %d - Pi %d Pc %d Vol %d OS %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pCtrl))>>8)), vValveActuation, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInspOS2))>>8)));
-                        }
-
-                        if (pPlatMax < pCtrl) {
-                            pPlatMax = pCtrl;
-                        }
-
-
-                        if (OSCheckInt) {
-                            if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
-                                OSCheckInt=0;
-                                if (pInspVSet == 2){
-
-                                    pInspOS3 = (3*pInspOS3 + pPlatMax - pValveActuation)>>2;
-                                } else if (pInspVSet == 1) {
-
-                                    pInspOS2 = (3*pInspOS2 + pPlatMax - pValveActuation)>>2;
-                                }
-                            }
-
-                            pInspOSScale = 0;
-                            vInspOSScale = ((1+pInspVSet)*vInspOS)/3;
-                        } else {
-                            if (pInspVSet == 3){
-                                pInspOSScale = pInspOS3;
-                            } else if (pInspVSet == 2) {
-                                pInspOSScale = pInspOS2;
-                            } else {
-                                pInspOSScale = (pInspVSet*pInspOS)/3;
-                            }
-                            vInspOSScale = (pInspVSet*vInspOS)/3;
-                        }
-
-
-                        if (timeElapsed(rCycleTime, intIDuration-rSV2ValveCRT-((time_t) 20*1)) ||
-                                (pInst > (intMaxP+((int16_t) ((0.045*4096+2)/5)*4))) ||
-                                (pCtrl > intMaxP) ||
-                                ((pCtrl + pInspOSScale) > intMaxP) ||
-                                ((intVentMode == VMODE_PRESSURE) && ((pCtrl + pInspOSScale) > intIP) && (vValveActuation + vInspOSScale) >= intMaxV) ||
-                                ((intVentMode == VMODE_VOLUME) && ((vValveActuation + vInspOSScale) >= intMaxV))) {
-                            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-                            sv2DelayCheck = 1;
-                            pValveActuation = pCtrl;
-                            initInspSubState = 0;
-                            rValveActuationTstamp = timeGet();
-                            rValveDelayStart = rValveActuationTstamp;
-                            tInsp = timeDiff(rCycleTime, rValveActuationTstamp);
-
-
-
-
-
-                            OSCheck = 1;
-                            pPlatMax = pInst;
-                            if (((pInspVSet != 1) || OSCheckInt) && ((pInst > intMaxP) || ((pCtrl + pInspOSScale) > intMaxP))) {
-
-
-                                if ((pInspOS3 < intMaxP) && ((pInspVSet == 2) || (pInspVSet == 3))) {
-                                    pInspOS3 += ((int16_t) ((0.045*4096+2)/5)*5);
-                                } else if (pInspOS2 < intMaxP) {
-                                    pInspOS2 += ((int16_t) ((0.045*4096+2)/5)*5);
-                                }
-                            }
-
-                            if (OSCheckInt) {
-                                pInspOSVSet = pInspVSet+1;
-                            } else {
-                                pInspOSVSet = pInspVSet;
-                            }
-
-                            if (pInspVSet == 3) {
-                                tmpUVal = timeDiff(rVHighActuationTstamp, timeGet());
-                            } else if (pInspVSet == 2){
-                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, timeGet()))/3;
-                            } else if (pInspVSet == 1){
-                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + (2*timeDiff(rVMedActuationTstamp, rVLowActuationTstamp))/3 + timeDiff(rVLowActuationTstamp, timeGet())/3;
-                            }
-
-                            if (tmpUVal >= 60) {
-                                effectiveFlowRate=(3*effectiveFlowRate+(((uint24_t) 1000*vValveActuation)/tmpUVal))>>2;
-                            }
-
-
-                            if (effectiveFlowRate < 100){
-                                effectiveFlowRate = 100;
-                            } else if (effectiveFlowRate > 2000){
-                                effectiveFlowRate = 2000;
-                            }
-
-                            printf ("PI-END T %d - Pi %d Pc %d Vol %d PMax %d VL %d VOS %d POS %d FR %d UV %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pValveActuation))>>8)), vValveActuation, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) intMaxP))>>8)), intMaxV, vInspOS, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInspOSScale))>>8)), effectiveFlowRate, tmpUVal);
-
-
-
-                        }
-                    } else {
-
-                        if (sv2DelayCheck) {
-                            aCaptGetResult(VolPSensor, &tmpVal);
-                            if (tmpVal < (20<<1)) {
-                                sv2DelayCheck = 0;
-
-                                rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-                                if (rTimeTmp < ((time_t) 150*1)) {
-
-                                    rSV2ValveCRT = (rSV2ValveCRT + rTimeTmp) >> 1;
-
-                                    MonitorErrorClr(MON_SV2E);
-                                } else {
-
-                                    MonitorErrorSet(MON_SV2E);
-                                }
-                            }
-                        }
-
-                        aCaptGetResult(MainPSensor, &pInst);
-                        MonitorErrorClr(MON_IPE);
-                        if ((LATAbits.LATA2|LATCbits.LATC3) && (timeElapsed(rValveActuationTstamp, ((time_t) 15*1)) || (pInst > intMaxP))) {
-                            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-                            rValveActuationTstamp = timeGet();
-                            aCaptGetResult(MainPSensor, &pInst);
-                            printf ("PI-VC T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)));
-                        } else {
-                            if (OSCheck) {
-
-                                aCaptGetResult(Flt1PSensor, &pAvgUShort);
-                                pPlatInsp = pAvgUShort;
-                                if (pPlatMax < pAvgUShort) {
-                                    pPlatMax = pAvgUShort;
-                                }
-
-                                if (timeElapsed(rValveActuationTstamp, ((time_t) 150*1) + rSV2ValveCRT)) {
-                                    OSCheck = 0;
-                                    inspOSMeasure();
-                                }
-                            } else {
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
-                                    if (QuantaCheck) {
-                                        QuantaCheck = 0;
-                                        tmpVal = vMeasureGet() - vValveActuation;
-                                        if (tmpVal > 90) {
-                                            tmpVal = 90;
-                                        }
-                                        vQuanta = (3 * tmpVal + vQuanta) / 4;
-                                        tmpVal = (pInst - pValveActuation);
-                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*7)) {
-                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*7);
-                                        }
-                                        pQuantaInsp = (3 * tmpVal + pQuantaInsp) / 4;
-                                        if (vQuanta < 0) {
-                                            vQuanta = 0;
-                                        }
-                                        if (pQuantaInsp < 0) {
-                                            pQuantaInsp = 0;
-                                        }
-                                    }
-                                    pAdj = pInst;
-                                    vAdj = vMeasureGet();
-
-                                    vValveActuation = vAdj;
-                                    pValveActuation = pAdj;
-
-
-
-                                    pAdj = pAdj + (pQuantaInsp >> 1);
-                                    vAdj = vAdj + (vQuanta >> 1);
-
-                                    if (((pInst + pQuantaInsp) < intMaxP) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < intIP)) ||
-                                             ((intVentMode == VMODE_VOLUME) && (vAdj < intMaxV )))) {
-                                        LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-                                        rValveActuationTstamp = timeGet();
-                                        QuantaCheck = 1;
-                                        printf ("PI-VO T %d - Pi %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), vMeasureGet());
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    screenMng();
-                    MenuMng();
-                }
-
-
-                if ((LATAbits.LATA3) && (rSV3ValveORT > ((time_t) 50*1)) &&
-                        ((intIDuration < (rSV3ValveORT - ((time_t) 50*1))) || timeElapsed(rCycleTime, intIDuration - (rSV3ValveORT - ((time_t) 50*1))))) {
-                    sv3DelayCheck = 1;
-                    rValveDelayStart = timeGet();
-                    LATAbits.LATA3 = 0;
-                    printf ("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart));
-                }
-
-
-                if (timeElapsedR(&printTime, ((time_t) 40*1))) {
-                    aCaptGetResult(Flt1PSensor, &pAvgShort);
-
-                        printf ("PI T %d - V %d Pi %d Pc %d\n", timeDiff(rCycleTime, timeGet()), vMeasureGet(), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pCtrl))>>8)));
-# 685 "main.c"
-                        do {} while (0);
-
-
-
-                }
-
-
-            }
-
-
-            lastCycleVol = vMeasureGet();
-            sprintf(lcdBtnRRow, "V% 4d", lastCycleVol);
-            lcdPrintBRR = 1;
-
-
-
-
-            printf ("\nEP\n");
+            aCaptureOffSet(MainPSensor, mPValMean);
+            aCaptureOffSet(VolPSensor, aPValMean);
 
             aCaptRstFlt(Flt0PSensor);
             aCaptRstFlt(Flt1PSensor);
-            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-            if (LATAbits.LATA3) {
-                LATAbits.LATA3 = 0;
-                sv3DelayCheck = 1;
-                rValveDelayStart = timeGet();
-            }
-
-            initExpSubState = 1;
-            OSCheck = 0;
-            QuantaCheck = 0;
-
-            while (1) {
-                if (intVentMode == VMODE_PRESSURE) {
-                    MonitorMsgSend(MONSTATE_RUNP);
-                } else {
-                    MonitorMsgSend(MONSTATE_RUNV);
-                }
-                if (timeElapsedR(&rCycleTime, intEDuration)) {
-
-                    bRateUpdt(0);
-                    if (initExpSubState) {
-
-                        MonitorErrorSet(MON_EPE);
-                    }
-                    if (OSCheck) {
-
-                        pExpOS = (3 * pExpOS) >> 2;
-                    }
-                    break;
-                } else {
-                    aCaptGetResult(MainPSensor, &pInst);
-                    pPeepActual = pInst;
-                    if (initExpSubState) {
-
-
-
-
-
-                        aCaptGetResult(Flt1PSensor, &pAvgShort);
-
-
-
-                        tmpVal = intPEEP - pExpOS;
-                        if (tmpVal <= ((int16_t) ((0.045*4096+2)/5)*1)) {
-                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*1);
-                        }
-                        if (pAvgShort < tmpVal) {
-                            LATAbits.LATA3 = 1;
-                            initExpSubState = 0;
-                            rValveActuationTstamp = timeGet();
-                            pValveActuation = pInst;
-                            OSCheck = 1;
-                            printf ("PEI end T %d - Pi %d OS %d\n", timeDiff(rCycleTime, rValveActuationTstamp), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)));
-
-
-
-                        }
-                        if (sv3DelayCheck) {
-
-
-                            if ((pInst <= ((intPEEP + pPlatInsp)>>1)) || (pInst < (pAvgShort - ((int16_t) ((0.045*4096+2)/5)*3)))) {
-                                sv3DelayCheck = 0;
-
-                                rTimeTmp = timeDiff(rValveDelayStart, timeGet());
-                                if (rTimeTmp < ((time_t) 600*1)) {
-
-                                    rSV3ValveORT = (rSV3ValveORT + rTimeTmp) >> 1;
-
-                                    MonitorErrorClr(MON_SV3E);
-                                } else {
-
-                                    MonitorErrorSet(MON_SV3E);
-                                }
-                            }
-                        }
-                    } else {
-
-                        MonitorErrorClr(MON_EPE);
-                        if ((LATAbits.LATA2|LATCbits.LATC3) && (timeElapsed(rValveActuationTstamp, ((time_t) 15*1)) || (pInst > intMaxP))) {
-                            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-                            rValveActuationTstamp = timeGet();
-                            aCaptGetResult(MainPSensor, &pInst);
-                            printf ("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)));
-                        } else {
-                            if (OSCheck) {
-                                if (timeElapsed(rValveActuationTstamp, ((time_t) 350*1) + rSV2ValveCRT+((time_t) 15*1))) {
-
-                                    aCaptGetResult(Flt0PSensor, &pAvgUShort);
-                                    pPlatExp = pAvgUShort;
-
-                                    tmpVal = pPlatExp - pValveActuation;
-                                    pExpOS = (3 * pExpOS + tmpVal) / 4;
-
-                                    aCaptRstFlt(Flt2PSensor);
-                                    aCaptRstFlt(Flt3PSensor);
-                                    OSCheck = 0;
-                                    printf ("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pAvgUShort))>>8)));
-                                }
-                            } else {
-
-
-
-                                aCaptGetResult(Flt2PSensor, &bdP1);
-                                aCaptGetResult(Flt3PSensor, &bdP2);
-                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*0.5)) < bdP2) || (keyPeek() == 4)) {
-
-                                    printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)));
-                                    LATDbits.LATD6 = 1;
-                                    rCycleTime = timeGet();
-                                    bRateUpdt(1);
-                                    break;
-                                }
-
-
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
-                                    if (QuantaCheck) {
-                                        QuantaCheck = 0;
-                                        tmpVal = (bdP1 - pValveActuation);
-                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*7)) {
-                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*7);
-                                        }
-
-                                        pQuantaExp = (3 * tmpVal + pQuantaExp) / 4;
-                                        if (pQuantaExp < 0) {
-                                            pQuantaExp = 0;
-                                        }
-                                    }
-                                    if ((bdP1 + (pQuantaExp >> 1)) < intPEEP) {
-                                        LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-                                        rValveActuationTstamp = timeGet();
-                                        QuantaCheck = 1;
-                                        pValveActuation = pInst;
-                                        printf ("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)));
-
-
-                                    }
-                                }
-                            }
-                        }
-
-                        screenMng();
-                        MenuMng();
-                    }
-                }
-
-                if (timeElapsedR(&printTime, ((time_t) 40*1)<<3)) {
-                    aCaptGetResult(MainPSensor, &pInst);
-                    aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    printf ("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst - pAvgShort))>>8)), rSV3ValveORT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatExp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaExp))>>8)) );
-# 888 "main.c"
-                    do {} while (0);
-
-
-
-
-                }
-
-            }
+            aCaptRstFlt(Flt2PSensor);
+            aCaptRstFlt(Flt3PSensor);
+            timeDelayMs(50);
         }
-
-        setCursor(0, 1);
-        printstrblock("                ");
-        printf ("POWER-OFF\n");
-
-        LATDbits.LATD0 = 0;
-        LATAbits.LATA3 = 0;
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-        LATDbits.LATD6 = 0;
-
-        lcdPrintTR = 1;
-        screenMng();
-        while (PrintStrBusy());
-        screenMng();
-        timeDelayMs(10);
-
-        MonitorMsgSendBlock(MONSTATE_SLEEP);
-        timeDelayMs(10);
-        setBacklight(0);
-
-        printf ("Wait for key press\n");
-        while (keyRead() != 10);
-
-        ctrlStatus = CTRL_STOP;
-        timeDelayMs(10);
-        MonitorMsgSendBlock(MONSTATE_STOP);
+    } else {
+        if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
+            printf ("VALVE CHECK ERROR\n");
+            chkResult = 0;
+        }
     }
+    return chkResult;
+}
+
+
+_Bool flowChk(fchk_val flowVal){
+  int16_t aPVal, aPValMax, aPValMin, aPValMean;
+  int16_t minFlowL, maxFlowL;
+  _Bool initOk;
+  time_t tstamp;
+
+  initOk = 1;
+
+
+  setCursor(0, 0);
+  printstrblock("FLOW RATE        ");
+  aPValMin = 4096;
+  aPValMax = 0;
+
+  if (!MonitorMsgSendBlock(MONSTATE_CALF)){
+    initOk=0;
+    printf ("Mon error");
+    setCursor(0, 0);
+    printstrblock("MONITOR ERROR");
+    timeDelayMs(500);
+  }
+
+
+  switch (flowVal) {
+  case FCHK_LOW:
+    LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+    minFlowL = 250;
+    break;
+  case FCHK_MED:
+    LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+    minFlowL = 400;
+    break;
+  case FCHK_HIGH:
+    LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+    minFlowL = 600;
+    break;
+  }
+  maxFlowL = 2*minFlowL;
+  LATAbits.LATA3 = 1;
+
+  timeDelayMs(250);
+  vMeasureRst();
+  tstamp = timeGet();
+  while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+    aCaptGetResult(VolPSensor, &aPVal);
+    if (aPVal > aPValMax) {
+      aPValMax = aPVal;
+    }
+    if (aPVal < aPValMin) {
+      aPValMin = aPVal;
+    }
+  }
+
+  freeFlowRateL = vMeasureGet()<<2;
+  if (!MonitorMsgSendBlock(MONSTATE_STOP)){
+    initOk=0;
+    printf ("Mon error");
+    setCursor(0, 0);
+    printstrblock("MONITOR ERROR");
+    timeDelayMs(500);
+  }
+  LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+  LATAbits.LATA3 = 0;
+
+  aPValMean=aCaptureOffGet(VolPSensor);
+
+  if ((aPValMean + aPValMax)>= (0.95*8192)) {
+
+    setCursor(0, 0);
+    printstrblock("FLOW TOO HIGH   ");
+    timeDelayMs(1000);
+    initOk = 0;
+  } else {
+    sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateL) / 1000));
+    setCursor(0, 0);
+    printstrblock(lcdTopRow);
+    timeDelayMs(4000);
+
+    if (freeFlowRateL < minFlowL) {
+
+      setCursor(0, 0);
+      printstrblock("FLOW TOO LOW    ");
+      timeDelayMs(1000);
+      initOk = 0;
+    } else if (freeFlowRateL > maxFlowL) {
+
+      setCursor(0, 0);
+      printstrblock("FLOW TOO HIGH   ");
+      timeDelayMs(1000);
+      initOk = 0;
+    }
+  }
+  return initOk;
+}
+
+
+
+
+_Bool SelfTest(void) {
+  int idx, cIdx;
+  int16_t vddVal, vddValMax, vddValMin;
+  int16_t aPVal, aPValMax, aPValMin, aPValMean;
+  _Bool lcdBLight;
+  time_t tstamp;
+  _Bool initOk;
+
+  ctrlStatus = CTRL_UNCAL;
+  LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+  LATAbits.LATA3 = 0;
+
+  setCursor(0, 1);
+  printstrblock("SELF-TEST       ");
+  setCursor(0, 0);
+  printstrblock("DISPLAY TEST    ");
+  for (idx=0;idx<10;idx++){
+    setCursor(0, 0);
+    lcdTopRow[0]=0x30+idx;
+    for (cIdx=1;cIdx<16;cIdx++){
+      lcdTopRow[cIdx]=lcdTopRow[0];
+    }
+    printstrblock(lcdTopRow);
+    setCursor(0, 1);
+    printstrblock(lcdTopRow);
+    timeDelayMs(800);
+  }
+
+  setCursor(0, 0);
+  printstrblock("SELF-TEST. LEAVE");
+  setCursor(0, 1);
+  printstrblock("AIRWAY OPEN     ");
+  timeDelayMs(1000);
+
+  vddValMin = 8000;
+  vddValMax = 0;
+  initOk = 1;
+
+  if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
+    initOk = 0;
+    printf ("Mon error");
+    setCursor(0, 0);
+    printstrblock("MONITOR ERROR");
+    timeDelayMs(500);
+  }
+
+  aCaptureOffSet(MainPSensor, 0);
+  aCaptureOffSet(VolPSensor, 0);
+
+  tstamp = timeGet();
+
+  while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+    if (aCaptGetResult(VddSensor, &vddVal)) {
+      if (vddVal > vddValMax) {
+ vddValMax = vddVal;
+      }
+      if (vddVal < vddValMin) {
+ vddValMin = vddVal;
+      }
+    } else {
+      LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",22);
+            initOk = 0;
+    }
+  }
+
+  if (!initOk) {
+    return initOk;
+  }
+
+
+  vddValMean = (vddValMax + vddValMin) >> 1;
+  printf ("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean);
+
+  if ((vddValMean > 5250) || (vddValMean < 4750)) {
+
+    setCursor(0, 0);
+    printstrblock("INTERNAL ERROR  ");
+    setCursor(0, 1);
+    sprintf(lcdTopRow, "VDD OOL: % 3d mV", vddValMean);
+    printstrblock(lcdTopRow);
+    initOk = 0;
+  } else if ((vddValMax - vddValMin) > 100) {
+
+    setCursor(0, 0);
+    printstrblock("INTERNAL ERROR  ");
+    setCursor(0, 1);
+    printstrblock("VDD NOISY       ");
+    initOk = 0;
+  }
+
+  if (!initOk) {
+    return initOk;
+  }
+
+  while (ctrlStatus == CTRL_UNCAL) {
+    LATDbits.LATD6 = 0;
+
+    while (keyPeek() != -1)
+      printf ("KP %d\n", keyPeek());
+    ;
+    keyReadInit();
+
+
+
+    LATDbits.LATD6 = 1;
+    setCursor(0, 0);
+    printstrblock("CAL PRESS BREATH");
+    tstamp = timeGet();
+    lcdBLight = 1;
+
+    tstamp = timeGet();
+    while (1) {
+      if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
+ setBacklight(lcdBLight);
+ lcdBLight = !lcdBLight;
+      }
+
+
+      if (keyReadEC() == -100) {
+ if (keyPeek() == 4) {
+
+   setBacklight(1);
+   break;
+ }
+      }
+    }
+
+    LATDbits.LATD6 = 0;
+    printf ("CALP\n");
+    if (!MonitorMsgSendBlock(MONSTATE_CALP)){
+      initOk=0;
+      printf ("Mon error");
+      setCursor(0, 0);
+      printstrblock("MONITOR ERROR");
+      timeDelayMs(500);
+    }
+
+    if (pressureSensorChk(1, 500)) {
+
+      ctrlStatus = CTRL_STOP;
+    } else {
+      printstrblock("CAL ERROR. RETRY ");
+      timeDelayMs(500);
+    }
+  }
+
+  if (!initOk) {
+    return initOk;
+  }
+
+
+  printf ("CHKSV2\n");
+
+  if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
+        initOk=0;
+ printf ("Mon error");
+ setCursor(0, 0);
+ printstrblock("MONITOR ERROR");
+ timeDelayMs(500);
+  }
+
+  LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+  timeDelayMs(200);
+  if (!pressureSensorChk(0, 100)) {
+    initOk=0;
+    printstrblock("SV2 Valve error");
+    timeDelayMs(500);
+  }
+
+
+  printf ("CHKSV1\n");
+  if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
+    initOk=0;
+  }
+  timeDelayMs(100);
+  LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+  timeDelayMs(300);
+  if (!pressureSensorChk(0, 100)) {
+    initOk=0;
+    printstrblock("SV1 Valve error");
+    timeDelayMs(500);
+  }
+
+
+  printf ("CHK FLOW\n");
+  tstamp = timeGet();
+
+
+  initOk &= flowChk(FCHK_LOW);
+  initOk &= flowChk(FCHK_MED);
+  initOk &= flowChk(FCHK_HIGH);
+
+
+  while (keyPeek() != -1)
+    ;
+  keyReadInit();
+
+  return initOk;
 }

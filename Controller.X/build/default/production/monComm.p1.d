@@ -1,5 +1,6 @@
-build/default/production/main.p1:  \
-main.c  \
+build/default/production/monComm.p1:  \
+monComm.c  \
+monComm.h  \
 mcc_generated_files/mcc.h  \
 mcc_generated_files/device_config.h  \
 mcc_generated_files/pin_manager.h  \
@@ -12,15 +13,9 @@ mcc_generated_files/tmr0.h  \
 mcc_generated_files/adcc.h  \
 mcc_generated_files/fvr.h  \
 mcc_generated_files/uart1.h  \
+time.h  \
 ORespGlobal.h  \
 aCapture.h  \
-time.h  \
-cmath.h  \
-vMeasure.h  \
-keyRead.h  \
-LiquidCrystal_I2C.h  \
+i2c2_mux.h  \
 menu.h  \
-brate.h  \
-selftest.h  \
-monComm.h  \
-i2c2_mux.h 
+brate.h 
