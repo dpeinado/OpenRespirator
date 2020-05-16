@@ -27118,6 +27118,7 @@ void PIN_MANAGER_Initialize(void)
     RB2PPS = 0x24;
     RC1PPS = 0x13;
     U1RXPPS = 0x10;
+    T4INPPS = 0x15;
     I2C2SDAPPS = 0x0A;
 }
 

@@ -22,10 +22,10 @@ extern "C" {
 #define PEEP_MAX 25
 // Volume limit. With limitations of this equipment volume below 100ml can not be provided with accuracy. Probably lower limit should be higher.
 #define VOL_MIN 100
-#define VOL_MAX 800
+#define VOL_MAX 1500
 #define VOL_AMIN 50
 // At this moment this is only due to restriction on display.
-#define VOL_AMAX 980
+#define VOL_AMAX 1500
 
 // Default value for volume alarms. +-25%
 #define VOL_ALRM_DFL 25
@@ -36,6 +36,8 @@ extern "C" {
 #define PQUANTA_LIMIT    MPRESSURE_MBAR(7)
 // Limit for pressure quanta estimation. Needed to saturate quanta measurement to avoid a deathlock.
 #define VQUANTA_LIMIT    90
+// Zero volume threshold for aux sensor.
+#define ZVOLTH 20
     
 // Objective time for inspiration.
 #define INSP_TIME 500
@@ -73,7 +75,7 @@ extern "C" {
 #define BUZZER_OFF LATDbits.LATD0 = 0
 
 #define DEBUG
-// #define OCTAVE
+//#define OCTAVE
 
 #ifdef DEBUG
 #define ERROR_CONDITION(k) CLOSE_SV2;CLOSE_SV3;printf("Fatal %d",k)
