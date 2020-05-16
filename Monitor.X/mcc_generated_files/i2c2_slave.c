@@ -126,7 +126,7 @@ void I2C2_Open()
 {
     I2C2_SlaveOpen();
     I2C2_SlaveSetSlaveAddr(I2C2_SLAVE_ADDRESS << 1);
-    printf("I2C Open %02X\r\n", I2C2ADR0);
+    //printf("I2C Open %02X\r\n", I2C2ADR0);
     I2C2_SlaveSetSlaveMask(I2C2_SLAVE_MASK);
     I2C2_SlaveSetIsrHandler(I2C2_Isr);
     I2C2_SlaveSetBusColIntHandler(I2C2_SlaveDefBusColInterruptHandler);

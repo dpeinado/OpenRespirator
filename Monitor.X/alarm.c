@@ -10,31 +10,31 @@
 #include "buttons.h"
 
 // Alarm state
-bool batteryFailAlarm = false;
-bool monitorFailAlarm = false;
-bool controlFailAlarm = false;
-bool gasFailureAlarm = false;
-bool highPressureAlarmLow = false;
-bool highPressureAlarmHigh = false;
-bool veryHighPressureAlarmHigh = false;
-bool circuitFailureAlarm = false;
-bool baterryLowAlarmMed = false;
-bool baterryLowAlarmHigh = false;
-int epBelowSetAlarm = 0;
-int epAboveSetAlarm = 0;
-int ipBelowSetAlarm = 0;
-int ipAboveSetAlarm = 0;
-bool tdiTooLongAlarm = false;
-bool tdeTooLongAlarm = false;
-bool vBelowMinAlarm = false;
-bool vAboveMaxAlarm = false;
-bool noPowerSupplyAlarm = false;
-int16_t alarmPmax = 40;
+static bool batteryFailAlarm = false;
+static bool monitorFailAlarm = false;
+static bool controlFailAlarm = false;
+static bool gasFailureAlarm = false;
+static bool highPressureAlarmLow = false;
+static bool highPressureAlarmHigh = false;
+static bool veryHighPressureAlarmHigh = false;
+static bool circuitFailureAlarm = false;
+static bool baterryLowAlarmMed = false;
+static bool baterryLowAlarmHigh = false;
+static int epBelowSetAlarm = 0;
+static int epAboveSetAlarm = 0;
+static int ipBelowSetAlarm = 0;
+static int ipAboveSetAlarm = 0;
+static bool tdiTooLongAlarm = false;
+static bool tdeTooLongAlarm = false;
+static bool vBelowMinAlarm = false;
+static bool vAboveMaxAlarm = false;
+static bool noPowerSupplyAlarm = false;
+static int16_t alarmPmax = 40;
 
-bool veryHighSV1 = true;
-bool batterySV1  = true;
-bool controlSV1  = true;
-bool monitorSV1  = true;
+static bool veryHighSV1 = true;
+static bool batterySV1  = true;
+static bool controlSV1  = true;
+static bool monitorSV1  = true;
 
 // Alarm check functions. Called every second
 bool BatteryFailAlarm(void) {
@@ -115,14 +115,10 @@ bool HighPressureAlarmLow(void) {
     //else ClearHighPressureAlarmHigh(); // MUTE to clear
     
     if (max>70){
-        countVery++;
-    } else countVery=0;
-    
-    if (countVery>=3) {
         SetVeryHighPressureAlarmHigh();
         veryHighSV1 = false;
-        countVery = 3;
-    }
+    } 
+    
     //else ClearVeryHighPressureAlarmHigh(); // MUTE to clear
     return highPressureAlarmLow;
 };
@@ -131,10 +127,7 @@ bool HighPressureAlarmHigh(void) {
     return highPressureAlarmHigh;
 };
 bool VeryHighPressureAlarmHigh(void) { 
-    if (highPressureAlarmHigh) {
-        
-    }
-    return highPressureAlarmHigh;
+    return veryHighPressureAlarmHigh;
 };
 bool CircuitFailureAlarm(void) {
     return circuitFailureAlarm;
@@ -248,22 +241,22 @@ struct alarm alarmData[] = {
 #define NUM_ALARMS sizeof(alarmData)/sizeof(a)
 
 // testAlarm
-int testAlarm[NUM_ALARMS];
+static int testAlarm[NUM_ALARMS];
 
 // Alarms at the same time
-int alarms[NUM_ALARMS];
+static int alarms[NUM_ALARMS];
 
 // Seconds muted
-int muteSec = 0;
+static int muteSec = 0;
 
 // Seconds Hist
-int histSec = 0;
+static int histSec = 0;
 
 // Hist num
-int hist = 0;
+static int hist = 0;
 
-int displayStatus;
-bool alarmCheck = false;
+static int displayStatus;
+static bool alarmCheck = false;
 
 #define DISPLAY_NORMAL 0
 #define DISPLAY_ALARM  1
@@ -310,25 +303,32 @@ void MuteAlarm(void) {
         muteSec = 0;
         return;
     }
+    printf("MUTE");
     if (AnyAlarm()) {
         BuzzerClear();
         muteSec = 120;
         if (alarmData[HigherAlarm()].func==HighPressureAlarmHigh) {
+//            printf("\r\nClear High Alarm\r\n");
             ClearHighPressureAlarmHigh();
         }
         if (alarmData[HigherAlarm()].func==VeryHighPressureAlarmHigh) {
+            printf("\r\nClear Very High Alarm\r\n");
             ClearVeryHighPressureAlarmHigh();
         }
         if (alarmData[HigherAlarm()].func==MonitorFailAlarm) {
+//            printf("\r\nClear Monitor Alarm\r\n");
             ClearMonitorFailAlarm();
         }
         if (alarmData[HigherAlarm()].func==ControlFailAlarm) {
+//            printf("\r\nClear Control Alarm\r\n");
             ClearControlFailAlarm();
         }
         if (alarmData[HigherAlarm()].func==GasFailureAlarm) {
+//            printf("\r\nClear Gas Failure Alarm\r\n");
             ClearGasFailureAlarm();
         }
         if (alarmData[HigherAlarm()].func==CircuitFailureAlarm) {
+//            printf("\r\nClear Circuit Failure Alarm\r\n");
             ClearCircuitFailureAlarm();
         }
     }
@@ -336,7 +336,7 @@ void MuteAlarm(void) {
     monitorSV1 = true;
     veryHighSV1 = true;
     
-    SetAlarmSV1(controlSV1 || monitorSV1 || veryHighSV1 || batterySV1);
+    SetAlarmSV1(controlSV1 && monitorSV1 && veryHighSV1 && batterySV1);
 }
 
 char *GetAlarmState(void) {
@@ -418,7 +418,7 @@ void HistAlarm(void) {
 }
 
 void AlarmCheckTask(void) {
-    SetAlarmSV1(controlSV1 || monitorSV1 || veryHighSV1 || batterySV1);
+    SetAlarmSV1(controlSV1 && monitorSV1 && veryHighSV1 && batterySV1);
     if (alarmCheck == false) return;
     alarmCheck = false;
     // Current buzzer state

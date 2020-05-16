@@ -6,8 +6,8 @@
 
 #define PUSHMASK 0xF0
 
-uint8_t muteButton=0;
-uint8_t histButton=0;
+static uint8_t muteButton=0;
+static uint8_t histButton=0;
 
 void ButtonInit(void) {
     TMR1_SetInterruptHandler(ButtonTask);
@@ -22,12 +22,12 @@ void ButtonTask(void) {
     histButton = !PORTDbits.RD5 | (histButton << 1);
     if ((muteButton) == PUSHMASK) {
         MuteAlarm();
-        printf("\r\nMUTE\r\n");
+        //printf("\r\nMUTE\r\n");
         muteButton = 0;
     }
     if ((histButton) == PUSHMASK) {
         HistAlarm(); 
-        printf("\r\nHIST\r\n");
+        //printf("\r\nHIST\r\n");
         histButton = 0;
     }
 }
