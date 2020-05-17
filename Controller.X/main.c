@@ -156,6 +156,36 @@ void SV2DelayOpen(void){
     }
 }
 
+// Power-off
+void CtrlPowerOff(void) {
+    // Clean screen lower line.
+    setCursor(0, 1);
+    printstrblock("                ");
+    DEBUG_PRINT(("POWER-OFF\n"));
+    // Now ensure at least once to update monitor with new state.
+    BUZZER_OFF;
+    CLOSE_SV3;
+    CLOSE_SV2;
+    BLED_OFF;
+    // Force screen refresh.
+    lcdPrintTR = true;
+    screenMng();
+    while (PrintStrBusy());
+    screenMng();
+    timeDelayMs(50);
+    // Wait until I2C idle, then send message.
+    MonitorMsgSendBlock(MONSTATE_SLEEP);
+    timeDelayMs(50);
+    setBacklight(false);
+    // Now wait until power button pressed again.
+    DEBUG_PRINT(("Wait for key press\n"));
+    while (keyRead() != KEYPOWER);
+    // Go back to stop.
+    ctrlStatus = CTRL_STOP;
+    timeDelayMs(50);
+    MonitorMsgSendBlock(MONSTATE_STOP);
+}
+
 void main(void) {
     uint16_t tmpUVal;
     int16_t tmpVal, tmpVal2;
@@ -232,6 +262,11 @@ void main(void) {
             // User inputs, screen update.
             MenuMng();
             screenMng();
+
+            if (ctrlStatus == CTRL_SLEEP) {
+                CtrlPowerOff();
+            }
+
             MonitorMsgSend(MONSTATE_STOP);
 
             if (keyReadEC() == ESCAPE_CODE) {
@@ -250,8 +285,8 @@ void main(void) {
         }
 
         // Wait until monitor free to receive new message.
-        while(MonitorMsgBusy());
-        
+        while (MonitorMsgBusy());
+
         // Init all control variables.
         rSV2ValveORT = 20;
         rSV2ValveCRT = 50;
@@ -269,11 +304,11 @@ void main(void) {
         pQuantaExp = 20;
         lungC = 0;
         // Flow rate in ml/sec.
-	//        effectiveFlowRate=freeFlowRateF;
-	// Inverse effective flow rate. Scaled by 2^18
-	if (freeFlowRateF > 50) {
-	  effectiveFlowRateInv=((uint24_t) 1<<18)/freeFlowRateF;
-	}
+        //        effectiveFlowRate=freeFlowRateF;
+        // Inverse effective flow rate. Scaled by 2^18
+        if (freeFlowRateF > 50) {
+            effectiveFlowRateInv = ((uint24_t) 1 << 18) / freeFlowRateF;
+        }
         pPeepActual = 0;
         IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
         EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
@@ -670,46 +705,6 @@ void main(void) {
                     CLOSE_SV3;
                     DEBUG_PRINT(("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart)));
                 }
-
-#ifdef DEBUG
-                if (timeElapsedR(&printTime, PRINTTIME)) {
-                    aCaptGetResult(Flt1PSensor, &pAvgShort);
-                        // User dump.
-                        DEBUG_PRINT(("PI T %d - V %d Pi %d Pc %d\n",
-                                timeDiff(rCycleTime, timeGet()),
-                                vMeasureGet(),
-                                DBGPCONVERT(pInst),
-                                DBGPCONVERT(pCtrl)));
-                        // For octave...
-                        // User dump.
-#if 0
-                        OCTAVE_PRINT(("-: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-                                timeGet(),
-                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
-                                pInst,
-                                pAvgShort,
-                                pInspOS,
-                                pInspOS2,
-                                pInspOS3,
-                                pPlatInsp,
-                                pExpOS,
-                                pPlatExp,
-                                lungC,
-                                effectiveFlowRateInv,
-                                pPlatMax,
-                                pQuantaInsp,
-                                pQuantaExp,
-                                vQuanta,
-                                vMeasureGet()));
-#else
-                        // User dump.
-                        OCTAVE_PRINT(("-: %d %d %d\n",
-                                timeGet(),
-                                (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
-                                pInst));
-                }
-#endif
-#endif
             }
 
             // Update last cycle inspiration volume. Temporal, should be removed once this is implemented on Monitor.
@@ -915,32 +910,8 @@ void main(void) {
 #endif
             }
         }
-        // Clean screen lower line.
-        setCursor(0, 1);
-        printstrblock("                ");
-        DEBUG_PRINT(("POWER-OFF\n"));
-        // Now ensure at least once to update monitor with new state.
-        BUZZER_OFF;
-        CLOSE_SV3;
-        CLOSE_SV2;
-        BLED_OFF;
-        // Force screen refresh.
-        lcdPrintTR = true;
-        screenMng();
-        while (PrintStrBusy());
-        screenMng();
-        timeDelayMs(10);
-        // Wait until I2C idle, then send message.
-        MonitorMsgSendBlock(MONSTATE_SLEEP);
-        timeDelayMs(10);
-        setBacklight(false);        
-        // Now wait until power button pressed again.
-        DEBUG_PRINT(("Wait for key press\n"));
-        while (keyRead() != KEYPOWER);
-        // Go back to stop.
-        ctrlStatus = CTRL_STOP;
-        timeDelayMs(10);
-        MonitorMsgSendBlock(MONSTATE_STOP);
+        
+        CtrlPowerOff();
     }
 }
 /**

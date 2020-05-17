@@ -28262,6 +28262,7 @@ _Bool SelfTest(void);
 
   extern time_t monTstamp;
   extern i2c2_error_t lastI2CMonTrfResponse;
+  extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
 
   void MonitorInit(void);
   void MonitorErrorSet(monErrorT flag);
@@ -28309,10 +28310,7 @@ uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
-_Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
-int16_t vddValMean;
-uint16_t sv2_pwmval;
-# 67 "main.c"
+# 64 "main.c"
 ctrlStatusT ctrlStatus;
 uint16_t lastCycleVol;
 
@@ -28408,6 +28406,36 @@ void SV2DelayOpen(void){
     }
 }
 
+
+void CtrlPowerOff(void) {
+
+    setCursor(0, 1);
+    printstrblock("                ");
+    do {} while (0);
+
+    LATDbits.LATD0 = 0;
+    LATAbits.LATA3 = 0;
+    LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+    LATDbits.LATD6 = 0;
+
+    lcdPrintTR = 1;
+    screenMng();
+    while (PrintStrBusy());
+    screenMng();
+    timeDelayMs(50);
+
+    MonitorMsgSendBlock(MONSTATE_SLEEP);
+    timeDelayMs(50);
+    setBacklight(0);
+
+    do {} while (0);
+    while (keyRead() != 10);
+
+    ctrlStatus = CTRL_STOP;
+    timeDelayMs(50);
+    MonitorMsgSendBlock(MONSTATE_STOP);
+}
+
 void main(void) {
     uint16_t tmpUVal;
     int16_t tmpVal, tmpVal2;
@@ -28484,6 +28512,11 @@ void main(void) {
 
             MenuMng();
             screenMng();
+
+            if (ctrlStatus == CTRL_SLEEP) {
+                CtrlPowerOff();
+            }
+
             MonitorMsgSend(MONSTATE_STOP);
 
             if (keyReadEC() == -100) {
@@ -28502,7 +28535,7 @@ void main(void) {
         }
 
 
-        while(MonitorMsgBusy());
+        while (MonitorMsgBusy());
 
 
         rSV2ValveORT = 20;
@@ -28523,9 +28556,9 @@ void main(void) {
 
 
 
- if (freeFlowRateF > 50) {
-   effectiveFlowRateInv=((uint24_t) 1<<18)/freeFlowRateF;
- }
+        if (freeFlowRateF > 50) {
+            effectiveFlowRateInv = ((uint24_t) 1 << 18) / freeFlowRateF;
+        }
         pPeepActual = 0;
         IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
         EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
@@ -28542,7 +28575,7 @@ void main(void) {
 
         rCycleTime = timeGet();
         while (ctrlStatus != CTRL_SLEEP) {
-# 307 "main.c"
+# 339 "main.c"
             intVentMode = VentMode;
             intMaxP = ((int16_t) ((0.045*4096+2)/5)*MaxP);
             intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
@@ -28912,7 +28945,6 @@ void main(void) {
                     LATAbits.LATA3 = 0;
                     do {} while (0);
                 }
-# 716 "main.c"
             }
 
 
@@ -29031,7 +29063,7 @@ void main(void) {
 
                                 aCaptGetResult(Flt2PSensor, &bdP1);
                                 aCaptGetResult(Flt3PSensor, &bdP2);
-                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*0.5)) < bdP2) || (keyPeek() == 4)) {
+                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*1)) < bdP2) || (keyPeek() == 4)) {
 
                                     do {} while (0);
                                     LATDbits.LATD6 = 1;
@@ -29071,34 +29103,10 @@ void main(void) {
                         MenuMng();
                     }
                 }
-# 919 "main.c"
+# 911 "main.c"
             }
         }
 
-        setCursor(0, 1);
-        printstrblock("                ");
-        do {} while (0);
-
-        LATDbits.LATD0 = 0;
-        LATAbits.LATA3 = 0;
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
-        LATDbits.LATD6 = 0;
-
-        lcdPrintTR = 1;
-        screenMng();
-        while (PrintStrBusy());
-        screenMng();
-        timeDelayMs(10);
-
-        MonitorMsgSendBlock(MONSTATE_SLEEP);
-        timeDelayMs(10);
-        setBacklight(0);
-
-        do {} while (0);
-        while (keyRead() != 10);
-
-        ctrlStatus = CTRL_STOP;
-        timeDelayMs(10);
-        MonitorMsgSendBlock(MONSTATE_STOP);
+        CtrlPowerOff();
     }
 }

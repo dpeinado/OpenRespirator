@@ -288,7 +288,7 @@ void screenInit(void) {
     setCursor(0, 0);
     printstrblock("Open Respirator ");
     setCursor(0, 1);
-    printstrblock("   Air Vita    ");
+    printstrblock("    AirVita     ");
     timeDelayMs(TIME_MS(2000));
     clear();
     lcdPrintTR = true;
@@ -401,4 +401,3 @@ void screenMng(void) {
         }
     }
 }
-
