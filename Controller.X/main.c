@@ -43,16 +43,13 @@ uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
-bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
-int16_t  vddValMean;
-uint16_t sv2_pwmval;
 
 // CONTROLLER INTERNAL PARAMETERS.
 #define BLED_ONTIME TIME_MS(500)
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
 #define PEEPCTRLMIN   MPRESSURE_MBAR(1)
 
-#define BDTECT_THRL   MPRESSURE_MBAR(0.5)
+#define BDTECT_THRL   MPRESSURE_MBAR(1)
 
 #define PIPLATEAUMDEL TIME_MS(150)
 #define PEPLATEAUMDEL TIME_MS(350)
