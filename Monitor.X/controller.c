@@ -25,8 +25,8 @@ struct message {
 
 union { struct message cntMsg; uint8_t controllerMsg[10]; } msg;
 
-int  cntByte;
-bool commandReceived;
+static int  cntByte;
+static bool commandReceived;
 
 #define STATE_INIT 0xE0
 
@@ -37,15 +37,15 @@ bool commandReceived;
 #define STATE_SLEEP 0x8
 
 void StopHandler(void);
-int16_t spr = 0;
+static int16_t spr = 0;
 int16_t GetSpr(void) { return spr; }
-bool init;
-bool run;
-bool volumeControl;
+static bool init;
+static bool run;
+static bool volumeControl;
 
 void UpdateState(void) {
     static uint8_t old;
-    if (msg.cntMsg.state!=old) printf("\r\nNew state: %02X\r\n", msg.cntMsg.state);
+    //if (msg.cntMsg.state!=old) printf("\r\nNew state: %02X\r\n", msg.cntMsg.state);
     old= msg.cntMsg.state;
     init = (msg.cntMsg.state & STATE_INIT);
     if (init) {
@@ -60,24 +60,25 @@ void UpdateState(void) {
         }
     }
     run = (msg.cntMsg.state & STATE_RUN) == STATE_RUN;
+    //if (run) printf("R\r\n");
     if (run) SetSV1(true);
     if (run) MonitorEnable(); else MonitorDisable();
     if (run) DisplayEnable(); else DisplayDisable();
     volumeControl = (msg.cntMsg.state & STATE_RUNV) == STATE_RUNV;
     SetVolumeControl(volumeControl);
     
-    SetTarget(msg.cntMsg.pmax & 0x7F, msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F, (msg.cntMsg.vhigh&0x7F)*10, (msg.cntMsg.vlow&0x7F)*10);
+    SetTarget(msg.cntMsg.pmax & 0x7F, msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F, (msg.cntMsg.vhigh&0x7F)*20, (msg.cntMsg.vlow&0x7F)*20);
     SetMaxPressure(msg.cntMsg.pmax & 0x7F);
     
     if (msg.cntMsg.state & STATE_SLEEP) {
         LCDOff(); 
-        printf("\r\n SLEEP MODE\r\n");
+        //printf("\r\n SLEEP MODE\r\n");
     } else { LCDOn(); }
     spr = msg.cntMsg.spr;
     
     static int cnt=0;
     if (msg.cntMsg.alarm & 0x80) {
-        printf("\r\nControl Alarm: %02X\r\n", msg.cntMsg.alarm);
+        //printf("\r\nControl Alarm: %02X\r\n", msg.cntMsg.alarm);
         
         cnt++;
         if (cnt>10) SetControlFailAlarm();
@@ -119,7 +120,7 @@ void StopHandler(void) {
     //if (I2C2STAT1bits.RXBF) ReceiveHandler();
     if (cntByte!=10 && cntByte>0) {
         ReceiveHandler();
-        printf("\r\nI2C: miss %d !!!\r\n", cntByte);
+        printf("I2C: miss %d\r\n", cntByte);
     }
     //printf("\r\nSTOP: %02X %02X C:%d\r\n",stat0, stat1, cntByte);
     if (cntByte!=0) {
@@ -141,7 +142,7 @@ void StopHandler(void) {
 void AddressHandler(void) {
     uint8_t addr;
     addr = I2C2ADB0;
-    printf("\r\nCA%02X\r\n",addr);
+    //printf("\r\nCA%02X\r\n",addr);
 }
 
 void ControllerTimerHandler(void) {
@@ -166,7 +167,7 @@ void ControllerTimerHandler(void) {
 }
 
 void ControllerInit(void) {
-    printf("Controller init\r\n");
+    //printf("Controller init\r\n");
     commandReceived = false;
     init = false;
     run = false;
@@ -184,11 +185,11 @@ void ControllerInit(void) {
 }
 
 void DumpI2C(void) {
-    printf("\r\nSTAT0/1: %02X %02X\r\n", I2C2STAT0, I2C2STAT1);
-    printf("ERR: %02X\r\n", I2C2ERR);
-    printf("CNT: %02X\r\n", I2C2CNT);
-    printf("PIR: %02X\r\n", I2C2PIR);
+    //printf("\r\nSTAT0/1: %02X %02X\r\n", I2C2STAT0, I2C2STAT1);
+    //printf("ERR: %02X\r\n", I2C2ERR);
+    //printf("CNT: %02X\r\n", I2C2CNT);
+    //printf("PIR: %02X\r\n", I2C2PIR);
     
-    printf("STATE %02X EP %d IP %d\r\n", msg.cntMsg.state, msg.cntMsg.ep&0x3f, msg.cntMsg.ip&0x3f);
+    //printf("STATE %02X EP %d IP %d\r\n", msg.cntMsg.state, msg.cntMsg.ep&0x3f, msg.cntMsg.ip&0x3f);
     
 }

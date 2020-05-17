@@ -14,6 +14,10 @@
 #include "tick.h"
 #include "../Controller.X/cmath.h"
 
+#define ABS(x) (((x)>0)?(x):(-x))
+#define MIN(x,y) ((x)>(y)?(y):(x))
+#define MAX(x,y) ((x)>(y)?(x):(y))
+
 #define NUM_CHANNELS 4
 
 struct adcChannel {
@@ -30,6 +34,17 @@ static struct adcChannel adcChannels[] = {
     {PRSV, false, 0, 0},// #define ADC_ID_VOL 2
     {MEAS12,false, 0, 3}// #define ADC_ID_12V 3
 };
+
+void AdcHandler(void);
+
+void AdcInit(void) {
+    currentChannel = 0;
+    ADCC_SetADIInterruptHandler(AdcHandler);
+    
+    ADCON0bits.ADON = 0;
+    ADREF = adcChannels[currentChannel].ref;
+    ADCC_StartConversion(adcChannels[currentChannel].ch);
+}
 
 bool AdcReady(void) {
     return ADCC_IsConversionDone();
@@ -55,11 +70,14 @@ adc_result_t AdcGetData(int id) {
 
 void AdcHandler(void) {
     static int cnt = 0;
-    //if (cnt==0) printf("+\r\n");
+    //if (cnt==0) printf("adc:%02X\r\n", ADSTAT);
 
     
-    if (!ADCC_IsConversionDone()) {
-        printf("\r\n Error ADC IRQ and no data ready\r\n");
+    if (!AdcReady()) {
+        printf("Error ADC IRQ and no data ready: %02X\r\n", ADSTAT);
+        ADCC_Initialize();
+        AdcInit();
+        return;
     }
     // Interrupt received from ADC
     adcChannels[currentChannel].data = ADCC_GetConversionResult();
@@ -83,43 +101,35 @@ void AdcHandler(void) {
     }   
 }
 
-void AdcInit(void) {
-    currentChannel = 0;
-    ADCC_SetADIInterruptHandler(AdcHandler);
-    
-    ADCON0bits.ADON = 0;
-    ADREF = adcChannels[currentChannel].ref;
-    ADCC_StartConversion(adcChannels[currentChannel].ch);
-}
 
-int16_t adcOffset, adcVOffset;
-int16_t targetHigh;
-int16_t targetLow;
-int16_t targetPmax;
-uint16_t targetBp;
-bool enable;
+static int16_t adcOffset, adcVOffset;
+static int16_t targetHigh;
+static int16_t targetLow;
+static int16_t targetPmax;
+static uint16_t targetBp;
+static bool enable;
 
 #define STATE_OFF           0
 #define STATE_CALIBRATE     1
 #define STATE_LOW           2
 #define STATE_HIGH          4
 
-int state;
+static int state;
 
-uint32_t volumeAcc;
-int16_t volume;
-int16_t volumeMax, volumeMin;
-int16_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34, ttNoAlarm, ttAlarm;
-bool enableAlarms;
-bool volumeControl;
-int16_t tdi, tde, ti, te, bp, bpm;
-int16_t pi,pe, pmax, pmin, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
-int32_t pHighAcc, pLowAcc;
-int16_t numHigh, numLow;
-bool alarmSV1;
-bool normalSV1;
-int16_t rpi, rpe, lrpi, lrpe;
-int16_t hiLimit, loLimit;
+static uint32_t volumeAcc;
+static int16_t volume;
+static int16_t volumeMax, volumeMin;
+static int16_t tt1, tt2, tt3, tt4, ttExt, tt12, tt34, ttNoAlarm, ttAlarm;
+static bool enableAlarms;
+static bool volumeControl;
+static int16_t tdi, tde, ti, te, bp, bpm;
+static int16_t pi,pe, pmax, pmin, maxPressure, minPressure, alarmMaxPressure, pHigh, pLow;
+static int32_t pHighAcc, pLowAcc;
+static int16_t numHigh, numLow;
+static bool alarmSV1;
+static bool normalSV1;
+static int16_t rpi, rpe, lrpi, lrpe;
+static int16_t hiLimit, loLimit;
 
 int16_t GetTde(void) { return tde*2; } // Time in ms
 int16_t GetTdi(void) { return tdi*2; } // Time in ms
@@ -127,8 +137,8 @@ int16_t GetTi(void) { return ti*2; } // Time in ms
 int16_t GetTe(void) { return te*2; } // Time in ms
 int16_t GetBp(void) { return bp*2; } // Time in ms
 int16_t GetBpm(void) { return bpm; } // Breaths per minute
-int16_t GetEp(void) { return (lrpe/5); } // 
-int16_t GetIp(void) { return (pHigh/5); } // 
+int16_t GetEp(void) { return MAX(MAX(lrpe/5, pLow/5), pe/5); } // 
+int16_t GetIp(void) { return MAX(MAX(lrpi/5, pHigh/5), pi/5); } // 
 int16_t GetVolume(void) { return volume; }
 int16_t GetPmax(void) { return pmax/5; }
 int16_t GetMaxPressure(void) {
@@ -139,15 +149,15 @@ int16_t GetMaxPressure(void) {
 }
 int GetMonitorState(void) { return state; }
 void ClearVars(void);
-int16_t prSlowBuffer[25];
-int16_t prFastBuffer[25];
-int16_t tdeBuffer[10];
-int16_t tdiBuffer[10];
-int16_t numtdi, numtde;
-int16_t count;
-int16_t prSlow, prSlowDev, prSlowNumStable;
-int16_t prFast, prFastDev;
-int32_t tt;
+static int16_t prSlowBuffer[25];
+static int16_t prFastBuffer[25];
+static int16_t tdeBuffer[10];
+static int16_t tdiBuffer[10];
+static int16_t numtdi, numtde;
+static int16_t count;
+static int16_t prSlow, prSlowDev, prSlowNumStable;
+static int16_t prFast, prFastDev;
+static int32_t tt;
 
 int16_t GetTargetIp() {
     return targetHigh/5; 
@@ -193,9 +203,6 @@ void MonitorDump(void) {
 
 }
 
-#define ABS(x) ((x>0)?(x):(-x))
-#define MIN(x,y) ((x>y)?(y):(x))
-#define MAX(x,y) ((x>y)?(x):(y))
 
 void SetCalibrateState(bool calib) {
     TMR0_StopTimer();
@@ -204,14 +211,14 @@ void SetCalibrateState(bool calib) {
         state = STATE_CALIBRATE;
     } else {
         //printf("\r\nSTOP CALIBRATE\r\n");
-        if (adcOffset/8>300 || adcOffset/8<-300) {
-            printf("\r\nBAD CALIBRATION.\r\n");
-            adcOffset = 42*8;
-        } 
-        if (adcVOffset/8>300 || adcVOffset/8<-300) {
-            printf("\r\nBAD VOLUME CALIBRATION.\r\n");
-            adcOffset = 228*8;
-        }
+        //if (adcOffset/8>300 || adcOffset/8<-300) {
+        //    printf("\r\nBAD CALIBRATION.\r\n");
+        //    adcOffset = 42*8;
+        //} 
+        //if (adcVOffset/8>300 || adcVOffset/8<-300) {
+        //    printf("\r\nBAD VOLUME CALIBRATION.\r\n");
+        //    adcOffset = 228*8;
+        //}
         //state = STATE_CALIBRATE;
         //printf("\r\nPreCalib: Pres:%d Off:%d //Volume pres:%d Off:%d\r\n", GetPressure_pa(), adcOffset/8, GetPressureV_pa(), adcVOffset/8);
         state = STATE_OFF;
@@ -223,7 +230,7 @@ void SetCalibrateState(bool calib) {
     TMR0_StartTimer();
 }
 
-void MonitorEnable(void) { enable = false; }
+void MonitorEnable(void) { enable = true; }
 void MonitorDisable(void) { enable = false; }
 
 void MonitorPressureTask(void) { // Every 2 ms
@@ -247,15 +254,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     static int16_t cnt=0;
     if (cnt==0) printf("0\r\n");
     cnt = (cnt+1)%1000;
-    
-    // Check ADC status
-    if (!AdcReady()) {
-            printf("=");
-            //AdcReStartCycle();
-            //AdcInit();)
-            return;
-    }
-    
+        
     if (!AdcDataReady(ADC_ID_PRS)) {
         printf(" (ErrDR) ");
         // Restart ADC
@@ -265,7 +264,13 @@ void MonitorPressureTask(void) { // Every 2 ms
         return;
     } 
  
-
+    // Check ADC status
+    if (!AdcReady()) {
+            printf("=");
+            //AdcReStartCycle();
+            //AdcInit();)
+            return;
+    }
      
     if (state == STATE_CALIBRATE) {
         static int cnt=0;
@@ -274,17 +279,17 @@ void MonitorPressureTask(void) { // Every 2 ms
         adcOffset  = (7*adcOffset + 8*tmp)/8; //
         tmp2 = GetPressureV_pa();
         adcVOffset = (7*adcVOffset + 8*tmp2)/8;
-
-        //cnt++;
-        //if (cnt==250) { // 500 ms
-        //    printf("\r\nC: %d %d %d %d\r\n", tmp, adcOffset/8, tmp2, adcVOffset/8);
-        //    cnt = 0;
+        AdcReStartCycle();
+        cnt++;
+        if (cnt==250) { // 500 ms
+            //printf("C: %d %d %d %d\r\n", tmp, adcOffset/8, tmp2, adcVOffset/8);
+            cnt = 0;
             //DisplayCalibrate(tmp, adcOffset, tmp2, adcVOffset);
-        //}
+        }
         //DisplayCalibrate(prFast, adcOffset);
         
         // Timer 0 restart conversion cycle
-        AdcReStartCycle();
+        
         return;
     } else {
         // Get pressure and filter 50 ms constant ( prFast) and 300 ms constant (prSlow)
@@ -309,11 +314,18 @@ void MonitorPressureTask(void) { // Every 2 ms
         ClearEPAboveSetAlarm();
         ClearIPBelowSetAlarm();
         ClearIPAboveSetAlarm();
+        ClearVAboveMaxAlarm();
+        ClearVBelowMinAlarm();
         ClearCircuitFailureAlarm();
         ClearGasFailureAlarm();
         alarmSV1=true;
         enableAlarms=false;
         return;
+    } else {
+        static int ecnt = 0;
+        ecnt++;
+        if (ecnt==0) printf("e\r\n");
+        ecnt= (ecnt+1)%1000;
     }
     
     // Pressure signal every 2 seconds
@@ -345,7 +357,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     if (ttAlarm>6*500) {
         if (enableAlarms) SetCircuitFailureAlarm();
     } else {
-        ClearCircuitFailureAlarm();
+        // ClearCircuitFailureAlarm(); // Latched alarm, Clear with Mute
     }
     // Only alarm after 15s after setting
     if (ttNoAlarm>15*500) {
@@ -371,7 +383,7 @@ void MonitorPressureTask(void) { // Every 2 ms
         
         // Correct limits in rare conditions
         if (loLimit<(targetLow+5*5)) {
-            printf("\r\nCorrected loLimit = %d (%d) \r\n", targetLow/5+5, loLimit/5);
+            //printf("\r\nCorrected loLimit = %d (%d) \r\n", targetLow/5+5, loLimit/5);
             loLimit = targetLow+5*5;
         }
             
@@ -383,7 +395,8 @@ void MonitorPressureTask(void) { // Every 2 ms
         pmax = maxPressure;
         pmin = minPressure;
         
-        if (pmax< targetLow) SetGasFailureAlarm();
+        if (pmax< targetLow && enableAlarms) SetGasFailureAlarm();
+        // else ClearGasFailureAlarm(); // Latched alarm. Clear with Mute
         
         // Reset maximum and minimum periodically
         //pLow = minPressure;
@@ -718,34 +731,38 @@ int16_t GetPressure_kpa (void) {
 int16_t GetPressure_pa (void) {
     
     adc_result_t adc = AdcGetData(ADC_ID_PRS);
-    
+    if (state == STATE_CALIBRATE) {
+        return adc;
+    }
     //printf("ADC: %d ", adc);
-    uint32_t mv = adc;
+    int32_t mv = adc - adcOffset/8;
     mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
     //printf("V: %d mV ", mv);
-    int32_t p32 = ((mv-200)*100)/45;
-    int16_t p = ((int16_t) p32)  - (state == STATE_CALIBRATE ? 0 : adcOffset/8); 
-    // if (p<0) p=0;
+    int32_t p32 = (mv*100)/45;
+    int16_t p = ((int16_t) p32); //  - (state == STATE_CALIBRATE ? 0 : adcOffset/8); 
+     if (p<0) p=0;
     return p;
 }
 
 int16_t GetPressureV_pa (void) {
     
     adc_result_t adc = AdcGetData(ADC_ID_VOL);
-    
+    //if (state == STATE_CALIBRATE) {
+    //    return adc;
+    //}    
     //printf("ADC: %d ", adc);
-    uint32_t mv = adc;
+    int32_t mv = adc;// - adcVOffset/8;
     mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
     //printf("V: %d mV ", mv);
     int16_t p = mv;
     p = p - 1000  - (state == STATE_CALIBRATE ? 0 : adcVOffset/8); // remove offset of 1V
-    // if (p<0) p=0;
+    //if (p<0 && state != STATE_CALIBRATE) p=0;
     return p;
 }
 
 int16_t Get12V (void) {
     adc_result_t adc = AdcGetData(ADC_ID_12V);
-    uint32_t mv = adc;
+    int32_t mv = adc;
     mv = ( mv*4096) / 4096;
     int16_t v12 = (mv*33)/10;
     return v12;

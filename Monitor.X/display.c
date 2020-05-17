@@ -16,8 +16,8 @@ char msg2[20]="";
 char msg3[20]="";
 char msg4[20]="";
 
-bool calibrate;
-bool enable = false;
+static bool calibrate;
+static bool enable = false;
 
 void InitDisplay(void) {
     LCDInit();
@@ -76,7 +76,7 @@ void ValueDisplay(void) {
     //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
     sprintf(msg1, "%2d%% %d.%02d %d.%02d %s", spr, etde,dtde, etdi, dtdi, calibrate? "Ca" : GetAlarmState() );
 //                   1234  56 78  90  12  3456  
-    sprintf(msg3, "%1d.%1d %2d %2d %2d %3d", er, dr, pe, pi, pmax, vol);
+    sprintf(msg3, "%1d%1d %2d %2d %2d %4d", er, dr, pe, pi, pmax, vol);
 //                   12  34 567 890 123456
     cnt++;
     cnt=cnt%10;
