@@ -31,7 +31,9 @@ void TestAlarm(int);
 char *GetAlarmState(void);
 void SetMaxPressure(int16_t);
 
-bool CircuitFailureAlarm(void);
+void ClearAllAlarm(void);
+
+//bool CircuitFailureAlarm(void);
 
 void SetBatteryFailAlarm(void);
 void SetMonitorFailAlarm(void);

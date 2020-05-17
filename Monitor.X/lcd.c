@@ -14,6 +14,8 @@ void LCDWrite4(uint8_t data);
 
 static bool LED = false;
 
+void LCDTest(void);
+
 
 void LCDInit (void) {
     TMR6_Start();
@@ -41,8 +43,10 @@ void LCDInit (void) {
     
     LCDMessage("Open Respirator");
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage("   AirVita");
+    LCDMessage("   AirVita     ");
     LCDWriteCmd(0x02);
+    __delay_ms(750);
+    LCDTest();
     /*
     LCDWriteCmd(0x02);
     __delay_ms(1000);
@@ -53,6 +57,28 @@ void LCDInit (void) {
     LCDMessage("                ");
     LCDWriteCmd(0x02);
     */
+}
+void LCDTest(void) {
+    LCDMessage12("0000000000000000","1111111111111111");
+    __delay_ms(750);
+    LCDMessage12("1111111111111111","2222222222222222");
+    __delay_ms(750);
+    LCDMessage12("2222222222222222","3333333333333333");
+    __delay_ms(750);
+    LCDMessage12("3333333333333333","4444444444444444");
+    __delay_ms(750);
+    LCDMessage12("4444444444444444","5555555555555555");
+    __delay_ms(750);
+    LCDMessage12("5555555555555555","6666666666666666");
+    __delay_ms(750);
+    LCDMessage12("6666666666666666","7777777777777777");
+    __delay_ms(750);
+    LCDMessage12("7777777777777777","8888888888888888");
+    __delay_ms(750);
+    LCDMessage12("8888888888888888","9999999999999999");
+    __delay_ms(750);
+    LCDMessage12("9999999999999999","0000000000000000");
+    
 }
 
 void LCDOff(void) {

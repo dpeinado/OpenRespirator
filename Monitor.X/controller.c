@@ -59,6 +59,16 @@ void UpdateState(void) {
             //printf("\r\nFlow: %d pa Pressure: %d pa\r\n", GetPressureV_pa(), GetPressure_pa());
         }
     }
+    if (msg.cntMsg.state & STATE_SLEEP) {
+        LCDOff();
+        ClearAllAlarm();
+        MonitorDisable();
+        DisplayDisable();
+        printf("\r\n SLEEP MODE\r\n");
+    } else {
+        LCDOn();
+    }
+    
     run = (msg.cntMsg.state & STATE_RUN) == STATE_RUN;
     //if (run) printf("R\r\n");
     if (run) SetSV1(true);
@@ -70,10 +80,7 @@ void UpdateState(void) {
     SetTarget(msg.cntMsg.pmax & 0x7F, msg.cntMsg.ip & 0x3F, msg.cntMsg.ep & 0x3F, msg.cntMsg.bpm & 0x3F, (msg.cntMsg.vhigh&0x7F)*20, (msg.cntMsg.vlow&0x7F)*20);
     SetMaxPressure(msg.cntMsg.pmax & 0x7F);
     
-    if (msg.cntMsg.state & STATE_SLEEP) {
-        LCDOff(); 
-        //printf("\r\n SLEEP MODE\r\n");
-    } else { LCDOn(); }
+
     spr = msg.cntMsg.spr;
     
     static int cnt=0;
