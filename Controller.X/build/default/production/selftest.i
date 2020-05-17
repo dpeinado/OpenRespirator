@@ -28194,6 +28194,7 @@ void screenMng(void);
 
   extern time_t monTstamp;
   extern i2c2_error_t lastI2CMonTrfResponse;
+  extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
 
   void MonitorInit(void);
   void MonitorErrorSet(monErrorT flag);
@@ -28256,6 +28257,7 @@ _Bool PrintStrBusy(void);
 # 16 "selftest.c" 2
 
 uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
+int16_t vddValMean;
 
 typedef enum
   {

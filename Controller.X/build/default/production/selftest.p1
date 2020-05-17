@@ -4,8 +4,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "25 ./time.h
 [; ;./time.h: 25: time_t timeGet(void);
 [v _timeGet `(us ~T0 @X0 0 ef ]
-"43 selftest.c
-[; ;selftest.c: 43:         if (aCaptGetResult(MainPSensor, &mPVal)) {
+"44 selftest.c
+[; ;selftest.c: 44:         if (aCaptGetResult(MainPSensor, &mPVal)) {
 [c E16736 0 1 2 3 4 5 6 .. ]
 [n E16736 . MainPSensor VolPSensor VddSensor Flt0PSensor Flt1PSensor Flt2PSensor Flt3PSensor  ]
 "37 ./aCapture.h
@@ -66,16 +66,16 @@ Version 4.0 HI-TECH Software Intermediate Code
 "40
 [; ;./aCapture.h: 40: void aCaptRstFlt(aSrcTyp sel);
 [v _aCaptRstFlt `(v ~T0 @X0 0 ef1`E16736 ]
-"108 selftest.c
-[; ;selftest.c: 108: _Bool flowChk(fchk_val flowVal){
-[c E16913 0 1 2 .. ]
-[n E16913 . FCHK_LOW FCHK_MED FCHK_HIGH  ]
-"122
-[; ;selftest.c: 122:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
+"109 selftest.c
+[; ;selftest.c: 109: _Bool flowChk(fchk_val flowVal){
+[c E16923 0 1 2 .. ]
+[n E16923 . FCHK_LOW FCHK_MED FCHK_HIGH  ]
+"123
+[; ;selftest.c: 123:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
 [c E16835 32 64 96 128 160 0 16 20 8 .. ]
 [n E16835 . MONSTATE_INIT MONSTATE_CALP MONSTATE_SV2CHK MONSTATE_SV1CHK MONSTATE_CALF MONSTATE_STOP MONSTATE_RUNP MONSTATE_RUNV MONSTATE_SLEEP  ]
-"67 ./monComm.h
-[; ;./monComm.h: 67:   _Bool MonitorMsgSendBlock(monStateT state);
+"68 ./monComm.h
+[; ;./monComm.h: 68:   _Bool MonitorMsgSendBlock(monStateT state);
 [v _MonitorMsgSendBlock `(a ~T0 @X0 0 ef1`E16835 ]
 "19 ./vMeasure.h
 [; ;./vMeasure.h: 19: void vMeasureRst(void);
@@ -86,16 +86,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 "35 ./aCapture.h
 [; ;./aCapture.h: 35: int16_t aCaptureOffGet(aSrcTyp sel);
 [v _aCaptureOffGet `(s ~T0 @X0 0 ef1`E16736 ]
-"214 selftest.c
-[; ;selftest.c: 214:   ctrlStatus = CTRL_UNCAL;
+"215 selftest.c
+[; ;selftest.c: 215:   ctrlStatus = CTRL_UNCAL;
 [c E16760 0 1 2 3 .. ]
 [n E16760 . CTRL_UNCAL CTRL_STOP CTRL_RUN CTRL_SLEEP  ]
 "115 ./ORespGlobal.h
 [; ;./ORespGlobal.h: 115:     extern ctrlStatusT ctrlStatus;
 [v _ctrlStatus `E16760 ~T0 @X0 0 e ]
-"126
-[; ;./ORespGlobal.h: 126:     extern int16_t vddValMean;
-[v _vddValMean `s ~T0 @X0 0 e ]
 "46068 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 46068:     struct {
 [s S2082 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -2372,1135 +2369,1138 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _freeFlowRateF `us ~T0 @X0 1 e ]
 [v _freeFlowRateM `us ~T0 @X0 1 e ]
 [v _freeFlowRateL `us ~T0 @X0 1 e ]
-"26
-[; ;selftest.c: 26: _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
+"18
+[; ;selftest.c: 18: int16_t vddValMean;
+[v _vddValMean `s ~T0 @X0 1 e ]
+"27
+[; ;selftest.c: 27: _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
 [v _pressureSensorChk `(a ~T0 @X0 1 ef2`a`us ]
 {
 [e :U _pressureSensorChk ]
 [v _offsetCal `a ~T0 @X0 1 r1 ]
 [v _time `us ~T0 @X0 1 r2 ]
 [f ]
-"27
-[; ;selftest.c: 27:     int16_t mPVal, mPValMax, mPValMin;
+"28
+[; ;selftest.c: 28:     int16_t mPVal, mPValMax, mPValMin;
 [v _mPVal `s ~T0 @X0 1 a ]
 [v _mPValMax `s ~T0 @X0 1 a ]
 [v _mPValMin `s ~T0 @X0 1 a ]
-"28
-[; ;selftest.c: 28:     int32_t mPValMean, aPValMean;
+"29
+[; ;selftest.c: 29:     int32_t mPValMean, aPValMean;
 [v _mPValMean `l ~T0 @X0 1 a ]
 [v _aPValMean `l ~T0 @X0 1 a ]
-"29
-[; ;selftest.c: 29:     int16_t aPVal, aPValMax, aPValMin;
+"30
+[; ;selftest.c: 30:     int16_t aPVal, aPValMax, aPValMin;
 [v _aPVal `s ~T0 @X0 1 a ]
 [v _aPValMax `s ~T0 @X0 1 a ]
 [v _aPValMin `s ~T0 @X0 1 a ]
-"30
-[; ;selftest.c: 30:     time_t tstamp;
-[v _tstamp `us ~T0 @X0 1 a ]
 "31
-[; ;selftest.c: 31:     _Bool chkResult;
+[; ;selftest.c: 31:     time_t tstamp;
+[v _tstamp `us ~T0 @X0 1 a ]
+"32
+[; ;selftest.c: 32:     _Bool chkResult;
 [v _chkResult `a ~T0 @X0 1 a ]
-"33
-[; ;selftest.c: 33:     chkResult = 1;
+"34
+[; ;selftest.c: 34:     chkResult = 1;
 [e = _chkResult -> -> 1 `i `a ]
-"36
-[; ;selftest.c: 36:     mPValMin = 4096;
-[e = _mPValMin -> -> 4096 `i `s ]
 "37
-[; ;selftest.c: 37:     aPValMin = 4096;
-[e = _aPValMin -> -> 4096 `i `s ]
+[; ;selftest.c: 37:     mPValMin = 4096;
+[e = _mPValMin -> -> 4096 `i `s ]
 "38
-[; ;selftest.c: 38:     mPValMax = 0;
-[e = _mPValMax -> -> 0 `i `s ]
+[; ;selftest.c: 38:     aPValMin = 4096;
+[e = _aPValMin -> -> 4096 `i `s ]
 "39
-[; ;selftest.c: 39:     aPValMax = 0;
-[e = _aPValMax -> -> 0 `i `s ]
+[; ;selftest.c: 39:     mPValMax = 0;
+[e = _mPValMax -> -> 0 `i `s ]
 "40
-[; ;selftest.c: 40:     tstamp = timeGet();
+[; ;selftest.c: 40:     aPValMax = 0;
+[e = _aPValMax -> -> 0 `i `s ]
+"41
+[; ;selftest.c: 41:     tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
-"42
-[; ;selftest.c: 42:     while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
+"43
+[; ;selftest.c: 43:     while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
 [e $U 2234  ]
 [e :U 2235 ]
 {
-"43
-[; ;selftest.c: 43:         if (aCaptGetResult(MainPSensor, &mPVal)) {
+"44
+[; ;selftest.c: 44:         if (aCaptGetResult(MainPSensor, &mPVal)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E16736 0 &U _mPVal `i -> 0 `i 2237  ]
 {
-"44
-[; ;selftest.c: 44:             if (mPVal > mPValMax) {
+"45
+[; ;selftest.c: 45:             if (mPVal > mPValMax) {
 [e $ ! > -> _mPVal `i -> _mPValMax `i 2238  ]
 {
-"45
-[; ;selftest.c: 45:                 mPValMax = mPVal;
-[e = _mPValMax _mPVal ]
 "46
-[; ;selftest.c: 46:             }
+[; ;selftest.c: 46:                 mPValMax = mPVal;
+[e = _mPValMax _mPVal ]
+"47
+[; ;selftest.c: 47:             }
 }
 [e :U 2238 ]
-"47
-[; ;selftest.c: 47:             if (mPVal < mPValMin) {
+"48
+[; ;selftest.c: 48:             if (mPVal < mPValMin) {
 [e $ ! < -> _mPVal `i -> _mPValMin `i 2239  ]
 {
-"48
-[; ;selftest.c: 48:                 mPValMin = mPVal;
-[e = _mPValMin _mPVal ]
 "49
-[; ;selftest.c: 49:             }
+[; ;selftest.c: 49:                 mPValMin = mPVal;
+[e = _mPValMin _mPVal ]
+"50
+[; ;selftest.c: 50:             }
 }
 [e :U 2239 ]
-"50
-[; ;selftest.c: 50:             mPValMean = (31*mPValMean + 32*mPVal)>>5;
-[e = _mPValMean >> + * -> -> 31 `i `l _mPValMean -> * -> 32 `i -> _mPVal `i `l -> 5 `i ]
 "51
-[; ;selftest.c: 51:         } else {
+[; ;selftest.c: 51:             mPValMean = (31*mPValMean + 32*mPVal)>>5;
+[e = _mPValMean >> + * -> -> 31 `i `l _mPValMean -> * -> 32 `i -> _mPVal `i `l -> 5 `i ]
+"52
+[; ;selftest.c: 52:         } else {
 }
 [e $U 2240  ]
 [e :U 2237 ]
 {
-"52
-[; ;selftest.c: 52:             LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",20);
+"53
+[; ;selftest.c: 53:             LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",20);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 1C -> 20 `i ]
-"53
-[; ;selftest.c: 53:             chkResult = 0;
-[e = _chkResult -> -> 0 `i `a ]
 "54
-[; ;selftest.c: 54:         }
+[; ;selftest.c: 54:             chkResult = 0;
+[e = _chkResult -> -> 0 `i `a ]
+"55
+[; ;selftest.c: 55:         }
 }
 [e :U 2240 ]
-"56
-[; ;selftest.c: 56:         if (aCaptGetResult(VolPSensor, &aPVal)) {
+"57
+[; ;selftest.c: 57:         if (aCaptGetResult(VolPSensor, &aPVal)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E16736 1 &U _aPVal `i -> 0 `i 2241  ]
 {
-"57
-[; ;selftest.c: 57:             if (aPVal > aPValMax) {
+"58
+[; ;selftest.c: 58:             if (aPVal > aPValMax) {
 [e $ ! > -> _aPVal `i -> _aPValMax `i 2242  ]
 {
-"58
-[; ;selftest.c: 58:                 aPValMax = aPVal;
-[e = _aPValMax _aPVal ]
 "59
-[; ;selftest.c: 59:             }
+[; ;selftest.c: 59:                 aPValMax = aPVal;
+[e = _aPValMax _aPVal ]
+"60
+[; ;selftest.c: 60:             }
 }
 [e :U 2242 ]
-"60
-[; ;selftest.c: 60:             if (aPVal < aPValMin) {
+"61
+[; ;selftest.c: 61:             if (aPVal < aPValMin) {
 [e $ ! < -> _aPVal `i -> _aPValMin `i 2243  ]
 {
-"61
-[; ;selftest.c: 61:                 aPValMin = aPVal;
-[e = _aPValMin _aPVal ]
 "62
-[; ;selftest.c: 62:             }
+[; ;selftest.c: 62:                 aPValMin = aPVal;
+[e = _aPValMin _aPVal ]
+"63
+[; ;selftest.c: 63:             }
 }
 [e :U 2243 ]
-"63
-[; ;selftest.c: 63:             aPValMean = (31*aPValMean + 32*aPVal)>>5;
-[e = _aPValMean >> + * -> -> 31 `i `l _aPValMean -> * -> 32 `i -> _aPVal `i `l -> 5 `i ]
 "64
-[; ;selftest.c: 64:         } else {
+[; ;selftest.c: 64:             aPValMean = (31*aPValMean + 32*aPVal)>>5;
+[e = _aPValMean >> + * -> -> 31 `i `l _aPValMean -> * -> 32 `i -> _aPVal `i `l -> 5 `i ]
+"65
+[; ;selftest.c: 65:         } else {
 }
 [e $U 2244  ]
 [e :U 2241 ]
 {
-"65
-[; ;selftest.c: 65:             chkResult = 0;
-[e = _chkResult -> -> 0 `i `a ]
 "66
-[; ;selftest.c: 66:             LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",21);
+[; ;selftest.c: 66:             chkResult = 0;
+[e = _chkResult -> -> 0 `i `a ]
+"67
+[; ;selftest.c: 67:             LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",21);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 2C -> 21 `i ]
-"67
-[; ;selftest.c: 67:         }
+"68
+[; ;selftest.c: 68:         }
 }
 [e :U 2244 ]
-"68
-[; ;selftest.c: 68:     }
+"69
+[; ;selftest.c: 69:     }
 }
 [e :U 2234 ]
-"42
-[; ;selftest.c: 42:     while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
+"43
+[; ;selftest.c: 43:     while (!timeElapsedR(&tstamp, ((time_t) time*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> _time `ui -> -> 1 `i `ui `us `i -> 0 `i 2235  ]
 [e :U 2236 ]
-"71
-[; ;selftest.c: 71:     mPValMean = mPValMean>>5;
-[e = _mPValMean >> _mPValMean -> 5 `i ]
 "72
-[; ;selftest.c: 72:     aPValMean = aPValMean>>5;
-[e = _aPValMean >> _aPValMean -> 5 `i ]
+[; ;selftest.c: 72:     mPValMean = mPValMean>>5;
+[e = _mPValMean >> _mPValMean -> 5 `i ]
 "73
-[; ;selftest.c: 73:     sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
-[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 3C _mPValMean _aPValMean ]
+[; ;selftest.c: 73:     aPValMean = aPValMean>>5;
+[e = _aPValMean >> _aPValMean -> 5 `i ]
 "74
-[; ;selftest.c: 74:     printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
-[e ( _printf , , , (. :s 4C -> _mPValMin `i -> _mPValMax `i _mPValMean ]
+[; ;selftest.c: 74:     sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
+[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 3C _mPValMean _aPValMean ]
 "75
-[; ;selftest.c: 75:     printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
-[e ( _printf , , , (. :s 5C -> _aPValMin `i -> _aPValMax `i _aPValMean ]
+[; ;selftest.c: 75:     printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+[e ( _printf , , , (. :s 4C -> _mPValMin `i -> _mPValMax `i _mPValMean ]
 "76
-[; ;selftest.c: 76:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 76:     printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
+[e ( _printf , , , (. :s 5C -> _aPValMin `i -> _aPValMax `i _aPValMean ]
 "77
-[; ;selftest.c: 77:     printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+[; ;selftest.c: 77:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "78
-[; ;selftest.c: 78:     timeDelayMs(1000);
+[; ;selftest.c: 78:     printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+"79
+[; ;selftest.c: 79:     timeDelayMs(1000);
 [e ( _timeDelayMs (1 -> -> 1000 `i `us ]
-"81
-[; ;selftest.c: 81:     if (offsetCal) {
+"82
+[; ;selftest.c: 82:     if (offsetCal) {
 [e $ ! != -> _offsetCal `i -> 0 `i 2245  ]
 {
-"82
-[; ;selftest.c: 82:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean < 40) || (aPValMean < 600) || (aPValMean > 1030)) {
+"83
+[; ;selftest.c: 83:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 350) || (mPValMean < 40) || (aPValMean < 600) || (aPValMean > 1030)) {
 [e $ ! || || || || || > - -> _aPValMax `i -> _aPValMin `i -> 16 `i > - -> _mPValMax `i -> _mPValMin `i -> 16 `i > _mPValMean -> -> 350 `i `l < _mPValMean -> -> 40 `i `l < _aPValMean -> -> 600 `i `l > _aPValMean -> -> 1030 `i `l 2246  ]
 {
-"84
-[; ;selftest.c: 84:             setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "85
-[; ;selftest.c: 85:             chkResult = 0;
-[e = _chkResult -> -> 0 `i `a ]
+[; ;selftest.c: 85:             setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "86
-[; ;selftest.c: 86:             printf ("PRESSURE CALIBRATION ERROR\n");
-[e ( _printf :s 6C ]
+[; ;selftest.c: 86:             chkResult = 0;
+[e = _chkResult -> -> 0 `i `a ]
 "87
-[; ;selftest.c: 87:         } else {
+[; ;selftest.c: 87:             printf ("PRESSURE CALIBRATION ERROR\n");
+[e ( _printf :s 6C ]
+"88
+[; ;selftest.c: 88:         } else {
 }
 [e $U 2247  ]
 [e :U 2246 ]
 {
-"89
-[; ;selftest.c: 89:             aCaptureOffSet(MainPSensor, mPValMean);
-[e ( _aCaptureOffSet (2 , . `E16736 0 -> _mPValMean `s ]
 "90
-[; ;selftest.c: 90:             aCaptureOffSet(VolPSensor, aPValMean);
+[; ;selftest.c: 90:             aCaptureOffSet(MainPSensor, mPValMean);
+[e ( _aCaptureOffSet (2 , . `E16736 0 -> _mPValMean `s ]
+"91
+[; ;selftest.c: 91:             aCaptureOffSet(VolPSensor, aPValMean);
 [e ( _aCaptureOffSet (2 , . `E16736 1 -> _aPValMean `s ]
-"92
-[; ;selftest.c: 92:             aCaptRstFlt(Flt0PSensor);
-[e ( _aCaptRstFlt (1 . `E16736 3 ]
 "93
-[; ;selftest.c: 93:             aCaptRstFlt(Flt1PSensor);
-[e ( _aCaptRstFlt (1 . `E16736 4 ]
+[; ;selftest.c: 93:             aCaptRstFlt(Flt0PSensor);
+[e ( _aCaptRstFlt (1 . `E16736 3 ]
 "94
-[; ;selftest.c: 94:             aCaptRstFlt(Flt2PSensor);
-[e ( _aCaptRstFlt (1 . `E16736 5 ]
+[; ;selftest.c: 94:             aCaptRstFlt(Flt1PSensor);
+[e ( _aCaptRstFlt (1 . `E16736 4 ]
 "95
-[; ;selftest.c: 95:             aCaptRstFlt(Flt3PSensor);
-[e ( _aCaptRstFlt (1 . `E16736 6 ]
+[; ;selftest.c: 95:             aCaptRstFlt(Flt2PSensor);
+[e ( _aCaptRstFlt (1 . `E16736 5 ]
 "96
-[; ;selftest.c: 96:             timeDelayMs(50);
-[e ( _timeDelayMs (1 -> -> 50 `i `us ]
+[; ;selftest.c: 96:             aCaptRstFlt(Flt3PSensor);
+[e ( _aCaptRstFlt (1 . `E16736 6 ]
 "97
-[; ;selftest.c: 97:         }
+[; ;selftest.c: 97:             timeDelayMs(50);
+[e ( _timeDelayMs (1 -> -> 50 `i `us ]
+"98
+[; ;selftest.c: 98:         }
 }
 [e :U 2247 ]
-"98
-[; ;selftest.c: 98:     } else {
+"99
+[; ;selftest.c: 99:     } else {
 }
 [e $U 2248  ]
 [e :U 2245 ]
 {
-"99
-[; ;selftest.c: 99:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
+"100
+[; ;selftest.c: 100:         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
 [e $ ! || || || || || > - -> _aPValMax `i -> _aPValMin `i -> 16 `i > - -> _mPValMax `i -> _mPValMin `i -> 16 `i > _mPValMean -> -> 10 `i `l < _mPValMean -> -U -> 10 `i `l < _aPValMean -> -U -> 10 `i `l > _aPValMean -> -> 10 `i `l 2249  ]
 {
-"100
-[; ;selftest.c: 100:             printf ("VALVE CHECK ERROR\n");
-[e ( _printf :s 7C ]
 "101
-[; ;selftest.c: 101:             chkResult = 0;
-[e = _chkResult -> -> 0 `i `a ]
+[; ;selftest.c: 101:             printf ("VALVE CHECK ERROR\n");
+[e ( _printf :s 7C ]
 "102
-[; ;selftest.c: 102:         }
+[; ;selftest.c: 102:             chkResult = 0;
+[e = _chkResult -> -> 0 `i `a ]
+"103
+[; ;selftest.c: 103:         }
 }
 [e :U 2249 ]
-"103
-[; ;selftest.c: 103:     }
+"104
+[; ;selftest.c: 104:     }
 }
 [e :U 2248 ]
-"104
-[; ;selftest.c: 104:     return chkResult;
+"105
+[; ;selftest.c: 105:     return chkResult;
 [e ) _chkResult ]
 [e $UE 2233  ]
-"105
-[; ;selftest.c: 105: }
+"106
+[; ;selftest.c: 106: }
 [e :UE 2233 ]
 }
-"108
-[; ;selftest.c: 108: _Bool flowChk(fchk_val flowVal){
-[v _flowChk `(a ~T0 @X0 1 ef1`E16913 ]
+"109
+[; ;selftest.c: 109: _Bool flowChk(fchk_val flowVal){
+[v _flowChk `(a ~T0 @X0 1 ef1`E16923 ]
 {
 [e :U _flowChk ]
-[v _flowVal `E16913 ~T0 @X0 1 r1 ]
+[v _flowVal `E16923 ~T0 @X0 1 r1 ]
 [f ]
-"109
-[; ;selftest.c: 109:   int16_t aPVal, aPValMax, aPValMin, aPValMean;
+"110
+[; ;selftest.c: 110:   int16_t aPVal, aPValMax, aPValMin, aPValMean;
 [v _aPVal `s ~T0 @X0 1 a ]
 [v _aPValMax `s ~T0 @X0 1 a ]
 [v _aPValMin `s ~T0 @X0 1 a ]
 [v _aPValMean `s ~T0 @X0 1 a ]
-"110
-[; ;selftest.c: 110:   int16_t minFlowL, maxFlowL;
+"111
+[; ;selftest.c: 111:   int16_t minFlowL, maxFlowL;
 [v _minFlowL `s ~T0 @X0 1 a ]
 [v _maxFlowL `s ~T0 @X0 1 a ]
-"111
-[; ;selftest.c: 111:   _Bool initOk;
-[v _initOk `a ~T0 @X0 1 a ]
 "112
-[; ;selftest.c: 112:   time_t tstamp;
+[; ;selftest.c: 112:   _Bool initOk;
+[v _initOk `a ~T0 @X0 1 a ]
+"113
+[; ;selftest.c: 113:   time_t tstamp;
 [v _tstamp `us ~T0 @X0 1 a ]
-"114
-[; ;selftest.c: 114:   initOk = 1;
+"115
+[; ;selftest.c: 115:   initOk = 1;
 [e = _initOk -> -> 1 `i `a ]
-"117
-[; ;selftest.c: 117:   setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "118
-[; ;selftest.c: 118:   printstrblock("FLOW RATE        ");
-[e ( _printstrblock (1 :s 8C ]
+[; ;selftest.c: 118:   setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "119
-[; ;selftest.c: 119:   aPValMin = 4096;
-[e = _aPValMin -> -> 4096 `i `s ]
+[; ;selftest.c: 119:   printstrblock("FLOW RATE        ");
+[e ( _printstrblock (1 :s 8C ]
 "120
-[; ;selftest.c: 120:   aPValMax = 0;
+[; ;selftest.c: 120:   aPValMin = 4096;
+[e = _aPValMin -> -> 4096 `i `s ]
+"121
+[; ;selftest.c: 121:   aPValMax = 0;
 [e = _aPValMax -> -> 0 `i `s ]
-"122
-[; ;selftest.c: 122:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
+"123
+[; ;selftest.c: 123:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 4 `i -> 0 `i 2251  ]
 {
-"123
-[; ;selftest.c: 123:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "124
-[; ;selftest.c: 124:     printf ("Mon error");
-[e ( _printf :s 9C ]
+[; ;selftest.c: 124:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "125
-[; ;selftest.c: 125:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 125:     printf ("Mon error");
+[e ( _printf :s 9C ]
 "126
-[; ;selftest.c: 126:     printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 10C ]
+[; ;selftest.c: 126:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "127
-[; ;selftest.c: 127:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 127:     printstrblock("MONITOR ERROR");
+[e ( _printstrblock (1 :s 10C ]
 "128
-[; ;selftest.c: 128:   }
+[; ;selftest.c: 128:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"129
+[; ;selftest.c: 129:   }
 }
 [e :U 2251 ]
-"131
-[; ;selftest.c: 131:   switch (flowVal) {
+"132
+[; ;selftest.c: 132:   switch (flowVal) {
 [e $U 2253  ]
 {
-"132
-[; ;selftest.c: 132:   case FCHK_LOW:
-[e :U 2254 ]
 "133
-[; ;selftest.c: 133:     LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+[; ;selftest.c: 133:   case FCHK_LOW:
+[e :U 2254 ]
+"134
+[; ;selftest.c: 134:     LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"134
-[; ;selftest.c: 134:     minFlowL = 250;
-[e = _minFlowL -> -> 250 `i `s ]
 "135
-[; ;selftest.c: 135:     break;
-[e $U 2252  ]
+[; ;selftest.c: 135:     minFlowL = 250;
+[e = _minFlowL -> -> 250 `i `s ]
 "136
-[; ;selftest.c: 136:   case FCHK_MED:
-[e :U 2255 ]
+[; ;selftest.c: 136:     break;
+[e $U 2252  ]
 "137
-[; ;selftest.c: 137:     LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[; ;selftest.c: 137:   case FCHK_MED:
+[e :U 2255 ]
+"138
+[; ;selftest.c: 138:     LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
-"138
-[; ;selftest.c: 138:     minFlowL = 400;
-[e = _minFlowL -> -> 400 `i `s ]
 "139
-[; ;selftest.c: 139:     break;
-[e $U 2252  ]
+[; ;selftest.c: 139:     minFlowL = 400;
+[e = _minFlowL -> -> 400 `i `s ]
 "140
-[; ;selftest.c: 140:   case FCHK_HIGH:
-[e :U 2256 ]
+[; ;selftest.c: 140:     break;
+[e $U 2252  ]
 "141
-[; ;selftest.c: 141:     LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+[; ;selftest.c: 141:   case FCHK_HIGH:
+[e :U 2256 ]
+"142
+[; ;selftest.c: 142:     LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
-"142
-[; ;selftest.c: 142:     minFlowL = 600;
-[e = _minFlowL -> -> 600 `i `s ]
 "143
-[; ;selftest.c: 143:     break;
-[e $U 2252  ]
+[; ;selftest.c: 143:     minFlowL = 600;
+[e = _minFlowL -> -> 600 `i `s ]
 "144
-[; ;selftest.c: 144:   }
+[; ;selftest.c: 144:     break;
+[e $U 2252  ]
+"145
+[; ;selftest.c: 145:   }
 }
 [e $U 2252  ]
 [e :U 2253 ]
-[e [\ -> _flowVal `ui , $ -> . `E16913 0 `ui 2254
- , $ -> . `E16913 1 `ui 2255
- , $ -> . `E16913 2 `ui 2256
+[e [\ -> _flowVal `ui , $ -> . `E16923 0 `ui 2254
+ , $ -> . `E16923 1 `ui 2255
+ , $ -> . `E16923 2 `ui 2256
  2252 ]
 [e :U 2252 ]
-"145
-[; ;selftest.c: 145:   maxFlowL = 2*minFlowL;
-[e = _maxFlowL -> * -> 2 `i -> _minFlowL `i `s ]
 "146
-[; ;selftest.c: 146:   LATAbits.LATA3 = 1;
+[; ;selftest.c: 146:   maxFlowL = 2*minFlowL;
+[e = _maxFlowL -> * -> 2 `i -> _minFlowL `i `s ]
+"147
+[; ;selftest.c: 147:   LATAbits.LATA3 = 1;
 [e = . . _LATAbits 0 3 -> -> 1 `i `uc ]
-"148
-[; ;selftest.c: 148:   timeDelayMs(250);
-[e ( _timeDelayMs (1 -> -> 250 `i `us ]
 "149
-[; ;selftest.c: 149:   vMeasureRst();
-[e ( _vMeasureRst ..  ]
+[; ;selftest.c: 149:   timeDelayMs(250);
+[e ( _timeDelayMs (1 -> -> 250 `i `us ]
 "150
-[; ;selftest.c: 150:   tstamp = timeGet();
-[e = _tstamp ( _timeGet ..  ]
+[; ;selftest.c: 150:   vMeasureRst();
+[e ( _vMeasureRst ..  ]
 "151
-[; ;selftest.c: 151:   while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+[; ;selftest.c: 151:   tstamp = timeGet();
+[e = _tstamp ( _timeGet ..  ]
+"152
+[; ;selftest.c: 152:   while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
 [e $U 2257  ]
 [e :U 2258 ]
 {
-"152
-[; ;selftest.c: 152:     aCaptGetResult(VolPSensor, &aPVal);
-[e ( _aCaptGetResult (2 , . `E16736 1 &U _aPVal ]
 "153
-[; ;selftest.c: 153:     if (aPVal > aPValMax) {
+[; ;selftest.c: 153:     aCaptGetResult(VolPSensor, &aPVal);
+[e ( _aCaptGetResult (2 , . `E16736 1 &U _aPVal ]
+"154
+[; ;selftest.c: 154:     if (aPVal > aPValMax) {
 [e $ ! > -> _aPVal `i -> _aPValMax `i 2260  ]
 {
-"154
-[; ;selftest.c: 154:       aPValMax = aPVal;
-[e = _aPValMax _aPVal ]
 "155
-[; ;selftest.c: 155:     }
+[; ;selftest.c: 155:       aPValMax = aPVal;
+[e = _aPValMax _aPVal ]
+"156
+[; ;selftest.c: 156:     }
 }
 [e :U 2260 ]
-"156
-[; ;selftest.c: 156:     if (aPVal < aPValMin) {
+"157
+[; ;selftest.c: 157:     if (aPVal < aPValMin) {
 [e $ ! < -> _aPVal `i -> _aPValMin `i 2261  ]
 {
-"157
-[; ;selftest.c: 157:       aPValMin = aPVal;
-[e = _aPValMin _aPVal ]
 "158
-[; ;selftest.c: 158:     }
+[; ;selftest.c: 158:       aPValMin = aPVal;
+[e = _aPValMin _aPVal ]
+"159
+[; ;selftest.c: 159:     }
 }
 [e :U 2261 ]
-"159
-[; ;selftest.c: 159:   }
+"160
+[; ;selftest.c: 160:   }
 }
 [e :U 2257 ]
-"151
-[; ;selftest.c: 151:   while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
+"152
+[; ;selftest.c: 152:   while (!timeElapsedR(&tstamp, ((time_t) 250*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 250 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2258  ]
 [e :U 2259 ]
-"161
-[; ;selftest.c: 161:   freeFlowRateL = vMeasureGet()<<2;
-[e = _freeFlowRateL -> << -> ( _vMeasureGet ..  `ui -> 2 `i `us ]
 "162
-[; ;selftest.c: 162:   if (!MonitorMsgSendBlock(MONSTATE_STOP)){
+[; ;selftest.c: 162:   freeFlowRateL = vMeasureGet()<<2;
+[e = _freeFlowRateL -> << -> ( _vMeasureGet ..  `ui -> 2 `i `us ]
+"163
+[; ;selftest.c: 163:   if (!MonitorMsgSendBlock(MONSTATE_STOP)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 5 `i -> 0 `i 2262  ]
 {
-"163
-[; ;selftest.c: 163:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "164
-[; ;selftest.c: 164:     printf ("Mon error");
-[e ( _printf :s 11C ]
+[; ;selftest.c: 164:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "165
-[; ;selftest.c: 165:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 165:     printf ("Mon error");
+[e ( _printf :s 11C ]
 "166
-[; ;selftest.c: 166:     printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 12C ]
+[; ;selftest.c: 166:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "167
-[; ;selftest.c: 167:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 167:     printstrblock("MONITOR ERROR");
+[e ( _printstrblock (1 :s 12C ]
 "168
-[; ;selftest.c: 168:   }
+[; ;selftest.c: 168:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"169
+[; ;selftest.c: 169:   }
 }
 [e :U 2262 ]
-"169
-[; ;selftest.c: 169:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+"170
+[; ;selftest.c: 170:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"170
-[; ;selftest.c: 170:   LATAbits.LATA3 = 0;
+"171
+[; ;selftest.c: 171:   LATAbits.LATA3 = 0;
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
-"172
-[; ;selftest.c: 172:   aPValMean=aCaptureOffGet(VolPSensor);
+"173
+[; ;selftest.c: 173:   aPValMean=aCaptureOffGet(VolPSensor);
 [e = _aPValMean ( _aCaptureOffGet (1 . `E16736 1 ]
-"174
-[; ;selftest.c: 174:   if ((aPValMean + aPValMax)>= (0.95*8192)) {
+"175
+[; ;selftest.c: 175:   if ((aPValMean + aPValMax)>= (0.95*8192)) {
 [e $ ! >= -> + -> _aPValMean `i -> _aPValMax `i `d * .0.95 -> -> 8192 `i `d 2263  ]
 {
-"176
-[; ;selftest.c: 176:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "177
-[; ;selftest.c: 177:     printstrblock("FLOW TOO HIGH   ");
-[e ( _printstrblock (1 :s 13C ]
+[; ;selftest.c: 177:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "178
-[; ;selftest.c: 178:     timeDelayMs(1000);
-[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+[; ;selftest.c: 178:     printstrblock("FLOW TOO HIGH   ");
+[e ( _printstrblock (1 :s 13C ]
 "179
-[; ;selftest.c: 179:     initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 179:     timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
 "180
-[; ;selftest.c: 180:   } else {
+[; ;selftest.c: 180:     initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"181
+[; ;selftest.c: 181:   } else {
 }
 [e $U 2264  ]
 [e :U 2263 ]
 {
-"181
-[; ;selftest.c: 181:     sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateL) / 1000));
-[e ( _sprintf (1 , (. , &U _lcdTopRow :s 14C -> -> / * -> -> 60 `i `ul -> _freeFlowRateL `ul -> -> -> 1000 `i `l `ul `s `i ]
 "182
-[; ;selftest.c: 182:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 182:     sprintf(lcdTopRow, "FLOW: % 3d L/min ", (int16_t) ((uint32_t) ((uint32_t) 60 * freeFlowRateL) / 1000));
+[e ( _sprintf (1 , (. , &U _lcdTopRow :s 14C -> -> / * -> -> 60 `i `ul -> _freeFlowRateL `ul -> -> -> 1000 `i `l `ul `s `i ]
 "183
-[; ;selftest.c: 183:     printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+[; ;selftest.c: 183:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "184
-[; ;selftest.c: 184:     timeDelayMs(4000);
+[; ;selftest.c: 184:     printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+"185
+[; ;selftest.c: 185:     timeDelayMs(4000);
 [e ( _timeDelayMs (1 -> -> 4000 `i `us ]
-"186
-[; ;selftest.c: 186:     if (freeFlowRateL < minFlowL) {
+"187
+[; ;selftest.c: 187:     if (freeFlowRateL < minFlowL) {
 [e $ ! < -> _freeFlowRateL `ui -> _minFlowL `ui 2265  ]
 {
-"188
-[; ;selftest.c: 188:       setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "189
-[; ;selftest.c: 189:       printstrblock("FLOW TOO LOW    ");
-[e ( _printstrblock (1 :s 15C ]
+[; ;selftest.c: 189:       setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "190
-[; ;selftest.c: 190:       timeDelayMs(1000);
-[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+[; ;selftest.c: 190:       printstrblock("FLOW TOO LOW    ");
+[e ( _printstrblock (1 :s 15C ]
 "191
-[; ;selftest.c: 191:       initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 191:       timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
 "192
-[; ;selftest.c: 192:     } else if (freeFlowRateL > maxFlowL) {
+[; ;selftest.c: 192:       initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"193
+[; ;selftest.c: 193:     } else if (freeFlowRateL > maxFlowL) {
 }
 [e $U 2266  ]
 [e :U 2265 ]
 [e $ ! > -> _freeFlowRateL `ui -> _maxFlowL `ui 2267  ]
 {
-"194
-[; ;selftest.c: 194:       setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "195
-[; ;selftest.c: 195:       printstrblock("FLOW TOO HIGH   ");
-[e ( _printstrblock (1 :s 16C ]
+[; ;selftest.c: 195:       setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "196
-[; ;selftest.c: 196:       timeDelayMs(1000);
-[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
+[; ;selftest.c: 196:       printstrblock("FLOW TOO HIGH   ");
+[e ( _printstrblock (1 :s 16C ]
 "197
-[; ;selftest.c: 197:       initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 197:       timeDelayMs(1000);
+[e ( _timeDelayMs (1 -> -> 1000 `i `us ]
 "198
-[; ;selftest.c: 198:     }
+[; ;selftest.c: 198:       initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"199
+[; ;selftest.c: 199:     }
 }
 [e :U 2267 ]
 [e :U 2266 ]
-"199
-[; ;selftest.c: 199:   }
+"200
+[; ;selftest.c: 200:   }
 }
 [e :U 2264 ]
-"200
-[; ;selftest.c: 200:   return initOk;
+"201
+[; ;selftest.c: 201:   return initOk;
 [e ) _initOk ]
 [e $UE 2250  ]
-"201
-[; ;selftest.c: 201: }
+"202
+[; ;selftest.c: 202: }
 [e :UE 2250 ]
 }
-"206
-[; ;selftest.c: 206: _Bool SelfTest(void) {
+"207
+[; ;selftest.c: 207: _Bool SelfTest(void) {
 [v _SelfTest `(a ~T0 @X0 1 ef ]
 {
 [e :U _SelfTest ]
 [f ]
-"207
-[; ;selftest.c: 207:   int idx, cIdx;
+"208
+[; ;selftest.c: 208:   int idx, cIdx;
 [v _idx `i ~T0 @X0 1 a ]
 [v _cIdx `i ~T0 @X0 1 a ]
-"208
-[; ;selftest.c: 208:   int16_t vddVal, vddValMax, vddValMin;
+"209
+[; ;selftest.c: 209:   int16_t vddVal, vddValMax, vddValMin;
 [v _vddVal `s ~T0 @X0 1 a ]
 [v _vddValMax `s ~T0 @X0 1 a ]
 [v _vddValMin `s ~T0 @X0 1 a ]
-"209
-[; ;selftest.c: 209:   int16_t aPVal, aPValMax, aPValMin, aPValMean;
+"210
+[; ;selftest.c: 210:   int16_t aPVal, aPValMax, aPValMin, aPValMean;
 [v _aPVal `s ~T0 @X0 1 a ]
 [v _aPValMax `s ~T0 @X0 1 a ]
 [v _aPValMin `s ~T0 @X0 1 a ]
 [v _aPValMean `s ~T0 @X0 1 a ]
-"210
-[; ;selftest.c: 210:   _Bool lcdBLight;
-[v _lcdBLight `a ~T0 @X0 1 a ]
 "211
-[; ;selftest.c: 211:   time_t tstamp;
-[v _tstamp `us ~T0 @X0 1 a ]
+[; ;selftest.c: 211:   _Bool lcdBLight;
+[v _lcdBLight `a ~T0 @X0 1 a ]
 "212
-[; ;selftest.c: 212:   _Bool initOk;
+[; ;selftest.c: 212:   time_t tstamp;
+[v _tstamp `us ~T0 @X0 1 a ]
+"213
+[; ;selftest.c: 213:   _Bool initOk;
 [v _initOk `a ~T0 @X0 1 a ]
-"214
-[; ;selftest.c: 214:   ctrlStatus = CTRL_UNCAL;
-[e = _ctrlStatus . `E16760 0 ]
 "215
-[; ;selftest.c: 215:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+[; ;selftest.c: 215:   ctrlStatus = CTRL_UNCAL;
+[e = _ctrlStatus . `E16760 0 ]
+"216
+[; ;selftest.c: 216:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"216
-[; ;selftest.c: 216:   LATAbits.LATA3 = 0;
+"217
+[; ;selftest.c: 217:   LATAbits.LATA3 = 0;
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
-"218
-[; ;selftest.c: 218:   setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "219
-[; ;selftest.c: 219:   printstrblock("SELF-TEST       ");
-[e ( _printstrblock (1 :s 17C ]
+[; ;selftest.c: 219:   setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "220
-[; ;selftest.c: 220:   setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 220:   printstrblock("SELF-TEST       ");
+[e ( _printstrblock (1 :s 17C ]
 "221
-[; ;selftest.c: 221:   printstrblock("DISPLAY TEST    ");
-[e ( _printstrblock (1 :s 18C ]
+[; ;selftest.c: 221:   setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "222
-[; ;selftest.c: 222:   for (idx=0;idx<10;idx++){
+[; ;selftest.c: 222:   printstrblock("DISPLAY TEST    ");
+[e ( _printstrblock (1 :s 18C ]
+"223
+[; ;selftest.c: 223:   for (idx=0;idx<10;idx++){
 {
 [e = _idx -> 0 `i ]
 [e $ < _idx -> 10 `i 2269  ]
 [e $U 2270  ]
 [e :U 2269 ]
 {
-"223
-[; ;selftest.c: 223:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "224
-[; ;selftest.c: 224:     lcdTopRow[0]=0x30+idx;
-[e = *U + &U _lcdTopRow * -> -> -> 0 `i `ui `ux -> -> # *U &U _lcdTopRow `ui `ux -> + -> 48 `i _idx `uc ]
+[; ;selftest.c: 224:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "225
-[; ;selftest.c: 225:     for (cIdx=1;cIdx<16;cIdx++){
+[; ;selftest.c: 225:     lcdTopRow[0]=0x30+idx;
+[e = *U + &U _lcdTopRow * -> -> -> 0 `i `ui `ux -> -> # *U &U _lcdTopRow `ui `ux -> + -> 48 `i _idx `uc ]
+"226
+[; ;selftest.c: 226:     for (cIdx=1;cIdx<16;cIdx++){
 {
 [e = _cIdx -> 1 `i ]
 [e $ < _cIdx -> 16 `i 2272  ]
 [e $U 2273  ]
 [e :U 2272 ]
 {
-"226
-[; ;selftest.c: 226:       lcdTopRow[cIdx]=lcdTopRow[0];
-[e = *U + &U _lcdTopRow * -> -> _cIdx `ui `ux -> -> # *U &U _lcdTopRow `ui `ux *U + &U _lcdTopRow * -> -> -> 0 `i `ui `ux -> -> # *U &U _lcdTopRow `ui `ux ]
 "227
-[; ;selftest.c: 227:     }
+[; ;selftest.c: 227:       lcdTopRow[cIdx]=lcdTopRow[0];
+[e = *U + &U _lcdTopRow * -> -> _cIdx `ui `ux -> -> # *U &U _lcdTopRow `ui `ux *U + &U _lcdTopRow * -> -> -> 0 `i `ui `ux -> -> # *U &U _lcdTopRow `ui `ux ]
+"228
+[; ;selftest.c: 228:     }
 }
 [e ++ _cIdx -> 1 `i ]
 [e $ < _cIdx -> 16 `i 2272  ]
 [e :U 2273 ]
 }
-"228
-[; ;selftest.c: 228:     printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
 "229
-[; ;selftest.c: 229:     setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
-"230
-[; ;selftest.c: 230:     printstrblock(lcdTopRow);
+[; ;selftest.c: 229:     printstrblock(lcdTopRow);
 [e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+"230
+[; ;selftest.c: 230:     setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "231
-[; ;selftest.c: 231:     timeDelayMs(800);
-[e ( _timeDelayMs (1 -> -> 800 `i `us ]
+[; ;selftest.c: 231:     printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
 "232
-[; ;selftest.c: 232:   }
+[; ;selftest.c: 232:     timeDelayMs(800);
+[e ( _timeDelayMs (1 -> -> 800 `i `us ]
+"233
+[; ;selftest.c: 233:   }
 }
 [e ++ _idx -> 1 `i ]
 [e $ < _idx -> 10 `i 2269  ]
 [e :U 2270 ]
 }
-"234
-[; ;selftest.c: 234:   setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "235
-[; ;selftest.c: 235:   printstrblock("SELF-TEST. LEAVE");
-[e ( _printstrblock (1 :s 19C ]
+[; ;selftest.c: 235:   setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "236
-[; ;selftest.c: 236:   setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;selftest.c: 236:   printstrblock("SELF-TEST. LEAVE");
+[e ( _printstrblock (1 :s 19C ]
 "237
-[; ;selftest.c: 237:   printstrblock("AIRWAY OPEN     ");
-[e ( _printstrblock (1 :s 20C ]
+[; ;selftest.c: 237:   setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "238
-[; ;selftest.c: 238:   timeDelayMs(1000);
+[; ;selftest.c: 238:   printstrblock("AIRWAY OPEN     ");
+[e ( _printstrblock (1 :s 20C ]
+"239
+[; ;selftest.c: 239:   timeDelayMs(1000);
 [e ( _timeDelayMs (1 -> -> 1000 `i `us ]
-"240
-[; ;selftest.c: 240:   vddValMin = 8000;
-[e = _vddValMin -> -> 8000 `i `s ]
 "241
-[; ;selftest.c: 241:   vddValMax = 0;
-[e = _vddValMax -> -> 0 `i `s ]
+[; ;selftest.c: 241:   vddValMin = 8000;
+[e = _vddValMin -> -> 8000 `i `s ]
 "242
-[; ;selftest.c: 242:   initOk = 1;
+[; ;selftest.c: 242:   vddValMax = 0;
+[e = _vddValMax -> -> 0 `i `s ]
+"243
+[; ;selftest.c: 243:   initOk = 1;
 [e = _initOk -> -> 1 `i `a ]
-"244
-[; ;selftest.c: 244:   if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
+"245
+[; ;selftest.c: 245:   if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 0 `i -> 0 `i 2275  ]
 {
-"245
-[; ;selftest.c: 245:     initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
 "246
-[; ;selftest.c: 246:     printf ("Mon error");
-[e ( _printf :s 21C ]
+[; ;selftest.c: 246:     initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
 "247
-[; ;selftest.c: 247:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 247:     printf ("Mon error");
+[e ( _printf :s 21C ]
 "248
-[; ;selftest.c: 248:     printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 22C ]
+[; ;selftest.c: 248:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "249
-[; ;selftest.c: 249:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 249:     printstrblock("MONITOR ERROR");
+[e ( _printstrblock (1 :s 22C ]
 "250
-[; ;selftest.c: 250:   }
+[; ;selftest.c: 250:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"251
+[; ;selftest.c: 251:   }
 }
 [e :U 2275 ]
-"252
-[; ;selftest.c: 252:   aCaptureOffSet(MainPSensor, 0);
-[e ( _aCaptureOffSet (2 , . `E16736 0 -> -> 0 `i `s ]
 "253
-[; ;selftest.c: 253:   aCaptureOffSet(VolPSensor, 0);
+[; ;selftest.c: 253:   aCaptureOffSet(MainPSensor, 0);
+[e ( _aCaptureOffSet (2 , . `E16736 0 -> -> 0 `i `s ]
+"254
+[; ;selftest.c: 254:   aCaptureOffSet(VolPSensor, 0);
 [e ( _aCaptureOffSet (2 , . `E16736 1 -> -> 0 `i `s ]
-"255
-[; ;selftest.c: 255:   tstamp = timeGet();
+"256
+[; ;selftest.c: 256:   tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
-"257
-[; ;selftest.c: 257:   while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"258
+[; ;selftest.c: 258:   while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $U 2276  ]
 [e :U 2277 ]
 {
-"258
-[; ;selftest.c: 258:     if (aCaptGetResult(VddSensor, &vddVal)) {
+"259
+[; ;selftest.c: 259:     if (aCaptGetResult(VddSensor, &vddVal)) {
 [e $ ! != -> ( _aCaptGetResult (2 , . `E16736 2 &U _vddVal `i -> 0 `i 2279  ]
 {
-"259
-[; ;selftest.c: 259:       if (vddVal > vddValMax) {
+"260
+[; ;selftest.c: 260:       if (vddVal > vddValMax) {
 [e $ ! > -> _vddVal `i -> _vddValMax `i 2280  ]
 {
-"260
-[; ;selftest.c: 260:  vddValMax = vddVal;
-[e = _vddValMax _vddVal ]
 "261
-[; ;selftest.c: 261:       }
+[; ;selftest.c: 261:  vddValMax = vddVal;
+[e = _vddValMax _vddVal ]
+"262
+[; ;selftest.c: 262:       }
 }
 [e :U 2280 ]
-"262
-[; ;selftest.c: 262:       if (vddVal < vddValMin) {
+"263
+[; ;selftest.c: 263:       if (vddVal < vddValMin) {
 [e $ ! < -> _vddVal `i -> _vddValMin `i 2281  ]
 {
-"263
-[; ;selftest.c: 263:  vddValMin = vddVal;
-[e = _vddValMin _vddVal ]
 "264
-[; ;selftest.c: 264:       }
+[; ;selftest.c: 264:  vddValMin = vddVal;
+[e = _vddValMin _vddVal ]
+"265
+[; ;selftest.c: 265:       }
 }
 [e :U 2281 ]
-"265
-[; ;selftest.c: 265:     } else {
+"266
+[; ;selftest.c: 266:     } else {
 }
 [e $U 2282  ]
 [e :U 2279 ]
 {
-"266
-[; ;selftest.c: 266:       LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",22);
+"267
+[; ;selftest.c: 267:       LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",22);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
 [e = . . _LATAbits 0 3 -> -> 0 `i `uc ]
 [e ( _printf , (. :s 23C -> 22 `i ]
-"267
-[; ;selftest.c: 267:             initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
 "268
-[; ;selftest.c: 268:     }
+[; ;selftest.c: 268:             initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"269
+[; ;selftest.c: 269:     }
 }
 [e :U 2282 ]
-"269
-[; ;selftest.c: 269:   }
+"270
+[; ;selftest.c: 270:   }
 }
 [e :U 2276 ]
-"257
-[; ;selftest.c: 257:   while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"258
+[; ;selftest.c: 258:   while (!timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2277  ]
 [e :U 2278 ]
-"271
-[; ;selftest.c: 271:   if (!initOk) {
+"272
+[; ;selftest.c: 272:   if (!initOk) {
 [e $ ! ! != -> _initOk `i -> 0 `i 2283  ]
 {
-"272
-[; ;selftest.c: 272:     return initOk;
+"273
+[; ;selftest.c: 273:     return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"273
-[; ;selftest.c: 273:   }
+"274
+[; ;selftest.c: 274:   }
 }
 [e :U 2283 ]
-"276
-[; ;selftest.c: 276:   vddValMean = (vddValMax + vddValMin) >> 1;
-[e = _vddValMean -> >> + -> _vddValMax `i -> _vddValMin `i -> 1 `i `s ]
 "277
-[; ;selftest.c: 277:   printf ("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean);
+[; ;selftest.c: 277:   vddValMean = (vddValMax + vddValMin) >> 1;
+[e = _vddValMean -> >> + -> _vddValMax `i -> _vddValMin `i -> 1 `i `s ]
+"278
+[; ;selftest.c: 278:   printf ("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean);
 [e ( _printf , , , (. :s 24C -> _vddValMin `i -> _vddValMax `i -> _vddValMean `i ]
-"279
-[; ;selftest.c: 279:   if ((vddValMean > 5250) || (vddValMean < 4750)) {
+"280
+[; ;selftest.c: 280:   if ((vddValMean > 5250) || (vddValMean < 4750)) {
 [e $ ! || > -> _vddValMean `i -> 5250 `i < -> _vddValMean `i -> 4750 `i 2284  ]
 {
-"281
-[; ;selftest.c: 281:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "282
-[; ;selftest.c: 282:     printstrblock("INTERNAL ERROR  ");
-[e ( _printstrblock (1 :s 25C ]
+[; ;selftest.c: 282:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "283
-[; ;selftest.c: 283:     setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;selftest.c: 283:     printstrblock("INTERNAL ERROR  ");
+[e ( _printstrblock (1 :s 25C ]
 "284
-[; ;selftest.c: 284:     sprintf(lcdTopRow, "VDD OOL: % 3d mV", vddValMean);
-[e ( _sprintf (1 , (. , &U _lcdTopRow :s 26C -> _vddValMean `i ]
+[; ;selftest.c: 284:     setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "285
-[; ;selftest.c: 285:     printstrblock(lcdTopRow);
-[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
+[; ;selftest.c: 285:     sprintf(lcdTopRow, "VDD OOL: % 3d mV", vddValMean);
+[e ( _sprintf (1 , (. , &U _lcdTopRow :s 26C -> _vddValMean `i ]
 "286
-[; ;selftest.c: 286:     initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 286:     printstrblock(lcdTopRow);
+[e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
 "287
-[; ;selftest.c: 287:   } else if ((vddValMax - vddValMin) > 100) {
+[; ;selftest.c: 287:     initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"288
+[; ;selftest.c: 288:   } else if ((vddValMax - vddValMin) > 100) {
 }
 [e $U 2285  ]
 [e :U 2284 ]
 [e $ ! > - -> _vddValMax `i -> _vddValMin `i -> 100 `i 2286  ]
 {
-"289
-[; ;selftest.c: 289:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "290
-[; ;selftest.c: 290:     printstrblock("INTERNAL ERROR  ");
-[e ( _printstrblock (1 :s 27C ]
+[; ;selftest.c: 290:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "291
-[; ;selftest.c: 291:     setCursor(0, 1);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;selftest.c: 291:     printstrblock("INTERNAL ERROR  ");
+[e ( _printstrblock (1 :s 27C ]
 "292
-[; ;selftest.c: 292:     printstrblock("VDD NOISY       ");
-[e ( _printstrblock (1 :s 28C ]
+[; ;selftest.c: 292:     setCursor(0, 1);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "293
-[; ;selftest.c: 293:     initOk = 0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 293:     printstrblock("VDD NOISY       ");
+[e ( _printstrblock (1 :s 28C ]
 "294
-[; ;selftest.c: 294:   }
+[; ;selftest.c: 294:     initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"295
+[; ;selftest.c: 295:   }
 }
 [e :U 2286 ]
 [e :U 2285 ]
-"296
-[; ;selftest.c: 296:   if (!initOk) {
+"297
+[; ;selftest.c: 297:   if (!initOk) {
 [e $ ! ! != -> _initOk `i -> 0 `i 2287  ]
 {
-"297
-[; ;selftest.c: 297:     return initOk;
+"298
+[; ;selftest.c: 298:     return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"298
-[; ;selftest.c: 298:   }
+"299
+[; ;selftest.c: 299:   }
 }
 [e :U 2287 ]
-"300
-[; ;selftest.c: 300:   while (ctrlStatus == CTRL_UNCAL) {
+"301
+[; ;selftest.c: 301:   while (ctrlStatus == CTRL_UNCAL) {
 [e $U 2288  ]
 [e :U 2289 ]
 {
-"301
-[; ;selftest.c: 301:     LATDbits.LATD6 = 0;
+"302
+[; ;selftest.c: 302:     LATDbits.LATD6 = 0;
 [e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
-"303
-[; ;selftest.c: 303:     while (keyPeek() != -1)
+"304
+[; ;selftest.c: 304:     while (keyPeek() != -1)
 [e $U 2291  ]
 [e :U 2292 ]
-"304
-[; ;selftest.c: 304:       printf ("KP %d\n", keyPeek());
+"305
+[; ;selftest.c: 305:       printf ("KP %d\n", keyPeek());
 [e ( _printf , (. :s 29C -> ( _keyPeek ..  `i ]
 [e :U 2291 ]
-"303
-[; ;selftest.c: 303:     while (keyPeek() != -1)
+"304
+[; ;selftest.c: 304:     while (keyPeek() != -1)
 [e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2292  ]
 [e :U 2293 ]
-"306
-[; ;selftest.c: 306:     keyReadInit();
+"307
+[; ;selftest.c: 307:     keyReadInit();
 [e ( _keyReadInit ..  ]
-"310
-[; ;selftest.c: 310:     LATDbits.LATD6 = 1;
-[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
 "311
-[; ;selftest.c: 311:     setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 311:     LATDbits.LATD6 = 1;
+[e = . . _LATDbits 0 6 -> -> 1 `i `uc ]
 "312
-[; ;selftest.c: 312:     printstrblock("CAL PRESS BREATH");
-[e ( _printstrblock (1 :s 30C ]
+[; ;selftest.c: 312:     setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "313
-[; ;selftest.c: 313:     tstamp = timeGet();
-[e = _tstamp ( _timeGet ..  ]
+[; ;selftest.c: 313:     printstrblock("CAL PRESS BREATH");
+[e ( _printstrblock (1 :s 30C ]
 "314
-[; ;selftest.c: 314:     lcdBLight = 1;
-[e = _lcdBLight -> -> 1 `i `a ]
-"316
-[; ;selftest.c: 316:     tstamp = timeGet();
+[; ;selftest.c: 314:     tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
+"315
+[; ;selftest.c: 315:     lcdBLight = 1;
+[e = _lcdBLight -> -> 1 `i `a ]
 "317
-[; ;selftest.c: 317:     while (1) {
+[; ;selftest.c: 317:     tstamp = timeGet();
+[e = _tstamp ( _timeGet ..  ]
+"318
+[; ;selftest.c: 318:     while (1) {
 [e :U 2295 ]
 {
-"318
-[; ;selftest.c: 318:       if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
+"319
+[; ;selftest.c: 319:       if (timeElapsedR(&tstamp, ((time_t) 500*1))) {
 [e $ ! != -> ( _timeElapsedR (2 , &U _tstamp -> * -> -> -> 500 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2297  ]
 {
-"319
-[; ;selftest.c: 319:  setBacklight(lcdBLight);
-[e ( _setBacklight (1 _lcdBLight ]
 "320
-[; ;selftest.c: 320:  lcdBLight = !lcdBLight;
-[e = _lcdBLight -> -> ! != -> _lcdBLight `i -> 0 `i `i `a ]
+[; ;selftest.c: 320:  setBacklight(lcdBLight);
+[e ( _setBacklight (1 _lcdBLight ]
 "321
-[; ;selftest.c: 321:       }
+[; ;selftest.c: 321:  lcdBLight = !lcdBLight;
+[e = _lcdBLight -> -> ! != -> _lcdBLight `i -> 0 `i `i `a ]
+"322
+[; ;selftest.c: 322:       }
 }
 [e :U 2297 ]
-"324
-[; ;selftest.c: 324:       if (keyReadEC() == -100) {
+"325
+[; ;selftest.c: 325:       if (keyReadEC() == -100) {
 [e $ ! == -> ( _keyReadEC ..  `i -U -> 100 `i 2298  ]
 {
-"325
-[; ;selftest.c: 325:  if (keyPeek() == 4) {
+"326
+[; ;selftest.c: 326:  if (keyPeek() == 4) {
 [e $ ! == -> ( _keyPeek ..  `i -> 4 `i 2299  ]
 {
-"327
-[; ;selftest.c: 327:    setBacklight(1);
-[e ( _setBacklight (1 -> -> 1 `i `a ]
 "328
-[; ;selftest.c: 328:    break;
-[e $U 2296  ]
+[; ;selftest.c: 328:    setBacklight(1);
+[e ( _setBacklight (1 -> -> 1 `i `a ]
 "329
-[; ;selftest.c: 329:  }
+[; ;selftest.c: 329:    break;
+[e $U 2296  ]
+"330
+[; ;selftest.c: 330:  }
 }
 [e :U 2299 ]
-"330
-[; ;selftest.c: 330:       }
+"331
+[; ;selftest.c: 331:       }
 }
 [e :U 2298 ]
-"331
-[; ;selftest.c: 331:     }
+"332
+[; ;selftest.c: 332:     }
 }
 [e :U 2294 ]
 [e $U 2295  ]
 [e :U 2296 ]
-"333
-[; ;selftest.c: 333:     LATDbits.LATD6 = 0;
-[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
 "334
-[; ;selftest.c: 334:     printf ("CALP\n");
-[e ( _printf :s 31C ]
+[; ;selftest.c: 334:     LATDbits.LATD6 = 0;
+[e = . . _LATDbits 0 6 -> -> 0 `i `uc ]
 "335
-[; ;selftest.c: 335:     if (!MonitorMsgSendBlock(MONSTATE_CALP)){
+[; ;selftest.c: 335:     printf ("CALP\n");
+[e ( _printf :s 31C ]
+"336
+[; ;selftest.c: 336:     if (!MonitorMsgSendBlock(MONSTATE_CALP)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 1 `i -> 0 `i 2300  ]
 {
-"336
-[; ;selftest.c: 336:       initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "337
-[; ;selftest.c: 337:       printf ("Mon error");
-[e ( _printf :s 32C ]
+[; ;selftest.c: 337:       initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "338
-[; ;selftest.c: 338:       setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 338:       printf ("Mon error");
+[e ( _printf :s 32C ]
 "339
-[; ;selftest.c: 339:       printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 33C ]
+[; ;selftest.c: 339:       setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "340
-[; ;selftest.c: 340:       timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 340:       printstrblock("MONITOR ERROR");
+[e ( _printstrblock (1 :s 33C ]
 "341
-[; ;selftest.c: 341:     }
+[; ;selftest.c: 341:       timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"342
+[; ;selftest.c: 342:     }
 }
 [e :U 2300 ]
-"343
-[; ;selftest.c: 343:     if (pressureSensorChk(1, 500)) {
+"344
+[; ;selftest.c: 344:     if (pressureSensorChk(1, 500)) {
 [e $ ! != -> ( _pressureSensorChk (2 , -> -> 1 `i `a -> -> 500 `i `us `i -> 0 `i 2301  ]
 {
-"345
-[; ;selftest.c: 345:       ctrlStatus = CTRL_STOP;
-[e = _ctrlStatus . `E16760 1 ]
 "346
-[; ;selftest.c: 346:     } else {
+[; ;selftest.c: 346:       ctrlStatus = CTRL_STOP;
+[e = _ctrlStatus . `E16760 1 ]
+"347
+[; ;selftest.c: 347:     } else {
 }
 [e $U 2302  ]
 [e :U 2301 ]
 {
-"347
-[; ;selftest.c: 347:       printstrblock("CAL ERROR. RETRY ");
-[e ( _printstrblock (1 :s 34C ]
 "348
-[; ;selftest.c: 348:       timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 348:       printstrblock("CAL ERROR. RETRY ");
+[e ( _printstrblock (1 :s 34C ]
 "349
-[; ;selftest.c: 349:     }
+[; ;selftest.c: 349:       timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"350
+[; ;selftest.c: 350:     }
 }
 [e :U 2302 ]
-"350
-[; ;selftest.c: 350:   }
+"351
+[; ;selftest.c: 351:   }
 }
 [e :U 2288 ]
-"300
-[; ;selftest.c: 300:   while (ctrlStatus == CTRL_UNCAL) {
+"301
+[; ;selftest.c: 301:   while (ctrlStatus == CTRL_UNCAL) {
 [e $ == -> _ctrlStatus `ui -> . `E16760 0 `ui 2289  ]
 [e :U 2290 ]
-"352
-[; ;selftest.c: 352:   if (!initOk) {
+"353
+[; ;selftest.c: 353:   if (!initOk) {
 [e $ ! ! != -> _initOk `i -> 0 `i 2303  ]
 {
-"353
-[; ;selftest.c: 353:     return initOk;
+"354
+[; ;selftest.c: 354:     return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"354
-[; ;selftest.c: 354:   }
+"355
+[; ;selftest.c: 355:   }
 }
 [e :U 2303 ]
-"357
-[; ;selftest.c: 357:   printf ("CHKSV2\n");
+"358
+[; ;selftest.c: 358:   printf ("CHKSV2\n");
 [e ( _printf :s 35C ]
-"359
-[; ;selftest.c: 359:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
+"360
+[; ;selftest.c: 360:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 2 `i -> 0 `i 2304  ]
 {
-"360
-[; ;selftest.c: 360:         initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "361
-[; ;selftest.c: 361:  printf ("Mon error");
-[e ( _printf :s 36C ]
+[; ;selftest.c: 361:         initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "362
-[; ;selftest.c: 362:  setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 362:  printf ("Mon error");
+[e ( _printf :s 36C ]
 "363
-[; ;selftest.c: 363:  printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 37C ]
+[; ;selftest.c: 363:  setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "364
-[; ;selftest.c: 364:  timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 364:  printstrblock("MONITOR ERROR");
+[e ( _printstrblock (1 :s 37C ]
 "365
-[; ;selftest.c: 365:   }
+[; ;selftest.c: 365:  timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"366
+[; ;selftest.c: 366:   }
 }
 [e :U 2304 ]
-"367
-[; ;selftest.c: 367:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+"368
+[; ;selftest.c: 368:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"368
-[; ;selftest.c: 368:   timeDelayMs(200);
-[e ( _timeDelayMs (1 -> -> 200 `i `us ]
 "369
-[; ;selftest.c: 369:   if (!pressureSensorChk(0, 100)) {
+[; ;selftest.c: 369:   timeDelayMs(200);
+[e ( _timeDelayMs (1 -> -> 200 `i `us ]
+"370
+[; ;selftest.c: 370:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2305  ]
 {
-"370
-[; ;selftest.c: 370:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "371
-[; ;selftest.c: 371:     printstrblock("SV2 Valve error");
-[e ( _printstrblock (1 :s 38C ]
+[; ;selftest.c: 371:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "372
-[; ;selftest.c: 372:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 372:     printstrblock("SV2 Valve error");
+[e ( _printstrblock (1 :s 38C ]
 "373
-[; ;selftest.c: 373:   }
+[; ;selftest.c: 373:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"374
+[; ;selftest.c: 374:   }
 }
 [e :U 2305 ]
-"376
-[; ;selftest.c: 376:   printf ("CHKSV1\n");
-[e ( _printf :s 39C ]
 "377
-[; ;selftest.c: 377:   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
+[; ;selftest.c: 377:   printf ("CHKSV1\n");
+[e ( _printf :s 39C ]
+"378
+[; ;selftest.c: 378:   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16835 3 `i -> 0 `i 2306  ]
 {
-"378
-[; ;selftest.c: 378:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "379
-[; ;selftest.c: 379:   }
+[; ;selftest.c: 379:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
+"380
+[; ;selftest.c: 380:   }
 }
 [e :U 2306 ]
-"380
-[; ;selftest.c: 380:   timeDelayMs(100);
-[e ( _timeDelayMs (1 -> -> 100 `i `us ]
 "381
-[; ;selftest.c: 381:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+[; ;selftest.c: 381:   timeDelayMs(100);
+[e ( _timeDelayMs (1 -> -> 100 `i `us ]
+"382
+[; ;selftest.c: 382:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
-"382
-[; ;selftest.c: 382:   timeDelayMs(300);
-[e ( _timeDelayMs (1 -> -> 300 `i `us ]
 "383
-[; ;selftest.c: 383:   if (!pressureSensorChk(0, 100)) {
+[; ;selftest.c: 383:   timeDelayMs(300);
+[e ( _timeDelayMs (1 -> -> 300 `i `us ]
+"384
+[; ;selftest.c: 384:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2307  ]
 {
-"384
-[; ;selftest.c: 384:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "385
-[; ;selftest.c: 385:     printstrblock("SV1 Valve error");
-[e ( _printstrblock (1 :s 40C ]
+[; ;selftest.c: 385:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "386
-[; ;selftest.c: 386:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 386:     printstrblock("SV1 Valve error");
+[e ( _printstrblock (1 :s 40C ]
 "387
-[; ;selftest.c: 387:   }
+[; ;selftest.c: 387:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"388
+[; ;selftest.c: 388:   }
 }
 [e :U 2307 ]
-"390
-[; ;selftest.c: 390:   printf ("CHK FLOW\n");
-[e ( _printf :s 41C ]
 "391
-[; ;selftest.c: 391:   tstamp = timeGet();
+[; ;selftest.c: 391:   printf ("CHK FLOW\n");
+[e ( _printf :s 41C ]
+"392
+[; ;selftest.c: 392:   tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
-"394
-[; ;selftest.c: 394:   initOk &= flowChk(FCHK_LOW);
-[e =& _initOk -> ( _flowChk (1 . `E16913 0 `i ]
 "395
-[; ;selftest.c: 395:   initOk &= flowChk(FCHK_MED);
-[e =& _initOk -> ( _flowChk (1 . `E16913 1 `i ]
+[; ;selftest.c: 395:   initOk &= flowChk(FCHK_LOW);
+[e =& _initOk -> ( _flowChk (1 . `E16923 0 `i ]
 "396
-[; ;selftest.c: 396:   initOk &= flowChk(FCHK_HIGH);
-[e =& _initOk -> ( _flowChk (1 . `E16913 2 `i ]
-"399
-[; ;selftest.c: 399:   while (keyPeek() != -1)
+[; ;selftest.c: 396:   initOk &= flowChk(FCHK_MED);
+[e =& _initOk -> ( _flowChk (1 . `E16923 1 `i ]
+"397
+[; ;selftest.c: 397:   initOk &= flowChk(FCHK_HIGH);
+[e =& _initOk -> ( _flowChk (1 . `E16923 2 `i ]
+"400
+[; ;selftest.c: 400:   while (keyPeek() != -1)
 [e $U 2308  ]
 [e :U 2309 ]
-"400
-[; ;selftest.c: 400:     ;
+"401
+[; ;selftest.c: 401:     ;
 [e :U 2308 ]
-"399
-[; ;selftest.c: 399:   while (keyPeek() != -1)
+"400
+[; ;selftest.c: 400:   while (keyPeek() != -1)
 [e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2309  ]
 [e :U 2310 ]
-"401
-[; ;selftest.c: 401:   keyReadInit();
+"402
+[; ;selftest.c: 402:   keyReadInit();
 [e ( _keyReadInit ..  ]
-"403
-[; ;selftest.c: 403:   return initOk;
+"404
+[; ;selftest.c: 404:   return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"404
-[; ;selftest.c: 404: }
+"405
+[; ;selftest.c: 405: }
 [e :UE 2268 ]
 }
 [p f _printf 8388736 ]

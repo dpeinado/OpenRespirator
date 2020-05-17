@@ -15,6 +15,7 @@
 #include "LiquidCrystal_I2C.h"
 
 uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
+int16_t  vddValMean;
 
 typedef enum
   {

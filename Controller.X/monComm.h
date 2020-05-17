@@ -57,7 +57,8 @@ extern "C" {
 
   extern time_t    monTstamp;
   extern i2c2_error_t lastI2CMonTrfResponse;
-  
+  extern bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
+ 
   void MonitorInit(void);
   void MonitorErrorSet(monErrorT flag);
   void MonitorErrorClr(monErrorT flag);

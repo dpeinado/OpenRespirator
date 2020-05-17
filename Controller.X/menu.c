@@ -286,9 +286,9 @@ void MenuMng(void) {
 void screenInit(void) {
     LcdI2CInit(0x27, 16, 2);
     setCursor(0, 0);
-    printstrblock("EMERG.RESPIRATOR");
+    printstrblock("Open Respirator ");
     setCursor(0, 1);
-    printstrblock("  CONTROLLER   ");
+    printstrblock("    AirVita     ");
     timeDelayMs(TIME_MS(2000));
     clear();
     lcdPrintTR = true;
@@ -401,4 +401,3 @@ void screenMng(void) {
         }
     }
 }
-
