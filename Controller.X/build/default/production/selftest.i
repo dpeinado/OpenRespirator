@@ -28292,7 +28292,7 @@ _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
             }
             mPValMean = (31*mPValMean + 32*mPVal)>>5;
         } else {
-            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",20);
             chkResult = 0;
         }
 
@@ -28306,7 +28306,7 @@ _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
             aPValMean = (31*aPValMean + 32*aPVal)>>5;
         } else {
             chkResult = 0;
-            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",21);
         }
     }
 
@@ -28314,8 +28314,8 @@ _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
     mPValMean = mPValMean>>5;
     aPValMean = aPValMean>>5;
     sprintf(lcdTopRow, "MS: % 3d AS: % 3d ", mPValMean, aPValMean);
-    do {} while (0);
-    do {} while (0);
+    printf ("MAIN PRESSURE. Min %d Max %d MEAN %d\n", mPValMin, mPValMax, mPValMean);
+    printf ("AUX PRESSURE. Min %d Max %d MEAN %d\n", aPValMin, aPValMax, aPValMean);
     setCursor(0, 0);
     printstrblock(lcdTopRow);
     timeDelayMs(1000);
@@ -28326,7 +28326,7 @@ _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
 
             setCursor(0, 0);
             chkResult = 0;
-            do {} while (0);
+            printf ("PRESSURE CALIBRATION ERROR\n");
         } else {
 
             aCaptureOffSet(MainPSensor, mPValMean);
@@ -28340,7 +28340,7 @@ _Bool pressureSensorChk(_Bool offsetCal, uint16_t time) {
         }
     } else {
         if (((aPValMax - aPValMin) > 16) || ((mPValMax - mPValMin) > 16) || (mPValMean > 10) || (mPValMean < -10) || (aPValMean < -10) || (aPValMean > 10)) {
-            do {} while (0);
+            printf ("VALVE CHECK ERROR\n");
             chkResult = 0;
         }
     }
@@ -28364,7 +28364,7 @@ _Bool flowChk(fchk_val flowVal){
 
   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
     initOk=0;
-    do {} while (0);
+    printf ("Mon error");
     setCursor(0, 0);
     printstrblock("MONITOR ERROR");
     timeDelayMs(500);
@@ -28404,7 +28404,7 @@ _Bool flowChk(fchk_val flowVal){
   freeFlowRateL = vMeasureGet()<<2;
   if (!MonitorMsgSendBlock(MONSTATE_STOP)){
     initOk=0;
-    do {} while (0);
+    printf ("Mon error");
     setCursor(0, 0);
     printstrblock("MONITOR ERROR");
     timeDelayMs(500);
@@ -28486,7 +28486,7 @@ _Bool SelfTest(void) {
 
   if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
     initOk = 0;
-    do {} while (0);
+    printf ("Mon error");
     setCursor(0, 0);
     printstrblock("MONITOR ERROR");
     timeDelayMs(500);
@@ -28506,7 +28506,7 @@ _Bool SelfTest(void) {
  vddValMin = vddVal;
       }
     } else {
-      LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+      LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",22);
             initOk = 0;
     }
   }
@@ -28517,7 +28517,7 @@ _Bool SelfTest(void) {
 
 
   vddValMean = (vddValMax + vddValMin) >> 1;
-  do {} while (0);
+  printf ("VDD Min %d Max %d MEAN %d\n", vddValMin, vddValMax, vddValMean);
 
   if ((vddValMean > 5250) || (vddValMean < 4750)) {
 
@@ -28544,7 +28544,7 @@ _Bool SelfTest(void) {
     LATDbits.LATD6 = 0;
 
     while (keyPeek() != -1)
-      do {} while (0);
+      printf ("KP %d\n", keyPeek());
     ;
     keyReadInit();
 
@@ -28574,10 +28574,10 @@ _Bool SelfTest(void) {
     }
 
     LATDbits.LATD6 = 0;
-    do {} while (0);
+    printf ("CALP\n");
     if (!MonitorMsgSendBlock(MONSTATE_CALP)){
       initOk=0;
-      do {} while (0);
+      printf ("Mon error");
       setCursor(0, 0);
       printstrblock("MONITOR ERROR");
       timeDelayMs(500);
@@ -28597,11 +28597,11 @@ _Bool SelfTest(void) {
   }
 
 
-  do {} while (0);
+  printf ("CHKSV2\n");
 
   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
         initOk=0;
- do {} while (0);
+ printf ("Mon error");
  setCursor(0, 0);
  printstrblock("MONITOR ERROR");
  timeDelayMs(500);
@@ -28616,7 +28616,7 @@ _Bool SelfTest(void) {
   }
 
 
-  do {} while (0);
+  printf ("CHKSV1\n");
   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
     initOk=0;
   }
@@ -28630,7 +28630,7 @@ _Bool SelfTest(void) {
   }
 
 
-  do {} while (0);
+  printf ("CHK FLOW\n");
   tstamp = timeGet();
 
 

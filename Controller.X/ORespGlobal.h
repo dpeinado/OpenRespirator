@@ -74,7 +74,7 @@ extern "C" {
 #define BUZZER_ON  LATDbits.LATD0 = 1
 #define BUZZER_OFF LATDbits.LATD0 = 0
 
-//#define DEBUG
+#define DEBUG
 //#define OCTAVE
 
 #ifdef DEBUG

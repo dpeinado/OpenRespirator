@@ -9,6 +9,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;i2c2_mux.c: 13: i2c2_operations_t I2C2_NackCb(void *ptr){
 [c E16390 1 2 3 4 5 .. ]
 [n E16390 . I2C2_STOP I2C2_RESTART_READ I2C2_RESTART_WRITE I2C2_CONTINUE I2C2_RESET_LINK  ]
+"111 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\c99\stdio.h
+[v _printf `(i ~T0 @X0 0 ev`*Cuc ]
 "79 ./mcc_generated_files/i2c2_master.h
 [; ;./mcc_generated_files/i2c2_master.h: 79: i2c2_operations_t I2C2_CallbackReturnStop(void *funPtr);
 [v _I2C2_CallbackReturnStop `(E16390 ~T0 @X0 0 ef1`*v ]
@@ -2287,14 +2289,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _ptr `*v ~T0 @X0 1 r1 ]
 [f ]
 "14
-[; ;i2c2_mux.c: 14:     do {} while (0);
-[e :U 2236 ]
-{
-}
-[e :U 2235 ]
+[; ;i2c2_mux.c: 14:     printf ("I2C2 E\n");
+[e ( _printf :s 1C ]
 "15
 [; ;i2c2_mux.c: 15:     if (currentTrfAddr == 0x50) {
-[e $ ! == -> _currentTrfAddr `i -> 80 `i 2237  ]
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2234  ]
 {
 "16
 [; ;i2c2_mux.c: 16:         lastI2C2MAckResponse = 0;
@@ -2302,8 +2301,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "17
 [; ;i2c2_mux.c: 17:     } else {
 }
-[e $U 2238  ]
-[e :U 2237 ]
+[e $U 2235  ]
+[e :U 2234 ]
 {
 "18
 [; ;i2c2_mux.c: 18:         lastI2C2LAckResponse = 0;
@@ -2311,7 +2310,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "19
 [; ;i2c2_mux.c: 19:     }
 }
-[e :U 2238 ]
+[e :U 2235 ]
 "20
 [; ;i2c2_mux.c: 20:     return I2C2_CallbackReturnStop(((void*)0));
 [e ) ( _I2C2_CallbackReturnStop (1 -> -> 0 `i `*v ]
@@ -2343,7 +2342,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _currentTrfAddr -> -> 0 `i `uc ]
 "29
 [; ;i2c2_mux.c: 29: }
-[e :UE 2239 ]
+[e :UE 2236 ]
 }
 "31
 [; ;i2c2_mux.c: 31: _Bool I2C2_MAck(void){
@@ -2354,10 +2353,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 "32
 [; ;i2c2_mux.c: 32:     return lastI2C2MAckResponse;
 [e ) -> _lastI2C2MAckResponse `a ]
-[e $UE 2240  ]
+[e $UE 2237  ]
 "33
 [; ;i2c2_mux.c: 33: }
-[e :UE 2240 ]
+[e :UE 2237 ]
 }
 "34
 [; ;i2c2_mux.c: 34: _Bool I2C2_LAck(void){
@@ -2368,10 +2367,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 "35
 [; ;i2c2_mux.c: 35:     return lastI2C2LAckResponse;
 [e ) -> _lastI2C2LAckResponse `a ]
-[e $UE 2241  ]
+[e $UE 2238  ]
 "36
 [; ;i2c2_mux.c: 36: }
-[e :UE 2241 ]
+[e :UE 2238 ]
 }
 "39
 [; ;i2c2_mux.c: 39: i2c2_error_t I2C2_MOpen(void){
@@ -2387,7 +2386,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _trfRsp ( _I2C2_Open (1 -> -> 80 `i `uc ]
 "43
 [; ;i2c2_mux.c: 43:     if (trfRsp != I2C2_BUSY) {
-[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2243  ]
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2240  ]
 {
 "44
 [; ;i2c2_mux.c: 44:         I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
@@ -2400,7 +2399,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lastI2C2MAckResponse -> -> 1 `i `E16385 ]
 "49
 [; ;i2c2_mux.c: 49:         if (currentTrfAddr == 0x50){
-[e $ ! == -> _currentTrfAddr `i -> 80 `i 2244  ]
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2241  ]
 {
 "50
 [; ;i2c2_mux.c: 50:             lastI2C2MTrfResponse = trfRsp;
@@ -2408,8 +2407,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "51
 [; ;i2c2_mux.c: 51:         } else {
 }
-[e $U 2245  ]
-[e :U 2244 ]
+[e $U 2242  ]
+[e :U 2241 ]
 {
 "52
 [; ;i2c2_mux.c: 52:             lastI2C2LTrfResponse = trfRsp;
@@ -2417,7 +2416,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "53
 [; ;i2c2_mux.c: 53:         }
 }
-[e :U 2245 ]
+[e :U 2242 ]
 "54
 [; ;i2c2_mux.c: 54:         currentTrfAddr = 0x50;
 [e = _currentTrfAddr -> -> 80 `i `uc ]
@@ -2427,18 +2426,18 @@ Version 4.0 HI-TECH Software Intermediate Code
 "57
 [; ;i2c2_mux.c: 57:         return lastI2C2MTrfResponse;
 [e ) _lastI2C2MTrfResponse ]
-[e $UE 2242  ]
+[e $UE 2239  ]
 "58
 [; ;i2c2_mux.c: 58:     }
 }
-[e :U 2243 ]
+[e :U 2240 ]
 "59
 [; ;i2c2_mux.c: 59:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
-[e $UE 2242  ]
+[e $UE 2239  ]
 "60
 [; ;i2c2_mux.c: 60: }
-[e :UE 2242 ]
+[e :UE 2239 ]
 }
 "62
 [; ;i2c2_mux.c: 62: i2c2_error_t I2C2_LOpen(void){
@@ -2454,7 +2453,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _trfRsp ( _I2C2_Open (1 -> -> 39 `i `uc ]
 "66
 [; ;i2c2_mux.c: 66:     if (trfRsp != I2C2_BUSY) {
-[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2247  ]
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2244  ]
 {
 "67
 [; ;i2c2_mux.c: 67:         I2C2_SetAddressNackCallback(I2C2_NackCb,((void*)0));
@@ -2467,7 +2466,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lastI2C2LAckResponse -> -> 1 `i `E16385 ]
 "72
 [; ;i2c2_mux.c: 72:         if (currentTrfAddr == 0x50){
-[e $ ! == -> _currentTrfAddr `i -> 80 `i 2248  ]
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2245  ]
 {
 "73
 [; ;i2c2_mux.c: 73:             lastI2C2MTrfResponse = trfRsp;
@@ -2475,8 +2474,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "74
 [; ;i2c2_mux.c: 74:         } else {
 }
-[e $U 2249  ]
-[e :U 2248 ]
+[e $U 2246  ]
+[e :U 2245 ]
 {
 "75
 [; ;i2c2_mux.c: 75:             lastI2C2LTrfResponse = trfRsp;
@@ -2484,7 +2483,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "76
 [; ;i2c2_mux.c: 76:         }
 }
-[e :U 2249 ]
+[e :U 2246 ]
 "77
 [; ;i2c2_mux.c: 77:         currentTrfAddr = 0x27;
 [e = _currentTrfAddr -> -> 39 `i `uc ]
@@ -2494,18 +2493,18 @@ Version 4.0 HI-TECH Software Intermediate Code
 "80
 [; ;i2c2_mux.c: 80:         return lastI2C2LTrfResponse;
 [e ) _lastI2C2LTrfResponse ]
-[e $UE 2246  ]
+[e $UE 2243  ]
 "81
 [; ;i2c2_mux.c: 81:     }
 }
-[e :U 2247 ]
+[e :U 2244 ]
 "82
 [; ;i2c2_mux.c: 82:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
-[e $UE 2246  ]
+[e $UE 2243  ]
 "83
 [; ;i2c2_mux.c: 83: }
-[e :UE 2246 ]
+[e :UE 2243 ]
 }
 "85
 [; ;i2c2_mux.c: 85: i2c2_error_t I2C2_MClose(void){
@@ -2521,11 +2520,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _trfRsp ( _I2C2_Close ..  ]
 "89
 [; ;i2c2_mux.c: 89:     if (trfRsp != I2C2_BUSY) {
-[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2251  ]
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2248  ]
 {
 "91
 [; ;i2c2_mux.c: 91:         if (currentTrfAddr == 0x50){
-[e $ ! == -> _currentTrfAddr `i -> 80 `i 2252  ]
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2249  ]
 {
 "92
 [; ;i2c2_mux.c: 92:             lastI2C2MTrfResponse = trfRsp;
@@ -2533,8 +2532,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "93
 [; ;i2c2_mux.c: 93:         } else {
 }
-[e $U 2253  ]
-[e :U 2252 ]
+[e $U 2250  ]
+[e :U 2249 ]
 {
 "94
 [; ;i2c2_mux.c: 94:             lastI2C2LTrfResponse = trfRsp;
@@ -2542,22 +2541,22 @@ Version 4.0 HI-TECH Software Intermediate Code
 "95
 [; ;i2c2_mux.c: 95:         }
 }
-[e :U 2253 ]
+[e :U 2250 ]
 "97
 [; ;i2c2_mux.c: 97:         return lastI2C2MTrfResponse;
 [e ) _lastI2C2MTrfResponse ]
-[e $UE 2250  ]
+[e $UE 2247  ]
 "98
 [; ;i2c2_mux.c: 98:     }
 }
-[e :U 2251 ]
+[e :U 2248 ]
 "99
 [; ;i2c2_mux.c: 99:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
-[e $UE 2250  ]
+[e $UE 2247  ]
 "100
 [; ;i2c2_mux.c: 100: }
-[e :UE 2250 ]
+[e :UE 2247 ]
 }
 "102
 [; ;i2c2_mux.c: 102: i2c2_error_t I2C2_LClose(void){
@@ -2573,11 +2572,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _trfRsp ( _I2C2_Close ..  ]
 "106
 [; ;i2c2_mux.c: 106:     if (trfRsp != I2C2_BUSY) {
-[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2255  ]
+[e $ ! != -> _trfRsp `ui -> . `E16385 1 `ui 2252  ]
 {
 "108
 [; ;i2c2_mux.c: 108:         if (currentTrfAddr == 0x50){
-[e $ ! == -> _currentTrfAddr `i -> 80 `i 2256  ]
+[e $ ! == -> _currentTrfAddr `i -> 80 `i 2253  ]
 {
 "109
 [; ;i2c2_mux.c: 109:             lastI2C2MTrfResponse = trfRsp;
@@ -2585,8 +2584,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "110
 [; ;i2c2_mux.c: 110:         } else {
 }
-[e $U 2257  ]
-[e :U 2256 ]
+[e $U 2254  ]
+[e :U 2253 ]
 {
 "111
 [; ;i2c2_mux.c: 111:             lastI2C2LTrfResponse = trfRsp;
@@ -2594,20 +2593,22 @@ Version 4.0 HI-TECH Software Intermediate Code
 "112
 [; ;i2c2_mux.c: 112:         }
 }
-[e :U 2257 ]
+[e :U 2254 ]
 "114
 [; ;i2c2_mux.c: 114:         return lastI2C2LTrfResponse;
 [e ) _lastI2C2LTrfResponse ]
-[e $UE 2254  ]
+[e $UE 2251  ]
 "115
 [; ;i2c2_mux.c: 115:     }
 }
-[e :U 2255 ]
+[e :U 2252 ]
 "116
 [; ;i2c2_mux.c: 116:     return I2C2_BUSY;
 [e ) . `E16385 1 ]
-[e $UE 2254  ]
+[e $UE 2251  ]
 "117
 [; ;i2c2_mux.c: 117: }
-[e :UE 2254 ]
+[e :UE 2251 ]
 }
+[p f _printf 8388608 ]
+[a 1C 73 50 67 50 32 69 10 0 ]

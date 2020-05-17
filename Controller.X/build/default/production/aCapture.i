@@ -28141,7 +28141,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
             break;
         default:
 
-           LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+           LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",100);
            return -1;
     }
 }
@@ -28199,7 +28199,7 @@ void adcCaptureIsr(void){
         }
     } else {
 
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",101);
     }
 }
 
@@ -28225,7 +28225,7 @@ void aCaptureOffSet(aSrcTyp sel, int16_t offVal){
     } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
     } else {
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
     }
 }
 
@@ -28235,7 +28235,7 @@ int16_t aCaptureOffGet(aSrcTyp sel){
     } else if (sel == VolPSensor) {
         return auxPSensCal;
     } else {
-        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+        LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",102);
     }
 }
 
@@ -28256,7 +28256,7 @@ void aCaptRstFlt(aSrcTyp sel) {
             break;
         default:
 
-            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",103);
     }
             PIE1bits.ADTIE = 1;
 }
@@ -28317,6 +28317,6 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return 1;
         default:
 
-            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;LATDbits.LATD0 = 1; while(1);
+            LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;LATAbits.LATA3 = 0;printf("Fatal %d",104);
     }
 }

@@ -8,6 +8,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "27 ./keyRead.h
 [; ;./keyRead.h: 27: int8_t keyRead();
 [v _keyRead `(c ~T0 @X0 0 e? ]
+"111 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\c99\stdio.h
+[v _printf `(i ~T0 @X0 0 ev`*Cuc ]
 "49 menu.c
 [; ;menu.c: 49:                 ctrlStatus = CTRL_SLEEP;
 [c E16756 0 1 2 3 .. ]
@@ -2424,21 +2426,18 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;menu.c: 42:         lcdMenuPrint = 1;
 [e = _lcdMenuPrint -> -> 1 `i `a ]
 "43
-[; ;menu.c: 43:         do {} while (0);
-[e :U 2238 ]
-{
-}
-[e :U 2237 ]
+[; ;menu.c: 43:         printf ("KEY! %d\n", keyPress);
+[e ( _printf , (. :s 1C -> _keyPress `i ]
 "45
 [; ;menu.c: 45:         if (menuStatus == CFG_POWEROFF) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2239  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2236  ]
 {
 "46
 [; ;menu.c: 46:             menuStatus = CFG_IDLE;
 [e = _menuStatus . `E16793 0 ]
 "47
 [; ;menu.c: 47:             if (keyPress == 2) {
-[e $ ! == -> _keyPress `i -> 2 `i 2240  ]
+[e $ ! == -> _keyPress `i -> 2 `i 2237  ]
 {
 "49
 [; ;menu.c: 49:                 ctrlStatus = CTRL_SLEEP;
@@ -2446,29 +2445,29 @@ Version 4.0 HI-TECH Software Intermediate Code
 "50
 [; ;menu.c: 50:             } else {
 }
-[e $U 2241  ]
-[e :U 2240 ]
+[e $U 2238  ]
+[e :U 2237 ]
 {
 "52
 [; ;menu.c: 52:             }
 }
-[e :U 2241 ]
+[e :U 2238 ]
 "53
 [; ;menu.c: 53:         } else {
 }
-[e $U 2242  ]
-[e :U 2239 ]
+[e $U 2239  ]
+[e :U 2236 ]
 {
 "54
 [; ;menu.c: 54:             switch (keyPress) {
-[e $U 2244  ]
+[e $U 2241  ]
 {
 "55
 [; ;menu.c: 55:                 case 0:
-[e :U 2245 ]
+[e :U 2242 ]
 "56
 [; ;menu.c: 56:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2246  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2243  ]
 {
 "57
 [; ;menu.c: 57:                         menuStatus = CFG_IP;
@@ -2482,9 +2481,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "60
 [; ;menu.c: 60:                     } else if (menuStatus == CFG_IP) {
 }
-[e $U 2247  ]
-[e :U 2246 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 1 `ui 2248  ]
+[e $U 2244  ]
+[e :U 2243 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 1 `ui 2245  ]
 {
 "62
 [; ;menu.c: 62:                         IP = menuVal;
@@ -2494,7 +2493,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chIP -> -> 1 `i `a ]
 "64
 [; ;menu.c: 64:                         if (VentMode == VMODE_VOLUME) {
-[e $ ! == -> _VentMode `ui -> . `E16752 1 `ui 2249  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 1 `ui 2246  ]
 {
 "65
 [; ;menu.c: 65:                             VentMode = VMODE_PRESSURE;
@@ -2505,7 +2504,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "67
 [; ;menu.c: 67:                         }
 }
-[e :U 2249 ]
+[e :U 2246 ]
 "69
 [; ;menu.c: 69:                         MaxP = menuVal + 2;
 [e = _MaxP -> + -> _menuVal `ui -> -> 2 `i `ui `uc ]
@@ -2518,8 +2517,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "72
 [; ;menu.c: 72:                     } else {
 }
-[e $U 2250  ]
-[e :U 2248 ]
+[e $U 2247  ]
+[e :U 2245 ]
 {
 "74
 [; ;menu.c: 74:                         menuStatus = CFG_IDLE;
@@ -2527,17 +2526,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "75
 [; ;menu.c: 75:                     }
 }
-[e :U 2250 ]
 [e :U 2247 ]
+[e :U 2244 ]
 "76
 [; ;menu.c: 76:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "77
 [; ;menu.c: 77:                 case 2:
-[e :U 2251 ]
+[e :U 2248 ]
 "78
 [; ;menu.c: 78:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2252  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2249  ]
 {
 "79
 [; ;menu.c: 79:                         menuStatus = CFG_BPM;
@@ -2551,9 +2550,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "82
 [; ;menu.c: 82:                     } else if (menuStatus == CFG_BPM) {
 }
-[e $U 2253  ]
-[e :U 2252 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 2 `ui 2254  ]
+[e $U 2250  ]
+[e :U 2249 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 2 `ui 2251  ]
 {
 "84
 [; ;menu.c: 84:                         BPM = menuVal;
@@ -2573,8 +2572,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "89
 [; ;menu.c: 89:                     } else {
 }
-[e $U 2255  ]
-[e :U 2254 ]
+[e $U 2252  ]
+[e :U 2251 ]
 {
 "91
 [; ;menu.c: 91:                         menuStatus = CFG_IDLE;
@@ -2582,17 +2581,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "92
 [; ;menu.c: 92:                     }
 }
-[e :U 2255 ]
-[e :U 2253 ]
+[e :U 2252 ]
+[e :U 2250 ]
 "93
 [; ;menu.c: 93:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "94
 [; ;menu.c: 94:                 case 1:
-[e :U 2256 ]
+[e :U 2253 ]
 "95
 [; ;menu.c: 95:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2257  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2254  ]
 {
 "96
 [; ;menu.c: 96:                         menuStatus = CFG_PEEP;
@@ -2606,9 +2605,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "99
 [; ;menu.c: 99:                     } else if (menuStatus == CFG_PEEP) {
 }
-[e $U 2258  ]
-[e :U 2257 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 3 `ui 2259  ]
+[e $U 2255  ]
+[e :U 2254 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 3 `ui 2256  ]
 {
 "101
 [; ;menu.c: 101:                         PEEP = menuVal;
@@ -2622,8 +2621,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "104
 [; ;menu.c: 104:                     } else {
 }
-[e $U 2260  ]
-[e :U 2259 ]
+[e $U 2257  ]
+[e :U 2256 ]
 {
 "106
 [; ;menu.c: 106:                         menuStatus = CFG_IDLE;
@@ -2631,17 +2630,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "107
 [; ;menu.c: 107:                     }
 }
-[e :U 2260 ]
-[e :U 2258 ]
+[e :U 2257 ]
+[e :U 2255 ]
 "108
 [; ;menu.c: 108:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "109
 [; ;menu.c: 109:                 case 6:
-[e :U 2261 ]
+[e :U 2258 ]
 "110
 [; ;menu.c: 110:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2262  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2259  ]
 {
 "111
 [; ;menu.c: 111:                         menuStatus = CFG_MAXP;
@@ -2655,9 +2654,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "114
 [; ;menu.c: 114:                     } else if (menuStatus == CFG_MAXP) {
 }
-[e $U 2263  ]
-[e :U 2262 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 4 `ui 2264  ]
+[e $U 2260  ]
+[e :U 2259 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 4 `ui 2261  ]
 {
 "116
 [; ;menu.c: 116:                         MaxP = menuVal;
@@ -2671,8 +2670,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "119
 [; ;menu.c: 119:                     } else {
 }
-[e $U 2265  ]
-[e :U 2264 ]
+[e $U 2262  ]
+[e :U 2261 ]
 {
 "121
 [; ;menu.c: 121:                         menuStatus = CFG_IDLE;
@@ -2680,17 +2679,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "122
 [; ;menu.c: 122:                     }
 }
-[e :U 2265 ]
-[e :U 2263 ]
+[e :U 2262 ]
+[e :U 2260 ]
 "123
 [; ;menu.c: 123:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "124
 [; ;menu.c: 124:                 case 7:
-[e :U 2266 ]
+[e :U 2263 ]
 "125
 [; ;menu.c: 125:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2267  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2264  ]
 {
 "126
 [; ;menu.c: 126:                         menuStatus = CFG_MAXV;
@@ -2704,9 +2703,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "129
 [; ;menu.c: 129:                     } else if (menuStatus == CFG_MAXV) {
 }
-[e $U 2268  ]
-[e :U 2267 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 5 `ui 2269  ]
+[e $U 2265  ]
+[e :U 2264 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 5 `ui 2266  ]
 {
 "133
 [; ;menu.c: 133:                         HighVAlarm += (menuVal - MaxV);
@@ -2728,7 +2727,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _chMaxV -> -> 1 `i `a ]
 "139
 [; ;menu.c: 139:                         if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2270  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2267  ]
 {
 "140
 [; ;menu.c: 140:                             VentMode = VMODE_VOLUME;
@@ -2745,15 +2744,15 @@ Version 4.0 HI-TECH Software Intermediate Code
 "145
 [; ;menu.c: 145:                         }
 }
-[e :U 2270 ]
+[e :U 2267 ]
 "146
 [; ;menu.c: 146:                         menuStatus = CFG_IDLE;
 [e = _menuStatus . `E16793 0 ]
 "147
 [; ;menu.c: 147:                     } else {
 }
-[e $U 2271  ]
-[e :U 2269 ]
+[e $U 2268  ]
+[e :U 2266 ]
 {
 "149
 [; ;menu.c: 149:                         menuStatus = CFG_IDLE;
@@ -2761,17 +2760,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "150
 [; ;menu.c: 150:                     }
 }
-[e :U 2271 ]
 [e :U 2268 ]
+[e :U 2265 ]
 "151
 [; ;menu.c: 151:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "152
 [; ;menu.c: 152:                 case 8:
-[e :U 2272 ]
+[e :U 2269 ]
 "153
 [; ;menu.c: 153:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2273  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2270  ]
 {
 "154
 [; ;menu.c: 154:                         menuStatus = CFG_HIGHVA;
@@ -2785,9 +2784,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "157
 [; ;menu.c: 157:                     } else if (menuStatus == CFG_HIGHVA) {
 }
-[e $U 2274  ]
-[e :U 2273 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 7 `ui 2275  ]
+[e $U 2271  ]
+[e :U 2270 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 7 `ui 2272  ]
 {
 "159
 [; ;menu.c: 159:                         HighVAlarm = menuVal;
@@ -2801,8 +2800,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "162
 [; ;menu.c: 162:                     } else {
 }
-[e $U 2276  ]
-[e :U 2275 ]
+[e $U 2273  ]
+[e :U 2272 ]
 {
 "164
 [; ;menu.c: 164:                         menuStatus = CFG_IDLE;
@@ -2810,17 +2809,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "165
 [; ;menu.c: 165:                     }
 }
-[e :U 2276 ]
-[e :U 2274 ]
+[e :U 2273 ]
+[e :U 2271 ]
 "166
 [; ;menu.c: 166:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "167
 [; ;menu.c: 167:                 case 9:
-[e :U 2277 ]
+[e :U 2274 ]
 "168
 [; ;menu.c: 168:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2278  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2275  ]
 {
 "169
 [; ;menu.c: 169:                         menuStatus = CFG_LOWVA;
@@ -2834,9 +2833,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "172
 [; ;menu.c: 172:                     } else if (menuStatus == CFG_LOWVA) {
 }
-[e $U 2279  ]
-[e :U 2278 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 6 `ui 2280  ]
+[e $U 2276  ]
+[e :U 2275 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 6 `ui 2277  ]
 {
 "174
 [; ;menu.c: 174:                         LowVAlarm = menuVal;
@@ -2850,8 +2849,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 "177
 [; ;menu.c: 177:                     } else {
 }
-[e $U 2281  ]
-[e :U 2280 ]
+[e $U 2278  ]
+[e :U 2277 ]
 {
 "179
 [; ;menu.c: 179:                         menuStatus = CFG_IDLE;
@@ -2859,34 +2858,34 @@ Version 4.0 HI-TECH Software Intermediate Code
 "180
 [; ;menu.c: 180:                     }
 }
-[e :U 2281 ]
-[e :U 2279 ]
+[e :U 2278 ]
+[e :U 2276 ]
 "181
 [; ;menu.c: 181:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "182
 [; ;menu.c: 182:                 case 3:
-[e :U 2282 ]
+[e :U 2279 ]
 "183
 [; ;menu.c: 183:                     if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2283  ]
+[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2280  ]
 {
 "184
 [; ;menu.c: 184:                         menuTstamp = timeGet();
 [e = _menuTstamp ( _timeGet ..  ]
 "186
 [; ;menu.c: 186:                         switch (menuStatus) {
-[e $U 2285  ]
+[e $U 2282  ]
 {
 "187
 [; ;menu.c: 187:                             case CFG_IP:
-[e :U 2286 ]
+[e :U 2283 ]
 "188
 [; ;menu.c: 188:                                 menuVal = menuVal + 1;
 [e = _menuVal -> + -> _menuVal `ui -> -> 1 `i `ui `us ]
 "189
 [; ;menu.c: 189:                                 if (menuVal > 70) {
-[e $ ! > -> _menuVal `ui -> -> 70 `i `ui 2287  ]
+[e $ ! > -> _menuVal `ui -> -> 70 `i `ui 2284  ]
 {
 "190
 [; ;menu.c: 190:                                     menuVal = 70;
@@ -2894,19 +2893,19 @@ Version 4.0 HI-TECH Software Intermediate Code
 "191
 [; ;menu.c: 191:                                 }
 }
-[e :U 2287 ]
+[e :U 2284 ]
 "192
 [; ;menu.c: 192:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "193
 [; ;menu.c: 193:                             case CFG_MAXP:
-[e :U 2288 ]
+[e :U 2285 ]
 "194
 [; ;menu.c: 194:                                 menuVal = menuVal + 1;
 [e = _menuVal -> + -> _menuVal `ui -> -> 1 `i `ui `us ]
 "195
 [; ;menu.c: 195:                                 if (menuVal > 70) {
-[e $ ! > -> _menuVal `ui -> -> 70 `i `ui 2289  ]
+[e $ ! > -> _menuVal `ui -> -> 70 `i `ui 2286  ]
 {
 "196
 [; ;menu.c: 196:                                     menuVal = 70;
@@ -2914,19 +2913,19 @@ Version 4.0 HI-TECH Software Intermediate Code
 "197
 [; ;menu.c: 197:                                 }
 }
-[e :U 2289 ]
+[e :U 2286 ]
 "198
 [; ;menu.c: 198:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "199
 [; ;menu.c: 199:                             case CFG_PEEP:
-[e :U 2290 ]
+[e :U 2287 ]
 "200
 [; ;menu.c: 200:                                 menuVal = menuVal + 1;
 [e = _menuVal -> + -> _menuVal `ui -> -> 1 `i `ui `us ]
 "201
 [; ;menu.c: 201:                                 if (menuVal > 25) {
-[e $ ! > -> _menuVal `ui -> -> 25 `i `ui 2291  ]
+[e $ ! > -> _menuVal `ui -> -> 25 `i `ui 2288  ]
 {
 "202
 [; ;menu.c: 202:                                     menuVal = 25;
@@ -2934,19 +2933,19 @@ Version 4.0 HI-TECH Software Intermediate Code
 "203
 [; ;menu.c: 203:                                 }
 }
-[e :U 2291 ]
+[e :U 2288 ]
 "204
 [; ;menu.c: 204:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "205
 [; ;menu.c: 205:                             case CFG_BPM:
-[e :U 2292 ]
+[e :U 2289 ]
 "206
 [; ;menu.c: 206:                                 menuVal = menuVal + 1;
 [e = _menuVal -> + -> _menuVal `ui -> -> 1 `i `ui `us ]
 "207
 [; ;menu.c: 207:                                 if (menuVal > 30) {
-[e $ ! > -> _menuVal `ui -> -> 30 `i `ui 2293  ]
+[e $ ! > -> _menuVal `ui -> -> 30 `i `ui 2290  ]
 {
 "208
 [; ;menu.c: 208:                                     menuVal = 30;
@@ -2954,84 +2953,84 @@ Version 4.0 HI-TECH Software Intermediate Code
 "209
 [; ;menu.c: 209:                                 }
 }
-[e :U 2293 ]
+[e :U 2290 ]
 "210
 [; ;menu.c: 210:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "211
 [; ;menu.c: 211:                             case CFG_MAXV:
-[e :U 2294 ]
+[e :U 2291 ]
 "212
 [; ;menu.c: 212:                                 menuVal = ((menuVal + 2 > (1500/10))? (1500/10) : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
 [e = _menuVal -> ? > + -> _menuVal `ui -> -> 2 `i `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < + -> _menuVal `ui -> -> 2 `i `ui -> / -> 100 `i -> 10 `i `ui : -> / -> 100 `i -> 10 `i `ui + -> _menuVal `ui -> -> 2 `i `ui `us ]
 "213
 [; ;menu.c: 213:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "214
 [; ;menu.c: 214:                             case CFG_LOWVA:
-[e :U 2295 ]
+[e :U 2292 ]
 "215
 [; ;menu.c: 215:                             case CFG_HIGHVA:
-[e :U 2296 ]
+[e :U 2293 ]
 "216
 [; ;menu.c: 216:                                 menuVal = ((menuVal + 2 > (1500/10))? (1500/10) : ((menuVal + 2 < (50/10))? (50/10) : menuVal + 2));
 [e = _menuVal -> ? > + -> _menuVal `ui -> -> 2 `i `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < + -> _menuVal `ui -> -> 2 `i `ui -> / -> 50 `i -> 10 `i `ui : -> / -> 50 `i -> 10 `i `ui + -> _menuVal `ui -> -> 2 `i `ui `us ]
 "217
 [; ;menu.c: 217:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "218
 [; ;menu.c: 218:                             default:
-[e :U 2297 ]
+[e :U 2294 ]
 "220
 [; ;menu.c: 220:                                 break;
-[e $U 2284  ]
+[e $U 2281  ]
 "221
 [; ;menu.c: 221:                         }
 }
-[e $U 2284  ]
-[e :U 2285 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16793 1 `ui 2286
- , $ -> . `E16793 4 `ui 2288
- , $ -> . `E16793 3 `ui 2290
- , $ -> . `E16793 2 `ui 2292
- , $ -> . `E16793 5 `ui 2294
- , $ -> . `E16793 6 `ui 2295
- , $ -> . `E16793 7 `ui 2296
- 2297 ]
-[e :U 2284 ]
+[e $U 2281  ]
+[e :U 2282 ]
+[e [\ -> _menuStatus `ui , $ -> . `E16793 1 `ui 2283
+ , $ -> . `E16793 4 `ui 2285
+ , $ -> . `E16793 3 `ui 2287
+ , $ -> . `E16793 2 `ui 2289
+ , $ -> . `E16793 5 `ui 2291
+ , $ -> . `E16793 6 `ui 2292
+ , $ -> . `E16793 7 `ui 2293
+ 2294 ]
+[e :U 2281 ]
 "222
 [; ;menu.c: 222:                     }
 }
-[e :U 2283 ]
+[e :U 2280 ]
 "223
 [; ;menu.c: 223:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "224
 [; ;menu.c: 224:                 case 5:
-[e :U 2298 ]
+[e :U 2295 ]
 "225
 [; ;menu.c: 225:                     if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2299  ]
+[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2296  ]
 {
 "226
 [; ;menu.c: 226:                         menuTstamp = timeGet();
 [e = _menuTstamp ( _timeGet ..  ]
 "228
 [; ;menu.c: 228:                         switch (menuStatus) {
-[e $U 2301  ]
+[e $U 2298  ]
 {
 "229
 [; ;menu.c: 229:                             case CFG_IP:
-[e :U 2302 ]
+[e :U 2299 ]
 "230
 [; ;menu.c: 230:                             case CFG_MAXP:
-[e :U 2303 ]
+[e :U 2300 ]
 "231
 [; ;menu.c: 231:                                 menuVal = menuVal - 1;
 [e = _menuVal -> - -> _menuVal `ui -> -> 1 `i `ui `us ]
 "232
 [; ;menu.c: 232:                                 if (menuVal < 4) {
-[e $ ! < -> _menuVal `ui -> -> 4 `i `ui 2304  ]
+[e $ ! < -> _menuVal `ui -> -> 4 `i `ui 2301  ]
 {
 "233
 [; ;menu.c: 233:                                     menuVal = 4;
@@ -3039,9 +3038,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "234
 [; ;menu.c: 234:                                 } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
 }
-[e $U 2305  ]
-[e :U 2304 ]
-[e $ ! && && == -> _menuStatus `ui -> . `E16793 4 `ui == -> _VentMode `ui -> . `E16752 0 `ui < -> _menuVal `ui -> _IP `ui 2306  ]
+[e $U 2302  ]
+[e :U 2301 ]
+[e $ ! && && == -> _menuStatus `ui -> . `E16793 4 `ui == -> _VentMode `ui -> . `E16752 0 `ui < -> _menuVal `ui -> _IP `ui 2303  ]
 {
 "235
 [; ;menu.c: 235:                                     menuVal = IP;
@@ -3049,20 +3048,20 @@ Version 4.0 HI-TECH Software Intermediate Code
 "236
 [; ;menu.c: 236:                                 }
 }
-[e :U 2306 ]
-[e :U 2305 ]
+[e :U 2303 ]
+[e :U 2302 ]
 "237
 [; ;menu.c: 237:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "238
 [; ;menu.c: 238:                             case CFG_PEEP:
-[e :U 2307 ]
+[e :U 2304 ]
 "239
 [; ;menu.c: 239:                                 menuVal = menuVal - 1;
 [e = _menuVal -> - -> _menuVal `ui -> -> 1 `i `ui `us ]
 "240
 [; ;menu.c: 240:                                 if (menuVal < 4) {
-[e $ ! < -> _menuVal `ui -> -> 4 `i `ui 2308  ]
+[e $ ! < -> _menuVal `ui -> -> 4 `i `ui 2305  ]
 {
 "241
 [; ;menu.c: 241:                                     menuVal = 4;
@@ -3070,19 +3069,19 @@ Version 4.0 HI-TECH Software Intermediate Code
 "242
 [; ;menu.c: 242:                                 }
 }
-[e :U 2308 ]
+[e :U 2305 ]
 "243
 [; ;menu.c: 243:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "244
 [; ;menu.c: 244:                             case CFG_BPM:
-[e :U 2309 ]
+[e :U 2306 ]
 "245
 [; ;menu.c: 245:                                 menuVal = menuVal - 1;
 [e = _menuVal -> - -> _menuVal `ui -> -> 1 `i `ui `us ]
 "246
 [; ;menu.c: 246:                                 if (menuVal < 10) {
-[e $ ! < -> _menuVal `ui -> -> 10 `i `ui 2310  ]
+[e $ ! < -> _menuVal `ui -> -> 10 `i `ui 2307  ]
 {
 "247
 [; ;menu.c: 247:                                     menuVal = 10;
@@ -3090,64 +3089,64 @@ Version 4.0 HI-TECH Software Intermediate Code
 "248
 [; ;menu.c: 248:                                 }
 }
-[e :U 2310 ]
+[e :U 2307 ]
 "249
 [; ;menu.c: 249:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "250
 [; ;menu.c: 250:                             case CFG_MAXV:
-[e :U 2311 ]
+[e :U 2308 ]
 "251
 [; ;menu.c: 251:                                 menuVal = ((menuVal - 2 > (1500/10))? (1500/10) : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
 [e = _menuVal -> ? > - -> _menuVal `ui -> -> 2 `i `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < - -> _menuVal `ui -> -> 2 `i `ui -> / -> 100 `i -> 10 `i `ui : -> / -> 100 `i -> 10 `i `ui - -> _menuVal `ui -> -> 2 `i `ui `us ]
 "252
 [; ;menu.c: 252:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "253
 [; ;menu.c: 253:                             case CFG_LOWVA:
-[e :U 2312 ]
+[e :U 2309 ]
 "254
 [; ;menu.c: 254:                             case CFG_HIGHVA:
-[e :U 2313 ]
+[e :U 2310 ]
 "255
 [; ;menu.c: 255:                                 menuVal = ((menuVal - 2 > (1500/10))? (1500/10) : ((menuVal - 2 < (50/10))? (50/10) : menuVal - 2));
 [e = _menuVal -> ? > - -> _menuVal `ui -> -> 2 `i `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < - -> _menuVal `ui -> -> 2 `i `ui -> / -> 50 `i -> 10 `i `ui : -> / -> 50 `i -> 10 `i `ui - -> _menuVal `ui -> -> 2 `i `ui `us ]
 "256
 [; ;menu.c: 256:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "257
 [; ;menu.c: 257:                             default:
-[e :U 2314 ]
+[e :U 2311 ]
 "259
 [; ;menu.c: 259:                                 break;
-[e $U 2300  ]
+[e $U 2297  ]
 "260
 [; ;menu.c: 260:                         }
 }
-[e $U 2300  ]
-[e :U 2301 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16793 1 `ui 2302
- , $ -> . `E16793 4 `ui 2303
- , $ -> . `E16793 3 `ui 2307
- , $ -> . `E16793 2 `ui 2309
- , $ -> . `E16793 5 `ui 2311
- , $ -> . `E16793 6 `ui 2312
- , $ -> . `E16793 7 `ui 2313
- 2314 ]
-[e :U 2300 ]
+[e $U 2297  ]
+[e :U 2298 ]
+[e [\ -> _menuStatus `ui , $ -> . `E16793 1 `ui 2299
+ , $ -> . `E16793 4 `ui 2300
+ , $ -> . `E16793 3 `ui 2304
+ , $ -> . `E16793 2 `ui 2306
+ , $ -> . `E16793 5 `ui 2308
+ , $ -> . `E16793 6 `ui 2309
+ , $ -> . `E16793 7 `ui 2310
+ 2311 ]
+[e :U 2297 ]
 "261
 [; ;menu.c: 261:                     }
 }
-[e :U 2299 ]
+[e :U 2296 ]
 "262
 [; ;menu.c: 262:                     break;
-[e $U 2243  ]
+[e $U 2240  ]
 "263
 [; ;menu.c: 263:                 case 10:
-[e :U 2315 ]
+[e :U 2312 ]
 "264
 [; ;menu.c: 264:                     if (menuStatus == CFG_IDLE) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2316  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 0 `ui 2313  ]
 {
 "266
 [; ;menu.c: 266:                         menuStatus = CFG_POWEROFF;
@@ -3161,28 +3160,28 @@ Version 4.0 HI-TECH Software Intermediate Code
 "269
 [; ;menu.c: 269:                     }
 }
-[e :U 2316 ]
+[e :U 2313 ]
 "270
 [; ;menu.c: 270:             }
 }
-[e $U 2243  ]
-[e :U 2244 ]
-[e [\ -> _keyPress `i , $ -> 0 `i 2245
- , $ -> 2 `i 2251
- , $ -> 1 `i 2256
- , $ -> 6 `i 2261
- , $ -> 7 `i 2266
- , $ -> 8 `i 2272
- , $ -> 9 `i 2277
- , $ -> 3 `i 2282
- , $ -> 5 `i 2298
- , $ -> 10 `i 2315
- 2243 ]
-[e :U 2243 ]
+[e $U 2240  ]
+[e :U 2241 ]
+[e [\ -> _keyPress `i , $ -> 0 `i 2242
+ , $ -> 2 `i 2248
+ , $ -> 1 `i 2253
+ , $ -> 6 `i 2258
+ , $ -> 7 `i 2263
+ , $ -> 8 `i 2269
+ , $ -> 9 `i 2274
+ , $ -> 3 `i 2279
+ , $ -> 5 `i 2295
+ , $ -> 10 `i 2312
+ 2240 ]
+[e :U 2240 ]
 "271
 [; ;menu.c: 271:         }
 }
-[e :U 2242 ]
+[e :U 2239 ]
 "272
 [; ;menu.c: 272:         lcdPrintBR = 1;
 [e = _lcdPrintBR -> -> 1 `i `a ]
@@ -3195,12 +3194,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 "275
 [; ;menu.c: 275:     } else {
 }
-[e $U 2317  ]
+[e $U 2314  ]
 [e :U 2235 ]
 {
 "276
 [; ;menu.c: 276:         if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
-[e $ ! && != -> _menuStatus `ui -> . `E16793 0 `ui != -> ( _timeElapsed (2 , _menuTstamp -> * -> 5 `i -> 1000 `i `us `i -> 0 `i 2318  ]
+[e $ ! && != -> _menuStatus `ui -> . `E16793 0 `ui != -> ( _timeElapsed (2 , _menuTstamp -> * -> 5 `i -> 1000 `i `us `i -> 0 `i 2315  ]
 {
 "278
 [; ;menu.c: 278:             lcdPrintTR = 1;
@@ -3214,14 +3213,14 @@ Version 4.0 HI-TECH Software Intermediate Code
 "281
 [; ;menu.c: 281:         }
 }
-[e :U 2318 ]
+[e :U 2315 ]
 "282
 [; ;menu.c: 282:         return;
 [e $UE 2234  ]
 "283
 [; ;menu.c: 283:     }
 }
-[e :U 2317 ]
+[e :U 2314 ]
 "284
 [; ;menu.c: 284: }
 [e :UE 2234 ]
@@ -3240,13 +3239,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "289
 [; ;menu.c: 289:     printstrblock("Open Respirator ");
-[e ( _printstrblock (1 :s 1C ]
+[e ( _printstrblock (1 :s 2C ]
 "290
 [; ;menu.c: 290:     setCursor(0, 1);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
 "291
 [; ;menu.c: 291:     printstrblock("    AirVita     ");
-[e ( _printstrblock (1 :s 2C ]
+[e ( _printstrblock (1 :s 3C ]
 "292
 [; ;menu.c: 292:     timeDelayMs(((time_t) 2000*1));
 [e ( _timeDelayMs (1 -> * -> -> -> 2000 `i `us `ui -> -> 1 `i `ui `us ]
@@ -3261,7 +3260,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _blink ..  ]
 "296
 [; ;menu.c: 296: }
-[e :UE 2319 ]
+[e :UE 2316 ]
 }
 "298
 [; ;menu.c: 298: void screenMng(void) {
@@ -3271,173 +3270,173 @@ Version 4.0 HI-TECH Software Intermediate Code
 [f ]
 "300
 [; ;menu.c: 300:     if (lcdPrintTR && !PrintStrBusy()) {
-[e $ ! && != -> _lcdPrintTR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2321  ]
+[e $ ! && != -> _lcdPrintTR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2318  ]
 {
 "301
 [; ;menu.c: 301:         lcdPrintTR = 0;
 [e = _lcdPrintTR -> -> 0 `i `a ]
 "302
 [; ;menu.c: 302:         if ((menuStatus == CFG_IDLE) || (menuStatus == CFG_LOWVA) || (menuStatus == CFG_HIGHVA)) {
-[e $ ! || || == -> _menuStatus `ui -> . `E16793 0 `ui == -> _menuStatus `ui -> . `E16793 6 `ui == -> _menuStatus `ui -> . `E16793 7 `ui 2322  ]
+[e $ ! || || == -> _menuStatus `ui -> . `E16793 0 `ui == -> _menuStatus `ui -> . `E16793 6 `ui == -> _menuStatus `ui -> . `E16793 7 `ui 2319  ]
 {
 "303
 [; ;menu.c: 303:             if (ctrlStatus != CTRL_SLEEP) {
-[e $ ! != -> _ctrlStatus `ui -> . `E16756 3 `ui 2323  ]
+[e $ ! != -> _ctrlStatus `ui -> . `E16756 3 `ui 2320  ]
 {
 "304
 [; ;menu.c: 304:                 if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2324  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2321  ]
 {
 "305
 [; ;menu.c: 305:                     sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, MaxP);
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 3C -> _BPM `i -> _PEEP `i -> _IP `i -> _MaxP `i ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 4C -> _BPM `i -> _PEEP `i -> _IP `i -> _MaxP `i ]
 "306
 [; ;menu.c: 306:                 } else {
 }
-[e $U 2325  ]
-[e :U 2324 ]
+[e $U 2322  ]
+[e :U 2321 ]
 {
 "307
 [; ;menu.c: 307:                     sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) MaxV));
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 4C -> _BPM `i -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 5C -> _BPM `i -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
 "308
 [; ;menu.c: 308:                 }
 }
-[e :U 2325 ]
+[e :U 2322 ]
 "309
 [; ;menu.c: 309:             } else {
 }
-[e $U 2326  ]
-[e :U 2323 ]
+[e $U 2323  ]
+[e :U 2320 ]
 {
 "310
 [; ;menu.c: 310:                 sprintf(lcdTopRow, "----OFF-STATE---");
-[e ( _sprintf (1 , &U _lcdTopRow :s 5C ]
+[e ( _sprintf (1 , &U _lcdTopRow :s 6C ]
 "311
 [; ;menu.c: 311:             }
 }
-[e :U 2326 ]
+[e :U 2323 ]
 "312
 [; ;menu.c: 312:         } else if (menuStatus == CFG_BPM) {
 }
-[e $U 2327  ]
-[e :U 2322 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 2 `ui 2328  ]
+[e $U 2324  ]
+[e :U 2319 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 2 `ui 2325  ]
 {
 "313
 [; ;menu.c: 313:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2329  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2326  ]
 {
 "314
 [; ;menu.c: 314:                 sprintf(lcdTopRow, "%2d %2d %2d %2d ----", menuVal, PEEP, IP, MaxP);
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 6C -> _menuVal `ui -> _PEEP `i -> _IP `i -> _MaxP `i ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 7C -> _menuVal `ui -> _PEEP `i -> _IP `i -> _MaxP `i ]
 "315
 [; ;menu.c: 315:             } else {
 }
-[e $U 2330  ]
-[e :U 2329 ]
+[e $U 2327  ]
+[e :U 2326 ]
 {
 "316
 [; ;menu.c: 316:                 sprintf(lcdTopRow, "%2d %2d -- %2d %4d", menuVal, PEEP, MaxP, 10 * ((uint16_t) MaxV));
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 7C -> _menuVal `ui -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 8C -> _menuVal `ui -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
 "317
 [; ;menu.c: 317:             }
 }
-[e :U 2330 ]
+[e :U 2327 ]
 "318
 [; ;menu.c: 318:         } else if (menuStatus == CFG_PEEP) {
 }
-[e $U 2331  ]
-[e :U 2328 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 3 `ui 2332  ]
+[e $U 2328  ]
+[e :U 2325 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 3 `ui 2329  ]
 {
 "319
 [; ;menu.c: 319:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2333  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2330  ]
 {
 "320
 [; ;menu.c: 320:                 sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, menuVal, IP, MaxP);
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 8C -> _BPM `i -> _menuVal `ui -> _IP `i -> _MaxP `i ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 9C -> _BPM `i -> _menuVal `ui -> _IP `i -> _MaxP `i ]
 "321
 [; ;menu.c: 321:             } else {
 }
-[e $U 2334  ]
-[e :U 2333 ]
+[e $U 2331  ]
+[e :U 2330 ]
 {
 "322
 [; ;menu.c: 322:                 sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, menuVal, MaxP, 10 * ((uint16_t) MaxV));
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 9C -> _BPM `i -> _menuVal `ui -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 10C -> _BPM `i -> _menuVal `ui -> _MaxP `i * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
 "323
 [; ;menu.c: 323:             }
 }
-[e :U 2334 ]
+[e :U 2331 ]
 "324
 [; ;menu.c: 324:         } else if (menuStatus == CFG_IP) {
 }
-[e $U 2335  ]
-[e :U 2332 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 1 `ui 2336  ]
+[e $U 2332  ]
+[e :U 2329 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 1 `ui 2333  ]
 {
 "325
 [; ;menu.c: 325:             sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, menuVal, MaxP);
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 10C -> _BPM `i -> _PEEP `i -> _menuVal `ui -> _MaxP `i ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 11C -> _BPM `i -> _PEEP `i -> _menuVal `ui -> _MaxP `i ]
 "326
 [; ;menu.c: 326:         } else if (menuStatus == CFG_MAXP) {
 }
-[e $U 2337  ]
-[e :U 2336 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 4 `ui 2338  ]
+[e $U 2334  ]
+[e :U 2333 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 4 `ui 2335  ]
 {
 "327
 [; ;menu.c: 327:             if (VentMode == VMODE_PRESSURE) {
-[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2339  ]
+[e $ ! == -> _VentMode `ui -> . `E16752 0 `ui 2336  ]
 {
 "328
 [; ;menu.c: 328:                 sprintf(lcdTopRow, "%2d %2d %2d %2d ----", BPM, PEEP, IP, menuVal);
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 11C -> _BPM `i -> _PEEP `i -> _IP `i -> _menuVal `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 12C -> _BPM `i -> _PEEP `i -> _IP `i -> _menuVal `ui ]
 "329
 [; ;menu.c: 329:             } else {
 }
-[e $U 2340  ]
-[e :U 2339 ]
+[e $U 2337  ]
+[e :U 2336 ]
 {
 "330
 [; ;menu.c: 330:                 sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, menuVal, 10 * ((uint16_t) MaxV));
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 12C -> _BPM `i -> _PEEP `i -> _menuVal `ui * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 13C -> _BPM `i -> _PEEP `i -> _menuVal `ui * -> -> 10 `i `ui -> -> _MaxV `us `ui ]
 "331
 [; ;menu.c: 331:             }
 }
-[e :U 2340 ]
+[e :U 2337 ]
 "332
 [; ;menu.c: 332:         } else if (menuStatus == CFG_MAXV) {
 }
-[e $U 2341  ]
-[e :U 2338 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 5 `ui 2342  ]
+[e $U 2338  ]
+[e :U 2335 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 5 `ui 2339  ]
 {
 "333
 [; ;menu.c: 333:             sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
-[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 13C -> _BPM `i -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> _menuVal `ui ]
+[e ( _sprintf (1 , , , , (. , &U _lcdTopRow :s 14C -> _BPM `i -> _PEEP `i -> _MaxP `i * -> -> 10 `i `ui -> _menuVal `ui ]
 "334
 [; ;menu.c: 334:         } else if (menuStatus == CFG_POWEROFF) {
 }
-[e $U 2343  ]
-[e :U 2342 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2344  ]
+[e $U 2340  ]
+[e :U 2339 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2341  ]
 {
 "335
 [; ;menu.c: 335:             sprintf(lcdTopRow, "PRESS BPM TO    ");
-[e ( _sprintf (1 , &U _lcdTopRow :s 14C ]
+[e ( _sprintf (1 , &U _lcdTopRow :s 15C ]
 "336
 [; ;menu.c: 336:         }
 }
-[e :U 2344 ]
-[e :U 2343 ]
 [e :U 2341 ]
-[e :U 2337 ]
-[e :U 2335 ]
-[e :U 2331 ]
-[e :U 2327 ]
+[e :U 2340 ]
+[e :U 2338 ]
+[e :U 2334 ]
+[e :U 2332 ]
+[e :U 2328 ]
+[e :U 2324 ]
 "339
 [; ;menu.c: 339:         setCursor(0, 0);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
@@ -3446,7 +3445,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printstr (1 -> &U _lcdTopRow `*Cuc ]
 "341
 [; ;menu.c: 341:         if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2345  ]
+[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2342  ]
 {
 "342
 [; ;menu.c: 342:             lcdBlink = 1;
@@ -3454,13 +3453,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 "343
 [; ;menu.c: 343:         }
 }
-[e :U 2345 ]
+[e :U 2342 ]
 "344
 [; ;menu.c: 344:     } else if (lcdPrintBRR && !PrintStrBusy()) {
 }
-[e $U 2346  ]
-[e :U 2321 ]
-[e $ ! && != -> _lcdPrintBRR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2347  ]
+[e $U 2343  ]
+[e :U 2318 ]
+[e $ ! && != -> _lcdPrintBRR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2344  ]
 {
 "345
 [; ;menu.c: 345:         lcdPrintBRR = 0;
@@ -3473,7 +3472,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printstr (1 -> &U _lcdBtnRRow `*Cuc ]
 "349
 [; ;menu.c: 349:         if (menuStatus != CFG_IDLE) {
-[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2348  ]
+[e $ ! != -> _menuStatus `ui -> . `E16793 0 `ui 2345  ]
 {
 "350
 [; ;menu.c: 350:             lcdBlink = 1;
@@ -3481,13 +3480,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 "351
 [; ;menu.c: 351:         }
 }
-[e :U 2348 ]
+[e :U 2345 ]
 "352
 [; ;menu.c: 352:     } else if (lcdPrintBR && !PrintStrBusy()) {
 }
-[e $U 2349  ]
-[e :U 2347 ]
-[e $ ! && != -> _lcdPrintBR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2350  ]
+[e $U 2346  ]
+[e :U 2344 ]
+[e $ ! && != -> _lcdPrintBR `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2347  ]
 {
 "353
 [; ;menu.c: 353:         lcdPrintBR = 0;
@@ -3497,63 +3496,63 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _lcdMenuPrint -> -> 0 `i `a ]
 "355
 [; ;menu.c: 355:         if (menuStatus == CFG_LOWVA) {
-[e $ ! == -> _menuStatus `ui -> . `E16793 6 `ui 2351  ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 6 `ui 2348  ]
 {
 "356
 [; ;menu.c: 356:             sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
-[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 15C * -> -> 10 `i `ui -> _menuVal `ui * -> -> 10 `i `ui -> -> _HighVAlarm `us `ui ]
+[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 16C * -> -> 10 `i `ui -> _menuVal `ui * -> -> 10 `i `ui -> -> _HighVAlarm `us `ui ]
 "357
 [; ;menu.c: 357:         } else if (menuStatus == CFG_HIGHVA) {
 }
-[e $U 2352  ]
-[e :U 2351 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 7 `ui 2353  ]
+[e $U 2349  ]
+[e :U 2348 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 7 `ui 2350  ]
 {
 "358
 [; ;menu.c: 358:             sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
-[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 16C * -> -> 10 `i `ui -> -> _LowVAlarm `us `ui * -> -> 10 `i `ui -> _menuVal `ui ]
+[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 17C * -> -> 10 `i `ui -> -> _LowVAlarm `us `ui * -> -> 10 `i `ui -> _menuVal `ui ]
 "359
 [; ;menu.c: 359:         } else if (menuStatus == CFG_POWEROFF) {
 }
-[e $U 2354  ]
-[e :U 2353 ]
-[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2355  ]
+[e $U 2351  ]
+[e :U 2350 ]
+[e $ ! == -> _menuStatus `ui -> . `E16793 8 `ui 2352  ]
 {
 "360
 [; ;menu.c: 360:                 sprintf(lcdBtnRow, "POWER OFF ");
-[e ( _sprintf (1 , &U _lcdBtnRow :s 17C ]
+[e ( _sprintf (1 , &U _lcdBtnRow :s 18C ]
 "361
 [; ;menu.c: 361:         } else {
 }
-[e $U 2356  ]
-[e :U 2355 ]
+[e $U 2353  ]
+[e :U 2352 ]
 {
 "362
 [; ;menu.c: 362:             if (ctrlStatus != CTRL_SLEEP) {
-[e $ ! != -> _ctrlStatus `ui -> . `E16756 3 `ui 2357  ]
+[e $ ! != -> _ctrlStatus `ui -> . `E16756 3 `ui 2354  ]
 {
 "363
 [; ;menu.c: 363:                 sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
-[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 18C * -> -> 10 `i `ui -> -> _LowVAlarm `us `ui * -> -> 10 `i `ui -> -> _HighVAlarm `us `ui ]
+[e ( _sprintf (1 , , (. , &U _lcdBtnRow :s 19C * -> -> 10 `i `ui -> -> _LowVAlarm `us `ui * -> -> 10 `i `ui -> -> _HighVAlarm `us `ui ]
 "364
 [; ;menu.c: 364:             } else {
 }
-[e $U 2358  ]
-[e :U 2357 ]
+[e $U 2355  ]
+[e :U 2354 ]
 {
 "365
 [; ;menu.c: 365:                 sprintf(lcdBtnRow, "PWR TO ON ");
-[e ( _sprintf (1 , &U _lcdBtnRow :s 19C ]
+[e ( _sprintf (1 , &U _lcdBtnRow :s 20C ]
 "366
 [; ;menu.c: 366:             }
 }
-[e :U 2358 ]
+[e :U 2355 ]
 "367
 [; ;menu.c: 367:         }
 }
-[e :U 2356 ]
-[e :U 2354 ]
-[e :U 2352 ]
+[e :U 2353 ]
+[e :U 2351 ]
+[e :U 2349 ]
 "371
 [; ;menu.c: 371:         setCursor(0, 1);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
@@ -3566,131 +3565,133 @@ Version 4.0 HI-TECH Software Intermediate Code
 "374
 [; ;menu.c: 374:     } else if (lcdBlink && !PrintStrBusy()) {
 }
-[e $U 2359  ]
-[e :U 2350 ]
-[e $ ! && != -> _lcdBlink `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2360  ]
+[e $U 2356  ]
+[e :U 2347 ]
+[e $ ! && != -> _lcdBlink `i -> 0 `i ! != -> ( _PrintStrBusy ..  `i -> 0 `i 2357  ]
 {
 "375
 [; ;menu.c: 375:         lcdBlink = 0;
 [e = _lcdBlink -> -> 0 `i `a ]
 "376
 [; ;menu.c: 376:         switch (menuStatus) {
-[e $U 2362  ]
+[e $U 2359  ]
 {
 "377
 [; ;menu.c: 377:             case CFG_BPM:
-[e :U 2363 ]
+[e :U 2360 ]
 "378
 [; ;menu.c: 378:                 setCursor(1, 0);
 [e ( _setCursor (2 , -> -> 1 `i `uc -> -> 0 `i `uc ]
 "379
 [; ;menu.c: 379:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "380
 [; ;menu.c: 380:             case CFG_PEEP:
-[e :U 2364 ]
+[e :U 2361 ]
 "381
 [; ;menu.c: 381:                 setCursor(4, 0);
 [e ( _setCursor (2 , -> -> 4 `i `uc -> -> 0 `i `uc ]
 "382
 [; ;menu.c: 382:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "383
 [; ;menu.c: 383:             case CFG_IP:
-[e :U 2365 ]
+[e :U 2362 ]
 "384
 [; ;menu.c: 384:                 setCursor(7, 0);
 [e ( _setCursor (2 , -> -> 7 `i `uc -> -> 0 `i `uc ]
 "385
 [; ;menu.c: 385:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "386
 [; ;menu.c: 386:             case CFG_MAXP:
-[e :U 2366 ]
+[e :U 2363 ]
 "387
 [; ;menu.c: 387:                 setCursor(10, 0);
 [e ( _setCursor (2 , -> -> 10 `i `uc -> -> 0 `i `uc ]
 "388
 [; ;menu.c: 388:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "389
 [; ;menu.c: 389:             case CFG_MAXV:
-[e :U 2367 ]
+[e :U 2364 ]
 "390
 [; ;menu.c: 390:                 setCursor(15, 0);
 [e ( _setCursor (2 , -> -> 15 `i `uc -> -> 0 `i `uc ]
 "391
 [; ;menu.c: 391:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "392
 [; ;menu.c: 392:             case CFG_LOWVA:
-[e :U 2368 ]
+[e :U 2365 ]
 "393
 [; ;menu.c: 393:                 setCursor(3, 1);
 [e ( _setCursor (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
 "394
 [; ;menu.c: 394:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "395
 [; ;menu.c: 395:             case CFG_HIGHVA:
-[e :U 2369 ]
+[e :U 2366 ]
 "396
 [; ;menu.c: 396:                 setCursor(8, 1);
 [e ( _setCursor (2 , -> -> 8 `i `uc -> -> 1 `i `uc ]
 "397
 [; ;menu.c: 397:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "398
 [; ;menu.c: 398:             default:
-[e :U 2370 ]
+[e :U 2367 ]
 "399
 [; ;menu.c: 399:                 setCursor(21, 0);
 [e ( _setCursor (2 , -> -> 21 `i `uc -> -> 0 `i `uc ]
 "400
 [; ;menu.c: 400:                 break;
-[e $U 2361  ]
+[e $U 2358  ]
 "401
 [; ;menu.c: 401:         }
 }
-[e $U 2361  ]
-[e :U 2362 ]
-[e [\ -> _menuStatus `ui , $ -> . `E16793 2 `ui 2363
- , $ -> . `E16793 3 `ui 2364
- , $ -> . `E16793 1 `ui 2365
- , $ -> . `E16793 4 `ui 2366
- , $ -> . `E16793 5 `ui 2367
- , $ -> . `E16793 6 `ui 2368
- , $ -> . `E16793 7 `ui 2369
- 2370 ]
-[e :U 2361 ]
+[e $U 2358  ]
+[e :U 2359 ]
+[e [\ -> _menuStatus `ui , $ -> . `E16793 2 `ui 2360
+ , $ -> . `E16793 3 `ui 2361
+ , $ -> . `E16793 1 `ui 2362
+ , $ -> . `E16793 4 `ui 2363
+ , $ -> . `E16793 5 `ui 2364
+ , $ -> . `E16793 6 `ui 2365
+ , $ -> . `E16793 7 `ui 2366
+ 2367 ]
+[e :U 2358 ]
 "402
 [; ;menu.c: 402:     }
 }
-[e :U 2360 ]
-[e :U 2359 ]
-[e :U 2349 ]
+[e :U 2357 ]
+[e :U 2356 ]
 [e :U 2346 ]
+[e :U 2343 ]
 "403
 [; ;menu.c: 403: }
-[e :UE 2320 ]
+[e :UE 2317 ]
 }
+[p f _printf 8388736 ]
 [p f _sprintf 8421504 ]
-[a 4C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
-[a 7C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
-[a 9C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
-[a 12C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
+[a 5C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
+[a 8C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
+[a 10C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
 [a 13C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
-[a 5C 45 45 45 45 79 70 70 45 83 84 65 84 69 45 45 45 0 ]
-[a 3C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
-[a 6C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
-[a 8C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
-[a 10C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
+[a 14C 37 50 100 32 37 50 100 32 45 45 32 37 50 100 32 37 52 100 0 ]
+[a 6C 45 45 45 45 79 70 70 45 83 84 65 84 69 45 45 45 0 ]
+[a 4C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
+[a 7C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
+[a 9C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
 [a 11C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
-[a 1C 79 112 101 110 32 82 101 115 112 105 114 97 116 111 114 32 0 ]
-[a 19C 80 87 82 32 84 79 32 79 78 32 0 ]
-[a 17C 80 79 87 69 82 32 79 70 70 32 0 ]
-[a 15C 37 52 100 32 37 52 100 32 32 0 ]
+[a 12C 37 50 100 32 37 50 100 32 37 50 100 32 37 50 100 32 45 45 45 45 0 ]
+[a 2C 79 112 101 110 32 82 101 115 112 105 114 97 116 111 114 32 0 ]
+[a 20C 80 87 82 32 84 79 32 79 78 32 0 ]
+[a 18C 80 79 87 69 82 32 79 70 70 32 0 ]
 [a 16C 37 52 100 32 37 52 100 32 32 0 ]
-[a 18C 37 52 100 32 37 52 100 32 32 0 ]
-[a 14C 80 82 69 83 83 32 66 80 77 32 84 79 32 32 32 32 0 ]
-[a 2C 32 32 32 32 65 105 114 86 105 116 97 32 32 32 32 32 0 ]
+[a 17C 37 52 100 32 37 52 100 32 32 0 ]
+[a 19C 37 52 100 32 37 52 100 32 32 0 ]
+[a 15C 80 82 69 83 83 32 66 80 77 32 84 79 32 32 32 32 0 ]
+[a 3C 32 32 32 32 65 105 114 86 105 116 97 32 32 32 32 32 0 ]
+[a 1C 75 69 89 33 32 37 100 10 0 ]

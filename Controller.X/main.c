@@ -265,6 +265,15 @@ void main(void) {
 
             if (ctrlStatus == CTRL_SLEEP) {
                 CtrlPowerOff();
+                setCursor(0, 1);
+                printstrblock("                ");
+                timeDelayMs(10);
+                setBacklight(true);
+                timeDelayMs(10);
+                // Now wait until BREATH button pressed.
+                lcdPrintTR = true;
+                lcdPrintBR = true;
+                BLED_ON;
             }
 
             MonitorMsgSend(MONSTATE_STOP);

@@ -28237,7 +28237,7 @@ void MenuMng(void) {
     keyPress = keyRead();
     if ((keyPress >= 0) && (keyPress != 4)) {
         lcdMenuPrint = 1;
-        do {} while (0);
+        printf ("KEY! %d\n", keyPress);
 
         if (menuStatus == CFG_POWEROFF) {
             menuStatus = CFG_IDLE;
