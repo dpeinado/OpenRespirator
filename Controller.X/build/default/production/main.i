@@ -28804,7 +28804,7 @@ void main(void) {
 
 
                         if (timeElapsed(rCycleTime, intIDuration-rSV2ValveCRT-((time_t) 20*1)) ||
-                                (pInst > (intMaxP+((int16_t) ((0.045*4096+2)/5)*4))) ||
+                                (pInst > (intMaxP+((int16_t) ((0.045*4096+2)/5)*2))) ||
                                 (pCtrl > intMaxP) ||
                                 ((pCtrl + pInspOSScale) > intMaxP) ||
                                 ((intVentMode == VMODE_PRESSURE) && ((pCtrl + pInspOSScale) > intIP) && (vValveActuation + vInspOSScale) >= intMaxV) ||
@@ -28910,7 +28910,7 @@ void main(void) {
                                     inspOSMeasure();
                                 }
                             } else {
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT<<2)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = vMeasureGet() - vValveActuation;
@@ -28919,8 +28919,8 @@ void main(void) {
                                         }
                                         vQuanta = (3 * tmpVal + vQuanta) / 4;
                                         tmpVal = (pInst - pValveActuation);
-                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*7)) {
-                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*7);
+                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*8)) {
+                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*8);
                                         }
                                         pQuantaInsp = (3 * tmpVal + pQuantaInsp) / 4;
                                         if (vQuanta < 0) {
@@ -28941,8 +28941,8 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
-                                    if (((pInst + pQuantaInsp) < intMaxP) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < intIP)) ||
+                                    if (((pInst + pQuantaInsp) < (intMaxP-((int16_t) ((0.045*4096+2)/5)*3))) &&
+                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP-((int16_t) ((0.045*4096+2)/5)*1)))) ||
                                              ((intVentMode == VMODE_VOLUME) && (vAdj < intMaxV )))) {
                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
                                         rValveActuationTstamp = timeGet();
@@ -28965,6 +28965,14 @@ void main(void) {
                     rValveDelayStart = timeGet();
                     LATAbits.LATA3 = 0;
                     printf ("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart));
+                }
+
+                if (timeElapsedR(&printTime, ((time_t) 20*1))) {
+                    printf ("-: %d %d %d %d\n", timeGet(), (LATCbits.LATC3?1:0) + (LATAbits.LATA2?2:0) + (LATAbits.LATA3?4:0), pInst, pAvgShort, vMeasureGet());
+
+
+
+
                 }
             }
 
@@ -29065,7 +29073,7 @@ void main(void) {
                             printf ("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)));
                         } else {
                             if (OSCheck) {
-                                if (timeElapsed(rValveActuationTstamp, ((time_t) 350*1) + rSV2ValveCRT+((time_t) 15*1))) {
+                                if (timeElapsed(rValveActuationTstamp, ((time_t) 350*1) + (rSV2ValveCRT<<1))) {
 
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                     pPlatExp = pAvgUShort;
@@ -29084,7 +29092,7 @@ void main(void) {
 
                                 aCaptGetResult(Flt2PSensor, &bdP1);
                                 aCaptGetResult(Flt3PSensor, &bdP2);
-                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*1)) < bdP2) || (keyPeek() == 4)) {
+                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*2.0)) < bdP2) || (keyPeek() == 4)) {
 
                                     printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)));
                                     LATDbits.LATD6 = 1;
@@ -29094,12 +29102,12 @@ void main(void) {
                                 }
 
 
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+((time_t) 15*1))) {
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT<<2)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = (bdP1 - pValveActuation);
-                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*7)) {
-                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*7);
+                                        if (tmpVal > ((int16_t) ((0.045*4096+2)/5)*8)) {
+                                            tmpVal = ((int16_t) ((0.045*4096+2)/5)*8);
                                         }
 
                                         pQuantaExp = (3 * tmpVal + pQuantaExp) / 4;
@@ -29107,7 +29115,7 @@ void main(void) {
                                             pQuantaExp = 0;
                                         }
                                     }
-                                    if ((bdP1 + (pQuantaExp >> 1)) < intPEEP) {
+                                    if ((bdP1 + (pQuantaExp >> 1)) < (intPEEP-((int16_t) ((0.045*4096+2)/5)*1))) {
                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = 1;
@@ -29125,11 +29133,11 @@ void main(void) {
                     }
                 }
 
-                if (timeElapsedR(&printTime, ((time_t) 40*1)<<3)) {
+                if (timeElapsedR(&printTime, ((time_t) 20*1))) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     printf ("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst - pAvgShort))>>8)), rSV3ValveORT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatExp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaExp))>>8)) );
-# 913 "main.c"
+# 921 "main.c"
                     do {} while (0);
 
 

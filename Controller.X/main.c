@@ -49,12 +49,12 @@ uint8_t PEEP = 4;
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
 #define PEEPCTRLMIN   MPRESSURE_MBAR(1)
 
-#define BDTECT_THRL   MPRESSURE_MBAR(1)
+#define BDTECT_THRL   MPRESSURE_MBAR(2.0)
 
 #define PIPLATEAUMDEL TIME_MS(150)
 #define PEPLATEAUMDEL TIME_MS(350)
 #define SV2OTIME TIME_MS(15)
-#define PRINTTIME TIME_MS(40)
+#define PRINTTIME TIME_MS(20)
 ///////////////////
 ///////////////////
 
@@ -552,7 +552,7 @@ void main(void) {
                                                 
                         // Finish inhale if pressure or volume conditions, but also if inspiration is about to finish, so SV2 close response time can be measured.
                         if (timeElapsed(rCycleTime, intIDuration-rSV2ValveCRT-TIME_MS(20)) ||
-                                (pInst > (intMaxP+MPRESSURE_MBAR(4))) || // Should never happen.
+                                (pInst > (intMaxP+MPRESSURE_MBAR(2))) || // Should never happen.
                                 (pCtrl > intMaxP) ||
                                 ((pCtrl + pInspOSScale) > intMaxP) ||
                                 ((intVentMode == VMODE_PRESSURE) && ((pCtrl + pInspOSScale) > intIP) && (vValveActuation + vInspOSScale) >= intMaxV) ||
@@ -658,7 +658,7 @@ void main(void) {
                                     inspOSMeasure();
                                 }
                             } else {
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+TIME_MS(15))) {
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT<<2)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = vMeasureGet() - vValveActuation;
@@ -689,8 +689,8 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
-                                    if (((pInst + pQuantaInsp) < intMaxP) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < intIP)) ||
+                                    if (((pInst + pQuantaInsp) < (intMaxP-MPRESSURE_MBAR(3))) &&
+                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP-MPRESSURE_MBAR(1)))) ||
                                              ((intVentMode == VMODE_VOLUME) && (vAdj < intMaxV  )))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
@@ -713,6 +713,14 @@ void main(void) {
                     rValveDelayStart = timeGet();
                     CLOSE_SV3;
                     DEBUG_PRINT(("PI-OSV3 T %d\n", timeDiff(rCycleTime, rValveDelayStart)));
+                }
+
+                if (timeElapsedR(&printTime, PRINTTIME)) {
+                    DEBUG_PRINT(("-: %d %d %d %d\n",
+                                  timeGet(),
+                                  (SV2MEDISOPEN?1:0) + (SV2LOWISOPEN?2:0) + (SV3ISOPEN?4:0),
+                                  pInst,
+                                  pAvgShort, vMeasureGet()));
                 }
             }
 
@@ -813,7 +821,7 @@ void main(void) {
                             DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst)));
                         } else {
                             if (OSCheck) {
-                                if (timeElapsed(rValveActuationTstamp, PEPLATEAUMDEL + rSV2ValveCRT+TIME_MS(15))) {
+                                if (timeElapsed(rValveActuationTstamp, PEPLATEAUMDEL + (rSV2ValveCRT<<1))) {
                                     // Take averaged pressure measurement as mean value.
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                     pPlatExp = pAvgUShort;
@@ -841,8 +849,8 @@ void main(void) {
                                     break;
                                 }
                                 // Then PEEP level maintenance.
-                                // Measure only after delay of valve actuation has elapsed, x2.
-                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT+TIME_MS(15))) {
+                                // Measure only after close delay of valve actuation has elapsed, x4.
+                                if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT<<2)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
                                         tmpVal = (bdP1 - pValveActuation);
@@ -855,7 +863,7 @@ void main(void) {
                                             pQuantaExp = 0;
                                         }
                                     }
-                                    if ((bdP1 + (pQuantaExp >> 1)) < intPEEP) {
+                                    if ((bdP1 + (pQuantaExp >> 1)) < (intPEEP-MPRESSURE_MBAR(1))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
@@ -873,7 +881,7 @@ void main(void) {
                     }
                 }
 #ifdef DEBUG
-                if (timeElapsedR(&printTime, PRINTTIME<<3)) {
+                if (timeElapsedR(&printTime, PRINTTIME)) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     DEBUG_PRINT(("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n",
