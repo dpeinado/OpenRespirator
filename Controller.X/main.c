@@ -658,6 +658,12 @@ void main(void) {
                                     inspOSMeasure();
                                 }
                             } else {
+                                if (QuantaCheck) {
+                                   aCaptGetResult(Flt1PSensor, &pAvgUShort);
+                                   if (pPlatMax < pAvgUShort) {
+                                       pPlatMax = pAvgUShort;
+                                    }
+                                }
                                 if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT<<2)) {
                                     if (QuantaCheck) {
                                         QuantaCheck = 0;
@@ -666,7 +672,7 @@ void main(void) {
                                             tmpVal = VQUANTA_LIMIT;
                                         }
                                         vQuanta = (3 * tmpVal + vQuanta) / 4;
-                                        tmpVal = (pInst - pValveActuation);
+                                        tmpVal = (pPlatMax - pValveActuation);
                                         if (tmpVal > PQUANTA_LIMIT) {
                                             tmpVal = PQUANTA_LIMIT;
                                         }
@@ -689,13 +695,14 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
-                                    if (((pInst + pQuantaInsp) < (intMaxP-MPRESSURE_MBAR(3))) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP-MPRESSURE_MBAR(1)))) ||
+                                    if (((pInst + pQuantaInsp) < intMaxP) &&
+                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP-MPRESSURE_MBAR(2)))) ||
                                              ((intVentMode == VMODE_VOLUME) && (vAdj < intMaxV  )))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
-                                        DEBUG_PRINT(("PI-VO T %d - Pi %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst), vMeasureGet()));
+                                        pPlatMax = pAvgUShort;
+                                        DEBUG_PRINT(("PI-VO T %d - Pi %d Pq %d VOL %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst),DBGPCONVERT(pQuantaInsp), vMeasureGet()));
                                     }
                                 }
                             }
