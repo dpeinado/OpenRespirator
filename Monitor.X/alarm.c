@@ -239,25 +239,26 @@ void ClearNoPowerSupplyAlarm(void) { noPowerSupplyAlarm = false; };
 struct alarm { char name[17]; int type; bool (* func)(void); } a;
 
 struct alarm alarmData[] = {
-    {"Battery Fail    ", ALARM_HIGH, BatteryFailAlarm },
-    {"Monitor Fail    ", ALARM_HIGH, MonitorFailAlarm },
-    {"Control Fail    ", ALARM_HIGH, ControlFailAlarm },
-    {"Very High Pressu", ALARM_HIGH, VeryHighPressureAlarmHigh},
-    {"High Pressure   ", ALARM_HIGH, HighPressureAlarmHigh},
-    {"High Pressure   ", ALARM_LOW,  HighPressureAlarmLow},   
-    {"Circuit Failure ", ALARM_HIGH, CircuitFailureAlarm},
-    {"Gas Failure     ", ALARM_HIGH, GasFailureAlarm},
-    {"Battery Low     ", ALARM_MED,  BaterryLowAlarmMed},
-    {"Battery Low     ", ALARM_HIGH, BaterryLowAlarmHigh},
-    {"EP Below Set    ", ALARM_MED,  EPBelowSetAlarm},
-    {"EP Above Set    ", ALARM_MED,  EPAboveSetAlarm},
-    {"IP Below Set    ", ALARM_MED,  IPBelowSetAlarm},
-    {"IP Above Set    ", ALARM_MED,  IPAboveSetAlarm},
-    {"Tdi too long    ", ALARM_MED,  TdiTooLongAlarm},
-    {"Tde too long    ", ALARM_MED,  TdeTooLongAlarm},
-    {"Over Max Volume ", ALARM_MED,  VAboveMaxAlarm},
-    {"Below Min Volume", ALARM_MED,  VBelowMinAlarm},
-    {"No Power Supply ", ALARM_LOW,  NoPowerSupplyAlarm}
+    {"Battery Fail  ", ALARM_HIGH, BatteryFailAlarm },
+    {"Monitor Fail  ", ALARM_HIGH, MonitorFailAlarm },
+    {"Control Fail  ", ALARM_HIGH, ControlFailAlarm },
+//    1234567890123456
+    {"Very High Pres", ALARM_HIGH, VeryHighPressureAlarmHigh},
+    {"High Pressure ", ALARM_HIGH, HighPressureAlarmHigh},
+    {"High Pressure ", ALARM_LOW,  HighPressureAlarmLow},   
+    {"Circuit Fail  ", ALARM_HIGH, CircuitFailureAlarm},
+    {"Gas Failure   ", ALARM_HIGH, GasFailureAlarm},
+    {"Battery Low   ", ALARM_MED,  BaterryLowAlarmMed},
+    {"Battery Low   ", ALARM_HIGH, BaterryLowAlarmHigh},
+    {"EP Below Set  ", ALARM_MED,  EPBelowSetAlarm},
+    {"EP Above Set  ", ALARM_MED,  EPAboveSetAlarm},
+    {"IP Below Set  ", ALARM_MED,  IPBelowSetAlarm},
+    {"IP Above Set  ", ALARM_MED,  IPAboveSetAlarm},
+    {"Tdi too long  ", ALARM_MED,  TdiTooLongAlarm},
+    {"Tde too long  ", ALARM_MED,  TdeTooLongAlarm},
+    {"Over Max Vol  ", ALARM_MED,  VAboveMaxAlarm},
+    {"Below Min Vol ", ALARM_MED,  VBelowMinAlarm},
+    {"No Power Suppl", ALARM_LOW,  NoPowerSupplyAlarm}
 };
 
 #define NUM_ALARMS sizeof(alarmData)/sizeof(a)
@@ -321,39 +322,52 @@ bool AnyAlarm(void) {
 }
 
 void MuteAlarm(void) {
-    if (muteSec && muteSec<115) {
-        muteSec = 0;
-        return;
-    }
     printf("MUTE");
-    if (AnyAlarm()) {
+    
+    if (muteSec && muteSec<115) { // Re-enable sound
+        muteSec = 0;
+    }
+
+    if (AnyAlarm()) { // If any alarm
+        // Start Mute
         BuzzerClear();
         muteSec = 120;
-        if (alarmData[HigherAlarm()].func==HighPressureAlarmHigh) {
+        // Clear latched alarms
+        int high = HigherAlarm();
+        if (alarmData[high].func==HighPressureAlarmHigh) {
 //            printf("\r\nClear High Alarm\r\n");
             ClearHighPressureAlarmHigh();
         }
-        if (alarmData[HigherAlarm()].func==VeryHighPressureAlarmHigh) {
-            printf("\r\nClear Very High Alarm\r\n");
+        if (alarmData[high].func==VeryHighPressureAlarmHigh) {
+//            printf("\r\nClear Very High Alarm\r\n");
             ClearVeryHighPressureAlarmHigh();
         }
-        if (alarmData[HigherAlarm()].func==MonitorFailAlarm) {
+        if (alarmData[high].func==MonitorFailAlarm) {
 //            printf("\r\nClear Monitor Alarm\r\n");
             ClearMonitorFailAlarm();
         }
-        if (alarmData[HigherAlarm()].func==ControlFailAlarm) {
+        if (alarmData[high].func==ControlFailAlarm) {
 //            printf("\r\nClear Control Alarm\r\n");
             ClearControlFailAlarm();
         }
-        if (alarmData[HigherAlarm()].func==GasFailureAlarm) {
+        if (alarmData[high].func==GasFailureAlarm) {
 //            printf("\r\nClear Gas Failure Alarm\r\n");
             ClearGasFailureAlarm();
         }
-        if (alarmData[HigherAlarm()].func==CircuitFailureAlarm) {
+        if (alarmData[high].func==CircuitFailureAlarm) {
 //            printf("\r\nClear Circuit Failure Alarm\r\n");
             ClearCircuitFailureAlarm();
         }
     }
+    
+    // This is here just in case .. To be debug
+    ClearVeryHighPressureAlarmHigh();
+    ClearHighPressureAlarmHigh();
+    ClearCircuitFailureAlarm();
+    ClearGasFailureAlarm();
+    ClearControlFailAlarm();
+    ClearMonitorFailAlarm();
+    
     controlSV1 = true;
     monitorSV1 = true;
     veryHighSV1 = true;

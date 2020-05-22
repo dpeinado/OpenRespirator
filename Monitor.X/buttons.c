@@ -2,9 +2,11 @@
 #include "mcc_generated_files/mcc.h"
 #include "alarm.h"
 #include "buttons.h"
+#include "monitor.h"
 
 
 #define PUSHMASK 0xF0
+#define PUSHLONGMASK 0xFF
 
 static uint8_t muteButton=0;
 static uint8_t histButton=0;
@@ -30,6 +32,12 @@ void ButtonTask(void) {
         //printf("\r\nHIST\r\n");
         histButton = 0;
     }
+    if (muteButton == PUSHLONGMASK && histButton == PUSHLONGMASK) {
+        DisableAlarmSV1();
+        VALVE_SetHigh();
+        printf("\r\nDISABLE SV1 ALARM!!!!!\r\n");
+    }
+    
 }
 
 void SetAlarmLED(void) {

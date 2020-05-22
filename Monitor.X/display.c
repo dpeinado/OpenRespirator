@@ -47,8 +47,8 @@ void UnDisplayCalibrate(void) {
 };
 
 void ValueDisplay(void) {
-    if (!enable) {
-        if (msg1[0]==0) sprintf(msg1, "Open Respirator ");
+    if (!enable) { //                  1234567890123456
+        if (msg1[0]==0) sprintf(msg1, "Open  Respirator");
         if (msg2[0]==0) sprintf(msg2, "    AirVita     ");
         return;
     }
@@ -69,7 +69,9 @@ void ValueDisplay(void) {
     int8_t dtdi = (tdi-((int16_t) etdi)*1000)/10;
     int8_t etde = tde/1000;
     int8_t dtde = (tde-((int16_t) etde)*1000)/10;
-    int16_t r = (te)/(ti/10);
+    int16_t r;
+    if (ti!=0) r = (te)/(ti/10);
+    else r = 0;
     int8_t er = r/10;
     int8_t dr = (r-((int16_t) er)*10);
     int16_t tip = GetTargetIp();
@@ -80,8 +82,8 @@ void ValueDisplay(void) {
     
     //printf("\rTR:%2d%% TDE:%d %d.%02d TDI:%d %d.%02d EP/IP:%d(%d)/%d(%d)  BPM: %d TE/TI:%d/%d ms       ", TR, tde, etde,dtde, tdi, etdi, dtdi, pe, tep, pi, tip, bpm, te, ti);
     //sprintf(msg, "%2d%% %d.%02d %d.%02d       ", TR, etdi, dtdi, etde, dtde);
-    sprintf(msg1, "%2d%% %d.%02d %d.%02d %s", spr, etde,dtde, etdi, dtdi, calibrate? "Ca" : GetAlarmState() );
-//                   1234  56 78  90  12  3456  
+    sprintf(msg1, "%2d%% %d.%02d %d.%02d%c%s", spr, etde,dtde, etdi, dtdi, GetDisableAlarmSV1() ? 'd':' ', calibrate? "Ca" : GetAlarmState() );
+//                   1234 5678  9 01 23  456  
     sprintf(msg3, "%1d%1d %2d %2d %2d %4d", er, dr, pe, pi, pmax, vol);
 //                   12  34 567 890 123456
     cnt++;

@@ -48,6 +48,9 @@ void SetVolumeControl(bool);
 
 // Solenoid functions
 void SetSV1 (bool);
+void DisableAlarmSV1(void);
+void EnableAlarmSV1(void);
+bool GetDisableAlarmSV1(void);
 
 // Output values
 int16_t GetTdi(void);

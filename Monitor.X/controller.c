@@ -58,6 +58,7 @@ void UpdateState(void) {
         if (initPhase == 5) {
             //printf("\r\nFlow: %d pa Pressure: %d pa\r\n", GetPressureV_pa(), GetPressure_pa());
         }
+        EnableAlarmSV1();
     }
     if (msg.cntMsg.state & STATE_SLEEP) {
         LCDOff();
@@ -71,6 +72,7 @@ void UpdateState(void) {
     
     run = (msg.cntMsg.state & STATE_RUN) == STATE_RUN;
     //if (run) printf("R\r\n");
+    
     if (run) SetSV1(true);
     if (run) MonitorEnable(); else MonitorDisable();
     if (run) DisplayEnable(); else DisplayDisable();

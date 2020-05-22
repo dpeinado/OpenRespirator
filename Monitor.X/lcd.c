@@ -40,10 +40,10 @@ void LCDInit (void) {
     
     LCDWriteCmd(0x0C);      // Display on; cursor off, blink off
     LCDWriteCmd(0x02);      // Return home
-    
-    LCDMessage("Open Respirator");
+              //1234567890123456
+    LCDMessage("Open  Respirator");
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage("   AirVita     ");
+    LCDMessage("    AirVita     ");
     LCDWriteCmd(0x02);
     __delay_ms(750);
     LCDTest();
@@ -78,6 +78,7 @@ void LCDTest(void) {
     LCDMessage12("8888888888888888","9999999999999999");
     __delay_ms(750);
     LCDMessage12("9999999999999999","0000000000000000");
+    __delay_ms(750);
     
 }
 

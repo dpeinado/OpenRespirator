@@ -18,8 +18,6 @@ void ButtonTask(void);
 void ToggleAlarmLED(void);
 void ButtonInit(void);
 
-
-
 #ifdef	__cplusplus
 }
 #endif

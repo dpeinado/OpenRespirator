@@ -128,6 +128,7 @@ static int32_t pHighAcc, pLowAcc;
 static int16_t numHigh, numLow;
 static bool alarmSV1;
 static bool normalSV1;
+static bool disableAlarmSV1;
 static int16_t rpi, rpe, lrpi, lrpe;
 static int16_t hiLimit, loLimit;
 
@@ -178,7 +179,7 @@ void SetTarget(int16_t pmax, int16_t ip, int16_t ep, uint16_t br, int16_t vmax, 
     //if (ip!= targetHigh) printf("\r\n IP: %d \r\n", ip);
     targetHigh = ip*5;
     targetLow  = ep*5;
-    targetBp   = 60000/br;
+    if (br!=0) targetBp   = 60000/br; else targetBp = 3000;
     targetPmax = pmax*5;
     volumeMax = vmax;
     volumeMin = vmin;
@@ -247,7 +248,7 @@ void MonitorPressureTask(void) { // Every 2 ms
     uint16_t temp;
     
     // Define Valve state
-    if (alarmSV1 & normalSV1) VALVE_SetHigh();
+    if (normalSV1 && (alarmSV1 || disableAlarmSV1)) VALVE_SetHigh();
     else VALVE_SetLow();
     
     // Timer0 signal every 2 seconds
@@ -702,10 +703,11 @@ void MonitorInit (void) {
     targetHigh = 20*5; // 0.2 mbar
     targetLow  = 7*5; // 0.2 mbar
     targetPmax = 25*5;
-    adcVOffset = 228*8; // Read from EEPROM or calibrate. ADC counts
-    adcOffset = 42*8;
+    adcVOffset = 162*8; // Read from EEPROM or calibrate. ADC counts
+    adcOffset = 174*8;
     volumeMax = 500;
     volumeMin = 100;
+    disableAlarmSV1=false;
     state = STATE_OFF;
     enable = false;
     ClearVars();
@@ -768,6 +770,15 @@ int16_t Get12V (void) {
     return v12;
 }
 
+void DisableAlarmSV1(void) {
+    disableAlarmSV1=true;
+}
+
+void EnableAlarmSV1(void) {
+    disableAlarmSV1=false;
+}
+
+bool GetDisableAlarmSV1(void) { return disableAlarmSV1; }
 
 void SetAlarmSV1(bool value) {
     static bool last= false;

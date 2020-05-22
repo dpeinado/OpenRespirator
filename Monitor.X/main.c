@@ -137,6 +137,8 @@ void main(void)
             if (ch=='g') SetSV1(false);
             if (ch=='R') MonitorEnable();
             if (ch=='r') MonitorDisable();
+            if (ch=='d') DisableAlarmSV1();
+            if (ch=='D') EnableAlarmSV1();
 
             if (ch=='l') printf("\r\nPRS: %d %d pa PRSV: %d pa 12V: %d mV\r\n", GetPressure_pa(), GetPressure_pa(), GetPressureV_pa(), Get12V());
             if (ch=='p') MonitorDump();
