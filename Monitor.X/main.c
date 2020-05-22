@@ -142,6 +142,8 @@ void main(void)
             if (ch=='p') MonitorDump();
             if (ch=='z') SetCalibrateState(false);
             if (ch=='Z') SetCalibrateState(true);
+            if (ch=='o') LCDOff();
+            if (ch=='O') LCDOn();
             if (ch) {
                 //putch(ch);
                 //putch('\n');

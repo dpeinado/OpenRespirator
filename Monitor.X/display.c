@@ -31,7 +31,8 @@ void DisplayEnable(void) {
 
 void DisplayDisable(void) {
     //                        1234567890123456   1234567890123456
-    if (enable) LCDMessage12("Open Respirator ","    AirVita    ");
+    if (enable) sprintf(msg1, "Open Respirator ");
+    if (enable) sprintf(msg2, "    AirVita     "); 
     enable = false;
 }
 
@@ -46,6 +47,11 @@ void UnDisplayCalibrate(void) {
 };
 
 void ValueDisplay(void) {
+    if (!enable) {
+        if (msg1[0]==0) sprintf(msg1, "Open Respirator ");
+        if (msg2[0]==0) sprintf(msg2, "    AirVita     ");
+        return;
+    }
     static int cnt=0;
     
     int16_t tdi = GetTdi();
@@ -95,14 +101,6 @@ void AlarmDisplay(int type, char *alarm) {
 }
 
 void DisplayTask(void) {
-    if (!enable) {
-        if (msg2[0]) {
-            //printf("\r\nAlarm \"%s\\r\n", msg2);
-            LCDMessage2(msg2);
-            msg2[0]=0;
-        }
-        return;
-    }
     
     if (msg1[0] && msg2[0]) {
         //printf("\r\nData+Alarm \"%s\" \"%s\"\r\n", msg1, msg2);
@@ -114,7 +112,7 @@ void DisplayTask(void) {
     
     if (msg4[0]) {
         //printf("\r\nData+Data \"%s\" \"%s\"\r\n", msg1, msg3);
-        LCDMessage1(msg4);
+        LCDMessage2(msg4);
         return;
     }
     

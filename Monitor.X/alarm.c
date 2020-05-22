@@ -194,6 +194,28 @@ void SetVAboveMaxAlarm(void) { vAboveMaxAlarm = true; };
 void SetVBelowMinAlarm(void) { vBelowMinAlarm = true; };
 void SetNoPowerSupplyAlarm(void) { noPowerSupplyAlarm = true; };
 
+void ClearAllAlarm(void) {
+    ClearBatteryFailAlarm();
+    ClearMonitorFailAlarm();
+    ClearControlFailAlarm();
+    ClearGasFailureAlarm();
+    ClearHighPressureAlarmLow();
+    ClearHighPressureAlarmHigh();
+    ClearVeryHighPressureAlarmHigh();
+    ClearCircuitFailureAlarm();
+    ClearBaterryLowAlarmMed();
+    ClearBaterryLowAlarmHigh();
+    ClearEPBelowSetAlarm();
+    ClearEPAboveSetAlarm();
+    ClearIPBelowSetAlarm();
+    ClearIPAboveSetAlarm();
+    ClearTdiTooLongAlarm();
+    ClearTdeTooLongAlarm();
+    ClearVAboveMaxAlarm();
+    ClearVBelowMinAlarm();
+    ClearNoPowerSupplyAlarm();
+}
+
 void ClearBatteryFailAlarm(void) { batteryFailAlarm = false; };
 void ClearMonitorFailAlarm(void) { monitorFailAlarm = false; };
 void ClearControlFailAlarm(void) { controlFailAlarm = false; };
