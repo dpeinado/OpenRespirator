@@ -75,7 +75,7 @@ void main(void)
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
-    printf ("\033c Hello world!!!\r\n New version \r\n");
+    printf ("\033c Hello world!!!\r\n");
     LCDOn();
     InitDisplay();
     

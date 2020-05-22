@@ -18,9 +18,9 @@ void LCDTest(void);
 
 
 void LCDInit (void) {
-    TMR6_Start();
+    //TMR6_Start();
     
-    DAC1_SetOutput(31);
+    //DAC1_SetOutput(31);
     
     __delay_ms(50);         // 50 ms after power up
  
@@ -83,13 +83,13 @@ void LCDTest(void) {
 }
 
 void LCDOff(void) {
-    LED = false;
+    LLED_SetLow();
     //LCDWriteCmd(0x01);
     //__delay_ms(2);
 }
 
 void LCDOn(void) {
-    LED = true;
+    LLED_SetHigh();
 }
 
 #define min(x,y) (x)>(y)?(y):(x)
@@ -124,7 +124,7 @@ void LCDMessage2(char *str) {
 
 void LCDWriteChar(char chr)
 {
-    
+    /*
     I2CSend(1,0,0,chr); //RS RW E D74
     __delay_us(5);
     I2CSend(1,0,1,chr); //RS RW E D74
@@ -137,49 +137,62 @@ void LCDWriteChar(char chr)
     __delay_us(10);
     I2CSend(1,0,0,chr<<4); //RS RW E D74
     __delay_us(38);
-    /*
-	LCD_DATA = (chr >> 2) & 0x3C;		// Place data high nibble
-	LCD_RS = 1;							// Prepare LCD for receiving character
+    */
+    
+    if (chr&0x80) D7_SetHigh(); else D7_SetLow(); // Place data
+    if (chr&0x40) D6_SetHigh(); else D6_SetLow();
+    if (chr&0x20) D5_SetHigh(); else D5_SetLow();
+    if (chr&0x10) D4_SetHigh(); else D4_SetLow(); 
+    
+	RS_SetHigh();							// Prepare LCD for receiving instruction
     __delay_us(5);
-	LCD_E  = 1;							// Enable read
-	__delay_us(10);  					// Wait 5uS
-	LCD_E  = 0;							// Latch data
-	__delay_us(5);							// Allow port to settle
-	LCD_DATA = (chr << 2) & 0x3C;		// Place data low nibble
-	LCD_RS = 1;
+	E_SetHigh();							// Enable read
+	__delay_us(10);                 	// Wait 10uS
+	E_SetLow();							// Latch data
+	__delay_us(5);								// Allow port to settle
+    if (chr&0x8) D7_SetHigh(); else D7_SetLow(); // Place data low nibble
+    if (chr&0x4) D6_SetHigh(); else D6_SetLow();
+    if (chr&0x2) D5_SetHigh(); else D5_SetLow();
+    if (chr&0x1) D4_SetHigh(); else D4_SetLow(); 
+	
+	RS_SetHigh();							// Prepare LCD for receiving instruction
     __delay_us(5);
-	LCD_E  = 1;							// Enable read
-	__delay_us(10);                      // Wait 5uS
-	LCD_E  = 0;							// Latch data
-	__delay_us(38);                     // Wait 38uS
- * */
+	E_SetHigh();							// Enable read
+	__delay_us(10);     				// Wait 10uS
+	E_SetLow();							// Latch data
+    __delay_us(38);
+
 }
 
 void LCDWrite4(uint8_t chr)
 {
-    
+    /*
     I2CSend(0,0,0,chr); //RS RW E D74
     __delay_us(5);
     I2CSend(0,0,1,chr); //RS RW E D74
     __delay_us(10);
     I2CSend(0,0,0,chr); //RS RW E D74
     __delay_us(38);
+    */
     
+     
+    if (chr&0x80) D7_SetHigh(); else D7_SetLow(); // Place data high nibble
+    if (chr&0x40) D6_SetHigh(); else D6_SetLow();
+    if (chr&0x20) D5_SetHigh(); else D5_SetLow();
+    if (chr&0x10) D4_SetHigh(); else D4_SetLow();
     
-     /*
-	LCD_DATA = (chr >> 2) & 0x3C;		// Place data high nibble
-	LCD_RS = 0;							// Prepare LCD for receiving character
+	RS_SetLow();							// Prepare LCD for receiving character
     __delay_us(5);
-	LCD_E  = 1;							// Enable read
+	E_SetHigh();							// Enable read
 	__delay_us(10);  					// Wait 5uS
-	LCD_E  = 0;							// Latch data
+	E_SetLow();							// Latch data
 	__delay_us(38);         			// Wait 38uS
-     * */
+    
 }
 
 void LCDWriteCmd(uint8_t data) 
 {
-      
+     /*
     I2CSend(0,0,0,data); //RS RW E D74
     __delay_us(5);
     I2CSend(0,0,1,data); //RS RW E D74
@@ -192,22 +205,31 @@ void LCDWriteCmd(uint8_t data)
     __delay_us(10);
     I2CSend(0,0,0,data<<4); //RS RW E D74
     __delay_us(38);
-/*
-	LCD_DATA = (data >> 2) & 0x3C; // Place data
-	LCD_RS = 0;							// Prepare LCD for receiving instruction
+    */
+    
+	if (data&0x80) D7_SetHigh(); else D7_SetLow(); // Place data
+    if (data&0x40) D6_SetHigh(); else D6_SetLow();
+    if (data&0x20) D5_SetHigh(); else D5_SetLow();
+    if (data&0x10) D4_SetHigh(); else D4_SetLow(); 
+    
+	RS_SetLow();							// Prepare LCD for receiving instruction
     __delay_us(5);
-	LCD_E  = 1;							// Enable read
+	E_SetHigh();							// Enable read
 	__delay_us(10);                 	// Wait 10uS
-	LCD_E  = 0;							// Latch data
+	E_SetLow();							// Latch data
 	__delay_us(5);								// Allow port to settle
-	LCD_DATA = (data << 2) & 0x3C; // Place data low nibble
-	LCD_RS = 0;							// Prepare LCD for receiving instruction
+    if (data&0x8) D7_SetHigh(); else D7_SetLow(); // Place data low nibble
+    if (data&0x4) D6_SetHigh(); else D6_SetLow();
+    if (data&0x2) D5_SetHigh(); else D5_SetLow();
+    if (data&0x1) D4_SetHigh(); else D4_SetLow(); 
+	
+	RS_SetLow();							// Prepare LCD for receiving instruction
     __delay_us(5);
-	LCD_E  = 1;							// Enable read
+	E_SetHigh();							// Enable read
 	__delay_us(10);     				// Wait 10uS
-	LCD_E  = 0;							// Latch data
+	E_SetLow();							// Latch data
     __delay_us(38);
-      */      
+            
 }
 
 void I2CSend(bool RS, bool RW, bool E, uint8_t D74) {

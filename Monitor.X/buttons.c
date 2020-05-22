@@ -20,8 +20,8 @@ void ButtonTask(void) {
     static int cnt = 0;
     cnt++;
     //if (cnt==10) { cnt = 0; printf(".\r\n"); }
-    muteButton = !PORTDbits.RD6 | (muteButton << 1);
-    histButton = !PORTDbits.RD5 | (histButton << 1);
+    muteButton = !MUTE_GetValue() | (muteButton << 1);
+    histButton = !HIST_GetValue() | (histButton << 1);
     if ((muteButton) == PUSHMASK) {
         MuteAlarm();
         //printf("\r\nMUTE\r\n");
@@ -41,13 +41,13 @@ void ButtonTask(void) {
 }
 
 void SetAlarmLED(void) {
-    PORTDbits.RD7 = 1;
+    LED_SetHigh();
 }
 
 void ClearAlarmLED(void) {
-    PORTDbits.RD7 = 0;
+    LED_SetLow();
 }
 
 void ToggleAlarmLED(void) {
-    PORTDbits.RD7 = !PORTDbits.RD7;
+    LED_Toggle();
 }
