@@ -10,6 +10,7 @@ HW and system dodumentation are in the Doc directory <br>
 - Collaborators: 
 - - Intersurgical: Sara Rodriguez, Bill Barners, Mike Hinton <br>
 - - Vithas Sanidad : Ignacio Narvaez <br>
+- - McFly:
   
 ## Sponsors: <br>
 
@@ -34,11 +35,7 @@ HW and system dodumentation are in the Doc directory <br>
 - Controller:
 - - Add buzzer alarms
 ### Test & Validation
-- Lab test:
-- - All functionality test with articial lung
-- Medical validation:
--- Doctor functionality demosntration and feedback
-- Animal validation:
+- Clinic test:
 ### Certification
 - Documentation
 - - Update existing documentation with final design
