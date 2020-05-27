@@ -28732,7 +28732,7 @@ void screenInit(void) {
     setCursor(0, 0);
     printstrblock("Open Respirator ");
     setCursor(0, 1);
-    printstrblock("    AirVita     ");
+    printstrblock("    OxiVita     ");
     timeDelayMs(((time_t) 2000*1));
     clear();
     lcdPrintTR = 1;
