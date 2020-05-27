@@ -3323,7 +3323,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;selftest.c: 339:       setCursor(0, 0);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "340
-[; ;selftest.c: 340:       printstrblock("MONITOR ERROR");
+[; ;selftest.c: 340:       printstrblock("MONITOR ERROR   ");
 [e ( _printstrblock (1 :s 33C ]
 "341
 [; ;selftest.c: 341:       timeDelayMs(500);
@@ -3346,172 +3346,179 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2301 ]
 {
 "348
-[; ;selftest.c: 348:       printstrblock("CAL ERROR. RETRY ");
-[e ( _printstrblock (1 :s 34C ]
+[; ;selftest.c: 348:       setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "349
-[; ;selftest.c: 349:       timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 349:       printstrblock("CAL ERROR. RETRY ");
+[e ( _printstrblock (1 :s 34C ]
 "350
-[; ;selftest.c: 350:     }
+[; ;selftest.c: 350:       timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"351
+[; ;selftest.c: 351:     }
 }
 [e :U 2302 ]
-"351
-[; ;selftest.c: 351:   }
+"352
+[; ;selftest.c: 352:   }
 }
 [e :U 2288 ]
 "301
 [; ;selftest.c: 301:   while (ctrlStatus == CTRL_UNCAL) {
 [e $ == -> _ctrlStatus `ui -> . `E16837 0 `ui 2289  ]
 [e :U 2290 ]
-"353
-[; ;selftest.c: 353:   if (!initOk) {
+"354
+[; ;selftest.c: 354:   if (!initOk) {
 [e $ ! ! != -> _initOk `i -> 0 `i 2303  ]
 {
-"354
-[; ;selftest.c: 354:     return initOk;
+"355
+[; ;selftest.c: 355:     return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"355
-[; ;selftest.c: 355:   }
+"356
+[; ;selftest.c: 356:   }
 }
 [e :U 2303 ]
-"358
-[; ;selftest.c: 358:   printf ("CHKSV2\n");
+"359
+[; ;selftest.c: 359:   printf ("CHKSV2\n");
 [e ( _printf :s 35C ]
-"360
-[; ;selftest.c: 360:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
+"361
+[; ;selftest.c: 361:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16912 2 `i -> 0 `i 2304  ]
 {
-"361
-[; ;selftest.c: 361:         initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "362
-[; ;selftest.c: 362:  printf ("Mon error");
-[e ( _printf :s 36C ]
+[; ;selftest.c: 362:         initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "363
-[; ;selftest.c: 363:  setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;selftest.c: 363:  printf ("Mon error");
+[e ( _printf :s 36C ]
 "364
-[; ;selftest.c: 364:  printstrblock("MONITOR ERROR");
-[e ( _printstrblock (1 :s 37C ]
+[; ;selftest.c: 364:  setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "365
-[; ;selftest.c: 365:  timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 365:  printstrblock("MONITOR ERROR   ");
+[e ( _printstrblock (1 :s 37C ]
 "366
-[; ;selftest.c: 366:   }
+[; ;selftest.c: 366:  timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"367
+[; ;selftest.c: 367:   }
 }
 [e :U 2304 ]
-"368
-[; ;selftest.c: 368:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+"369
+[; ;selftest.c: 369:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"369
-[; ;selftest.c: 369:   timeDelayMs(200);
-[e ( _timeDelayMs (1 -> -> 200 `i `us ]
 "370
-[; ;selftest.c: 370:   if (!pressureSensorChk(0, 100)) {
+[; ;selftest.c: 370:   timeDelayMs(200);
+[e ( _timeDelayMs (1 -> -> 200 `i `us ]
+"371
+[; ;selftest.c: 371:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2305  ]
 {
-"371
-[; ;selftest.c: 371:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
 "372
-[; ;selftest.c: 372:     printstrblock("SV2 Valve error");
-[e ( _printstrblock (1 :s 38C ]
+[; ;selftest.c: 372:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "373
-[; ;selftest.c: 373:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 373:  setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "374
-[; ;selftest.c: 374:   }
+[; ;selftest.c: 374:     printstrblock("SV2 Valve error ");
+[e ( _printstrblock (1 :s 38C ]
+"375
+[; ;selftest.c: 375:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"376
+[; ;selftest.c: 376:   }
 }
 [e :U 2305 ]
-"377
-[; ;selftest.c: 377:   printf ("CHKSV1\n");
+"379
+[; ;selftest.c: 379:   printf ("CHKSV1\n");
 [e ( _printf :s 39C ]
-"378
-[; ;selftest.c: 378:   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
+"380
+[; ;selftest.c: 380:   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
 [e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16912 3 `i -> 0 `i 2306  ]
 {
-"379
-[; ;selftest.c: 379:     initOk=0;
+"381
+[; ;selftest.c: 381:     initOk=0;
 [e = _initOk -> -> 0 `i `a ]
-"380
-[; ;selftest.c: 380:   }
+"382
+[; ;selftest.c: 382:   }
 }
 [e :U 2306 ]
-"381
-[; ;selftest.c: 381:   timeDelayMs(100);
+"383
+[; ;selftest.c: 383:   timeDelayMs(100);
 [e ( _timeDelayMs (1 -> -> 100 `i `us ]
-"382
-[; ;selftest.c: 382:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+"384
+[; ;selftest.c: 384:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
-"383
-[; ;selftest.c: 383:   timeDelayMs(300);
+"385
+[; ;selftest.c: 385:   timeDelayMs(300);
 [e ( _timeDelayMs (1 -> -> 300 `i `us ]
-"384
-[; ;selftest.c: 384:   if (!pressureSensorChk(0, 100)) {
+"386
+[; ;selftest.c: 386:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2307  ]
 {
-"385
-[; ;selftest.c: 385:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
-"386
-[; ;selftest.c: 386:     printstrblock("SV1 Valve error");
-[e ( _printstrblock (1 :s 40C ]
 "387
-[; ;selftest.c: 387:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 387:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "388
-[; ;selftest.c: 388:   }
+[; ;selftest.c: 388:  setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"389
+[; ;selftest.c: 389:     printstrblock("SV1 Valve error ");
+[e ( _printstrblock (1 :s 40C ]
+"390
+[; ;selftest.c: 390:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"391
+[; ;selftest.c: 391:   }
 }
 [e :U 2307 ]
-"391
-[; ;selftest.c: 391:   printf ("CHK FLOW\n");
+"394
+[; ;selftest.c: 394:   printf ("CHK FLOW\n");
 [e ( _printf :s 41C ]
-"392
-[; ;selftest.c: 392:   tstamp = timeGet();
-[e = _tstamp ( _timeGet ..  ]
 "395
-[; ;selftest.c: 395:   initOk &= flowChk(FCHK_LOW);
+[; ;selftest.c: 395:   tstamp = timeGet();
+[e = _tstamp ( _timeGet ..  ]
+"398
+[; ;selftest.c: 398:   initOk &= flowChk(FCHK_LOW);
 [e =& _initOk -> ( _flowChk (1 . `E17000 0 `i ]
-"396
-[; ;selftest.c: 396:   initOk &= flowChk(FCHK_MED);
+"399
+[; ;selftest.c: 399:   initOk &= flowChk(FCHK_MED);
 [e =& _initOk -> ( _flowChk (1 . `E17000 1 `i ]
-"397
-[; ;selftest.c: 397:   initOk &= flowChk(FCHK_HIGH);
-[e =& _initOk -> ( _flowChk (1 . `E17000 2 `i ]
 "400
-[; ;selftest.c: 400:   while (keyPeek() != -1)
+[; ;selftest.c: 400:   initOk &= flowChk(FCHK_HIGH);
+[e =& _initOk -> ( _flowChk (1 . `E17000 2 `i ]
+"403
+[; ;selftest.c: 403:   while (keyPeek() != -1)
 [e $U 2308  ]
 [e :U 2309 ]
-"401
-[; ;selftest.c: 401:     ;
+"404
+[; ;selftest.c: 404:     ;
 [e :U 2308 ]
-"400
-[; ;selftest.c: 400:   while (keyPeek() != -1)
+"403
+[; ;selftest.c: 403:   while (keyPeek() != -1)
 [e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2309  ]
 [e :U 2310 ]
-"402
-[; ;selftest.c: 402:   keyReadInit();
+"405
+[; ;selftest.c: 405:   keyReadInit();
 [e ( _keyReadInit ..  ]
-"404
-[; ;selftest.c: 404:   return initOk;
+"407
+[; ;selftest.c: 407:   return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"405
-[; ;selftest.c: 405: }
+"408
+[; ;selftest.c: 408: }
 [e :UE 2268 ]
 }
-[p f _printf 8388736 ]
 [p f _sprintf 8421505 ]
+[p f _printf 8388736 ]
 [a 9C 77 111 110 32 101 114 114 111 114 0 ]
 [a 11C 77 111 110 32 101 114 114 111 114 0 ]
 [a 21C 77 111 110 32 101 114 114 111 114 0 ]
 [a 32C 77 111 110 32 101 114 114 111 114 0 ]
 [a 36C 77 111 110 32 101 114 114 111 114 0 ]
-[a 38C 83 86 50 32 86 97 108 118 101 32 101 114 114 111 114 0 ]
-[a 40C 83 86 49 32 86 97 108 118 101 32 101 114 114 111 114 0 ]
 [a 1C 70 97 116 97 108 32 37 100 0 ]
 [a 2C 70 97 116 97 108 32 37 100 0 ]
 [a 23C 70 97 116 97 108 32 37 100 0 ]
@@ -3519,15 +3526,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 10C 77 79 78 73 84 79 82 32 69 82 82 79 82 0 ]
 [a 12C 77 79 78 73 84 79 82 32 69 82 82 79 82 0 ]
 [a 22C 77 79 78 73 84 79 82 32 69 82 82 79 82 0 ]
-[a 33C 77 79 78 73 84 79 82 32 69 82 82 79 82 0 ]
-[a 37C 77 79 78 73 84 79 82 32 69 82 82 79 82 0 ]
 [a 30C 67 65 76 32 80 82 69 83 83 32 66 82 69 65 84 72 0 ]
 [a 19C 83 69 76 70 45 84 69 83 84 46 32 76 69 65 86 69 0 ]
+[a 38C 83 86 50 32 86 97 108 118 101 32 101 114 114 111 114 32 0 ]
+[a 40C 83 86 49 32 86 97 108 118 101 32 101 114 114 111 114 32 0 ]
 [a 14C 70 76 79 87 58 32 37 32 51 100 32 76 47 109 105 110 32 0 ]
 [a 3C 77 83 58 32 37 32 51 100 32 65 83 58 32 37 32 51 100 32 0 ]
 [a 34C 67 65 76 32 69 82 82 79 82 46 32 82 69 84 82 89 32 0 ]
 [a 25C 73 78 84 69 82 78 65 76 32 69 82 82 79 82 32 32 0 ]
 [a 27C 73 78 84 69 82 78 65 76 32 69 82 82 79 82 32 32 0 ]
+[a 33C 77 79 78 73 84 79 82 32 69 82 82 79 82 32 32 32 0 ]
+[a 37C 77 79 78 73 84 79 82 32 69 82 82 79 82 32 32 32 0 ]
 [a 13C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
 [a 16C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
 [a 15C 70 76 79 87 32 84 79 79 32 76 79 87 32 32 32 32 0 ]

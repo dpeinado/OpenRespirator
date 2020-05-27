@@ -28826,7 +28826,7 @@ _Bool SelfTest(void) {
       initOk=0;
       printf ("Mon error");
       setCursor(0, 0);
-      printstrblock("MONITOR ERROR");
+      printstrblock("MONITOR ERROR   ");
       timeDelayMs(500);
     }
 
@@ -28834,6 +28834,7 @@ _Bool SelfTest(void) {
 
       ctrlStatus = CTRL_STOP;
     } else {
+      setCursor(0, 0);
       printstrblock("CAL ERROR. RETRY ");
       timeDelayMs(500);
     }
@@ -28850,7 +28851,7 @@ _Bool SelfTest(void) {
         initOk=0;
  printf ("Mon error");
  setCursor(0, 0);
- printstrblock("MONITOR ERROR");
+ printstrblock("MONITOR ERROR   ");
  timeDelayMs(500);
   }
 
@@ -28858,7 +28859,8 @@ _Bool SelfTest(void) {
   timeDelayMs(200);
   if (!pressureSensorChk(0, 100)) {
     initOk=0;
-    printstrblock("SV2 Valve error");
+ setCursor(0, 0);
+    printstrblock("SV2 Valve error ");
     timeDelayMs(500);
   }
 
@@ -28872,7 +28874,8 @@ _Bool SelfTest(void) {
   timeDelayMs(300);
   if (!pressureSensorChk(0, 100)) {
     initOk=0;
-    printstrblock("SV1 Valve error");
+ setCursor(0, 0);
+    printstrblock("SV1 Valve error ");
     timeDelayMs(500);
   }
 
