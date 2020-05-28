@@ -27,7 +27,7 @@ void putch(char byte) {
 #endif
 
 // To avoid problems with control, keep a copy of the values during first part of inspiration and expiration.
-int16_t intIP, intMaxP, intPEEP, intIDuration, intEDuration, intMaxV;
+int16_t intBdTrig, intIP, intMaxP, intPEEP, intIDuration, intEDuration, intMaxV;
 vmodeT intVentMode; 
 
 ///////////////////
@@ -43,13 +43,12 @@ uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
+uint8_t BdTrig = 2;
 
 // CONTROLLER INTERNAL PARAMETERS.
 #define BLED_ONTIME TIME_MS(500)
 // DO NOT CHANGE. NEEDED TO ENSURE STABILITY.
 #define PEEPCTRLMIN   MPRESSURE_MBAR(1)
-
-#define BDTECT_THRL   MPRESSURE_MBAR(2.0)
 
 #define PIPLATEAUMDEL TIME_MS(150)
 #define PEPLATEAUMDEL TIME_MS(350)
@@ -75,7 +74,7 @@ int16_t pCtrl, pValveActuation, pPlatMax, pPlatInsp, pPlatExp, pPeepActual, pExp
 // Volume overshoot measurement variables. Measure volume difference between valve close time and after valve actuation time.
 // Best way to decide when to determine SV2 close time, even in pressure-mode is to measure the volume that produces the desired IP.
 // Estimate lung compliance, multiplied by the desired IP it gives the estimated volume for it.
-uint16_t lungC;
+uint16_t lungC, lungR;
 int16_t pInspOS3, pInspOS2; // Pressure overshoot during inhalation for each intermediate valve setting.
 int16_t vValveActuation, vPlateau, vInspOS;
 // Volume quanta. Volume injected on each fixed-time SV2 opening after initial subState.
@@ -193,6 +192,7 @@ void main(void) {
 #ifdef DEBUG
     time_t printTime;
 #endif
+    bool tstScreen=true;
 
 
     // Initialize the device
@@ -225,9 +225,10 @@ void main(void) {
     
     while (1) {
         char keyTmp;
-        while (!SelfTest())
-            ;
+        while (!SelfTest(tstScreen))
+            tstScreen=false;
 
+        tstScreen=false;
         setCursor(0, 0);
         printstrblock("PRESS + TO REPEAT ");
         setCursor(0, 1);
@@ -312,6 +313,7 @@ void main(void) {
         pQuantaInsp = 20;
         pQuantaExp = 20;
         lungC = 0;
+        lungR = 0;
         // Flow rate in ml/sec.
         //        effectiveFlowRate=freeFlowRateF;
         // Inverse effective flow rate. Scaled by 2^18
@@ -347,7 +349,8 @@ void main(void) {
 
             intVentMode = VentMode;
             intMaxP = MPRESSURE_MBAR(MaxP);
-            intPEEP = MPRESSURE_MBAR(PEEP);
+            intPEEP = MPRESSURE_MBAR(PEEP)+PEEP_COMP;
+            intBdTrig = MPRESSURE_MBAR(BdTrig);
             intIDuration = TIME_MS(IDuration);
             intEDuration = TIME_MS(EDuration);
             if (intVentMode == VMODE_PRESSURE) {
@@ -847,7 +850,7 @@ void main(void) {
                                 // To avoid interference with the algorithm to keep PEEP controlled, PEEP control uses the 50ms filtered version of the signal.
                                 aCaptGetResult(Flt2PSensor, &bdP1);
                                 aCaptGetResult(Flt3PSensor, &bdP2);
-                                if (((bdP1 + BDTECT_THRL) < bdP2) || (keyPeek() == KEYBREATH)) {
+                                if (((bdP1 + intBdTrig) < bdP2) || (keyPeek() == KEYBREATH)) {
                                     // Detected breath, or pressed breath button
                                     DEBUG_PRINT(("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(bdP1), DBGPCONVERT(bdP1)));
                                     BLED_ON;

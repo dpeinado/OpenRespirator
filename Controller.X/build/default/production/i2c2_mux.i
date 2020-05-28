@@ -28344,7 +28344,25 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 101 "./ORespGlobal.h"
+
+# 1 "./time.h" 1
+# 17 "./time.h"
+typedef uint16_t time_t;
+
+
+
+
+
+
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 15 "./ORespGlobal.h" 2
+# 108 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28366,15 +28384,18 @@ void aCaptRstFlt(aSrcTyp sel);
     extern uint8_t IP;
     extern uint8_t MaxP;
     extern uint8_t MaxV;
+    extern uint8_t BdTrig;
     extern uint8_t LowVAlarm;
     extern uint8_t HighVAlarm;
     extern uint8_t PEEP;
     extern uint8_t eBRate;
     extern int16_t vddValMean;
 
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
+    extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
+    extern uint16_t lungC, lungR;
 # 5 "i2c2_mux.c" 2
 
 

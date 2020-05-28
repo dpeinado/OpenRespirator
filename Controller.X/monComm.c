@@ -12,7 +12,7 @@
 
 time_t    monTstamp;
 i2c2_error_t lastI2CMonTrfResponse;
-bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
+bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
 
 void MonitorInit(void){
     ;

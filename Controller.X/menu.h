@@ -34,6 +34,10 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_ENGMODE,
+    CFG_ENGVSTATS,
+    CFG_ENGLSTATS,
+    CFG_ENGTRIG,
     CFG_POWEROFF
 } menuStatusT;
 

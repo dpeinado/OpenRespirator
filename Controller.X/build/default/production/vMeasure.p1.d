@@ -15,5 +15,6 @@ mcc_generated_files/fvr.h  \
 mcc_generated_files/adcc.h  \
 mcc_generated_files/uart1.h  \
 aCapture.h  \
+time.h  \
 vMeasure.h  \
 cmath.h 

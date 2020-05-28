@@ -28380,7 +28380,7 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 101 "./ORespGlobal.h"
+# 108 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28402,15 +28402,18 @@ void aCaptRstFlt(aSrcTyp sel);
     extern uint8_t IP;
     extern uint8_t MaxP;
     extern uint8_t MaxV;
+    extern uint8_t BdTrig;
     extern uint8_t LowVAlarm;
     extern uint8_t HighVAlarm;
     extern uint8_t PEEP;
     extern uint8_t eBRate;
     extern int16_t vddValMean;
 
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
+    extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
+    extern uint16_t lungC, lungR;
 # 9 "monComm.c" 2
 # 1 "./i2c2_mux.h" 1
 # 18 "./i2c2_mux.h"
@@ -28452,6 +28455,10 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_ENGMODE,
+    CFG_ENGVSTATS,
+    CFG_ENGLSTATS,
+    CFG_ENGTRIG,
     CFG_POWEROFF
 } menuStatusT;
 
@@ -28472,7 +28479,7 @@ void screenMng(void);
 
 time_t monTstamp;
 i2c2_error_t lastI2CMonTrfResponse;
-_Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
+_Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chMaxP, chVentMode;
 
 void MonitorInit(void){
     ;

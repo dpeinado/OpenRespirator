@@ -28322,7 +28322,25 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 101 "./ORespGlobal.h"
+
+# 1 "./time.h" 1
+# 17 "./time.h"
+typedef uint16_t time_t;
+
+
+
+
+
+
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 15 "./ORespGlobal.h" 2
+# 108 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28344,35 +28362,21 @@ void aCaptRstFlt(aSrcTyp sel);
     extern uint8_t IP;
     extern uint8_t MaxP;
     extern uint8_t MaxV;
+    extern uint8_t BdTrig;
     extern uint8_t LowVAlarm;
     extern uint8_t HighVAlarm;
     extern uint8_t PEEP;
     extern uint8_t eBRate;
     extern int16_t vddValMean;
 
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
+    extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
+    extern uint16_t lungC, lungR;
 # 6 "main.c" 2
 
 
-# 1 "./time.h" 1
-# 17 "./time.h"
-typedef uint16_t time_t;
-
-
-
-
-
-
-void timeInit(void);
-time_t timeGet(void);
-
-time_t timeDiff(time_t startT, time_t endT);
-_Bool timeElapsedR(time_t *prevTime, time_t duration);
-_Bool timeElapsed(time_t prevTime, time_t duration);
-void timeDelayMs(time_t delms);
-# 8 "main.c" 2
 
 # 1 "./cmath.h" 1
 # 17 "./cmath.h"
@@ -28396,6 +28400,11 @@ int8_t keyPeek(void);
 int8_t keyReadEC();
 
 int8_t keyRead();
+
+void keyFlush(uint8_t keyIdx);
+
+
+_Bool isKeyPressed(uint8_t keyIdx);
 # 11 "main.c" 2
 
 # 1 "./LiquidCrystal_I2C.h" 1
@@ -28452,6 +28461,10 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_ENGMODE,
+    CFG_ENGVSTATS,
+    CFG_ENGLSTATS,
+    CFG_ENGTRIG,
     CFG_POWEROFF
 } menuStatusT;
 
@@ -28477,7 +28490,7 @@ extern uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
 
 
 
-_Bool SelfTest(void);
+_Bool SelfTest(_Bool tstScreen);
 # 15 "main.c" 2
 
 # 1 "./monComm.h" 1
@@ -28553,7 +28566,7 @@ void putch(char byte) {
 
 
 
-int16_t intIP, intMaxP, intPEEP, intIDuration, intEDuration, intMaxV;
+int16_t intBdTrig, intIP, intMaxP, intPEEP, intIDuration, intEDuration, intMaxV;
 vmodeT intVentMode;
 
 
@@ -28569,7 +28582,8 @@ uint8_t BPM = 10;
 uint16_t IDuration, EDuration;
 uint8_t IP = 4;
 uint8_t PEEP = 4;
-# 64 "main.c"
+uint8_t BdTrig = 2;
+# 63 "main.c"
 ctrlStatusT ctrlStatus;
 uint16_t lastCycleVol;
 
@@ -28584,7 +28598,7 @@ int16_t pCtrl, pValveActuation, pPlatMax, pPlatInsp, pPlatExp, pPeepActual, pExp
 
 
 
-uint16_t lungC;
+uint16_t lungC, lungR;
 int16_t pInspOS3, pInspOS2;
 int16_t vValveActuation, vPlateau, vInspOS;
 
@@ -28702,6 +28716,7 @@ void main(void) {
 
     time_t printTime;
 
+    _Bool tstScreen=1;
 
 
 
@@ -28734,9 +28749,10 @@ void main(void) {
 
     while (1) {
         char keyTmp;
-        while (!SelfTest())
-            ;
+        while (!SelfTest(tstScreen))
+            tstScreen=0;
 
+        tstScreen=0;
         setCursor(0, 0);
         printstrblock("PRESS + TO REPEAT ");
         setCursor(0, 1);
@@ -28821,6 +28837,7 @@ void main(void) {
         pQuantaInsp = 20;
         pQuantaExp = 20;
         lungC = 0;
+        lungR = 0;
 
 
 
@@ -28843,10 +28860,11 @@ void main(void) {
 
         rCycleTime = timeGet();
         while (ctrlStatus != CTRL_SLEEP) {
-# 348 "main.c"
+# 350 "main.c"
             intVentMode = VentMode;
             intMaxP = ((int16_t) ((0.045*4096+2)/5)*MaxP);
-            intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP);
+            intPEEP = ((int16_t) ((0.045*4096+2)/5)*PEEP)+((int16_t) ((0.045*4096+2)/5)*0.4);
+            intBdTrig = ((int16_t) ((0.045*4096+2)/5)*BdTrig);
             intIDuration = ((time_t) IDuration*1);
             intEDuration = ((time_t) EDuration*1);
             if (intVentMode == VMODE_PRESSURE) {
@@ -29346,7 +29364,7 @@ void main(void) {
 
                                 aCaptGetResult(Flt2PSensor, &bdP1);
                                 aCaptGetResult(Flt3PSensor, &bdP2);
-                                if (((bdP1 + ((int16_t) ((0.045*4096+2)/5)*2.0)) < bdP2) || (keyPeek() == 4)) {
+                                if (((bdP1 + intBdTrig) < bdP2) || (keyPeek() == 4)) {
 
                                     printf ("BD VO T %d - Pi %d P50 %d P2000 %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) bdP1))>>8)));
                                     LATDbits.LATD6 = 1;
@@ -29391,7 +29409,7 @@ void main(void) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     printf ("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst - pAvgShort))>>8)), rSV3ValveORT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatExp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaExp))>>8)) );
-# 928 "main.c"
+# 931 "main.c"
                     do {} while (0);
 
 

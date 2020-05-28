@@ -28325,7 +28325,25 @@ _Bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 
 void aCaptRstFlt(aSrcTyp sel);
 # 14 "./ORespGlobal.h" 2
-# 101 "./ORespGlobal.h"
+
+# 1 "./time.h" 1
+# 17 "./time.h"
+typedef uint16_t time_t;
+
+
+
+
+
+
+void timeInit(void);
+time_t timeGet(void);
+
+time_t timeDiff(time_t startT, time_t endT);
+_Bool timeElapsedR(time_t *prevTime, time_t duration);
+_Bool timeElapsed(time_t prevTime, time_t duration);
+void timeDelayMs(time_t delms);
+# 15 "./ORespGlobal.h" 2
+# 108 "./ORespGlobal.h"
     typedef enum {
         VMODE_PRESSURE = 0,
         VMODE_VOLUME = 1
@@ -28347,15 +28365,18 @@ void aCaptRstFlt(aSrcTyp sel);
     extern uint8_t IP;
     extern uint8_t MaxP;
     extern uint8_t MaxV;
+    extern uint8_t BdTrig;
     extern uint8_t LowVAlarm;
     extern uint8_t HighVAlarm;
     extern uint8_t PEEP;
     extern uint8_t eBRate;
     extern int16_t vddValMean;
 
-    extern _Bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
+    extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
+    extern uint16_t lungC, lungR;
 # 8 "menu.c" 2
 
 # 1 "./menu.h" 1
@@ -28378,6 +28399,10 @@ typedef enum {
     CFG_MAXV,
     CFG_LOWVA,
     CFG_HIGHVA,
+    CFG_ENGMODE,
+    CFG_ENGVSTATS,
+    CFG_ENGLSTATS,
+    CFG_ENGTRIG,
     CFG_POWEROFF
 } menuStatusT;
 
@@ -28401,25 +28426,13 @@ int8_t keyPeek(void);
 int8_t keyReadEC();
 
 int8_t keyRead();
+
+void keyFlush(uint8_t keyIdx);
+
+
+_Bool isKeyPressed(uint8_t keyIdx);
 # 11 "menu.c" 2
 
-# 1 "./time.h" 1
-# 17 "./time.h"
-typedef uint16_t time_t;
-
-
-
-
-
-
-void timeInit(void);
-time_t timeGet(void);
-
-time_t timeDiff(time_t startT, time_t endT);
-_Bool timeElapsedR(time_t *prevTime, time_t duration);
-_Bool timeElapsed(time_t prevTime, time_t duration);
-void timeDelayMs(time_t delms);
-# 12 "menu.c" 2
 
 # 1 "./LiquidCrystal_I2C.h" 1
 # 55 "./LiquidCrystal_I2C.h"
@@ -28461,7 +28474,6 @@ _Bool PrintStrBusy(void);
 
 
 _Bool lcdPrintTR, lcdPrintBR, lcdPrintBRR, lcdBlink;
-_Bool lcdMenuPrint;
 
 char lcdTopRow[20];
 char lcdBtnRow[20];
@@ -28472,18 +28484,35 @@ time_t menuTstamp;
 
 void MenuInit(void) {
     menuStatus = CFG_IDLE;
-    lcdMenuPrint = 1;
     lcdPrintBR=1;
     lcdPrintBRR=0;
     lcdPrintTR=1;
+
+    chBdTrig=1;
+    chBPM=1;
+    chIP=1;
+    chMaxP=1;
+    chPEEP=1;
+    chLowVAlarm=1;
+    chHighVAlarm=1;
+    chMaxV=1;
+    chMaxP=1;
+    chVentMode=1;
 }
 
 void MenuMng(void) {
 
     int8_t keyPress;
     keyPress = keyRead();
-    if ((keyPress >= 0) && (keyPress != 4)) {
-        lcdMenuPrint = 1;
+
+
+    if ((menuStatus == CFG_IDLE) && (keyPress == 3)){
+        menuStatus = CFG_ENGMODE;
+        menuTstamp = timeGet();
+        lcdPrintBR = 1;
+    } else if ((keyPress >= 0) && (keyPress != 4)) {
+        lcdPrintTR = 1;
+        lcdPrintBR = 1;
         printf ("KEY! %d\n", keyPress);
 
         if (menuStatus == CFG_POWEROFF) {
@@ -28513,6 +28542,14 @@ void MenuMng(void) {
                         MaxP = menuVal + 2;
                         chMaxP = 1;
                         menuStatus = CFG_IDLE;
+                    } else if (menuStatus == CFG_ENGMODE) {
+                        menuStatus = CFG_ENGTRIG;
+                        menuVal = BdTrig;
+                        menuTstamp = timeGet();
+                    } else if (menuStatus == CFG_ENGTRIG) {
+                        BdTrig = menuVal;
+                        chBdTrig = 1;
+                        menuStatus = CFG_IDLE;
                     } else {
 
                         menuStatus = CFG_IDLE;
@@ -28530,6 +28567,9 @@ void MenuMng(void) {
                         IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
                         EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
                         menuStatus = CFG_IDLE;
+                    } else if (menuStatus == CFG_ENGMODE) {
+                        menuStatus = CFG_ENGVSTATS;
+                        menuTstamp = timeGet();
                     } else {
 
                         menuStatus = CFG_IDLE;
@@ -28545,12 +28585,15 @@ void MenuMng(void) {
                         PEEP = menuVal;
                         chPEEP = 1;
                         menuStatus = CFG_IDLE;
+                    } else if (menuStatus == CFG_ENGMODE) {
+                        menuStatus = CFG_ENGLSTATS;
+                        menuTstamp = timeGet();
                     } else {
 
                         menuStatus = CFG_IDLE;
                     }
                     break;
-                case 6:
+                case 7:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXP;
                         menuVal = MaxP;
@@ -28565,7 +28608,7 @@ void MenuMng(void) {
                         menuStatus = CFG_IDLE;
                     }
                     break;
-                case 7:
+                case 6:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXV;
                         menuVal = MaxV;
@@ -28652,6 +28695,12 @@ void MenuMng(void) {
                                     menuVal = 30;
                                 }
                                 break;
+                            case CFG_ENGTRIG:
+                                menuVal = menuVal + 1;
+                                if (menuVal > 8) {
+                                    menuVal = 8;
+                                }
+                                break;
                             case CFG_MAXV:
                                 menuVal = ((menuVal + 2 > (1500/10))? (1500/10) : ((menuVal + 2 < (100/10))? (100/10) : menuVal + 2));
                                 break;
@@ -28691,6 +28740,12 @@ void MenuMng(void) {
                                     menuVal = 10;
                                 }
                                 break;
+                            case CFG_ENGTRIG:
+                                menuVal = menuVal - 1;
+                                if (menuVal < 1) {
+                                    menuVal = 1;
+                                }
+                                break;
                             case CFG_MAXV:
                                 menuVal = ((menuVal - 2 > (1500/10))? (1500/10) : ((menuVal - 2 < (100/10))? (100/10) : menuVal - 2));
                                 break;
@@ -28715,7 +28770,6 @@ void MenuMng(void) {
         }
         lcdPrintBR = 1;
         lcdPrintTR = 1;
-        lcdMenuPrint = 1;
     } else {
         if ((menuStatus != CFG_IDLE) && (timeElapsed(menuTstamp, ((time_t) (5*1000))))) {
 
@@ -28732,7 +28786,7 @@ void screenInit(void) {
     setCursor(0, 0);
     printstrblock("Open Respirator ");
     setCursor(0, 1);
-    printstrblock("    OxiVita     ");
+    printstrblock("    OxyVita     ");
     timeDelayMs(((time_t) 2000*1));
     clear();
     lcdPrintTR = 1;
@@ -28777,6 +28831,12 @@ void screenMng(void) {
             sprintf(lcdTopRow, "%2d %2d -- %2d %4d", BPM, PEEP, MaxP, 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
             sprintf(lcdTopRow, "PRESS BPM TO    ");
+        } else if (menuStatus == CFG_ENGVSTATS) {
+            sprintf(lcdTopRow, "%3d %3d %3d     ", rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT);
+        } else if (menuStatus == CFG_ENGLSTATS) {
+            sprintf(lcdTopRow, "%3d   %3d  ", ((((uint24_t) ((int16_t) ((0.045*4096+2)/5)*1))*((uint24_t) lungC))>>7), lungR);
+        } else if (menuStatus == CFG_ENGTRIG) {
+            sprintf(lcdTopRow, "%1d               ", menuVal);
         }
 
 
@@ -28795,13 +28855,20 @@ void screenMng(void) {
         }
     } else if (lcdPrintBR && !PrintStrBusy()) {
         lcdPrintBR = 0;
-        lcdMenuPrint = 0;
         if (menuStatus == CFG_LOWVA) {
             sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) menuVal), 10 * ((uint16_t) HighVAlarm));
         } else if (menuStatus == CFG_HIGHVA) {
             sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) menuVal));
         } else if (menuStatus == CFG_POWEROFF) {
                 sprintf(lcdBtnRow, "POWER OFF ");
+        } else if (menuStatus == CFG_ENGMODE) {
+                sprintf(lcdBtnRow, "VS LS BDT");
+        } else if (menuStatus == CFG_ENGTRIG) {
+                sprintf(lcdBtnRow, "      BDT");
+        } else if (menuStatus == CFG_ENGVSTATS) {
+                sprintf(lcdBtnRow, "S2O S2C S3C");
+        } else if (menuStatus == CFG_ENGLSTATS) {
+                sprintf(lcdBtnRow, "LC    LR   ");
         } else {
             if (ctrlStatus != CTRL_SLEEP) {
                 sprintf(lcdBtnRow, "%4d %4d  ", 10 * ((uint16_t) LowVAlarm), 10 * ((uint16_t) HighVAlarm));
