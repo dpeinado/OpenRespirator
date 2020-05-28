@@ -3593,8 +3593,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! == -> _menuStatus `ui -> . `E16891 10 `ui 2359  ]
 {
 "380
-[; ;menu.c: 380:             sprintf(lcdTopRow, "%3d   %3d  ", ((((uint24_t) ((int16_t) ((0.045*4096+2)/5)*1))*((uint24_t) lungC))>>7), lungR);
-[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 17C >> * -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i `um -> _lungC `um -> 7 `i -> _lungR `ui ]
+[; ;menu.c: 380:             sprintf(lcdTopRow, "%3d   %3d  ", (uint16_t) ((((uint24_t) ((int16_t) ((0.045*4096+2)/5)*1))*((uint24_t) lungC))>>7), lungR/((int16_t) ((0.045*4096+2)/5)*1));
+[e ( _sprintf (1 , , (. , &U _lcdTopRow :s 17C -> -> >> * -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i `um -> _lungC `um -> 7 `i `us `ui / -> _lungR `ui -> * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i `ui ]
 "381
 [; ;menu.c: 381:         } else if (menuStatus == CFG_ENGTRIG) {
 }

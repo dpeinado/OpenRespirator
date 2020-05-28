@@ -28428,5 +28428,5 @@ uint16_t vMeasureGet(void) {
     rawV=volume;
     PIE4bits.TMR2IE = 1;
 
-    return rawV/65;
+    return rawV/60;
 }

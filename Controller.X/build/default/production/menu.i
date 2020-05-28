@@ -28834,7 +28834,7 @@ void screenMng(void) {
         } else if (menuStatus == CFG_ENGVSTATS) {
             sprintf(lcdTopRow, "%3d %3d %3d     ", rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT);
         } else if (menuStatus == CFG_ENGLSTATS) {
-            sprintf(lcdTopRow, "%3d   %3d  ", ((((uint24_t) ((int16_t) ((0.045*4096+2)/5)*1))*((uint24_t) lungC))>>7), lungR);
+            sprintf(lcdTopRow, "%3d   %3d  ", (uint16_t) ((((uint24_t) ((int16_t) ((0.045*4096+2)/5)*1))*((uint24_t) lungC))>>7), lungR/((int16_t) ((0.045*4096+2)/5)*1));
         } else if (menuStatus == CFG_ENGTRIG) {
             sprintf(lcdTopRow, "%1d               ", menuVal);
         }

@@ -137,14 +137,26 @@ void inspOSMeasure(void) {
             lungC = (3 * lungC + tmpUVal) >> 2;
         }
     }
-
+    
     tmpVal = (setScale*(tmpVal - vValveActuation))>>1;
     if (vInspOS == 0){
         vInspOS = (3*tmpVal)>>2;
     } else {
         vInspOS = (3 * vInspOS + tmpVal) >> 2;
     }
-    DEBUG_PRINT(("\nIPOS LC %d Plat %d\n", lungC,DBGPCONVERT(pPlatInsp)));
+
+    // Calculate also lungR (mbar/l/min).
+    // lungR = (pPlatMax - pPlatInsp)/FlowRate at end of inspiration.
+    tmpVal = pPlatMax - pPlatInsp;
+    tmpVal = ((uint32_t) setScale*tmpVal*effectiveFlowRateInv)>>9;
+    if (tmpVal > (200*MPRESSURE_MBAR(1))){
+        tmpVal = 200;
+    } else if (tmpVal < (2*MPRESSURE_MBAR(1))){
+        tmpVal = 2;
+    }
+    lungR = (3*lungR + tmpVal)>>2;
+
+    DEBUG_PRINT(("\nIPOS LC %d Plat %d FI %d\n", lungC,DBGPCONVERT(pPlatInsp), effectiveFlowRateInv));
 }
 
 // Due to difference between open and close response times of the valves, it is
@@ -339,13 +351,6 @@ void main(void) {
             /////////////////////////////////////////////
             // Inspiration part of the cycle.
             /////////////////////////////////////////////
-            // Now three different pressure settings are possible. Optimize time expended on each one.
-            // Pressure due to lung compliance and lung resistance can be simplified as:
-            // P(t) = LC*Integral(Flow(t)) + LR*Flow(t). Being LC the lung compliance, and LR the lung resistance.
-            // With fixed flow(t) values, the integral of flow becomes F1*T1+F2*T2+F3*T3 being F1, F2, F3 the flow at the three settings, and T1, T2, T3 the total time at each setting.
-            // To minimize the maximum pressure reached, this pressure should be reached the end of each stage (of filling the lung with one of the three settings)
-            // If this is done, then T2 and T3 have fixed durations that can be expressed as T2=LR/2LC, T3=LR/LC. T1 would account for the rest of the time.
-            // In this expression the time is unrestricted. If time must be minimized, above values would represent max values.
 
             intVentMode = VentMode;
             intMaxP = MPRESSURE_MBAR(MaxP);
@@ -585,31 +590,31 @@ void main(void) {
                             }
 
                             if (OSCheckInt) {
-                                pInspOSVSet = pInspVSet+1;
+                                pInspOSVSet = pInspVSet + 1;
                             } else {
                                 pInspOSVSet = pInspVSet;
                             }
 
                             if (pInspVSet == 3) {
                                 tmpUVal = timeDiff(rVHighActuationTstamp, timeGet());
-                            } else if (pInspVSet == 2){
-			      tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + ((2*5*timeDiff(rVMedActuationTstamp, timeGet()))>>4);
-                            } else if (pInspVSet == 1){
-			      tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + ((5*(2*timeDiff(rVMedActuationTstamp, rVLowActuationTstamp)) + timeDiff(rVLowActuationTstamp, timeGet()))>>4);
+                            } else if (pInspVSet == 2) {
+                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + ((2 * 5 * timeDiff(rVMedActuationTstamp, timeGet())) >> 4);
+                            } else if (pInspVSet == 1) {
+                                tmpUVal = timeDiff(rVHighActuationTstamp, rVMedActuationTstamp) + ((5 * ((2 * timeDiff(rVMedActuationTstamp, rVLowActuationTstamp)) + timeDiff(rVLowActuationTstamp, timeGet()))) >> 4);
                             }
 
                             if ((tmpUVal > 50)&&(vValveActuation > 50)) {
-			      //                                effectiveFlowRate=(3*effectiveFlowRate+(((uint24_t) 1000*vValveActuation)/tmpUVal))>>2;
-			      effectiveFlowRateInv=(3*effectiveFlowRateInv+((((uint24_t) tmpUVal)<<8) / vValveActuation))>>2;
+                                //                                effectiveFlowRate=(3*effectiveFlowRate+(((uint24_t) 1000*vValveActuation)/tmpUVal))>>2;
+                                effectiveFlowRateInv = (3 * effectiveFlowRateInv + ((((uint24_t) tmpUVal) << 8) / vValveActuation)) >> 2;
                             }
-                            
+
                             // Avoid too big errors in flow measurement.
-			    //                            if (effectiveFlowRate < 100){
+                            //                            if (effectiveFlowRate < 100){
                             //    effectiveFlowRate = 100;
                             //} else if (effectiveFlowRate > 2000){
                             //    effectiveFlowRate = 2000;
                             //}
-                            if (effectiveFlowRateInv > 2621){
+                            if (effectiveFlowRateInv > 2621) {
                                 effectiveFlowRateInv = 2621;
                             } else if (effectiveFlowRateInv < 131){
                                 effectiveFlowRateInv = 131;
