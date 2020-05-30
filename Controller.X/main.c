@@ -710,9 +710,9 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
+                                    // Leaks detected by comparing pressure with plateau pressure, not with the set pressure or volume, so common for both PC-SIMV and VC-SIMV.
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP - MPRESSURE_MBAR(2)))) ||
-                                            ((intVentMode == VMODE_VOLUME) && (pAdj < (pPlatInsp - MPRESSURE_MBAR(3)))))) {
+                                         (pAdj < (pPlatInsp - MPRESSURE_MBAR(2)))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;

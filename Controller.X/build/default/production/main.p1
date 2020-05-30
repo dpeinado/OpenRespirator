@@ -4295,11 +4295,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 "711
 [; ;main.c: 711:                                     vAdj = vAdj + (vQuanta >> 1);
 [e = _vAdj -> + -> _vAdj `i >> -> _vQuanta `i -> 1 `i `s ]
-"713
-[; ;main.c: 713:                                     if (((pInst + pQuantaInsp) < intMaxP) &&
-[e $ ! && < + -> _pInst `i -> _pQuantaInsp `i -> _intMaxP `i || && == -> _intVentMode `ui -> . `E16843 0 `ui < -> _pAdj `i - -> _intIP `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 2 `i && == -> _intVentMode `ui -> . `E16843 1 `ui < -> _pAdj `i - -> _pPlatInsp `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 3 `i 2375  ]
+"714
+[; ;main.c: 714:                                     if (((pInst + pQuantaInsp) < intMaxP) &&
+[e $ ! && < + -> _pInst `i -> _pQuantaInsp `i -> _intMaxP `i < -> _pAdj `i - -> _pPlatInsp `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 2 `i 2375  ]
 "715
-[; ;main.c: 715:                                             ((intVentMode == VMODE_VOLUME) && (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*3)))))) {
+[; ;main.c: 715:                                          (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*2)))) {
 {
 "716
 [; ;main.c: 716:                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
@@ -4854,8 +4854,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 960: }
 [e :UE 2264 ]
 }
-[p f _printf 12615808 ]
 [p f _sprintf 8421505 ]
+[p f _printf 12615808 ]
 [a 20C 86 37 32 52 100 0 ]
 [a 6C 80 82 69 83 83 32 45 32 84 79 32 69 88 73 84 32 0 ]
 [a 5C 80 82 69 83 83 32 43 32 84 79 32 82 69 80 69 65 84 32 0 ]

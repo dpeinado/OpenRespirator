@@ -29234,9 +29234,9 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
+
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
-                                            (((intVentMode == VMODE_PRESSURE) && (pAdj < (intIP - ((int16_t) ((0.045*4096+2)/5)*2)))) ||
-                                            ((intVentMode == VMODE_VOLUME) && (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*3)))))) {
+                                         (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*2)))) {
                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = 1;
