@@ -375,11 +375,15 @@ void main(void) {
                 }
             } else {
                 // In volume mode --> Target volume implies starting from the setted PEEP. If PEEP is higher --> lower the volume to avoid damage.
-                intIP = 0;
                 if (pPeepActual > ((MPRESSURE_MBAR(1) + intPEEP))) {
                     intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP) * lungC) >> 7);
                 } else {
                     intMaxV = 10 * ((uint16_t) MaxV);
+                }
+                if (lungC > 20) {
+                    intIP = ((uint24_t) intMaxV<<7)/lungC; // Estimated IP at end of inspiration.
+                } else {
+                    intIP = 0;
                 }
             }
             DEBUG_PRINT(("\nIP. MaxV %d EBRate %d SV2RO %d SV2RC %d PQ %d VQ %d.\n", intMaxV, bRateGet(), rSV2ValveORT, rSV2ValveCRT, DBGPCONVERT(pQuantaInsp), vQuanta));
@@ -710,9 +714,11 @@ void main(void) {
                                     pAdj = pAdj + (pQuantaInsp >> 1);
                                     vAdj = vAdj + (vQuanta >> 1);
 
-                                    // Leaks detected by comparing pressure with plateau pressure, not with the set pressure or volume, so common for both PC-SIMV and VC-SIMV.
+                                    // Leaks detected by comparing pressure with plateau pressure, and with the theoretical plateau pressure, and only compensate for the lower of the two.
+                                    // It is common for both PC-SIMV and VC-SIMV.
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
-                                         (pAdj < (pPlatInsp - MPRESSURE_MBAR(2)))) {
+                                         (pAdj < (pPlatInsp - MPRESSURE_MBAR(2))) &&
+                                            (pAdj < (intIP - MPRESSURE_MBAR(2)))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;

@@ -28899,11 +28899,15 @@ void main(void) {
                 }
             } else {
 
-                intIP = 0;
                 if (pPeepActual > ((((int16_t) ((0.045*4096+2)/5)*1) + intPEEP))) {
                     intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP) * lungC) >> 7);
                 } else {
                     intMaxV = 10 * ((uint16_t) MaxV);
+                }
+                if (lungC > 20) {
+                    intIP = ((uint24_t) intMaxV<<7)/lungC;
+                } else {
+                    intIP = 0;
                 }
             }
             printf ("\nIP. MaxV %d EBRate %d SV2RO %d SV2RC %d PQ %d VQ %d.\n", intMaxV, bRateGet(), rSV2ValveORT, rSV2ValveCRT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaInsp))>>8)), vQuanta);
@@ -29235,8 +29239,10 @@ void main(void) {
                                     vAdj = vAdj + (vQuanta >> 1);
 
 
+
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
-                                         (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*2)))) {
+                                         (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*2))) &&
+                                            (pAdj < (intIP - ((int16_t) ((0.045*4096+2)/5)*2)))) {
                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = 1;
@@ -29436,7 +29442,7 @@ void main(void) {
                     aCaptGetResult(MainPSensor, &pInst);
                     aCaptGetResult(Flt1PSensor, &pAvgShort);
                     printf ("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n", timeDiff(rCycleTime, timeGet()), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pInst - pAvgShort))>>8)), rSV3ValveORT, ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pPlatExp))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pExpOS))>>8)), ((int16_t) (((2560/((int16_t) ((0.045*4096+2)/5)*1))*((int24_t) pQuantaExp))>>8)) );
-# 948 "main.c"
+# 954 "main.c"
                     do {} while (0);
 
 
