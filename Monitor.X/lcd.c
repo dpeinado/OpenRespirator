@@ -43,9 +43,10 @@ void LCDInit (void) {
               //1234567890123456
     LCDMessage("Open  Respirator");
     LCDWriteCmd(0xC0);      // Second Line
-    LCDMessage("    AirVita     ");
+    LCDMessage("    OxyVita     ");
     LCDWriteCmd(0x02);
     __delay_ms(750);
+    printf("LCDTest\r\n");
     LCDTest();
     /*
     LCDWriteCmd(0x02);
@@ -59,6 +60,17 @@ void LCDInit (void) {
     */
 }
 void LCDTest(void) {
+    char msg1[17];
+    char msg2[17];
+    
+    for (int i=0; i<9; i++) {
+        for (int j=0; j<17; j++) {
+            msg1[j] = '0' + i; msg2[j] = '0' + i + 1; 
+        }
+        LCDMessage12(msg1,msg2);
+        __delay_ms(750);
+    }
+    /*   
     LCDMessage12("0000000000000000","1111111111111111");
     __delay_ms(750);
     LCDMessage12("1111111111111111","2222222222222222");
@@ -79,16 +91,18 @@ void LCDTest(void) {
     __delay_ms(750);
     LCDMessage12("9999999999999999","0000000000000000");
     __delay_ms(750);
-    
+    */
 }
 
 void LCDOff(void) {
+    LED = false;
     LLED_SetLow();
     //LCDWriteCmd(0x01);
     //__delay_ms(2);
 }
 
 void LCDOn(void) {
+    LED = true;
     LLED_SetHigh();
 }
 

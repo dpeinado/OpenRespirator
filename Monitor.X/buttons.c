@@ -8,10 +8,16 @@
 #define PUSHMASK 0xF0
 #define PUSHLONGMASK 0xFF
 
-static uint8_t muteButton=0;
-static uint8_t histButton=0;
+static uint8_t muteButton;
+static uint8_t histButton;
+static int ledCnt;
+static uint8_t ledType;
 
 void ButtonInit(void) {
+    ledCnt=0;
+    ledType=ALARM_NONE;
+    muteButton=0;
+    histButton=0;
     TMR1_SetInterruptHandler(ButtonTask);
     TMR1_StartTimer();
 }
@@ -35,16 +41,38 @@ void ButtonTask(void) {
     if (muteButton == PUSHLONGMASK && histButton == PUSHLONGMASK) {
         DisableAlarmSV1();
         VALVE_SetHigh();
-        printf("\r\nDISABLE SV1 ALARM!!!!!\r\n");
+        printf("\r\nDIS SV1 ALARM!\r\n");
+    }
+    if (ledType!=ALARM_NONE) {
+        if (ledCnt == 0) LED_SetHigh();
+        if ((ledCnt == 2 && ledType==ALARM_LOW) || 
+            (ledCnt == 75/2 && ledType== ALARM_MED) ||
+            (ledCnt == 15 && ledType == ALARM_HIGH) )
+        {
+            LED_SetLow();
+        }
+        if ((ledCnt == 4 && ledType==ALARM_LOW) || 
+            (ledCnt == 75 && ledType== ALARM_MED) ||
+            (ledCnt == 30 && ledType == ALARM_HIGH) )
+        {
+            ledCnt = 0;
+        } else {
+            ledCnt++;
+        }
+    } else {
+        ledCnt=0;
+        LED_SetLow();
     }
     
 }
 
-void SetAlarmLED(void) {
+void SetAlarmLED(uint8_t type) {
+    ledType = type;
     LED_SetHigh();
 }
 
 void ClearAlarmLED(void) {
+    ledType = ALARM_NONE;
     LED_SetLow();
 }
 

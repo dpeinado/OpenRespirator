@@ -60,7 +60,7 @@ void SYSTEM_Initialize(void)
     TMR0_Initialize();
     PWM6_Initialize();
     TMR6_Initialize();
-    DAC1_Initialize();
+    CMP1_Initialize();
     TMR5_Initialize();
     TMR1_Initialize();
     UART1_Initialize();

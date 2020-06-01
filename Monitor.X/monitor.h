@@ -14,7 +14,7 @@ extern "C" {
     
 // ADC functions
 #define ADC_ID_PRS 0
-#define ADC_ID_MIC 1
+#define ADC_ID_5V  1
 #define ADC_ID_VOL 2
 #define ADC_ID_12V 3
     
@@ -30,6 +30,7 @@ int16_t GetPressure_mbar (void);
 int16_t GetPressure_mbar02 (void); // 20 ubar units
 int16_t GetPressure_kpa (void);
 int16_t GetPressure_pa (void);
+int16_t SeePressure_pa (void);
 void MonitorPressureTask(void);
 void MonitorDump(void);
 void SetCalibrateState(bool);
@@ -39,7 +40,11 @@ void MonitorDisable(void);
 int16_t GetTargetIp(void);
 int16_t GetTargetEp(void);
 int16_t GetPressureV_pa(void);
+int16_t SeePressureV_pa(void);
+int16_t See12V(void);
 int16_t Get12V(void);
+int16_t Get5V(void);
+int16_t See5V(void);
 int16_t GetVolume(void);
 int16_t GetPmax(void);
 void SetAlarmSV1(bool);

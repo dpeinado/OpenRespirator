@@ -140,7 +140,7 @@ void main(void)
             if (ch=='d') DisableAlarmSV1();
             if (ch=='D') EnableAlarmSV1();
 
-            if (ch=='l') printf("\r\nPRS: %d %d pa PRSV: %d pa 12V: %d mV\r\n", GetPressure_pa(), GetPressure_pa(), GetPressureV_pa(), Get12V());
+            if (ch=='l') printf("\r\nPRS: %d pa PRSV: %d pa 12V: %d mV 5V:%d \r\n", SeePressure_pa(), SeePressureV_pa(), See12V(), See5V());
             if (ch=='p') MonitorDump();
             if (ch=='z') SetCalibrateState(false);
             if (ch=='Z') SetCalibrateState(true);

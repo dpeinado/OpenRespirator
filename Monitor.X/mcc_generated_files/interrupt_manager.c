@@ -58,13 +58,13 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    if(PIE1bits.C1IE == 1 && PIR1bits.C1IF == 1)
+    {
+        CMP1_ISR();
+    }
+    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
     {
         ADCC_ISR();
-    }
-    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
-    {
-        TMR0_ISR();
     }
     else if(PIE3bits.U1TXIE == 1 && PIR3bits.U1TXIF == 1)
     {
@@ -74,9 +74,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         UART1_RxInterruptHandler();
     }
-    else if(PIE3bits.I2C1EIE == 1 && PIR3bits.I2C1EIF == 1)
+    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
     {
-        I2C1_InterruptHandler();
+        TMR0_ISR();
     }
     else if(PIE2bits.I2C1RXIE == 1 && PIR2bits.I2C1RXIF == 1)
     {
@@ -117,10 +117,6 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     else if(PIE7bits.TMR4IE == 1 && PIR7bits.TMR4IF == 1)
     {
         TMR4_ISR();
-    }
-    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
-    {
-        ADCC_ISR();
     }
     else if(PIE4bits.TMR1IE == 1 && PIR4bits.TMR1IF == 1)
     {

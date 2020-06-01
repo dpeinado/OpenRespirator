@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void ClearAlarmLED(void);
-void SetAlarmLED(void);
+void SetAlarmLED(uint8_t);
 void ButtonTask(void);
 void ToggleAlarmLED(void);
 void ButtonInit(void);

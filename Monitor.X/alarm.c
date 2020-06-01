@@ -71,7 +71,7 @@ bool BatteryFailAlarm(void) {
             ClearBaterryLowAlarmHigh();
         }
         
-        if (bat < 13000) { // Battery operated
+        if (bat < 13250) { // Battery operated
             timeBattery++;
             SetNoPowerSupplyAlarm();
         }
@@ -86,14 +86,36 @@ bool BatteryFailAlarm(void) {
     
     return batteryFailAlarm;
 }
-bool MonitorFailAlarm(void) { monitorSV1 = true; return monitorFailAlarm; };
+bool MonitorFailAlarm(void) {
+    int16_t v5;
+    static int cnt5v = 0;
+    if (AdcDataReady(ADC_ID_5V)) {
+        v5= Get5V();
+        if (v5 < 4700/2 || v5 > 5300/2) {
+            cnt5v++;
+            if (cnt5v>3) { // Error during more than 3 secs
+                monitorFailAlarm = true;
+                monitorSV1 = false;
+                cnt5v = 4;
+            }
+        } else
+        {
+            monitorFailAlarm = false;
+            monitorSV1 = true;
+            cnt5v = 0;
+        }
+    }
+    return monitorFailAlarm;
+}
+
 bool ControlFailAlarm(void) {
     if (controlFailAlarm) {
         controlSV1=false;
     }  
     return controlFailAlarm;
-};
-bool GasFailureAlarm(void) { return gasFailureAlarm; };
+}
+
+bool GasFailureAlarm(void) { return gasFailureAlarm; }
 void SetMaxPressure(int16_t pr) { alarmPmax = pr; }
 
 bool HighPressureAlarmLow(void) {
@@ -287,7 +309,7 @@ static bool alarmCheck = false;
 
 void TestAlarm(int id) {
     testAlarm[id] = !testAlarm[id];
-    printf("\r\nTest Alarm: ");
+    printf("\r\nTA: ");
     for (int i=0; i<NUM_ALARMS; i++) 
     {
         if (testAlarm[i]) putchar('0'+i); else putchar('.');
@@ -389,12 +411,12 @@ void AlarmUpdateLCD(void) {
     if (histSec) {
         displayStatus = DISPLAY_HIST;
         AlarmDisplay(alarmData[hist].type, alarmData[hist].name);
-        SetAlarmLED();
+        
     } else {
         if (displayStatus==DISPLAY_ALARM && AnyAlarm())
         {
             int id;
-            SetAlarmLED();
+            
             id = HigherAlarm();
             //printf("\r\nAlarm: %d %s\r\n", id, alarmData[id].name);
             AlarmDisplay(alarmData[id].type,alarmData[id].name);
@@ -403,7 +425,7 @@ void AlarmUpdateLCD(void) {
             // Display Parameters TBD
             // MonitorUpdateLCD();
             ValueDisplay();
-            ClearAlarmLED();
+            
             if (AnyAlarm()) displayStatus = DISPLAY_ALARM;
         }
     }
@@ -453,6 +475,7 @@ void HistAlarm(void) {
     TMR5_StartTimer();
 }
 
+// Runs at app level
 void AlarmCheckTask(void) {
     SetAlarmSV1(controlSV1 && monitorSV1 && veryHighSV1 && batterySV1);
     if (alarmCheck == false) return;
@@ -471,34 +494,34 @@ void AlarmCheckTask(void) {
     // Update LCD
     AlarmUpdateLCD();
     
-    // Update buzzer state
-    // I am mute ?
-    if (muteSec == 0)
-    {
-        // There is an alarm
-        if (AnyAlarm()) {
-            // The type of the alarm
-            int type = alarmData[HigherAlarm()].type;
-            // The type of the higher alarm is the same than the one playing ?
-            if (type!=current) {
-                // Update alarm
-                current = type;
+    // Update buzzer and LED state
+    // There is an alarm
+    if (AnyAlarm()) {
+        // The type of the alarm
+        int type = alarmData[HigherAlarm()].type;
+        // The type of the higher alarm is the same than the one playing ?
+        if (type!=current) {
+            // Update alarm
+            current = type;
+            if (muteSec == 0) { // I am mute ?
                 BuzzerSet(type);
-            } 
+            } else {
+                // I am mute
+                current = 0;
+                BuzzerClear();
+            }
+            SetAlarmLED(type);
         } else {
             // No alarm
             current = 0;
             BuzzerClear();
+            ClearAlarmLED();
         }
-    } else {
-        // I am mute
-        current = 0;
-        BuzzerClear();
     }
 }
 
 
-
+// IRQ handler
 void AlarmHandler(void) {
 
     //printf("AH %d %d\r\n", muteSec, histSec);
@@ -521,6 +544,7 @@ void AlarmInit() {
     }
     displayStatus = DISPLAY_NORMAL;
     alarmPmax = 40;
+    alarmCheck = false;
     
     TMR5_SetInterruptHandler(AlarmHandler);
     TMR5_StartTimer();

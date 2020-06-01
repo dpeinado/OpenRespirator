@@ -56,6 +56,7 @@ void BuzzerHandler( void) {
     BuzzerOff();
     BuzzerTask();
 }
+
 void BuzzerTestHandler( void) {    
 //    printf("BTH\r\n");
     BuzzerOff();
@@ -338,9 +339,15 @@ void BuzzerTask(void) {
     
 }
 
+void BuzzerCMPHandler( void) {    
+    printf("BCMPH\r\n");
+    
+}
+
 void BuzzerInit (void) {
     // Initialize TIMER 4 handler
     TMR4_SetInterruptHandler(BuzzerHandler);
+    CMP1_SetIntHandler(BuzzerCMPHandler);
     BuzzerOff();
     
 }

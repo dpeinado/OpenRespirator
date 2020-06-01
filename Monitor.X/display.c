@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+#include "display.h"
 #include "lcd.h"
 #include "alarm.h"
 #include "monitor.h"
@@ -22,23 +22,22 @@ static bool enable = false;
 void InitDisplay(void) {
     LCDInit();
     calibrate=false;
-    LCDMessage12("Open Respirator ","    AirVita    ");
+    //LCDMessage12("Open Respirator ","    OxyVita    ");
 }
 
-void DisplayEnable(void) {
+void DisplayEnable(void) {   
+    if (enable == false) ValueDisplay();
     enable = true;
 }
 
 void DisplayDisable(void) {
-    //                        1234567890123456   1234567890123456
-    if (enable) sprintf(msg1, "Open Respirator ");
-    if (enable) sprintf(msg2, "    AirVita     "); 
+    if (enable == true) ValueDisplay();
     enable = false;
 }
 
-void DisplayCalibrate(int16_t pr, int16_t off) {
+void DisplayCalibrate(int16_t pr, int16_t off, int16_t prv, int16_t offv) {
     calibrate=true;
-    sprintf(msg4, "Pr: %2d Of: %4d", pr, off);
+    sprintf(msg4, "Cal: %4d - %4d", off, offv);
 }
 
 void UnDisplayCalibrate(void) {
@@ -49,7 +48,7 @@ void UnDisplayCalibrate(void) {
 void ValueDisplay(void) {
     if (!enable) { //                  1234567890123456
         if (msg1[0]==0) sprintf(msg1, "Open  Respirator");
-        if (msg2[0]==0) sprintf(msg2, "    AirVita     ");
+        if (msg2[0]==0) sprintf(msg2, "    OxyVita     ");
         return;
     }
     static int cnt=0;

@@ -89,9 +89,9 @@ typedef __uint24 uint24_t;
 typedef enum
 {
     PRSV =  0x0,
-    MIC =  0x3,
-    MEAS12 =  0x4,
-    PRS =  0x5,
+    MEAS5 =  0x2,
+    PRS =  0x4,
+    MEAS12 =  0x5,
     channel_VSS =  0x3B,
     channel_Temp =  0x3C,
     channel_DAC1 =  0x3D,
