@@ -12,6 +12,7 @@ extern "C" {
 
 #include "mcc_generated_files/mcc.h"
 #include "aCapture.h"
+#include "time.h"
 
 // User parameter limits.
 #define BPM_MIN 10
@@ -20,6 +21,9 @@ extern "C" {
 #define IP_MAX 70
 #define PEEP_MIN 4
 #define PEEP_MAX 25
+    // Breath detect trigger, in mbar.
+#define BDT_MIN 1
+#define BDT_MAX 8
 // Volume limit. With limitations of this equipment volume below 100ml can not be provided with accuracy. Probably lower limit should be higher.
 #define VOL_MIN 100
 #define VOL_MAX 1500
@@ -38,6 +42,9 @@ extern "C" {
 #define VQUANTA_LIMIT    90
 // Zero volume threshold for aux sensor.
 #define ZVOLTH 20
+
+#define PEEP_COMP   MPRESSURE_MBAR(0.4)
+
     
 // Objective time for inspiration.
 #define INSP_TIME 500
@@ -119,15 +126,19 @@ extern "C" {
     extern uint8_t IP;
     extern uint8_t MaxP;
     extern uint8_t MaxV;
+    extern uint8_t BdTrig;
     extern uint8_t LowVAlarm;
     extern uint8_t HighVAlarm;
     extern uint8_t PEEP;
     extern uint8_t eBRate;
     extern int16_t vddValMean;
     // Change detection for all user settings.
-    extern bool chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
+    extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
+    extern uint16_t lungC, lungR;
+
 
 #ifdef	__cplusplus
 }

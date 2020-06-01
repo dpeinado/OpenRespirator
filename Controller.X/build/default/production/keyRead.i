@@ -28323,6 +28323,11 @@ int8_t keyPeek(void);
 int8_t keyReadEC();
 
 int8_t keyRead();
+
+void keyFlush(uint8_t keyIdx);
+
+
+_Bool isKeyPressed(uint8_t keyIdx);
 # 11 "keyRead.c" 2
 
 
@@ -28332,7 +28337,7 @@ int8_t keyRead();
 
 int8_t keysD[6] = {1,2,3,4,5,7};
 int8_t keysC[5] = {4,5,6,7,2};
-int8_t lastkey, lastkeyEC;
+int8_t lastkey, lastkeyEC, keyFilter;
 time_t pressMills;
 
 uint8_t digitalReadD(uint8_t pin){
@@ -28346,6 +28351,7 @@ void keyReadInit(void){
     pressMills = 0;
     lastkey = -1;
     lastkeyEC = -1;
+    keyFilter = -1;
 
 };
 
@@ -28385,5 +28391,23 @@ int8_t keyRead() {
     if (ch == lastkey) return -1;
     int tmp = lastkey;
     lastkey = ch;
-    return tmp;
+    if (tmp == keyFilter) {
+        keyFilter = -1;
+        return -1;
+    } else {
+        keyFilter = -1;
+        return tmp;
+    }
+}
+
+void keyFlush(uint8_t keyIdx){
+    keyFilter=keyIdx;
+}
+
+_Bool isKeyPressed(uint8_t keyIdx){
+    if (keyIdx<6){
+        return (digitalReadD(keysD[keyIdx]) != 1);
+    } else {
+        return (digitalReadC(keysC[keyIdx-6]) != 1);
+    }
 }

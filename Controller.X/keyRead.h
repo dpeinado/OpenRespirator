@@ -9,8 +9,8 @@
 #define KEYMINUS     5
 #define KEYPLUS      3
 #define KEYBREATH    4
-#define KEYMAXP      6
-#define KEYMAXV      7
+#define KEYMAXV      6
+#define KEYMAXP      7
 #define KEYHIGHVA    8
 #define KEYLOWVA     9
 #define KEYPOWER  10
@@ -26,4 +26,8 @@ int8_t keyReadEC();
 
 int8_t keyRead();
 
+void keyFlush(uint8_t keyIdx);
+
+// Poll for specific key pressed. To check simultanous key presses.
+bool isKeyPressed(uint8_t keyIdx);
 #endif /* KEYREAD_H_ */

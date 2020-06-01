@@ -204,7 +204,7 @@ bool flowChk(fchk_val flowVal){
 
 // Initialization procedure.
 // Self-test.
-bool SelfTest(void) {
+bool SelfTest(bool tstScreen){
   int idx, cIdx;
   int16_t vddVal, vddValMax, vddValMin;
   int16_t aPVal, aPValMax, aPValMin, aPValMean;
@@ -215,23 +215,25 @@ bool SelfTest(void) {
   ctrlStatus = CTRL_UNCAL;
   CLOSE_SV2;
   CLOSE_SV3;
-  
-  setCursor(0, 1);
-  printstrblock("SELF-TEST       ");
-  setCursor(0, 0);
-  printstrblock("DISPLAY TEST    ");
-  for (idx=0;idx<10;idx++){
-    setCursor(0, 0);
-    lcdTopRow[0]=0x30+idx;
-    for (cIdx=1;cIdx<16;cIdx++){
-      lcdTopRow[cIdx]=lcdTopRow[0];
-    }
-    printstrblock(lcdTopRow);
-    setCursor(0, 1);
-    printstrblock(lcdTopRow);
-    timeDelayMs(800);
-  }
 
+    if (tstScreen) {
+        setCursor(0, 1);
+        printstrblock("SELF-TEST       ");
+        setCursor(0, 0);
+        printstrblock("DISPLAY TEST    ");
+        for (idx = 0; idx < 10; idx++) {
+            setCursor(0, 0);
+            lcdTopRow[0] = 0x30 + idx;
+            for (cIdx = 1; cIdx < 16; cIdx++) {
+                lcdTopRow[cIdx] = lcdTopRow[0];
+            }
+            printstrblock(lcdTopRow);
+            setCursor(0, 1);
+            printstrblock(lcdTopRow);
+            timeDelayMs(800);
+        }
+    }
+    
   setCursor(0, 0);
   printstrblock("SELF-TEST. LEAVE");
   setCursor(0, 1);
@@ -337,7 +339,7 @@ bool SelfTest(void) {
       initOk=false;
       DEBUG_PRINT(("Mon error"));
       setCursor(0, 0);
-      printstrblock("MONITOR ERROR");
+      printstrblock("MONITOR ERROR   ");
       timeDelayMs(500);
     }
     
@@ -345,6 +347,7 @@ bool SelfTest(void) {
       // Success.
       ctrlStatus = CTRL_STOP;
     } else {
+      setCursor(0, 0);
       printstrblock("CAL ERROR. RETRY ");
       timeDelayMs(500);
     }
@@ -361,7 +364,7 @@ bool SelfTest(void) {
         initOk=false;
 	DEBUG_PRINT(("Mon error"));
 	setCursor(0, 0);
-	printstrblock("MONITOR ERROR");
+	printstrblock("MONITOR ERROR   ");
 	timeDelayMs(500);
   }
   
@@ -369,7 +372,8 @@ bool SelfTest(void) {
   timeDelayMs(200);
   if (!pressureSensorChk(false, 100)) {
     initOk=false;
-    printstrblock("SV2 Valve error");
+	setCursor(0, 0);
+    printstrblock("SV2 Valve error ");
     timeDelayMs(500);
   }
   
@@ -383,7 +387,8 @@ bool SelfTest(void) {
   timeDelayMs(300);
   if (!pressureSensorChk(false, 100)) {
     initOk=false;
-    printstrblock("SV1 Valve error");
+	setCursor(0, 0);
+    printstrblock("SV1 Valve error ");
     timeDelayMs(500);
   }
   

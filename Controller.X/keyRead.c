@@ -16,7 +16,7 @@
 // Pins of portd.
 int8_t keysD[KEYDN] = {1,2,3,4,5,7};
 int8_t keysC[KEYCN] = {4,5,6,7,2};
-int8_t lastkey, lastkeyEC;
+int8_t lastkey, lastkeyEC, keyFilter;
 time_t pressMills;
 
 uint8_t digitalReadD(uint8_t pin){
@@ -30,6 +30,7 @@ void keyReadInit(void){
     pressMills = 0;
     lastkey = -1;
     lastkeyEC = -1;
+    keyFilter = -1;
     // Keys already initialized.
 };
 
@@ -69,5 +70,23 @@ int8_t keyRead() {
     if (ch == lastkey) return -1;
     int tmp = lastkey;
     lastkey = ch;
-    return tmp;
+    if (tmp == keyFilter) {
+        keyFilter = -1;
+        return -1;
+    } else {
+        keyFilter = -1;
+        return tmp;
+    }
+}
+
+void keyFlush(uint8_t keyIdx){
+    keyFilter=keyIdx;
+}
+
+bool isKeyPressed(uint8_t keyIdx){
+    if (keyIdx<KEYDN){
+        return (digitalReadD(keysD[keyIdx]) != 1);
+    } else {
+        return (digitalReadC(keysC[keyIdx-KEYDN]) != 1);
+    }
 }

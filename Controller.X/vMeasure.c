@@ -6,7 +6,7 @@
 #include "cmath.h"
 
 // Constant from acc diff pressure to ml (2ms acc time): 65 for 6mm orifice.
-#define VOLK 65
+#define VOLK 60
 uint32_t volume;
 
 void vMeasureIsr(void) {

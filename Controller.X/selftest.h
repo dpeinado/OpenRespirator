@@ -17,7 +17,7 @@ extern uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
   
 // Initialization procedure.
 // Self-test.
-bool SelfTest(void);
+bool SelfTest(bool tstScreen);
   
 #ifdef	__cplusplus
 }
