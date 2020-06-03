@@ -49,7 +49,6 @@
 #include "buttons.h"
 #include "alarm.h"
 #include "buzzer.h"
-#include "tick.h"
 #include "controller.h"
 
 /*

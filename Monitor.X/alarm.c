@@ -88,24 +88,25 @@ bool BatteryFailAlarm(void) {
 }
 bool MonitorFailAlarm(void) {
     int16_t v5;
+    static bool monitorFailAlarm5V = false;
     static int cnt5v = 0;
     if (AdcDataReady(ADC_ID_5V)) {
         v5= Get5V();
         if (v5 < 4700/2 || v5 > 5300/2) {
             cnt5v++;
             if (cnt5v>3) { // Error during more than 3 secs
-                monitorFailAlarm = true;
+                monitorFailAlarm5V = true;
                 monitorSV1 = false;
                 cnt5v = 4;
             }
         } else
         {
-            monitorFailAlarm = false;
+            monitorFailAlarm5V = false;
             monitorSV1 = true;
             cnt5v = 0;
         }
     }
-    return monitorFailAlarm;
+    return monitorFailAlarm5V || monitorFailAlarm;
 }
 
 bool ControlFailAlarm(void) {

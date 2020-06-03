@@ -11,7 +11,6 @@
 #include "display.h"
 #include "alarm.h"
 #include "buttons.h"
-#include "tick.h"
 #include "../Controller.X/cmath.h"
 
 #define ABS(x) (((x)>0)?(x):(-x))

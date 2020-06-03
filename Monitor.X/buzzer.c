@@ -38,6 +38,9 @@ uint8_t buzzerState;
 #define TIMER_180MS 46
 #define TIMER_1S    255
 
+static bool on;
+static bool detected;
+
 void BuzzerSet(uint8_t state) {
     alarmState = state;
     alarmStep = 0;
@@ -53,12 +56,21 @@ void BuzzerClear(void) {
 
 void BuzzerHandler( void) {
 //    printf("BH\r\n");
-    BuzzerOff();
     BuzzerTask();
 }
 
 void BuzzerTestHandler( void) {    
 //    printf("BTH\r\n");
+    if (on) {
+        // I come from Buzzer on
+        if (detected) {
+            // Buzz is detected by micro
+            printf("_DB_");
+        } else {
+            // Not detected
+            printf("_EB_");
+        }
+    }
     BuzzerOff();
 }
 
@@ -98,6 +110,25 @@ void BuzzerTest(char note) {
                      // ... C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 4s
 
 void BuzzerTask(void) {
+    static int noDetections = 0;
+    if (on) {
+        // I come from Buzzer on
+        if (detected) {
+            // Buzz is detected by micro
+            ClearMonitorFailAlarm(); // Latched should not be here
+            noDetections = 0;
+            printf("_DB_");
+        } else {
+            // Not detected
+            // we give 3 tries           
+            if (noDetections>=2) {
+                SetMonitorFailAlarm();
+            } else {
+                noDetections ++;
+            }
+            printf("_EB_");
+        }
+    }
     BuzzerOff();
     TMR4_Stop();
     TMR4_SetInterruptHandler(BuzzerHandler);
@@ -341,6 +372,7 @@ void BuzzerTask(void) {
 
 void BuzzerCMPHandler( void) {    
     printf("BCMPH\r\n");
+    detected = true;
     
 }
 
@@ -349,15 +381,18 @@ void BuzzerInit (void) {
     TMR4_SetInterruptHandler(BuzzerHandler);
     CMP1_SetIntHandler(BuzzerCMPHandler);
     BuzzerOff();
-    
+    detected = true;
 }
 
 
 void BuzzerOn (uint8_t period) {
     T2PR = period;
     PWM6CON = 0x80;
+    on = true;
+    detected = false;
 }
 
 void BuzzerOff (void) {
     PWM6CON = 0x00;
+    on = false;
 }
