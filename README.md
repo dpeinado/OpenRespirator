@@ -10,7 +10,7 @@ HW and system dodumentation are in the Doc directory <br>
 - Collaborators: 
 - - Intersurgical: Sara Rodriguez, Bill Barners, Mike Hinton <br>
 - - Vithas Sanidad : Ignacio Narvaez <br>
-- - McFly:
+- - McFly: Enrique, Marino y Daniel
   
 ## Sponsors: <br>
 
@@ -18,26 +18,20 @@ HW and system dodumentation are in the Doc directory <br>
 ### System
 
 ### Assembly
-- Document front and back pannel
+
 ### Production
 - Prepare production documentation
-- - Assembly map
-- - BOM update
 - - Define part alternatives
-- Price estimation
 - Define production test & calibration
 ### Electronics
 - Documentation
 - - Electronics production test
 ### Firmware
 - Monitor:
-- - Implement Microphone check
 - Controller:
-- - Add buzzer alarms
 ### Test & Validation
 - Clinic test:
 ### Certification
 - Documentation
-- - Update existing documentation with final design
-- Presentation to gobernment
+- Presented to gobernment
 
