@@ -63,13 +63,14 @@ void ButtonTask(void) {
     }
     if (ledType!=ALARM_NONE) {
         if (ledCnt == 0) LED_SetHigh();
+        
         if ((ledCnt == 2 && ledType==ALARM_LOW) || 
-            (ledCnt == 75/2 && ledType== ALARM_MED) ||
+            (ledCnt == 15 && ledType== ALARM_MED) ||
             (ledCnt == 15 && ledType == ALARM_HIGH) )
         {
             LED_SetLow();
         }
-        if ((ledCnt == 4 && ledType==ALARM_LOW) || 
+        if ((ledCnt == 75 && ledType==ALARM_LOW) || 
             (ledCnt == 75 && ledType== ALARM_MED) ||
             (ledCnt == 30 && ledType == ALARM_HIGH) )
         {

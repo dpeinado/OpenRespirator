@@ -92,7 +92,7 @@ void main(void)
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
-    printf ("\033c Hello world!!!\r\n");
+    printf ("\033c Oxyvita\r\n");
     LCDOn();
     InitDisplay();
     
@@ -112,6 +112,9 @@ void main(void)
     //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
     //  + Display message generation TIMER 5 1s
     //  + Monitor Controller accesses 150 ms TIMER 6
+    
+    // Check Buzzer
+    BuzzerCheck();
     
     while (1)
     {
@@ -135,6 +138,7 @@ void main(void)
             if (ch=='e') BuzzerTest('E');
             if (ch=='f') BuzzerTest('F');
             if (ch=='o') BuzzerTest('O');
+            if (ch=='t') BuzzerCheck();
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
             if (ch=='i') DumpI2C();

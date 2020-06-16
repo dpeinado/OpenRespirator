@@ -110,20 +110,21 @@ bool MonitorFailAlarm(void) {
     static int cnt5v = 0;
     if (AdcDataReady(ADC_ID_5V)) {
         v5= Get5V();
-        if (v5 < 4700/2 || v5 > 5300/2) {
-            cnt5v++;
-            if (cnt5v>3) { // Error during more than 3 secs
-                monitorFailAlarm5V = true;
-                monitorSV1 = false;
-                cnt5v = 4;
+        if (v5>3000) { // Some boards does not have the 5V monitoring
+            if (v5 < 4700/2 || v5 > 5300/2) {
+                cnt5v++;
+                if (cnt5v>3) { // Error during more than 3 secs
+                    monitorFailAlarm5V = true;
+                    cnt5v = 4;
+                }
+            } else
+            {
+                monitorFailAlarm5V = false;
+                cnt5v = 0;
             }
-        } else
-        {
-            monitorFailAlarm5V = false;
-            monitorSV1 = true;
-            cnt5v = 0;
         }
     }
+    monitorSV1 = !(monitorFailAlarm5V || monitorFailAlarm);
     return monitorFailAlarm5V || monitorFailAlarm;
 }
 
@@ -530,13 +531,14 @@ void AlarmCheckTask(void) {
                 BuzzerClear();
             }
             SetAlarmLED(type);
-        } else {
-            // No alarm
-            current = 0;
-            BuzzerClear();
-            ClearAlarmLED();
-        }
+        } else { } // Do nothing. Already buzzer & LED going ....
+    } else {
+        // No alarm
+        current = 0;
+        BuzzerClear();
+        ClearAlarmLED();
     }
+    
 }
 
 

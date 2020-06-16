@@ -36,9 +36,6 @@ void LCDTest(void);
 
 
 void LCDInit (void) {
-    //TMR6_Start();
-    
-    //DAC1_SetOutput(31);
     
     __delay_ms(50);         // 50 ms after power up
  
@@ -64,7 +61,7 @@ void LCDInit (void) {
     LCDMessage("    OxyVita     ");
     LCDWriteCmd(0x02);
     __delay_ms(750);
-    printf("LCDTest\r\n");
+    //printf("LCDTest\r\n");
     LCDTest();
     /*
     LCDWriteCmd(0x02);
@@ -86,7 +83,7 @@ void LCDTest(void) {
             msg1[j] = '0' + i; msg2[j] = '0' + i + 1; 
         }
         LCDMessage12(msg1,msg2);
-        __delay_ms(750);
+        __delay_ms(500);
     }
     /*   
     LCDMessage12("0000000000000000","1111111111111111");
@@ -264,6 +261,7 @@ void LCDWriteCmd(uint8_t data)
             
 }
 
+/*
 void I2CSend(bool RS, bool RW, bool E, uint8_t D74) {
         
     static uint8_t writeBuffer[1];
@@ -295,3 +293,4 @@ void I2CSend(bool RS, bool RW, bool E, uint8_t D74) {
     //printf("0x%0X ", writeBuffer[0]);
 
 }
+ */

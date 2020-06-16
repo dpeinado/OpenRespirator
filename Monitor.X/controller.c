@@ -76,6 +76,18 @@ void UpdateState(void) {
         if (initPhase == 5) {
             //printf("\r\nFlow: %d pa Pressure: %d pa\r\n", GetPressureV_pa(), GetPressure_pa());
         }
+        /*
+        // Check of Controller Buzzer
+        if (initPhase == TBD) { // Clear Check
+            GetControllerBuzzerCheck();
+        }
+         if (initPhase == TBD) { // Do Check
+            ControllerBuzzerCheck();
+         }
+         if (initPhase == TBD) { // Check result
+            if (GetControllerBuzzerCheck()) SetControlFailAlarm();
+         }
+        */
         EnableAlarmSV1();
     }
     if (msg.cntMsg.state & STATE_SLEEP) {
@@ -184,7 +196,7 @@ void ControllerTimerHandler(void) {
             ClearControlFailAlarm();
         }
     } else {
-        ClearControlFailAlarm();
+        //ClearControlFailAlarm();
         errors = 0;
     }
     static int16_t cnt=0;

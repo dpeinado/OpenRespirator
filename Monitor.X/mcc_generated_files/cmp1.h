@@ -66,6 +66,8 @@
         
 typedef void (*interruptCMP1Handler)(void);
 void CMP1_SetIntHandler(interruptCMP1Handler handler);
+inline void CMP1_Disable(void);
+inline void CMP1_Enable(void);
 
 
 /**

@@ -58,6 +58,8 @@ uint8_t buzzerState;
 
 static bool on;
 static bool detected;
+static bool checkController;
+static bool controllerDetected;
 
 void BuzzerSet(uint8_t state) {
     alarmState = state;
@@ -389,8 +391,13 @@ void BuzzerTask(void) {
 }
 
 void BuzzerCMPHandler( void) {    
-    printf("BCMPH\r\n");
-    detected = true;
+    //printf("BCMPH\r\n");
+    if (checkController) {
+        controllerDetected = true;
+    } else  {
+        detected = true;
+    }
+    CMP1_Disable();
     
 }
 
@@ -400,17 +407,48 @@ void BuzzerInit (void) {
     CMP1_SetIntHandler(BuzzerCMPHandler);
     BuzzerOff();
     detected = true;
+    checkController = false;
+    controllerDetected = false;
+}
+
+bool GetControllerBuzzerCheck() {
+    bool tmp = controllerDetected;
+    controllerDetected = false;
+    return tmp;
+}
+
+void ControllerBuzzerCheck() {
+        CMP1_Enable();
+        checkController = true;
+}
+
+void BuzzerCheck (void) {
+    BuzzerOn(PERIOD_A);
+    __delay_ms(250);
+    BuzzerOff();
+    if (detected==false) {
+        SetMonitorFailAlarm();
+        printf("Error Buzzer\r\n");
+    } else {
+        printf("Found Buzzer\r\n");
+        }
 }
 
 
 void BuzzerOn (uint8_t period) {
+
     T2PR = period;
     PWM6CON = 0x80;
+
     on = true;
     detected = false;
+    
+    CMP1_Enable();
+
 }
 
 void BuzzerOff (void) {
     PWM6CON = 0x00;
     on = false;
+    CMP1_Disable();
 }
