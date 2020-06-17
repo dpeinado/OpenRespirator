@@ -68,15 +68,15 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _aCaptRstFlt `(v ~T0 @X0 0 ef1`E16814 ]
 "109 selftest.c
 [; ;selftest.c: 109: _Bool flowChk(fchk_val flowVal){
-[c E17016 0 1 2 .. ]
-[n E17016 . FCHK_LOW FCHK_MED FCHK_HIGH  ]
+[c E17018 0 1 2 .. ]
+[n E17018 . FCHK_LOW FCHK_MED FCHK_HIGH  ]
 "123
 [; ;selftest.c: 123:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
-[c E16924 32 64 96 128 160 0 16 20 8 .. ]
-[n E16924 . MONSTATE_INIT MONSTATE_CALP MONSTATE_SV2CHK MONSTATE_SV1CHK MONSTATE_CALF MONSTATE_STOP MONSTATE_RUNP MONSTATE_RUNV MONSTATE_SLEEP  ]
+[c E16926 32 64 96 128 160 0 16 20 8 .. ]
+[n E16926 . MONSTATE_INIT MONSTATE_CALP MONSTATE_SV2CHK MONSTATE_SV1CHK MONSTATE_CALF MONSTATE_STOP MONSTATE_RUNP MONSTATE_RUNV MONSTATE_SLEEP  ]
 "68 ./monComm.h
 [; ;./monComm.h: 68:   _Bool MonitorMsgSendBlock(monStateT state);
-[v _MonitorMsgSendBlock `(a ~T0 @X0 0 ef1`E16924 ]
+[v _MonitorMsgSendBlock `(a ~T0 @X0 0 ef1`E16926 ]
 "19 ./vMeasure.h
 [; ;./vMeasure.h: 19: void vMeasureRst(void);
 [v _vMeasureRst `(v ~T0 @X0 0 ef ]
@@ -2633,10 +2633,10 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 "109
 [; ;selftest.c: 109: _Bool flowChk(fchk_val flowVal){
-[v _flowChk `(a ~T0 @X0 1 ef1`E17016 ]
+[v _flowChk `(a ~T0 @X0 1 ef1`E17018 ]
 {
 [e :U _flowChk ]
-[v _flowVal `E17016 ~T0 @X0 1 r1 ]
+[v _flowVal `E17018 ~T0 @X0 1 r1 ]
 [f ]
 "110
 [; ;selftest.c: 110:   int16_t aPVal, aPValMax, aPValMin, aPValMean;
@@ -2671,7 +2671,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _aPValMax -> -> 0 `i `s ]
 "123
 [; ;selftest.c: 123:   if (!MonitorMsgSendBlock(MONSTATE_CALF)){
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 4 `i -> 0 `i 2251  ]
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 4 `i -> 0 `i 2251  ]
 {
 "124
 [; ;selftest.c: 124:     initOk=0;
@@ -2740,9 +2740,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e $U 2252  ]
 [e :U 2253 ]
-[e [\ -> _flowVal `ui , $ -> . `E17016 0 `ui 2254
- , $ -> . `E17016 1 `ui 2255
- , $ -> . `E17016 2 `ui 2256
+[e [\ -> _flowVal `ui , $ -> . `E17018 0 `ui 2254
+ , $ -> . `E17018 1 `ui 2255
+ , $ -> . `E17018 2 `ui 2256
  2252 ]
 [e :U 2252 ]
 "146
@@ -2803,7 +2803,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _freeFlowRateL -> << -> ( _vMeasureGet ..  `ui -> 2 `i `us ]
 "163
 [; ;selftest.c: 163:   if (!MonitorMsgSendBlock(MONSTATE_STOP)){
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 5 `i -> 0 `i 2262  ]
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 5 `i -> 0 `i 2262  ]
 {
 "164
 [; ;selftest.c: 164:     initOk=0;
@@ -3019,8 +3019,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;selftest.c: 232:             printstrblock(lcdTopRow);
 [e ( _printstrblock (1 -> &U _lcdTopRow `*Cuc ]
 "233
-[; ;selftest.c: 233:             timeDelayMs(800);
-[e ( _timeDelayMs (1 -> -> 800 `i `us ]
+[; ;selftest.c: 233:             timeDelayMs(350);
+[e ( _timeDelayMs (1 -> -> 350 `i `us ]
 "234
 [; ;selftest.c: 234:         }
 }
@@ -3058,7 +3058,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e = _initOk -> -> 1 `i `a ]
 "247
 [; ;selftest.c: 247:   if (!MonitorMsgSendBlock(MONSTATE_INIT)) {
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 0 `i -> 0 `i 2276  ]
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 0 `i -> 0 `i 2276  ]
 {
 "248
 [; ;selftest.c: 248:     initOk = 0;
@@ -3320,7 +3320,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _printf :s 31C ]
 "338
 [; ;selftest.c: 338:     if (!MonitorMsgSendBlock(MONSTATE_CALP)){
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 1 `i -> 0 `i 2301  ]
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 1 `i -> 0 `i 2301  ]
 {
 "339
 [; ;selftest.c: 339:       initOk=0;
@@ -3391,134 +3391,152 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;selftest.c: 361:   printf ("CHKSV2\n");
 [e ( _printf :s 35C ]
 "363
-[; ;selftest.c: 363:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 2 `i -> 0 `i 2305  ]
+[; ;selftest.c: 363:   if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)) {
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 2 `i -> 0 `i 2305  ]
 {
 "364
-[; ;selftest.c: 364:         initOk=0;
+[; ;selftest.c: 364:         initOk = 0;
 [e = _initOk -> -> 0 `i `a ]
 "365
-[; ;selftest.c: 365:  printf ("Mon error");
+[; ;selftest.c: 365:         printf ("Mon error");
 [e ( _printf :s 36C ]
 "366
-[; ;selftest.c: 366:  setCursor(0, 0);
+[; ;selftest.c: 366:         setCursor(0, 0);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "367
-[; ;selftest.c: 367:  printstrblock("MONITOR ERROR   ");
+[; ;selftest.c: 367:         printstrblock("MONITOR ERROR   ");
 [e ( _printstrblock (1 :s 37C ]
 "368
-[; ;selftest.c: 368:  timeDelayMs(500);
+[; ;selftest.c: 368:         timeDelayMs(500);
 [e ( _timeDelayMs (1 -> -> 500 `i `us ]
 "369
-[; ;selftest.c: 369:   }
+[; ;selftest.c: 369:     }
 }
 [e :U 2305 ]
 "371
-[; ;selftest.c: 371:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
+[; ;selftest.c: 371:   LATDbits.LATD0 = 1;
+[e = . . _LATDbits 0 0 -> -> 1 `i `uc ]
+"373
+[; ;selftest.c: 373:   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
-"372
-[; ;selftest.c: 372:   timeDelayMs(200);
+"374
+[; ;selftest.c: 374:   timeDelayMs(200);
 [e ( _timeDelayMs (1 -> -> 200 `i `us ]
-"373
-[; ;selftest.c: 373:   if (!pressureSensorChk(0, 100)) {
+"375
+[; ;selftest.c: 375:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2306  ]
 {
-"374
-[; ;selftest.c: 374:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
-"375
-[; ;selftest.c: 375:  setCursor(0, 0);
-[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "376
-[; ;selftest.c: 376:     printstrblock("SV2 Valve error ");
-[e ( _printstrblock (1 :s 38C ]
+[; ;selftest.c: 376:     initOk=0;
+[e = _initOk -> -> 0 `i `a ]
 "377
-[; ;selftest.c: 377:     timeDelayMs(500);
-[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+[; ;selftest.c: 377:  setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
 "378
-[; ;selftest.c: 378:   }
+[; ;selftest.c: 378:     printstrblock("SV2 Valve error ");
+[e ( _printstrblock (1 :s 38C ]
+"379
+[; ;selftest.c: 379:     timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"380
+[; ;selftest.c: 380:   }
 }
 [e :U 2306 ]
-"381
-[; ;selftest.c: 381:   printf ("CHKSV1\n");
-[e ( _printf :s 39C ]
-"382
-[; ;selftest.c: 382:   if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
-[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16924 3 `i -> 0 `i 2307  ]
-{
 "383
-[; ;selftest.c: 383:     initOk=0;
-[e = _initOk -> -> 0 `i `a ]
+[; ;selftest.c: 383:   LATDbits.LATD0 = 0;
+[e = . . _LATDbits 0 0 -> -> 0 `i `uc ]
 "384
-[; ;selftest.c: 384:   }
+[; ;selftest.c: 384:   printf ("CHKSV1\n");
+[e ( _printf :s 39C ]
+"385
+[; ;selftest.c: 385:     if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)) {
+[e $ ! ! != -> ( _MonitorMsgSendBlock (1 . `E16926 3 `i -> 0 `i 2307  ]
+{
+"386
+[; ;selftest.c: 386:         initOk = 0;
+[e = _initOk -> -> 0 `i `a ]
+"387
+[; ;selftest.c: 387:         printf ("Mon error");
+[e ( _printf :s 40C ]
+"388
+[; ;selftest.c: 388:         setCursor(0, 0);
+[e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+"389
+[; ;selftest.c: 389:         printstrblock("MONITOR ERROR   ");
+[e ( _printstrblock (1 :s 41C ]
+"390
+[; ;selftest.c: 390:         timeDelayMs(500);
+[e ( _timeDelayMs (1 -> -> 500 `i `us ]
+"391
+[; ;selftest.c: 391:     }
 }
 [e :U 2307 ]
-"385
-[; ;selftest.c: 385:   timeDelayMs(100);
+"392
+[; ;selftest.c: 392:   timeDelayMs(100);
 [e ( _timeDelayMs (1 -> -> 100 `i `us ]
-"386
-[; ;selftest.c: 386:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
+"393
+[; ;selftest.c: 393:   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 [e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
-"387
-[; ;selftest.c: 387:   timeDelayMs(300);
+"394
+[; ;selftest.c: 394:   timeDelayMs(300);
 [e ( _timeDelayMs (1 -> -> 300 `i `us ]
-"388
-[; ;selftest.c: 388:   if (!pressureSensorChk(0, 100)) {
+"395
+[; ;selftest.c: 395:   if (!pressureSensorChk(0, 100)) {
 [e $ ! ! != -> ( _pressureSensorChk (2 , -> -> 0 `i `a -> -> 100 `i `us `i -> 0 `i 2308  ]
 {
-"389
-[; ;selftest.c: 389:     initOk=0;
+"396
+[; ;selftest.c: 396:     initOk=0;
 [e = _initOk -> -> 0 `i `a ]
-"390
-[; ;selftest.c: 390:  setCursor(0, 0);
+"397
+[; ;selftest.c: 397:  setCursor(0, 0);
 [e ( _setCursor (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-"391
-[; ;selftest.c: 391:     printstrblock("SV1 Valve error ");
-[e ( _printstrblock (1 :s 40C ]
-"392
-[; ;selftest.c: 392:     timeDelayMs(500);
+"398
+[; ;selftest.c: 398:     printstrblock("SV1 Valve error ");
+[e ( _printstrblock (1 :s 42C ]
+"399
+[; ;selftest.c: 399:     timeDelayMs(500);
 [e ( _timeDelayMs (1 -> -> 500 `i `us ]
-"393
-[; ;selftest.c: 393:   }
+"400
+[; ;selftest.c: 400:   }
 }
 [e :U 2308 ]
-"396
-[; ;selftest.c: 396:   printf ("CHK FLOW\n");
-[e ( _printf :s 41C ]
-"397
-[; ;selftest.c: 397:   tstamp = timeGet();
+"403
+[; ;selftest.c: 403:   printf ("CHK FLOW\n");
+[e ( _printf :s 43C ]
+"404
+[; ;selftest.c: 404:   tstamp = timeGet();
 [e = _tstamp ( _timeGet ..  ]
-"400
-[; ;selftest.c: 400:   initOk &= flowChk(FCHK_LOW);
-[e =& _initOk -> ( _flowChk (1 . `E17016 0 `i ]
-"401
-[; ;selftest.c: 401:   initOk &= flowChk(FCHK_MED);
-[e =& _initOk -> ( _flowChk (1 . `E17016 1 `i ]
-"402
-[; ;selftest.c: 402:   initOk &= flowChk(FCHK_HIGH);
-[e =& _initOk -> ( _flowChk (1 . `E17016 2 `i ]
-"405
-[; ;selftest.c: 405:   while (keyPeek() != -1)
+"407
+[; ;selftest.c: 407:   initOk &= flowChk(FCHK_LOW);
+[e =& _initOk -> ( _flowChk (1 . `E17018 0 `i ]
+"408
+[; ;selftest.c: 408:   initOk &= flowChk(FCHK_MED);
+[e =& _initOk -> ( _flowChk (1 . `E17018 1 `i ]
+"409
+[; ;selftest.c: 409:   initOk &= flowChk(FCHK_HIGH);
+[e =& _initOk -> ( _flowChk (1 . `E17018 2 `i ]
+"412
+[; ;selftest.c: 412:   while (keyPeek() != -1)
 [e $U 2309  ]
 [e :U 2310 ]
-"406
-[; ;selftest.c: 406:     ;
+"413
+[; ;selftest.c: 413:     ;
 [e :U 2309 ]
-"405
-[; ;selftest.c: 405:   while (keyPeek() != -1)
+"412
+[; ;selftest.c: 412:   while (keyPeek() != -1)
 [e $ != -> ( _keyPeek ..  `i -U -> 1 `i 2310  ]
 [e :U 2311 ]
-"407
-[; ;selftest.c: 407:   keyReadInit();
+"414
+[; ;selftest.c: 414:   keyReadInit();
 [e ( _keyReadInit ..  ]
-"409
-[; ;selftest.c: 409:   return initOk;
+"416
+[; ;selftest.c: 416:   return initOk;
 [e ) _initOk ]
 [e $UE 2268  ]
-"410
-[; ;selftest.c: 410: }
+"417
+[; ;selftest.c: 417: }
 [e :UE 2268 ]
 }
 [p f _printf 8388736 ]
@@ -3528,6 +3546,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 21C 77 111 110 32 101 114 114 111 114 0 ]
 [a 32C 77 111 110 32 101 114 114 111 114 0 ]
 [a 36C 77 111 110 32 101 114 114 111 114 0 ]
+[a 40C 77 111 110 32 101 114 114 111 114 0 ]
 [a 1C 70 97 116 97 108 32 37 100 0 ]
 [a 2C 70 97 116 97 108 32 37 100 0 ]
 [a 23C 70 97 116 97 108 32 37 100 0 ]
@@ -3538,7 +3557,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 30C 67 65 76 32 80 82 69 83 83 32 66 82 69 65 84 72 0 ]
 [a 19C 83 69 76 70 45 84 69 83 84 46 32 76 69 65 86 69 0 ]
 [a 38C 83 86 50 32 86 97 108 118 101 32 101 114 114 111 114 32 0 ]
-[a 40C 83 86 49 32 86 97 108 118 101 32 101 114 114 111 114 32 0 ]
+[a 42C 83 86 49 32 86 97 108 118 101 32 101 114 114 111 114 32 0 ]
 [a 14C 70 76 79 87 58 32 37 32 51 100 32 76 47 109 105 110 32 0 ]
 [a 3C 77 83 58 32 37 32 51 100 32 65 83 58 32 37 32 51 100 32 0 ]
 [a 34C 67 65 76 32 69 82 82 79 82 46 32 82 69 84 82 89 32 0 ]
@@ -3546,6 +3565,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 27C 73 78 84 69 82 78 65 76 32 69 82 82 79 82 32 32 0 ]
 [a 33C 77 79 78 73 84 79 82 32 69 82 82 79 82 32 32 32 0 ]
 [a 37C 77 79 78 73 84 79 82 32 69 82 82 79 82 32 32 32 0 ]
+[a 41C 77 79 78 73 84 79 82 32 69 82 82 79 82 32 32 32 0 ]
 [a 13C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
 [a 16C 70 76 79 87 32 84 79 79 32 72 73 71 72 32 32 32 0 ]
 [a 15C 70 76 79 87 32 84 79 79 32 76 79 87 32 32 32 32 0 ]
@@ -3558,7 +3578,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [a 24C 86 68 68 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 5C 65 85 88 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
 [a 4C 77 65 73 78 32 80 82 69 83 83 85 82 69 46 32 77 105 110 32 37 100 32 77 97 120 32 37 100 32 77 69 65 78 32 37 100 10 0 ]
-[a 41C 67 72 75 32 70 76 79 87 10 0 ]
+[a 43C 67 72 75 32 70 76 79 87 10 0 ]
 [a 6C 80 82 69 83 83 85 82 69 32 67 65 76 73 66 82 65 84 73 79 78 32 69 82 82 79 82 10 0 ]
 [a 7C 86 65 76 86 69 32 67 72 69 67 75 32 69 82 82 79 82 10 0 ]
 [a 31C 67 65 76 80 10 0 ]

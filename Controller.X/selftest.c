@@ -230,7 +230,7 @@ bool SelfTest(bool tstScreen){
             printstrblock(lcdTopRow);
             setCursor(0, 1);
             printstrblock(lcdTopRow);
-            timeDelayMs(800);
+            timeDelayMs(350);
         }
     }
     
@@ -360,13 +360,15 @@ bool SelfTest(bool tstScreen){
   // Two extra valve check steps. 
   DEBUG_PRINT(("CHKSV2\n"));
   // First CLOSE SV2, OPEN SV1, check no pressure, no volume detected.
-  if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
-        initOk=false;
-	DEBUG_PRINT(("Mon error"));
-	setCursor(0, 0);
-	printstrblock("MONITOR ERROR   ");
-	timeDelayMs(500);
-  }
+  if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)) {
+        initOk = false;
+        DEBUG_PRINT(("Mon error"));
+        setCursor(0, 0);
+        printstrblock("MONITOR ERROR   ");
+        timeDelayMs(500);
+    }
+  // Also check buzzer during this stage.
+  BUZZER_ON;
   
   CLOSE_SV2;
   timeDelayMs(200);
@@ -378,10 +380,15 @@ bool SelfTest(bool tstScreen){
   }
   
   // Then CLOSE SV1, OPEN SV2, check no pressure, no volume detected.
+  BUZZER_OFF;
   DEBUG_PRINT(("CHKSV1\n"));
-  if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
-    initOk=false;
-  }
+    if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)) {
+        initOk = false;
+        DEBUG_PRINT(("Mon error"));
+        setCursor(0, 0);
+        printstrblock("MONITOR ERROR   ");
+        timeDelayMs(500);
+    }
   timeDelayMs(100);
   OPEN_SV2;
   timeDelayMs(300);

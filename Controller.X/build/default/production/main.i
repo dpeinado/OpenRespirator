@@ -28370,6 +28370,8 @@ void timeDelayMs(time_t delms);
     extern int16_t vddValMean;
 
     extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern int16_t intIP, intMaxV;
+
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
@@ -28572,16 +28574,16 @@ vmodeT intVentMode;
 
 
 
-vmodeT VentMode = 0;
-uint8_t MaxP = 6;
+vmodeT VentMode = 1;
+uint8_t MaxP = 40;
 
-uint8_t MaxV = 16;
-uint8_t LowVAlarm = 10;
-uint8_t HighVAlarm = 22;
-uint8_t BPM = 10;
+uint8_t MaxV = 40;
+uint8_t LowVAlarm = 34;
+uint8_t HighVAlarm = 46;
+uint8_t BPM = 20;
 uint16_t IDuration, EDuration;
-uint8_t IP = 4;
-uint8_t PEEP = 4;
+uint8_t IP = 30;
+uint8_t PEEP = 15;
 uint8_t BdTrig = 2;
 _Bool sBreath;
 # 64 "main.c"
@@ -29242,7 +29244,7 @@ void main(void) {
 
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
                                          (pAdj < (pPlatInsp - ((int16_t) ((0.045*4096+2)/5)*2))) &&
-                                            (pAdj < (intIP - ((int16_t) ((0.045*4096+2)/5)*2)))) {
+                                         ((intVentMode == VMODE_VOLUME) || (pAdj < (intIP - ((int16_t) ((0.045*4096+2)/5)*2))))) {
                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = 1;

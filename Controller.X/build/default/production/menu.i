@@ -28373,6 +28373,8 @@ void timeDelayMs(time_t delms);
     extern int16_t vddValMean;
 
     extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern int16_t intIP, intMaxV;
+
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
@@ -28528,7 +28530,11 @@ void MenuMng(void) {
                 case 0:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_IP;
-                        menuVal = IP;
+                        if (VentMode == VMODE_PRESSURE) {
+                            menuVal = IP;
+                        } else {
+                            menuVal = intIP/((int16_t) ((0.045*4096+2)/5)*1);
+                        }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_IP) {
 
@@ -28611,7 +28617,11 @@ void MenuMng(void) {
                 case 6:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXV;
-                        menuVal = MaxV;
+                        if (VentMode == VMODE_PRESSURE) {
+                            menuVal = 2*((intMaxV+10)/20);
+                        } else {
+                            menuVal = MaxV;
+                        }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_MAXV) {
 
@@ -28673,14 +28683,14 @@ void MenuMng(void) {
                         switch (menuStatus) {
                             case CFG_IP:
                                 menuVal = menuVal + 1;
-                                if (menuVal > 70) {
-                                    menuVal = 70;
+                                if (menuVal > 60) {
+                                    menuVal = 60;
                                 }
                                 break;
                             case CFG_MAXP:
                                 menuVal = menuVal + 1;
-                                if (menuVal > 70) {
-                                    menuVal = 70;
+                                if (menuVal > 60) {
+                                    menuVal = 60;
                                 }
                                 break;
                             case CFG_PEEP:
@@ -28784,9 +28794,9 @@ void MenuMng(void) {
 void screenInit(void) {
     LcdI2CInit(0x27, 16, 2);
     setCursor(0, 0);
-    printstrblock("Open Respirator ");
+    printstrblock("OxyVitaEmergency");
     setCursor(0, 1);
-    printstrblock("    OxyVita     ");
+    printstrblock("Ventilator V1.0 ");
     timeDelayMs(((time_t) 2000*1));
     clear();
     lcdPrintTR = 1;

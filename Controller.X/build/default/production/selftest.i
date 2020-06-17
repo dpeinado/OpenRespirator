@@ -28380,6 +28380,8 @@ void timeDelayMs(time_t delms);
     extern int16_t vddValMean;
 
     extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern int16_t intIP, intMaxV;
+
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
@@ -28733,7 +28735,7 @@ _Bool SelfTest(_Bool tstScreen){
             printstrblock(lcdTopRow);
             setCursor(0, 1);
             printstrblock(lcdTopRow);
-            timeDelayMs(800);
+            timeDelayMs(350);
         }
     }
 
@@ -28863,13 +28865,15 @@ _Bool SelfTest(_Bool tstScreen){
 
   printf ("CHKSV2\n");
 
-  if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)){
-        initOk=0;
- printf ("Mon error");
- setCursor(0, 0);
- printstrblock("MONITOR ERROR   ");
- timeDelayMs(500);
-  }
+  if (!MonitorMsgSendBlock(MONSTATE_SV2CHK)) {
+        initOk = 0;
+        printf ("Mon error");
+        setCursor(0, 0);
+        printstrblock("MONITOR ERROR   ");
+        timeDelayMs(500);
+    }
+
+  LATDbits.LATD0 = 1;
 
   LATAbits.LATA2 = 0;LATCbits.LATC3 = 0;
   timeDelayMs(200);
@@ -28881,10 +28885,15 @@ _Bool SelfTest(_Bool tstScreen){
   }
 
 
+  LATDbits.LATD0 = 0;
   printf ("CHKSV1\n");
-  if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)){
-    initOk=0;
-  }
+    if (!MonitorMsgSendBlock(MONSTATE_SV1CHK)) {
+        initOk = 0;
+        printf ("Mon error");
+        setCursor(0, 0);
+        printstrblock("MONITOR ERROR   ");
+        timeDelayMs(500);
+    }
   timeDelayMs(100);
   LATAbits.LATA2 = 1;LATCbits.LATC3 = 1;
   timeDelayMs(300);
