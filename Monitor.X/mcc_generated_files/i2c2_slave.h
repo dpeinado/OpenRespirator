@@ -95,6 +95,7 @@ void I2C2_Write(uint8_t data);
  * \return None
  */
 void I2C2_Enable(void);
+void I2C2_Disable(void);
 
 /**
  * \brief Send the Ack Signal to Master 

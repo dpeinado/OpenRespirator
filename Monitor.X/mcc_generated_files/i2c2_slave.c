@@ -81,6 +81,7 @@ static inline void I2C2_SlaveClose();
 static inline void I2C2_SlaveSetSlaveAddr(uint8_t slaveAddr);
 static inline void I2C2_SlaveSetSlaveMask(uint8_t maskAddr);
 static inline void I2C2_SlaveEnableIrq(void);
+static inline void I2C2_SlaveDisableIrq(void);
 static inline bool I2C2_SlaveIsAddr(void);
 static inline bool I2C2_SlaveIsMyAddr(void);
 static inline bool I2C2_SlaveIsRead(void);
@@ -109,6 +110,8 @@ volatile uint8_t i2c2WrData;
 volatile uint8_t i2c2RdData;
 volatile uint8_t i2c2SlaveAddr;
 
+static bool I2C2_on;
+
 void I2C2_Initialize()
 {
     //EN disabled; RSEN disabled; S Cleared by hardware after Start; CSTR Enable clocking; MODE four 7-bit address; 
@@ -124,6 +127,7 @@ void I2C2_Initialize()
 
 void I2C2_Open() 
 {
+    I2C2_on = true;
     I2C2_SlaveOpen();
     I2C2_SlaveSetSlaveAddr(I2C2_SLAVE_ADDRESS << 1);
     //printf("I2C Open %02X\r\n", I2C2ADR0);
@@ -154,7 +158,12 @@ void I2C2_Write(uint8_t data)
 
 void I2C2_Enable()
 {
-    I2C2_Initialize();
+    I2C2_on = true;
+}
+
+void I2C2_Disable()
+{
+    I2C2_on = false;
 }
 
 void I2C2_SendAck()
@@ -169,6 +178,11 @@ void I2C2_SendNack()
 
 static void I2C2_Isr() 
 { 
+    if (!I2C2_on) {
+        I2C2_SlaveReleaseClock();
+        I2C2_SlaveClearStopFlag();
+        return;
+    }
     
     if(I2C2_SlaveIsRxBufFull())
     { 
