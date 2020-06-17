@@ -28368,6 +28368,8 @@ void timeDelayMs(time_t delms);
     extern int16_t vddValMean;
 
     extern _Bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern int16_t intIP, intMaxV;
+
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;

@@ -71,7 +71,11 @@ void MenuMng(void) {
                 case KEYIP:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_IP;
-                        menuVal = IP;
+                        if (VentMode == VMODE_PRESSURE) {
+                            menuVal = IP;
+                        } else {
+                            menuVal = intIP/MPRESSURE_MBAR(1);
+                        }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_IP) {
                         // Accept change and exit.
@@ -154,7 +158,11 @@ void MenuMng(void) {
                 case KEYMAXV:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXV;
-                        menuVal = MaxV;
+                        if (VentMode == VMODE_PRESSURE) {
+                            menuVal = 2*((intMaxV+10)/20);   
+                        } else {
+                            menuVal = MaxV;
+                        }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_MAXV) {
                         // Accept change and exit.
@@ -327,9 +335,9 @@ void MenuMng(void) {
 void screenInit(void) {
     LcdI2CInit(0x27, 16, 2);
     setCursor(0, 0);
-    printstrblock("Open Respirator ");
+    printstrblock("OxyVitaEmergency");
     setCursor(0, 1);
-    printstrblock("    OxyVita     ");
+    printstrblock("Ventilator V1.0 ");
     timeDelayMs(TIME_MS(2000));
     clear();
     lcdPrintTR = true;

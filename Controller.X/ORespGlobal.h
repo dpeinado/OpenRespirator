@@ -18,7 +18,7 @@ extern "C" {
 #define BPM_MIN 10
 #define BPM_MAX 30
 #define IP_MIN 4
-#define IP_MAX 70
+#define IP_MAX 60
 #define PEEP_MIN 4
 #define PEEP_MAX 25
     // Breath detect trigger, in mbar.
@@ -134,6 +134,8 @@ extern "C" {
     extern int16_t vddValMean;
     // Change detection for all user settings.
     extern bool chBdTrig, chBPM, chIP, chMaxP, chPEEP, chLowVAlarm, chHighVAlarm, chMaxV, chPEEP, chVentMode;
+    extern int16_t intIP, intMaxV;
+
     extern uint16_t lastCycleVol;
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;

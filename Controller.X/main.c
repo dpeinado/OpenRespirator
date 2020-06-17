@@ -33,16 +33,16 @@ vmodeT intVentMode;
 ///////////////////
 // User parameters.
 ///////////////////
-vmodeT   VentMode = 0; // 0 --> Pressure-control, 1 --> Volume-control.
-uint8_t  MaxP = 6;
+vmodeT   VentMode = 1; // 0 --> Pressure-control, 1 --> Volume-control.
+uint8_t  MaxP = 40;
 // Volume is in units of 10ml.
-uint8_t  MaxV = 16;
-uint8_t  LowVAlarm = 10;
-uint8_t  HighVAlarm = 22;
-uint8_t BPM = 10;
+uint8_t  MaxV = 40;
+uint8_t  LowVAlarm = 34;
+uint8_t  HighVAlarm = 46;
+uint8_t BPM = 20;
 uint16_t IDuration, EDuration;
-uint8_t IP = 4;
-uint8_t PEEP = 4;
+uint8_t IP = 30;
+uint8_t PEEP = 15;
 uint8_t BdTrig = 2;
 bool    sBreath;
 
@@ -718,7 +718,7 @@ void main(void) {
                                     // It is common for both PC-SIMV and VC-SIMV.
                                     if (((pInst + pQuantaInsp) < intMaxP) &&
                                          (pAdj < (pPlatInsp - MPRESSURE_MBAR(2))) &&
-                                            (pAdj < (intIP - MPRESSURE_MBAR(2)))) {
+                                         ((intVentMode == VMODE_VOLUME) || (pAdj < (intIP - MPRESSURE_MBAR(2))))) {
                                         OPEN_SV2LOW;
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
