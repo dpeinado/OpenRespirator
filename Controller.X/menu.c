@@ -71,23 +71,41 @@ void MenuMng(void) {
                 case KEYIP:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_IP;
-                        if (VentMode == VMODE_PRESSURE) {
+                        if ((VentMode == VMODE_PRESSURE)||(intIP == 0)) {
                             menuVal = IP;
                         } else {
                             menuVal = intIP/MPRESSURE_MBAR(1);
+                            if (menuVal > IP_MAX) {
+                                menuVal = IP_MAX;
+                            } else if (menuVal < IP_MIN) {
+                                menuVal = IP_MIN;
+                            }
                         }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_IP) {
                         // Accept change and exit.
-                        IP = menuVal;
-                        chIP = true;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = true;                            
+                            // By default MaxP 2mbar higher than IP in pressure mode.
+                            MaxP = menuVal + 2;
+                        } else {
+                            // If already in pressure mode, keep delta between IP and MaxP.
+                            MaxP = MaxP + menuVal - IP;
                         }
-                        // By default MaxP 2mbar higher than IP in pressure mode.
-                        MaxP = menuVal + 2;
+                        if (MaxP < menuVal + 2){
+                            // By default keep 2 delta as a minimum.
+                            MaxP = menuVal + 2;
+                        }
+                        if (MaxP > IP_MAX){
+                            MaxP = IP_MAX;
+                        } else if (MaxP < IP_MIN) {
+                            MaxP = IP_MIN;
+                        }
+                        
                         chMaxP = true;                       
+                        IP = menuVal;
+                        chIP = true;
                         menuStatus = CFG_IDLE;
                     } else if (menuStatus == CFG_ENGMODE) {
                         menuStatus = CFG_ENGTRIG;
@@ -158,10 +176,11 @@ void MenuMng(void) {
                 case KEYMAXV:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXV;
-                        if (VentMode == VMODE_PRESSURE) {
-                            menuVal = 2*((intMaxV+10)/20);   
-                        } else {
+                        if ((VentMode == VMODE_VOLUME)||(intMaxV==0)) {
                             menuVal = MaxV;
+                        } else {
+                            menuVal = 2*((intMaxV+10)/20);   
+                            menuVal = VOL_CHK(menuVal);
                         }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_MAXV) {
@@ -239,6 +258,11 @@ void MenuMng(void) {
                                 if (menuVal > PEEP_MAX) {
                                     menuVal = PEEP_MAX;
                                 }
+                                if ((VentMode == VMODE_PRESSURE) && (menuVal > IP)) {
+                                    menuVal = IP;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
                                 break;
                             case CFG_BPM:
                                 menuVal = menuVal + 1;
@@ -273,11 +297,13 @@ void MenuMng(void) {
                             case CFG_IP:
                             case CFG_MAXP:
                                 menuVal = menuVal - 1;
-                                if (menuVal < IP_MIN) {
+                                if (menuVal < PEEP) {
+                                    menuVal = PEEP;
+                                } else if (menuVal < IP_MIN) {
                                     menuVal = IP_MIN;
                                 } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
                                     menuVal = IP;
-                                }
+                                } 
                                 break;
                             case CFG_PEEP:
                                 menuVal = menuVal - 1;

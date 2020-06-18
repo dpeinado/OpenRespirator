@@ -28530,23 +28530,41 @@ void MenuMng(void) {
                 case 0:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_IP;
-                        if (VentMode == VMODE_PRESSURE) {
+                        if ((VentMode == VMODE_PRESSURE)||(intIP == 0)) {
                             menuVal = IP;
                         } else {
                             menuVal = intIP/((int16_t) ((0.045*4096+2)/5)*1);
+                            if (menuVal > 60) {
+                                menuVal = 60;
+                            } else if (menuVal < 4) {
+                                menuVal = 4;
+                            }
                         }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_IP) {
 
-                        IP = menuVal;
-                        chIP = 1;
                         if (VentMode == VMODE_VOLUME) {
                             VentMode = VMODE_PRESSURE;
                             chVentMode = 1;
+
+                            MaxP = menuVal + 2;
+                        } else {
+
+                            MaxP = MaxP + menuVal - IP;
+                        }
+                        if (MaxP < menuVal + 2){
+
+                            MaxP = menuVal + 2;
+                        }
+                        if (MaxP > 60){
+                            MaxP = 60;
+                        } else if (MaxP < 4) {
+                            MaxP = 4;
                         }
 
-                        MaxP = menuVal + 2;
                         chMaxP = 1;
+                        IP = menuVal;
+                        chIP = 1;
                         menuStatus = CFG_IDLE;
                     } else if (menuStatus == CFG_ENGMODE) {
                         menuStatus = CFG_ENGTRIG;
@@ -28617,10 +28635,11 @@ void MenuMng(void) {
                 case 6:
                     if (menuStatus == CFG_IDLE) {
                         menuStatus = CFG_MAXV;
-                        if (VentMode == VMODE_PRESSURE) {
-                            menuVal = 2*((intMaxV+10)/20);
-                        } else {
+                        if ((VentMode == VMODE_VOLUME)||(intMaxV==0)) {
                             menuVal = MaxV;
+                        } else {
+                            menuVal = 2*((intMaxV+10)/20);
+                            menuVal = ((menuVal > (1500/10))? (1500/10) : ((menuVal < (100/10))? (100/10) : menuVal));
                         }
                         menuTstamp = timeGet();
                     } else if (menuStatus == CFG_MAXV) {
@@ -28698,6 +28717,11 @@ void MenuMng(void) {
                                 if (menuVal > 25) {
                                     menuVal = 25;
                                 }
+                                if ((VentMode == VMODE_PRESSURE) && (menuVal > IP)) {
+                                    menuVal = IP;
+                                } else if (menuVal > MaxP) {
+                                    menuVal = MaxP;
+                                }
                                 break;
                             case CFG_BPM:
                                 menuVal = menuVal + 1;
@@ -28732,7 +28756,9 @@ void MenuMng(void) {
                             case CFG_IP:
                             case CFG_MAXP:
                                 menuVal = menuVal - 1;
-                                if (menuVal < 4) {
+                                if (menuVal < PEEP) {
+                                    menuVal = PEEP;
+                                } else if (menuVal < 4) {
                                     menuVal = 4;
                                 } else if ((menuStatus == CFG_MAXP) && (VentMode == VMODE_PRESSURE) && (menuVal < IP)) {
                                     menuVal = IP;

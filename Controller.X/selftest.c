@@ -136,7 +136,7 @@ bool flowChk(fchk_val flowVal){
     break;
   case FCHK_MED:
     OPEN_SV2MED;
-    minFlowL = 400;
+    minFlowL = 500;
     break;
   case FCHK_HIGH:
     OPEN_SV2;
