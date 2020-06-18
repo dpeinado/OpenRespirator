@@ -65,8 +65,8 @@ void UnDisplayCalibrate(void) {
 
 void ValueDisplay(void) {
     if (!enable) { //                  1234567890123456
-        if (msg1[0]==0) sprintf(msg1, "Open  Respirator");
-        if (msg2[0]==0) sprintf(msg2, "    OxyVita     ");
+        if (msg1[0]==0) sprintf(msg1, "OxyVitaEmergency");
+        if (msg2[0]==0) sprintf(msg2, "Ventilator v1.0 ");
         return;
     }
     static int cnt=0;

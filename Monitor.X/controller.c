@@ -23,6 +23,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "monitor.h"
 #include "display.h"
+#include "buzzer.h"
 #include "alarm.h"
 #include "lcd.h"
 
@@ -76,18 +77,23 @@ void UpdateState(void) {
         if (initPhase == 5) {
             //printf("\r\nFlow: %d pa Pressure: %d pa\r\n", GetPressureV_pa(), GetPressure_pa());
         }
-        /*
+        
         // Check of Controller Buzzer
-        if (initPhase == TBD) { // Clear Check
+        if (initPhase == 2) { // Clear Check
             GetControllerBuzzerCheck();
         }
-         if (initPhase == TBD) { // Do Check
+         if (initPhase == 3) { // Do Check
             ControllerBuzzerCheck();
          }
-         if (initPhase == TBD) { // Check result
-            if (GetControllerBuzzerCheck()) SetControlFailAlarm();
+         if (initPhase == 4) { // Check result
+            if (!GetControllerBuzzerCheck()) {
+                printf("\r\n Error in Controller buzzer\r\n");
+                SetControlFailAlarm();
+            } else {
+                printf("\r\n Controller buzzer detected\r\n");
+            }
          }
-        */
+        
         EnableAlarmSV1();
     }
     if (msg.cntMsg.state & STATE_SLEEP) {

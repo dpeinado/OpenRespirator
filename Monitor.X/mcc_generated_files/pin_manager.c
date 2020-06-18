@@ -68,7 +68,7 @@ void PIN_MANAGER_Initialize(void)
     */
     TRISE = 0x07;
     TRISA = 0xFD;
-    TRISB = 0xC3;
+    TRISB = 0xCF;
     TRISC = 0x1D;
     TRISD = 0x06;
 
@@ -77,7 +77,7 @@ void PIN_MANAGER_Initialize(void)
     */
     ANSELD = 0xF9;
     ANSELC = 0xFE;
-    ANSELB = 0xC3;
+    ANSELB = 0xCF;
     ANSELE = 0x07;
     ANSELA = 0xFF;
 
@@ -134,16 +134,12 @@ void PIN_MANAGER_Initialize(void)
    
     
 	
-    I2C1SDAPPS = 0x0A;   //RB2->I2C1:SDA1;    
     I2C2SCLPPS = 0x0D;   //RB5->I2C2:SCL2;    
-    RB2PPS = 0x22;   //RB2->I2C1:SDA1;    
     RB5PPS = 0x23;   //RB5->I2C2:SCL2;    
     RC1PPS = 0x13;   //RC1->UART1:TX1;    
-    RB3PPS = 0x21;   //RB3->I2C1:SCL1;    
     RB4PPS = 0x24;   //RB4->I2C2:SDA2;    
     RD0PPS = 0x0E;   //RD0->PWM6:PWM6;    
     U1RXPPS = 0x10;   //RC0->UART1:RX1;    
-    I2C1SCLPPS = 0x0B;   //RB3->I2C1:SCL1;    
     I2C2SDAPPS = 0x0C;   //RB4->I2C2:SDA2;    
 }
   

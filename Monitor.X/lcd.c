@@ -56,7 +56,7 @@ void LCDInit (void) {
     LCDWriteCmd(0x0C);      // Display on; cursor off, blink off
     LCDWriteCmd(0x02);      // Return home
               //1234567890123456
-    LCDMessage("Open  Respirator");
+    LCDMessage("Emerg Respirator");
     LCDWriteCmd(0xC0);      // Second Line
     LCDMessage("    OxyVita     ");
     LCDWriteCmd(0x02);

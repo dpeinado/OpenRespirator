@@ -141,8 +141,8 @@ void BuzzerTask(void) {
         } else {
             // Not detected
             // we give 3 tries           
-            if (noDetections>=2) {
-                SetMonitorFailAlarm();
+            if (noDetections>=3) {
+                SetMonitorFailAlarm(); // To avoid alarms in noisy environment we decide to test buzzer only during start-up
             } else {
                 noDetections ++;
             }
@@ -393,6 +393,7 @@ void BuzzerTask(void) {
 void BuzzerCMPHandler( void) {    
     //printf("BCMPH\r\n");
     if (checkController) {
+        printf("BCMPH_Cnt\r\n");
         controllerDetected = true;
     } else  {
         detected = true;
@@ -414,24 +415,31 @@ void BuzzerInit (void) {
 bool GetControllerBuzzerCheck() {
     bool tmp = controllerDetected;
     controllerDetected = false;
+    checkController = false;
     return tmp;
 }
 
 void ControllerBuzzerCheck() {
-        CMP1_Enable();
-        checkController = true;
+    CMP1_Enable();
+    checkController = true;
 }
 
 void BuzzerCheck (void) {
     BuzzerOn(PERIOD_A);
     __delay_ms(250);
     BuzzerOff();
-    if (detected==false) {
-        SetMonitorFailAlarm();
-        printf("Error Buzzer\r\n");
-    } else {
-        printf("Found Buzzer\r\n");
+    if (detected==false) { // Another try
+        __delay_ms(100);
+        BuzzerOn(PERIOD_A);
+        __delay_ms(250);
+        BuzzerOff();
+        if (detected==false) {
+            SetMonitorFailAlarm();
+            printf("Error Buzzer\r\n");
+            return;
         }
+    }
+    printf("Found Buzzer\r\n");
 }
 
 

@@ -116,6 +116,7 @@ bool MonitorFailAlarm(void) {
                 if (cnt5v>3) { // Error during more than 3 secs
                     monitorFailAlarm5V = true;
                     cnt5v = 4;
+                    printf("\r\nFail 5V : %d \r\n", v5);
                 }
             } else
             {
@@ -124,8 +125,12 @@ bool MonitorFailAlarm(void) {
             }
         }
     }
-    monitorSV1 = !(monitorFailAlarm5V || monitorFailAlarm);
-    return monitorFailAlarm5V || monitorFailAlarm;
+    monitorSV1 = !monitorFailAlarm5V;
+    
+    //if (monitorFailAlarm) I2C2_Disable();
+    //return monitorFailAlarm5V || 
+            
+    return monitorFailAlarm || monitorFailAlarm5V;
 }
 
 bool ControlFailAlarm(void) {
@@ -217,7 +222,10 @@ bool NoPowerSupplyAlarm(void) { return noPowerSupplyAlarm; };
 // External function to set or clear alarms
 
 void SetBatteryFailAlarm(void) { batteryFailAlarm = true; };
-void SetMonitorFailAlarm(void) { monitorFailAlarm = true; };
+void SetMonitorFailAlarm(void) {
+    monitorFailAlarm = true;
+    //I2C2_Disable(); // Tell controller to enable buzzer
+};
 void SetControlFailAlarm(void) { controlFailAlarm = true; };
 void SetGasFailureAlarm(void) { gasFailureAlarm = true; };
 void SetHighPressureAlarmLow(void) { highPressureAlarmLow = true; };
@@ -259,7 +267,10 @@ void ClearAllAlarm(void) {
 }
 
 void ClearBatteryFailAlarm(void) { batteryFailAlarm = false; };
-void ClearMonitorFailAlarm(void) { monitorFailAlarm = false; };
+void ClearMonitorFailAlarm(void) {
+    //if (monitorFailAlarm) I2C2_Enable();
+    monitorFailAlarm = false;
+};
 void ClearControlFailAlarm(void) { controlFailAlarm = false; };
 void ClearGasFailureAlarm(void) { gasFailureAlarm = false; };
 void ClearHighPressureAlarmLow(void) { highPressureAlarmLow = false; };
