@@ -15,12 +15,12 @@
     For individual peripheral handlers please see the peripheral driver for
     all modules selected in the GUI.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.03
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above or later
-        MPLAB 	          :  MPLAB X 5.30
+        MPLAB 	          :  MPLAB X 5.35
 */
 
 /*
@@ -58,9 +58,9 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
+   if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
     {
-        TMR0_ISR();
+        ADCC_ISR();
     }
     else if(PIE3bits.U1TXIE == 1 && PIR3bits.U1TXIF == 1)
     {
@@ -73,22 +73,6 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
     {
         TMR0_ISR();
-    }
-    else if(PIE3bits.I2C1EIE == 1 && PIR3bits.I2C1EIF == 1)
-    {
-        I2C1_InterruptHandler();
-    }
-    else if(PIE2bits.I2C1RXIE == 1 && PIR2bits.I2C1RXIF == 1)
-    {
-        I2C1_InterruptHandler();
-    }
-    else if(PIE3bits.I2C1IE == 1 && PIR3bits.I2C1IF == 1)
-    {
-        I2C1_InterruptHandler();
-    }
-    else if(PIE3bits.I2C1TXIE == 1 && PIR3bits.I2C1TXIF == 1)
-    {
-        I2C1_InterruptHandler();
     }
     else if(PIE6bits.I2C2EIE == 1 && PIR6bits.I2C2EIF == 1)
     {
@@ -106,6 +90,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C2_InterruptHandler();
     }
+    else if(PIE9bits.TMR6IE == 1 && PIR9bits.TMR6IF == 1)
+    {
+        TMR6_ISR();
+    }
     else if(PIE8bits.TMR5IE == 1 && PIR8bits.TMR5IF == 1)
     {
         TMR5_ISR();
@@ -118,7 +106,11 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         TMR1_ISR();
     }
-    else
+    else if(PIE1bits.C1IE == 1 && PIR1bits.C1IF == 1)
+    {
+        CMP1_ISR();
+    }
+    else 
     {
         //Unhandled Interrupt
     }

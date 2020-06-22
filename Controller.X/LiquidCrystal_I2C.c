@@ -3,6 +3,7 @@
 
 #include "LiquidCrystal_I2C.h"
 #include "time.h"
+#include "i2c2_mux.h"
 
 uint8_t _Addr;
 uint8_t _displayfunction;
@@ -11,103 +12,120 @@ uint8_t _displaymode;
 uint8_t _numlines;
 uint8_t _cols;
 uint8_t _rows;
-uint8_t _backlightval;
-uint8_t i2cBuff[80];
+volatile uint8_t _backlightval;
+volatile uint8_t i2cBuff[80];
 
 
 /************ low level data pushing commands **********/
+#define LCD_D0 LATAbits.LATA0
+#define LCD_D1 LATAbits.LATA1
+#define LCD_D2 LATAbits.LATA4
+#define LCD_D3 LATAbits.LATA5
+#define LCD_E LATAbits.LATA7
+#define LCD_RS LATAbits.LATA6
+#define LCD_BL LATBbits.LATB5
 
-void expanderWrite(uint8_t data) {
-        uint8_t i2cBuff[2];
-        i2cBuff[0]=data | _backlightval;
-        I2C2_Open(_Addr);
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
-}
-#if 1
-void write4bits(uint8_t value) {
-        uint8_t i2cBuff[2];
-        
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value  | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+volatile uint8_t parBuffPtr;
+volatile uint8_t parBuffLen;
+volatile bool lcdBusy;
 
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | En | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
-        
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | ~En | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+void lcdIrqHandler(void){
+    uint8_t byte;
+    if (parBuffPtr < parBuffLen){
+        // Set E=0
+        LCD_E=0;
+        // Set RS.
+        byte = i2cBuff[parBuffPtr];
+        LCD_RS=(byte&Rs)?1:0;
+        // Raise E.
+        LCD_E=(byte&En)?1:0;
+        // Now put rest of the data.
+        LCD_D0=(byte&0x10)?1:0;
+        LCD_D1=(byte&0x20)?1:0;
+        LCD_D2=(byte&0x40)?1:0;
+        LCD_D3=(byte&0x80)?1:0;
+        // Now check if backlight has to be set.
+        LCD_BL = (byte&LCD_BACKLIGHT)?1:0;
+        parBuffPtr++;
+        // Re-enable timer.
+        TMR6_Start();
+        // Now clear E.
+        LCD_E=0;
+    } else {
+        lcdBusy = false;
+    }
 }
-#else
-void write4bits(uint8_t value) {
-        uint8_t i2cBuff[3];
-        
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | _backlightval;
-        i2cBuff[1]=value | En | _backlightval;
-        i2cBuff[2]=value | ~En | _backlightval;
-        I2C2_SetBuffer(i2cBuff,3);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+
+void send4bits(uint8_t value, uint8_t mode) {
+    int idx;
+    
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 0;
+        idx = parBuffLen;
+    } else {
+        idx = 0;
+        parBuffPtr=0;
+    }
+    i2cBuff[idx++]=value | mode | _backlightval;
+
+    parBuffLen=idx;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 1;
+    } else {
+        lcdBusy = true;
+        TMR6_Start();
+    }
 }
-#endif
 
 // write either command or data
 void send(uint8_t value, uint8_t mode) {
-	uint8_t highnib=value&0xf0;
-	uint8_t lownib=(value<<4)&0xf0;
-    write4bits((highnib)|mode);
-	write4bits((lownib)|mode); 
+    send4bits(value&0xf0, mode);
+    send4bits((value<<4)&0xf0, mode);
+}
+
+// Only blocking function.
+void expanderWriteBlock(uint8_t data) {
+    send4bits(data, 0);
 }
 
 void write(uint8_t value) {
-    uint8_t i2cBuff[4];
-	uint8_t highnib=value&0xf0;
-	uint8_t lownib=(value<<4)&0xf0;
-    i2cBuff[0]=highnib | Rs | En | _backlightval;
-    i2cBuff[1]=highnib | Rs | ~En | _backlightval;
-    i2cBuff[2]=lownib | Rs | En | _backlightval;
-    i2cBuff[3]=lownib | Rs | ~En | _backlightval;
-    I2C2_Open(_Addr);
-    I2C2_SetBuffer(i2cBuff,4);
-    I2C2_MasterWrite();
-    while(I2C2_BUSY == I2C2_Close()); // sit here until finished.
+    send(value,Rs|En);
 }
 
 void printstr(const char c[]){
     uint8_t idx;
     
-
-    idx=0;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 0;
+        idx = parBuffLen;
+    } else {
+        idx = 0;
+        parBuffPtr=0;
+    }
     while (*c){
         i2cBuff[idx++]=((*c)&0xF0) | Rs | En | _backlightval;
-        i2cBuff[idx++]=((*c)&0xF0) | Rs | ~En | _backlightval;
         i2cBuff[idx++]=(((*c)&0x0F)<<4) | Rs | En | _backlightval;
-        i2cBuff[idx++]=(((*c)&0x0F)<<4) | Rs | ~En | _backlightval;
         c++;
         if (idx >=80) {
             break;
         }
     }
-    I2C2_Open(_Addr);
-    I2C2_SetBuffer(i2cBuff,idx);
-    I2C2_MasterWrite();
+
+    parBuffLen=idx;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 1;
+    } else {
+        lcdBusy = true;
+        TMR6_Start();
+    }
 }
 
 bool PrintStrBusy(void){
-    return (I2C2_BUSY == I2C2_Close());
+    return lcdBusy;
 }	
 
 void printstrblock(const char c[]){
+    while(PrintStrBusy());
     printstr(c);
     while(PrintStrBusy());
 }
@@ -115,7 +133,7 @@ void printstrblock(const char c[]){
 /*********** mid level commands, for sending data/cmds */
 
 inline void command(uint8_t value) {
-	send(value, 0);
+	send(value, En);
 }
 
 /********** high level commands, for the user! */
@@ -138,70 +156,78 @@ inline void command(uint8_t value) {
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
-  _Addr = lcd_Addr;
-  _cols = lcd_cols;
-  _rows = lcd_rows;
-  _backlightval = LCD_NOBACKLIGHT;
-  _numlines = 2;
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) {
+    _Addr = lcd_Addr;
+    _cols = lcd_cols;
+    _rows = lcd_rows;
+    _backlightval = LCD_BACKLIGHT;
+    _numlines = 2;
 
-  _displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS;
+    _displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS;
 
-	// SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
-	// according to datasheet, we need at least 40ms after power rises above 2.7V
-	// before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50
-	timeDelayMs(50); 
-  
-	// Now we pull both RS and R/W low to begin commands
-	expanderWrite(_backlightval);	// reset expanderand turn backlight off (Bit 8 =1)
-	timeDelayMs(10);
+    parBuffPtr = 0;
+    parBuffLen = 0;
+    lcdBusy = false;
+    TMR6_SetInterruptHandler(lcdIrqHandler);
 
-  	//put the LCD into 4 bit mode
-	// this is according to the hitachi HD44780 datasheet
-	// figure 24, pg 46
-	
-	  // we start in 8bit mode, try to set 4 bit mode
-   write4bits(0x03 << 4);
-   timeDelayMs(5); // wait min 4.1ms
-   
-   // second try
-   write4bits(0x03 << 4);
-   timeDelayMs(5); // wait min 4.1ms
-   
-   // third go!
-   write4bits(0x03 << 4); 
-   
-   // finally, set to 4-bit interface
-   write4bits(0x02 << 4); 
+    // SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
+    // according to datasheet, we need at least 40ms after power rises above 2.7V
+    // before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50
+    timeDelayMs(50);
 
-	// set # lines, font size, etc.
-	command(LCD_FUNCTIONSET | _displayfunction);  
-	
-	// turn the display on with no cursor or blinking default
-	_displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
-	display();
-	
-	// clear it off
-	clear();
-	
-	// Initialize to default text direction (for roman languages)
-	_displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
-	
-	// set the entry mode
-	command(LCD_ENTRYMODESET | _displaymode);
-	
-	home();
-  
+    // Now we pull both RS and R/W low to begin commands
+    expanderWriteBlock(_backlightval);
+    timeDelayMs(20);
+
+    //put the LCD into 4 bit mode. First set it in 8-bit mode regardless the current mode.
+    send4bits(0x03 << 4, En);
+    while (lcdBusy);
+    timeDelayMs(20);
+    send4bits(0x03 << 4, En);
+    while (lcdBusy);
+    timeDelayMs(20);
+    send4bits(0x03 << 4, En);
+    while (lcdBusy);
+    timeDelayMs(20);
+
+    // finally, set to 4-bit interface
+    send4bits(0x02 << 4, En);
+    while (lcdBusy);
+    timeDelayMs(20); // wait min 4.1ms
+
+    // set # lines, font size, etc.
+    command(LCD_FUNCTIONSET | _displayfunction);
+    while (lcdBusy);
+    timeDelayMs(20); // wait min 4.1ms
+
+    // turn the display on with no cursor or blinking default
+    _displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    display();
+    while (lcdBusy);
+
+    // clear it off
+    clear();
+    while (lcdBusy);
+
+    // Initialize to default text direction (for roman languages)
+    _displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
+
+    // set the entry mode
+    command(LCD_ENTRYMODESET | _displaymode);
+    while (lcdBusy);
+
+    home();
+    while (lcdBusy);
 }
 
 void clear(){
 	command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
-	timeDelayMs(2);  // this command takes a long time!
+	timeDelayMs(10);  // this command takes a long time!
 }
 
 void home(){
 	command(LCD_RETURNHOME);  // set cursor position to zero
-	timeDelayMs(2);  // this command takes a long time!
+	timeDelayMs(10);  // this command takes a long time!
 }
 
 void setCursor(uint8_t col, uint8_t row){
@@ -287,12 +313,12 @@ void createChar(uint8_t location, uint8_t charmap[]) {
 // Turn the (optional) backlight off/on
 void noBacklight(void) {
 	_backlightval=LCD_NOBACKLIGHT;
-	expanderWrite(0);
+	expanderWriteBlock(0);
 }
 
 void backlight(void) {
 	_backlightval=LCD_BACKLIGHT;
-	expanderWrite(0);
+	expanderWriteBlock(0);
 }
 
 void load_custom_character(uint8_t char_num, uint8_t *rows){

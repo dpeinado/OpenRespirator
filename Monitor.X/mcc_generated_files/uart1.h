@@ -13,12 +13,12 @@
   @Description
     This header file provides APIs for driver for UART1.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.4.0
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -85,7 +85,7 @@ typedef union {
 /**
  Section: Global variables
  */
-extern volatile uint8_t uart1TxBufferRemaining;
+extern volatile uint16_t uart1TxBufferRemaining;
 extern volatile uint8_t uart1RxCount;
 
 /**

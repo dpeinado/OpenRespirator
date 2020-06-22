@@ -1,3 +1,21 @@
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//  
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+// MA  02110-1301, USA.
+//
+//  Copyright © 2020 Carlos Pardo
+//  This file is part of project: OpenRespirator
+//
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -38,6 +56,11 @@ uint8_t buzzerState;
 #define TIMER_180MS 46
 #define TIMER_1S    255
 
+static bool on;
+static bool detected;
+static bool checkController;
+static bool controllerDetected;
+
 void BuzzerSet(uint8_t state) {
     alarmState = state;
     alarmStep = 0;
@@ -53,11 +76,21 @@ void BuzzerClear(void) {
 
 void BuzzerHandler( void) {
 //    printf("BH\r\n");
-    BuzzerOff();
     BuzzerTask();
 }
+
 void BuzzerTestHandler( void) {    
 //    printf("BTH\r\n");
+    if (on) {
+        // I come from Buzzer on
+        if (detected) {
+            // Buzz is detected by micro
+            printf("_DB_");
+        } else {
+            // Not detected
+            printf("_EB_");
+        }
+    }
     BuzzerOff();
 }
 
@@ -97,6 +130,25 @@ void BuzzerTest(char note) {
                      // ... C 180ms LOW 100ms A 180ms LOW 100ms F 180ms LOW 400ms A 180ms LOW 100ms F 180ms LOW 4s
 
 void BuzzerTask(void) {
+    static int noDetections = 0;
+    if (on) {
+        // I come from Buzzer on
+        if (detected) {
+            // Buzz is detected by micro
+            ClearMonitorFailAlarm(); // Latched should not be here
+            noDetections = 0;
+            printf("_DB_");
+        } else {
+            // Not detected
+            // we give 3 tries           
+            if (noDetections>=3) {
+                SetMonitorFailAlarm(); // To avoid alarms in noisy environment we decide to test buzzer only during start-up
+            } else {
+                noDetections ++;
+            }
+            printf("_EB_");
+        }
+    }
     BuzzerOff();
     TMR4_Stop();
     TMR4_SetInterruptHandler(BuzzerHandler);
@@ -338,19 +390,73 @@ void BuzzerTask(void) {
     
 }
 
+void BuzzerCMPHandler( void) {    
+    //printf("BCMPH\r\n");
+    if (checkController) {
+        printf("BCMPH_Cnt\r\n");
+        controllerDetected = true;
+    } else  {
+        detected = true;
+    }
+    CMP1_Disable();
+    
+}
+
 void BuzzerInit (void) {
     // Initialize TIMER 4 handler
     TMR4_SetInterruptHandler(BuzzerHandler);
+    CMP1_SetIntHandler(BuzzerCMPHandler);
     BuzzerOff();
-    
+    detected = true;
+    checkController = false;
+    controllerDetected = false;
+}
+
+bool GetControllerBuzzerCheck() {
+    bool tmp = controllerDetected;
+    controllerDetected = false;
+    checkController = false;
+    return tmp;
+}
+
+void ControllerBuzzerCheck() {
+    CMP1_Enable();
+    checkController = true;
+}
+
+void BuzzerCheck (void) {
+    BuzzerOn(PERIOD_A);
+    __delay_ms(250);
+    BuzzerOff();
+    if (detected==false) { // Another try
+        __delay_ms(100);
+        BuzzerOn(PERIOD_A);
+        __delay_ms(250);
+        BuzzerOff();
+        if (detected==false) {
+            SetMonitorFailAlarm();
+            printf("Error Buzzer\r\n");
+            return;
+        }
+    }
+    printf("Found Buzzer\r\n");
 }
 
 
 void BuzzerOn (uint8_t period) {
+
     T2PR = period;
     PWM6CON = 0x80;
+
+    on = true;
+    detected = false;
+    
+    CMP1_Enable();
+
 }
 
 void BuzzerOff (void) {
     PWM6CON = 0x00;
+    on = false;
+    CMP1_Disable();
 }

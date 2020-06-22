@@ -27041,9 +27041,9 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 50 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/pin_manager.h" 1
-# 490 "./mcc_generated_files/pin_manager.h"
+# 718 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
-# 502 "./mcc_generated_files/pin_manager.h"
+# 730 "./mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_IOC(void);
 # 51 "./mcc_generated_files/mcc.h" 2
 
@@ -27173,8 +27173,8 @@ extern void cputs(const char *);
 void INTERRUPT_Initialize (void);
 # 55 "./mcc_generated_files/mcc.h" 2
 
-# 1 "./mcc_generated_files/i2c1_master.h" 1
-# 54 "./mcc_generated_files/i2c1_master.h"
+# 1 "./mcc_generated_files/i2c2_master.h" 1
+# 54 "./mcc_generated_files/i2c2_master.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdio.h" 1 3
 # 24 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\stdio.h" 3
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\c99\\bits/alltypes.h" 1 3
@@ -27313,81 +27313,11 @@ char *ctermid(char *);
 
 
 char *tempnam(const char *, const char *);
-# 54 "./mcc_generated_files/i2c1_master.h" 2
+# 54 "./mcc_generated_files/i2c2_master.h" 2
 
 
 
 
-typedef enum {
-    I2C1_NOERR,
-    I2C1_BUSY,
-    I2C1_FAIL
-
-
-} i2c1_error_t;
-
-typedef enum
-{
-    I2C1_STOP=1,
-    I2C1_RESTART_READ,
-    I2C1_RESTART_WRITE,
-    I2C1_CONTINUE,
-    I2C1_RESET_LINK
-} i2c1_operations_t;
-
-typedef uint8_t i2c1_address_t;
-typedef i2c1_operations_t (*i2c1_callback_t)(void *funPtr);
-
-
-i2c1_operations_t I2C1_CallbackReturnStop(void *funPtr);
-i2c1_operations_t I2C1_CallbackReturnReset(void *funPtr);
-i2c1_operations_t I2C1_CallbackRestartWrite(void *funPtr);
-i2c1_operations_t I2C1_CallbackRestartRead(void *funPtr);
-
-
-
-
-
-
-void I2C1_Initialize(void);
-# 101 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_Open(i2c1_address_t address);
-# 111 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_Close(void);
-# 123 "./mcc_generated_files/i2c1_master.h"
-i2c1_error_t I2C1_MasterOperation(_Bool read);
-
-
-
-
-i2c1_error_t I2C1_MasterWrite(void);
-
-
-
-
-i2c1_error_t I2C1_MasterRead(void);
-# 142 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetTimeout(uint8_t timeOut);
-# 152 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetBuffer(void *buffer, size_t bufferSize);
-# 164 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetDataCompleteCallback(i2c1_callback_t cb, void *ptr);
-# 174 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetWriteCollisionCallback(i2c1_callback_t cb, void *ptr);
-# 184 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetAddressNackCallback(i2c1_callback_t cb, void *ptr);
-# 194 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetDataNackCallback(i2c1_callback_t cb, void *ptr);
-# 204 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetTimeoutCallback(i2c1_callback_t cb, void *ptr);
-# 213 "./mcc_generated_files/i2c1_master.h"
-void (*I2C1_InterruptHandler)(void);
-# 222 "./mcc_generated_files/i2c1_master.h"
-void I2C1_SetInterruptHandler(void (* InterruptHandler)(void));
-# 56 "./mcc_generated_files/mcc.h" 2
-
-# 1 "./mcc_generated_files/i2c2_master.h" 1
-# 58 "./mcc_generated_files/i2c2_master.h"
 typedef enum {
     I2C2_NOERR,
     I2C2_BUSY,
@@ -27454,7 +27384,501 @@ void I2C2_SetTimeoutCallback(i2c2_callback_t cb, void *ptr);
 void (*I2C2_InterruptHandler)(void);
 # 222 "./mcc_generated_files/i2c2_master.h"
 void I2C2_SetInterruptHandler(void (* InterruptHandler)(void));
+# 56 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/tmr6.h" 1
+# 79 "./mcc_generated_files/tmr6.h"
+typedef enum
+{
+# 89 "./mcc_generated_files/tmr6.h"
+   TMR6_ROP_STARTS_TMRON,
+
+
+
+
+   TMR6_ROP_STARTS_TMRON_ERSHIGH,
+
+
+
+
+   TMR6_ROP_STARTS_TMRON_ERSLOW,
+
+
+
+
+   TMR6_ROP_RESETS_ERSBOTHEDGE,
+
+
+
+
+   TMR6_ROP_RESETS_ERSRISINGEDGE,
+
+
+
+
+   TMR6_ROP_RESETS_ERSFALLINGEDGE,
+
+
+
+
+   TMR6_ROP_RESETS_ERSLOW,
+
+
+
+
+   TMR6_ROP_RESETS_ERSHIGH,
+# 135 "./mcc_generated_files/tmr6.h"
+   TMR6_OS_STARTS_TMRON,
+
+
+
+
+   TMR6_OS_STARTS_ERSRISINGEDGE ,
+
+
+
+
+   TMR6_OS_STARTS_ERSFALLINGEDGE ,
+
+
+
+
+   TMR6_OS_STARTS_ERSBOTHEDGE,
+
+
+
+
+
+   TMR6_OS_STARTS_ERSFIRSTRISINGEDGE,
+
+
+
+
+
+   TMR6_OS_STARTS_ERSFIRSTFALLINGEDGE,
+
+
+
+
+
+   TMR6_OS_STARTS_ERSRISINGEDGEDETECT,
+
+
+
+
+   TMR6_OS_STARTS_ERSFALLINGEDGEDETECT,
+
+
+
+
+   TMR6_OS_STARTS_TMRON_ERSHIGH = 0x16,
+
+
+
+
+   TMR6_OS_STARTS_TMRON_ERSLOW = 0x17,
+# 192 "./mcc_generated_files/tmr6.h"
+   TMR6_MS_STARTS_TMRON_ERSRISINGEDGEDETECT = 0x11,
+
+
+
+
+   TMR6_MS_STARTS_TMRON_ERSFALLINGEDGEDETECT = 0x12,
+
+
+
+
+
+   TMR6_MS_STARTS_TMRON_ERSBOTHEDGE = 0x13
+
+} TMR6_HLT_MODE;
+# 220 "./mcc_generated_files/tmr6.h"
+typedef enum
+{
+
+
+    TMR6_T6INPPS,
+
+
+
+    TMR6_T2POSTSCALED,
+
+
+
+    TMR6_T4POSTSCALED,
+
+
+
+    TMR6_RESERVED,
+
+
+
+    TMR6_CCP1_OUT,
+
+
+
+    TMR6_CCP2_OUT,
+
+
+
+    TMR6_CCP3_OUT,
+
+
+
+    TMR6_CCP4_OUT,
+
+
+
+    TMR6_PWM5_OUT,
+
+
+
+    TMR6_PWM6_OUT,
+
+
+
+    TMR6_PWM7_OUT,
+
+
+
+    TMR6_PWM8_OUT,
+
+
+
+    TMR6_RESERVED_2,
+
+
+
+    TMR6_RESERVED_3,
+
+
+
+    TMR6_C1_OUT_SYNC,
+
+
+
+    TMR6_C2_OUT_SYNC,
+
+
+
+    TMR6_ZCD_OUTPUT,
+
+
+
+    TMR6_CLC1_OUT,
+
+
+
+    TMR6_CLC2_OUT,
+
+
+
+    TMR6_CLC3_OUT,
+
+
+
+    TMR6_CLC4_OUT,
+
+
+
+    TMR6_UART1_RX_EDGE,
+
+
+
+    TMR6_UART1_TX_EDGE,
+
+
+
+    TMR6_UART2_RX_EDGE,
+
+
+
+    TMR6_UART2_TX_EDGE
+
+
+} TMR6_HLT_EXT_RESET_SOURCE;
+# 365 "./mcc_generated_files/tmr6.h"
+void TMR6_Initialize(void);
+# 401 "./mcc_generated_files/tmr6.h"
+void TMR6_ModeSet(TMR6_HLT_MODE mode);
+# 436 "./mcc_generated_files/tmr6.h"
+void TMR6_ExtResetSourceSet(TMR6_HLT_EXT_RESET_SOURCE reset);
+# 465 "./mcc_generated_files/tmr6.h"
+void TMR6_Start(void);
+# 494 "./mcc_generated_files/tmr6.h"
+void TMR6_StartTimer(void);
+# 526 "./mcc_generated_files/tmr6.h"
+void TMR6_Stop(void);
+# 558 "./mcc_generated_files/tmr6.h"
+void TMR6_StopTimer(void);
+# 593 "./mcc_generated_files/tmr6.h"
+uint8_t TMR6_Counter8BitGet(void);
+# 628 "./mcc_generated_files/tmr6.h"
+uint8_t TMR6_ReadTimer(void);
+# 667 "./mcc_generated_files/tmr6.h"
+void TMR6_Counter8BitSet(uint8_t timerVal);
+# 706 "./mcc_generated_files/tmr6.h"
+void TMR6_WriteTimer(uint8_t timerVal);
+# 758 "./mcc_generated_files/tmr6.h"
+void TMR6_Period8BitSet(uint8_t periodVal);
+# 810 "./mcc_generated_files/tmr6.h"
+void TMR6_LoadPeriodRegister(uint8_t periodVal);
+# 828 "./mcc_generated_files/tmr6.h"
+void TMR6_ISR(void);
+# 846 "./mcc_generated_files/tmr6.h"
+ void TMR6_SetInterruptHandler(void (* InterruptHandler)(void));
+# 864 "./mcc_generated_files/tmr6.h"
+extern void (*TMR6_InterruptHandler)(void);
+# 882 "./mcc_generated_files/tmr6.h"
+void TMR6_DefaultInterruptHandler(void);
 # 57 "./mcc_generated_files/mcc.h" 2
+
+# 1 "./mcc_generated_files/tmr4.h" 1
+# 79 "./mcc_generated_files/tmr4.h"
+typedef enum
+{
+# 89 "./mcc_generated_files/tmr4.h"
+   TMR4_ROP_STARTS_TMRON,
+
+
+
+
+   TMR4_ROP_STARTS_TMRON_ERSHIGH,
+
+
+
+
+   TMR4_ROP_STARTS_TMRON_ERSLOW,
+
+
+
+
+   TMR4_ROP_RESETS_ERSBOTHEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSRISINGEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSFALLINGEDGE,
+
+
+
+
+   TMR4_ROP_RESETS_ERSLOW,
+
+
+
+
+   TMR4_ROP_RESETS_ERSHIGH,
+# 135 "./mcc_generated_files/tmr4.h"
+   TMR4_OS_STARTS_TMRON,
+
+
+
+
+   TMR4_OS_STARTS_ERSRISINGEDGE ,
+
+
+
+
+   TMR4_OS_STARTS_ERSFALLINGEDGE ,
+
+
+
+
+   TMR4_OS_STARTS_ERSBOTHEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSFIRSTRISINGEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSFIRSTFALLINGEDGE,
+
+
+
+
+
+   TMR4_OS_STARTS_ERSRISINGEDGEDETECT,
+
+
+
+
+   TMR4_OS_STARTS_ERSFALLINGEDGEDETECT,
+
+
+
+
+   TMR4_OS_STARTS_TMRON_ERSHIGH = 0x16,
+
+
+
+
+   TMR4_OS_STARTS_TMRON_ERSLOW = 0x17,
+# 192 "./mcc_generated_files/tmr4.h"
+   TMR4_MS_STARTS_TMRON_ERSRISINGEDGEDETECT = 0x11,
+
+
+
+
+   TMR4_MS_STARTS_TMRON_ERSFALLINGEDGEDETECT = 0x12,
+
+
+
+
+
+   TMR4_MS_STARTS_TMRON_ERSBOTHEDGE = 0x13
+
+} TMR4_HLT_MODE;
+# 220 "./mcc_generated_files/tmr4.h"
+typedef enum
+{
+
+
+    TMR4_T4INPPS,
+
+
+
+    TMR4_T2POSTSCALED,
+
+
+
+    TMR4_RESERVED,
+
+
+
+    TMR4_T6POSTSCALED,
+
+
+
+    TMR4_CCP1_OUT,
+
+
+
+    TMR4_CCP2_OUT,
+
+
+
+    TMR4_CCP3_OUT,
+
+
+
+    TMR4_CCP4_OUT,
+
+
+
+    TMR4_PWM5_OUT,
+
+
+
+    TMR4_PWM6_OUT,
+
+
+
+    TMR4_PWM7_OUT,
+
+
+
+    TMR4_PWM8_OUT,
+
+
+
+    TMR4_RESERVED_2,
+
+
+
+    TMR4_RESERVED_3,
+
+
+
+    TMR4_C1_OUT_SYNC,
+
+
+
+    TMR4_C2_OUT_SYNC,
+
+
+
+    TMR4_ZCD_OUTPUT,
+
+
+
+    TMR4_CLC1_OUT,
+
+
+
+    TMR4_CLC2_OUT,
+
+
+
+    TMR4_CLC3_OUT,
+
+
+
+    TMR4_CLC4_OUT,
+
+
+
+    TMR4_UART1_RX_EDGE,
+
+
+
+    TMR4_UART1_TX_EDGE,
+
+
+
+    TMR4_UART2_RX_EDGE,
+
+
+
+    TMR4_UART2_TX_EDGE
+
+
+} TMR4_HLT_EXT_RESET_SOURCE;
+# 365 "./mcc_generated_files/tmr4.h"
+void TMR4_Initialize(void);
+# 401 "./mcc_generated_files/tmr4.h"
+void TMR4_ModeSet(TMR4_HLT_MODE mode);
+# 436 "./mcc_generated_files/tmr4.h"
+void TMR4_ExtResetSourceSet(TMR4_HLT_EXT_RESET_SOURCE reset);
+# 465 "./mcc_generated_files/tmr4.h"
+void TMR4_Start(void);
+# 494 "./mcc_generated_files/tmr4.h"
+void TMR4_StartTimer(void);
+# 526 "./mcc_generated_files/tmr4.h"
+void TMR4_Stop(void);
+# 558 "./mcc_generated_files/tmr4.h"
+void TMR4_StopTimer(void);
+# 593 "./mcc_generated_files/tmr4.h"
+uint8_t TMR4_Counter8BitGet(void);
+# 628 "./mcc_generated_files/tmr4.h"
+uint8_t TMR4_ReadTimer(void);
+# 667 "./mcc_generated_files/tmr4.h"
+void TMR4_Counter8BitSet(uint8_t timerVal);
+# 706 "./mcc_generated_files/tmr4.h"
+void TMR4_WriteTimer(uint8_t timerVal);
+# 758 "./mcc_generated_files/tmr4.h"
+void TMR4_Period8BitSet(uint8_t periodVal);
+# 810 "./mcc_generated_files/tmr4.h"
+void TMR4_LoadPeriodRegister(uint8_t periodVal);
+# 828 "./mcc_generated_files/tmr4.h"
+void TMR4_ISR(void);
+# 846 "./mcc_generated_files/tmr4.h"
+ void TMR4_SetInterruptHandler(void (* InterruptHandler)(void));
+# 864 "./mcc_generated_files/tmr4.h"
+extern void (*TMR4_InterruptHandler)(void);
+# 882 "./mcc_generated_files/tmr4.h"
+void TMR4_DefaultInterruptHandler(void);
+# 58 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr1.h" 1
 # 100 "./mcc_generated_files/tmr1.h"
@@ -27475,7 +27899,7 @@ void TMR1_StartSinglePulseAcquisition(void);
 uint8_t TMR1_CheckGateValueStatus(void);
 # 387 "./mcc_generated_files/tmr1.h"
 _Bool TMR1_HasOverflowOccured(void);
-# 58 "./mcc_generated_files/mcc.h" 2
+# 59 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr2.h" 1
 # 79 "./mcc_generated_files/tmr2.h"
@@ -27722,7 +28146,7 @@ void TMR2_ISR(void);
 extern void (*TMR2_InterruptHandler)(void);
 # 882 "./mcc_generated_files/tmr2.h"
 void TMR2_DefaultInterruptHandler(void);
-# 59 "./mcc_generated_files/mcc.h" 2
+# 60 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/tmr0.h" 1
 # 100 "./mcc_generated_files/tmr0.h"
@@ -27739,14 +28163,14 @@ void TMR0_WriteTimer(uint8_t timerVal);
 void TMR0_Reload(uint8_t periodVal);
 # 308 "./mcc_generated_files/tmr0.h"
 _Bool TMR0_HasOverflowOccured(void);
-# 60 "./mcc_generated_files/mcc.h" 2
+# 61 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/fvr.h" 1
 # 93 "./mcc_generated_files/fvr.h"
  void FVR_Initialize(void);
 # 127 "./mcc_generated_files/fvr.h"
 _Bool FVR_IsOutputReady(void);
-# 61 "./mcc_generated_files/mcc.h" 2
+# 62 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/adcc.h" 1
 # 72 "./mcc_generated_files/adcc.h"
@@ -27825,7 +28249,7 @@ void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 void ADCC_ThresholdISR(void);
 # 881 "./mcc_generated_files/adcc.h"
 void ADCC_DefaultInterruptHandler(void);
-# 62 "./mcc_generated_files/mcc.h" 2
+# 63 "./mcc_generated_files/mcc.h" 2
 
 # 1 "./mcc_generated_files/uart1.h" 1
 # 74 "./mcc_generated_files/uart1.h"
@@ -27870,12 +28294,12 @@ void UART1_SetErrorHandler(void (* interruptHandler)(void));
 void (*UART1_TxInterruptHandler)(void);
 # 498 "./mcc_generated_files/uart1.h"
 void UART1_SetTxInterruptHandler(void (* InterruptHandler)(void));
-# 63 "./mcc_generated_files/mcc.h" 2
-# 78 "./mcc_generated_files/mcc.h"
+# 64 "./mcc_generated_files/mcc.h" 2
+# 79 "./mcc_generated_files/mcc.h"
 void SYSTEM_Initialize(void);
-# 91 "./mcc_generated_files/mcc.h"
+# 92 "./mcc_generated_files/mcc.h"
 void OSCILLATOR_Initialize(void);
-# 104 "./mcc_generated_files/mcc.h"
+# 105 "./mcc_generated_files/mcc.h"
 void PMD_Initialize(void);
 # 7 "./LiquidCrystal_I2C.h" 2
 # 55 "./LiquidCrystal_I2C.h"
@@ -27929,6 +28353,27 @@ _Bool timeElapsed(time_t prevTime, time_t duration);
 void timeDelayMs(time_t delms);
 # 5 "LiquidCrystal_I2C.c" 2
 
+# 1 "./i2c2_mux.h" 1
+# 18 "./i2c2_mux.h"
+extern uint8_t currentTrfAddr;
+extern i2c2_error_t lastI2C2MTrfResponse;
+extern i2c2_error_t lastI2C2LTrfResponse;
+
+
+
+
+
+
+
+void I2C2_MuxInit(void);
+_Bool I2C2_MAck(void);
+_Bool I2C2_LAck(void);
+i2c2_error_t I2C2_MOpen(void);
+i2c2_error_t I2C2_LOpen(void);
+i2c2_error_t I2C2_MClose(void);
+i2c2_error_t I2C2_LClose(void);
+# 6 "LiquidCrystal_I2C.c" 2
+
 
 uint8_t _Addr;
 uint8_t _displayfunction;
@@ -27937,89 +28382,110 @@ uint8_t _displaymode;
 uint8_t _numlines;
 uint8_t _cols;
 uint8_t _rows;
-uint8_t _backlightval;
-uint8_t i2cBuff[80];
+volatile uint8_t _backlightval;
+volatile uint8_t i2cBuff[80];
+# 28 "LiquidCrystal_I2C.c"
+volatile uint8_t parBuffPtr;
+volatile uint8_t parBuffLen;
+volatile _Bool lcdBusy;
 
+void lcdIrqHandler(void){
+    uint8_t byte;
+    if (parBuffPtr < parBuffLen){
 
+        LATAbits.LATA7=0;
 
+        byte = i2cBuff[parBuffPtr];
+        LATAbits.LATA6=(byte&0x1)?1:0;
 
-void expanderWrite(uint8_t data) {
-        uint8_t i2cBuff[2];
-        i2cBuff[0]=data | _backlightval;
-        I2C2_Open(_Addr);
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close());
+        LATAbits.LATA7=(byte&0x4)?1:0;
+
+        LATAbits.LATA0=(byte&0x10)?1:0;
+        LATAbits.LATA1=(byte&0x20)?1:0;
+        LATAbits.LATA4=(byte&0x40)?1:0;
+        LATAbits.LATA5=(byte&0x80)?1:0;
+
+        LATBbits.LATB5 = (byte&0x08)?1:0;
+        parBuffPtr++;
+
+        TMR6_Start();
+
+        LATAbits.LATA7=0;
+    } else {
+        lcdBusy = 0;
+    }
 }
 
-void write4bits(uint8_t value) {
-        uint8_t i2cBuff[2];
+void send4bits(uint8_t value, uint8_t mode) {
+    int idx;
 
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close());
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 0;
+        idx = parBuffLen;
+    } else {
+        idx = 0;
+        parBuffPtr=0;
+    }
+    i2cBuff[idx++]=value | mode | _backlightval;
 
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | 0x4 | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close());
-
-        I2C2_Open(_Addr);
-        i2cBuff[0]=value | ~0x4 | _backlightval;
-        I2C2_SetBuffer(i2cBuff,1);
-        I2C2_MasterWrite();
-        while(I2C2_BUSY == I2C2_Close());
+    parBuffLen=idx;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 1;
+    } else {
+        lcdBusy = 1;
+        TMR6_Start();
+    }
 }
-# 65 "LiquidCrystal_I2C.c"
+
+
 void send(uint8_t value, uint8_t mode) {
- uint8_t highnib=value&0xf0;
- uint8_t lownib=(value<<4)&0xf0;
-    write4bits((highnib)|mode);
- write4bits((lownib)|mode);
+    send4bits(value&0xf0, mode);
+    send4bits((value<<4)&0xf0, mode);
+}
+
+
+void expanderWriteBlock(uint8_t data) {
+    send4bits(data, 0);
 }
 
 void write(uint8_t value) {
-    uint8_t i2cBuff[4];
- uint8_t highnib=value&0xf0;
- uint8_t lownib=(value<<4)&0xf0;
-    i2cBuff[0]=highnib | 0x1 | 0x4 | _backlightval;
-    i2cBuff[1]=highnib | 0x1 | ~0x4 | _backlightval;
-    i2cBuff[2]=lownib | 0x1 | 0x4 | _backlightval;
-    i2cBuff[3]=lownib | 0x1 | ~0x4 | _backlightval;
-    I2C2_Open(_Addr);
-    I2C2_SetBuffer(i2cBuff,4);
-    I2C2_MasterWrite();
-    while(I2C2_BUSY == I2C2_Close());
+    send(value,0x1|0x4);
 }
 
 void printstr(const char c[]){
     uint8_t idx;
 
-
-    idx=0;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 0;
+        idx = parBuffLen;
+    } else {
+        idx = 0;
+        parBuffPtr=0;
+    }
     while (*c){
         i2cBuff[idx++]=((*c)&0xF0) | 0x1 | 0x4 | _backlightval;
-        i2cBuff[idx++]=((*c)&0xF0) | 0x1 | ~0x4 | _backlightval;
         i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | 0x4 | _backlightval;
-        i2cBuff[idx++]=(((*c)&0x0F)<<4) | 0x1 | ~0x4 | _backlightval;
         c++;
         if (idx >=80) {
             break;
         }
     }
-    I2C2_Open(_Addr);
-    I2C2_SetBuffer(i2cBuff,idx);
-    I2C2_MasterWrite();
+
+    parBuffLen=idx;
+    if (lcdBusy){
+        PIE9bits.TMR6IE = 1;
+    } else {
+        lcdBusy = 1;
+        TMR6_Start();
+    }
 }
 
 _Bool PrintStrBusy(void){
-    return (I2C2_BUSY == I2C2_Close());
+    return lcdBusy;
 }
 
 void printstrblock(const char c[]){
+    while(PrintStrBusy());
     printstr(c);
     while(PrintStrBusy());
 }
@@ -28027,73 +28493,81 @@ void printstrblock(const char c[]){
 
 
 __attribute__((inline)) void command(uint8_t value) {
- send(value, 0);
+ send(value, 0x4);
 }
-# 141 "LiquidCrystal_I2C.c"
-void LcdI2CInit(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows){
-  _Addr = lcd_Addr;
-  _cols = lcd_cols;
-  _rows = lcd_rows;
-  _backlightval = 0x00;
-  _numlines = 2;
+# 159 "LiquidCrystal_I2C.c"
+void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) {
+    _Addr = lcd_Addr;
+    _cols = lcd_cols;
+    _rows = lcd_rows;
+    _backlightval = 0x08;
+    _numlines = 2;
 
-  _displayfunction = 0x00 | 0x08 | 0x00;
+    _displayfunction = 0x00 | 0x08 | 0x00;
 
-
-
-
- timeDelayMs(50);
-
-
- expanderWrite(_backlightval);
- timeDelayMs(10);
+    parBuffPtr = 0;
+    parBuffLen = 0;
+    lcdBusy = 0;
+    TMR6_SetInterruptHandler(lcdIrqHandler);
 
 
 
 
+    timeDelayMs(50);
 
 
-   write4bits(0x03 << 4);
-   timeDelayMs(5);
+    expanderWriteBlock(_backlightval);
+    timeDelayMs(20);
 
 
-   write4bits(0x03 << 4);
-   timeDelayMs(5);
+    send4bits(0x03 << 4, 0x4);
+    while (lcdBusy);
+    timeDelayMs(20);
+    send4bits(0x03 << 4, 0x4);
+    while (lcdBusy);
+    timeDelayMs(20);
+    send4bits(0x03 << 4, 0x4);
+    while (lcdBusy);
+    timeDelayMs(20);
 
 
-   write4bits(0x03 << 4);
+    send4bits(0x02 << 4, 0x4);
+    while (lcdBusy);
+    timeDelayMs(20);
 
 
-   write4bits(0x02 << 4);
+    command(0x20 | _displayfunction);
+    while (lcdBusy);
+    timeDelayMs(20);
 
 
- command(0x20 | _displayfunction);
+    _displaycontrol = 0x04 | 0x00 | 0x00;
+    display();
+    while (lcdBusy);
 
 
- _displaycontrol = 0x04 | 0x00 | 0x00;
- display();
+    clear();
+    while (lcdBusy);
 
 
- clear();
+    _displaymode = 0x02 | 0x00;
 
 
- _displaymode = 0x02 | 0x00;
+    command(0x04 | _displaymode);
+    while (lcdBusy);
 
-
- command(0x04 | _displaymode);
-
- home();
-
+    home();
+    while (lcdBusy);
 }
 
 void clear(){
  command(0x01);
- timeDelayMs(2);
+ timeDelayMs(10);
 }
 
 void home(){
  command(0x02);
- timeDelayMs(2);
+ timeDelayMs(10);
 }
 
 void setCursor(uint8_t col, uint8_t row){
@@ -28179,12 +28653,12 @@ void createChar(uint8_t location, uint8_t charmap[]) {
 
 void noBacklight(void) {
  _backlightval=0x00;
- expanderWrite(0);
+ expanderWriteBlock(0);
 }
 
 void backlight(void) {
  _backlightval=0x08;
- expanderWrite(0);
+ expanderWriteBlock(0);
 }
 
 void load_custom_character(uint8_t char_num, uint8_t *rows){

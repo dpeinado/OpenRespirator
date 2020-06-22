@@ -1,3 +1,21 @@
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//  
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+// MA  02110-1301, USA.
+//
+//  Copyright © 2020 Carlos Pardo
+//  This file is part of project: OpenRespirator
+//
 /**
   Generated Main Source File
 
@@ -13,7 +31,7 @@
   Description:
     This header file provides implementations for driver APIs for all modules selected in the GUI.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.00
 */
@@ -49,7 +67,7 @@
 #include "buttons.h"
 #include "alarm.h"
 #include "buzzer.h"
-#include "tick.h"
+#include "controller.h"
 
 /*
                          Main application
@@ -58,42 +76,58 @@ void main(void)
 {
     // Initialize the device
     SYSTEM_Initialize();
-    PWM6CON = 0x00;
+    SetSV1(false);
+    SetAlarmSV1(true);  
+    PWM6CON = 0x00;        // Disable BUZZER
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
     // Use the following macros to:
 
+
+    
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
 
     // Disable the Global Interrupts
     //INTERRUPT_GlobalInterruptDisable();
 
-    printf ("\033c Hello world!!!\r\n New version \r\n");
-    
+    printf ("\033c Oxyvita\r\n");
+    LCDOn();
     InitDisplay();
+    
     AlarmInit();
-    InitializePressure();
-    //tick_init();
+    MonitorInit();
+    ControllerInit();   
     ButtonInit();
     
-    SetSV1(true); // Open air input to the system
+    //SetSV1(true); // Open air input to the system
     
     // Interrupt driven tasks:
-    //  + ADC acquisition using TIMER 0
-    //  + I2C reception
+    //  + ADC acquisition 
+    //  + System monitoring with TIMER 0 2 ms
+    //  + I2C master
+    //  + I2C slave
+    //  + Buttons sampling with TIMER 1 20 ms
     //  + Buzzer alarm generation TIMER 2 for tone; TIMER 4 for sequences
-    //  + Display message generation TIMER 5
+    //  + Display message generation TIMER 5 1s
+    //  + Monitor Controller accesses 150 ms TIMER 6
+    
+    // Check Buzzer
+    BuzzerCheck();
     
     while (1)
     {
         // Add your application code
-//        InputTargetsTask();             // Update targets from Controller via I2C
 
         DisplayTask();
         AlarmCheckTask();
         
+        if (PCON0&0xC0) printf("\r\nStack:%02X\r\n");
+        static uint32_t cnt = 0;
+        if (cnt==0) printf("m\r\n");
+        cnt = (cnt+1)%300000;
+
         if (UART1_is_rx_ready())
         {
             char ch = getch();
@@ -104,9 +138,10 @@ void main(void)
             if (ch=='e') BuzzerTest('E');
             if (ch=='f') BuzzerTest('F');
             if (ch=='o') BuzzerTest('O');
+            if (ch=='t') BuzzerCheck();
             if (ch=='h') HistAlarm();
             if (ch=='m') MuteAlarm();
-            if (ch=='i') I2CSend(1,1,1,0xF0);
+            if (ch=='i') DumpI2C();
             if (ch=='v') SetSV1(false);
             if (ch=='V') SetSV1(true);
             if (ch=='0') TestAlarm(0);
@@ -119,11 +154,19 @@ void main(void)
             if (ch=='7') TestAlarm(7);
             if (ch=='8') TestAlarm(8);
             if (ch=='9') TestAlarm(9);
+            if (ch=='G') SetSV1(true);
+            if (ch=='g') SetSV1(false);
+            if (ch=='R') MonitorEnable();
+            if (ch=='r') MonitorDisable();
+            if (ch=='d') DisableAlarmSV1();
+            if (ch=='D') EnableAlarmSV1();
 
-            if (ch=='l') printf("\r\nADC: %d %03X %lu %lu\r\n", ADCC_GetConversionResult(), ADCC_GetConversionResult(), tick_get(), tick_get_slow());
+            if (ch=='l') printf("\r\nPRS: %d pa PRSV: %d pa 12V: %d mV 5V:%d \r\n", SeePressure_pa(), SeePressureV_pa(), See12V(), See5V());
             if (ch=='p') MonitorDump();
             if (ch=='z') SetCalibrateState(false);
             if (ch=='Z') SetCalibrateState(true);
+            if (ch=='o') LCDOff();
+            if (ch=='O') LCDOn();
             if (ch) {
                 //putch(ch);
                 //putch('\n');

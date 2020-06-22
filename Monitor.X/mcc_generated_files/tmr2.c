@@ -13,12 +13,12 @@
   @Description
     This source file provides APIs for TMR2.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.11
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above 
-        MPLAB 	          :  MPLAB X 5.30
+        MPLAB 	          :  MPLAB X 5.35
 */
 
 /*
@@ -72,8 +72,8 @@ void TMR2_Initialize(void)
     // T2RSEL T2CKIPPS pin; 
     T2RST = 0x00;
 
-    // PR2 178; 
-    T2PR = 0xB2;
+    // PR2 249; 
+    T2PR = 0xF9;
 
     // TMR2 0; 
     T2TMR = 0x00;
@@ -81,8 +81,8 @@ void TMR2_Initialize(void)
     // Clearing IF flag.
     PIR4bits.TMR2IF = 0;
 
-    // T2CKPS 1:64; T2OUTPS 1:1; TMR2ON on; 
-    T2CON = 0xE0;
+    // T2CKPS 1:128; T2OUTPS 1:1; TMR2ON on; 
+    T2CON = 0xF0;
 }
 
 void TMR2_ModeSet(TMR2_HLT_MODE mode)

@@ -1,6 +1,6 @@
 /* 
  * File:   aCapture.h
- * Author: David
+ * Author: David Ortiz
  *
  * Created on April 4, 2020, 12:19 PM
  */
@@ -16,11 +16,11 @@ extern "C" {
 #define ATOT_N 7
     
 #define MPRESSURE_MBAR(x) ((int16_t) ((0.045*4096+2)/5)*x)
-#define APRESSURE_MBAR(x) ((int16_t) ((0.100*4096+2)/5)*x)
+#define VPRESSURE_MBAR(x) ((int16_t) ((0.100*4096+2)/5)*x)
     
 typedef enum{
     MainPSensor=0,
-    AuxPSensor=1,
+    VolPSensor=1,
     VddSensor=2,
     Flt0PSensor=3,
     Flt1PSensor=4,
@@ -30,7 +30,9 @@ typedef enum{
 
 void aCaptureInit(void);
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal);
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal);
+
+int16_t aCaptureOffGet(aSrcTyp sel);
 
 bool aCaptGetResult(aSrcTyp sel, int16_t *outVal);
 

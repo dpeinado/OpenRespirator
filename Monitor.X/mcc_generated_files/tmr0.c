@@ -13,12 +13,12 @@
   @Description
     This source file provides APIs for TMR0.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  3.10
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above
-        MPLAB 	          :  MPLAB X 5.30
+        MPLAB 	          :  MPLAB X 5.35
 */
 
 /*
@@ -51,11 +51,6 @@
 #include <xc.h>
 #include "tmr0.h"
 
-/**
-  Section: Global Variables Definitions
-*/
-
-volatile uint16_t timer0ReloadVal16bit;
 
 /**
   Section: TMR0 APIs
@@ -67,17 +62,14 @@ void TMR0_Initialize(void)
 {
     // Set TMR0 to the options selected in the User Interface
 
-    // T0CS FOSC/4; T0CKPS 1:4; T0ASYNC synchronised; 
-    T0CON1 = 0x42;
+    // T0CS HFINTOSC; T0CKPS 1:32; T0ASYNC synchronised; 
+    T0CON1 = 0x65;
 
-    // TMR0H 248; 
-    TMR0H = 0xF8;
+    // TMR0H 249; 
+    TMR0H = 0xF9;
 
-    // TMR0L 48; 
-    TMR0L = 0x30;
-
-    // Load TMR0 value to the 16-bit reload variable
-    timer0ReloadVal16bit = (TMR0H << 8) | TMR0L;
+    // TMR0L 0; 
+    TMR0L = 0x00;
 
     // Clear Interrupt flag before enabling the interrupt
     PIR3bits.TMR0IF = 0;
@@ -88,8 +80,8 @@ void TMR0_Initialize(void)
     // Set Default Interrupt Handler
     TMR0_SetInterruptHandler(TMR0_DefaultInterruptHandler);
 
-    // T0OUTPS 1:1; T0EN enabled; T016BIT 16-bit; 
-    T0CON0 = 0x90;
+    // T0OUTPS 1:16; T0EN enabled; T016BIT 8-bit; 
+    T0CON0 = 0x8F;
 }
 
 void TMR0_StartTimer(void)
@@ -104,41 +96,32 @@ void TMR0_StopTimer(void)
     T0CON0bits.T0EN = 0;
 }
 
-uint16_t TMR0_ReadTimer(void)
+uint8_t TMR0_ReadTimer(void)
 {
-    uint16_t readVal;
-    uint8_t readValLow;
-    uint8_t readValHigh;
+    uint8_t readVal;
 
-    readValLow  = TMR0L;
-    readValHigh = TMR0H;
-    readVal  = ((uint16_t)readValHigh << 8) + readValLow;
+    // read Timer0, low register only
+    readVal = TMR0L;
 
     return readVal;
 }
 
-void TMR0_WriteTimer(uint16_t timerVal)
+void TMR0_WriteTimer(uint8_t timerVal)
 {
-    // Write to the Timer0 register
-    TMR0H = timerVal >> 8;
-    TMR0L = (uint8_t) timerVal;
-}
+    // Write to Timer0 registers, low register only
+    TMR0L = timerVal;
+ }
 
-void TMR0_Reload(void)
+void TMR0_Reload(uint8_t periodVal)
 {
-    // Write to the Timer0 register
-    TMR0H = timer0ReloadVal16bit >> 8;
-    TMR0L = (uint8_t) timer0ReloadVal16bit;
+   // Write to Timer0 registers, high register only
+   TMR0H = periodVal;
 }
 
 void TMR0_ISR(void)
 {
     // clear the TMR0 interrupt flag
     PIR3bits.TMR0IF = 0;
-    // Write to the Timer0 register
-    TMR0H = timer0ReloadVal16bit >> 8;
-    TMR0L = (uint8_t) timer0ReloadVal16bit;
-
     if(TMR0_InterruptHandler)
     {
         TMR0_InterruptHandler();

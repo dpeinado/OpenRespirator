@@ -13,12 +13,12 @@
   @Description
     This header file provides implementations for driver APIs for I2C2.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  1.0.0
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above or later
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -46,8 +46,9 @@
 
 #include "i2c2_slave.h"
 #include <xc.h>
+#include <stdio.h>
 
-#define I2C2_SLAVE_ADDRESS      8
+#define I2C2_SLAVE_ADDRESS      0x50 // 0x27 // 80
 #define I2C2_SLAVE_MASK         0
 
 /**
@@ -64,12 +65,14 @@ static void I2C2_Isr(void);
 static void I2C2_SlaveDefRdInterruptHandler(void);
 static void I2C2_SlaveDefWrInterruptHandler(void);
 static void I2C2_SlaveDefAddrInterruptHandler(void);
+static void I2C2_SlaveDefStopInterruptHandler(void);
 static void I2C2_SlaveDefWrColInterruptHandler(void);
 static void I2C2_SlaveDefBusColInterruptHandler(void);
 
 static void I2C2_SlaveRdCallBack(void);
 static void I2C2_SlaveWrCallBack(void);
 static void I2C2_SlaveAddrCallBack(void);
+static void I2C2_SlaveStopCallBack(void);
 static void I2C2_SlaveWrColCallBack(void);
 static void I2C2_SlaveBusColCallBack(void);
 
@@ -78,13 +81,16 @@ static inline void I2C2_SlaveClose();
 static inline void I2C2_SlaveSetSlaveAddr(uint8_t slaveAddr);
 static inline void I2C2_SlaveSetSlaveMask(uint8_t maskAddr);
 static inline void I2C2_SlaveEnableIrq(void);
+static inline void I2C2_SlaveDisableIrq(void);
 static inline bool I2C2_SlaveIsAddr(void);
+static inline bool I2C2_SlaveIsMyAddr(void);
 static inline bool I2C2_SlaveIsRead(void);
 static inline void I2C2_SlaveClearAddrFlag(void);
 static inline void I2C2_SlaveClearStartFlag(void);
 static inline bool I2C2_SlaveIsStop(void);
 static inline void I2C2_SlaveClearBuff(void);
 static inline void I2C2_SlaveClearIrq(void);
+static inline void I2C2_SlaveClearStopFlag(void);
 static inline void I2C2_SlaveSetCounter(uint8_t counter);
 static inline void I2C2_SlaveReleaseClock(void);
 static inline bool I2C2_SlaveIsWriteCollision(void);
@@ -104,6 +110,8 @@ volatile uint8_t i2c2WrData;
 volatile uint8_t i2c2RdData;
 volatile uint8_t i2c2SlaveAddr;
 
+static bool I2C2_on;
+
 void I2C2_Initialize()
 {
     //EN disabled; RSEN disabled; S Cleared by hardware after Start; CSTR Enable clocking; MODE four 7-bit address; 
@@ -111,16 +119,18 @@ void I2C2_Initialize()
     //ACKCNT Acknowledge; ACKDT Acknowledge; ACKSTAT ACK received; ACKT 0; RXO 0; TXU 0; CSD Clock Stretching enabled; 
     I2C2CON1 = 0x00;
     //ACNT disabled; GCEN enabled; FME disabled; ABD enabled; SDAHT 300 ns hold time; BFRET 8 I2C Clock pulses; 
-    I2C2CON2 = 0x40;
+    I2C2CON2 = 0x00;
     //CNT 0; 
     I2C2CNT = 0xFF;
-    I2C2_Open();
+    //I2C2_Open();
 }
 
 void I2C2_Open() 
 {
+    I2C2_on = true;
     I2C2_SlaveOpen();
     I2C2_SlaveSetSlaveAddr(I2C2_SLAVE_ADDRESS << 1);
+    //printf("I2C Open %02X\r\n", I2C2ADR0);
     I2C2_SlaveSetSlaveMask(I2C2_SLAVE_MASK);
     I2C2_SlaveSetIsrHandler(I2C2_Isr);
     I2C2_SlaveSetBusColIntHandler(I2C2_SlaveDefBusColInterruptHandler);
@@ -148,7 +158,12 @@ void I2C2_Write(uint8_t data)
 
 void I2C2_Enable()
 {
-    I2C2_Initialize();
+    I2C2_on = true;
+}
+
+void I2C2_Disable()
+{
+    I2C2_on = false;
 }
 
 void I2C2_SendAck()
@@ -163,68 +178,53 @@ void I2C2_SendNack()
 
 static void I2C2_Isr() 
 { 
-    
-    if (I2C2_SlaveIsAddr()) 
-    {
-        if(I2C2_SlaveIsRead())
-        {
-            i2c2State = I2C2_TX;
-        }
-        else
-        {
-            i2c2State = I2C2_RX;
-        }
-        I2C2_SlaveClearAddrFlag();
-        I2C2_SlaveClearStartFlag();
-    }
-    else if(I2C2_SlaveIsStop())
-    {
-        I2C2_SlaveClearBuff();
-        I2C2_SlaveClearIrq();
-        I2C2_SlaveSetCounter(0xFF);
+    if (!I2C2_on) {
         I2C2_SlaveReleaseClock();
-        i2c2State = I2C2_ADDR;
+        I2C2_SlaveClearStopFlag();
         return;
     }
-
-    if(I2C2_SlaveIsNack())
-    {
-        I2C2_SlaveClearNack();
-        I2C2_SlaveClearBuff();
-        return;
-    } 
     
-    switch(i2c2State)
+    if(I2C2_SlaveIsRxBufFull())
+    { 
+        I2C2_SlaveRdCallBack();
+        I2C2_SlaveReleaseClock();
+        return;
+    }
+    
+    //printf("\r\n^");
+    if(PIE6bits.I2C2EIE == 1 && PIR6bits.I2C2EIF == 1)
     {
-        case I2C2_TX:
-            if(!I2C2_SlaveIsWriteCollision())
-            {    
-                if(I2C2_SlaveIsTxBufEmpty())
-                {    
-                    I2C2_SlaveWrCallBack();
-                }    
-            }
-            else
-            {   
-                I2C2_SlaveWrColCallBack();
-            }
-            break;
-           
-        case I2C2_RX:
-            if (I2C2_SlaveIsData()) 
-            {
-                if(I2C2_SlaveIsRxBufFull())
-                { 
-                    I2C2_SlaveRdCallBack();
-                }    
-            }
-            break;
-        default:          
-            break;
+        //printf("E");
+    }
+    if(PIE5bits.I2C2RXIE == 1 && PIR5bits.I2C2RXIF == 1)
+    {
+        //printf("R");
+        if(I2C2_SlaveIsRxBufFull())
+        { 
+            I2C2_SlaveRdCallBack();
+        }    
+    }
+    if(PIE5bits.I2C2TXIE == 1 && PIR5bits.I2C2TXIF == 1)
+    {
+        //printf("T");
+    }
+    if(PIE6bits.I2C2IE == 1 && PIR6bits.I2C2IF == 1)
+    {
+        //printf("I");     
+        if (I2C2PIR&0x4) {
+            //printf("S\r\n");
+            I2C2_SlaveClearStopFlag();         
+            I2C2_SlaveClearBuff();
+            I2C2_SlaveReleaseClock();
+            I2C2_SlaveSetCounter(0xFF);
+            I2C2_SlaveStopCallBack();
+            return;
+        }
     }
     I2C2_SlaveReleaseClock();
+    
 }
-
+        
 // Common Event Interrupt Handlers
 void I2C2_SlaveSetIsrHandler(interruptHandler handler)
 {
@@ -265,6 +265,22 @@ static void I2C2_SlaveDefWrInterruptHandler() {
     I2C2_SlaveSendTxData(i2c2WrData);
 }
 
+// Stop Event Interrupt Handlers
+void I2C2_SlaveSetStopIntHandler(interruptHandler handler) {
+    I2C2_SlaveStopInterruptHandler = handler;
+}
+
+static void I2C2_SlaveStopCallBack() {
+    // Add your custom callback code here
+    if (I2C2_SlaveStopInterruptHandler) 
+    {
+        I2C2_SlaveStopInterruptHandler();
+    }
+}
+
+static void I2C2_SlaveDefStopInterruptHandler() {
+
+}
 // ADDRESS Event Interrupt Handlers
 void I2C2_SlaveSetAddrIntHandler(interruptHandler handler){
     I2C2_SlaveAddrInterruptHandler = handler;
@@ -343,14 +359,20 @@ static inline void I2C2_SlaveSetSlaveMask(uint8_t maskAddr)
 static inline void I2C2_SlaveEnableIrq()
 {
     PIE6bits.I2C2IE    = 1;
-    PIE6bits.I2C2EIE   = 1;
+    PIE6bits.I2C2EIE   = 0;
     PIE5bits.I2C2RXIE  = 1;
     PIE5bits.I2C2TXIE  = 1;
     I2C2PIEbits.PCIE = 1; 
-    I2C2PIEbits.ADRIE = 1; 
-    I2C2ERRbits.NACKIE = 1; 
+    I2C2PIEbits.ADRIE = 0; 
+    I2C2ERRbits.NACKIE = 0; 
+    
+    I2C2PIEbits.WRIE = 0; 
 
+}
 
+static inline bool I2C2_SlaveIsMyAddr()
+{
+    return I2C2STAT0bits.SMA;
 }
 
 static inline bool I2C2_SlaveIsAddr()
@@ -371,6 +393,11 @@ static inline void I2C2_SlaveClearAddrFlag()
 static inline void I2C2_SlaveClearStartFlag()
 {
     I2C2PIRbits.SCIF = 0; 
+}
+
+static inline void I2C2_SlaveClearStopFlag()
+{
+    I2C2PIRbits.PCIF = 0; 
 }
 
 static inline bool I2C2_SlaveIsStop()

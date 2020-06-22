@@ -8,12 +8,10 @@
                      displayName="MCC Generated Files"
                      projectFiles="true">
         <logicalFolder name="examples" displayName="examples" projectFiles="true">
-          <itemPath>mcc_generated_files/examples/i2c1_master_example.h</itemPath>
           <itemPath>mcc_generated_files/examples/i2c2_master_example.h</itemPath>
         </logicalFolder>
         <itemPath>mcc_generated_files/interrupt_manager.h</itemPath>
         <itemPath>mcc_generated_files/pin_manager.h</itemPath>
-        <itemPath>mcc_generated_files/i2c1_master.h</itemPath>
         <itemPath>mcc_generated_files/uart1.h</itemPath>
         <itemPath>mcc_generated_files/adcc.h</itemPath>
         <itemPath>mcc_generated_files/device_config.h</itemPath>
@@ -23,12 +21,19 @@
         <itemPath>mcc_generated_files/tmr0.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
         <itemPath>mcc_generated_files/i2c2_master.h</itemPath>
+        <itemPath>mcc_generated_files/tmr4.h</itemPath>
+        <itemPath>mcc_generated_files/tmr6.h</itemPath>
       </logicalFolder>
       <itemPath>aCapture.h</itemPath>
       <itemPath>ORespGlobal.h</itemPath>
       <itemPath>time.h</itemPath>
       <itemPath>keyRead.h</itemPath>
       <itemPath>LiquidCrystal_I2C.h</itemPath>
+      <itemPath>menu.h</itemPath>
+      <itemPath>i2c2_mux.h</itemPath>
+      <itemPath>vMeasure.h</itemPath>
+      <itemPath>selftest.h</itemPath>
+      <itemPath>monComm.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -41,11 +46,9 @@
                      displayName="MCC Generated Files"
                      projectFiles="true">
         <logicalFolder name="examples" displayName="examples" projectFiles="true">
-          <itemPath>mcc_generated_files/examples/i2c1_master_example.c</itemPath>
           <itemPath>mcc_generated_files/examples/i2c2_master_example.c</itemPath>
         </logicalFolder>
         <itemPath>mcc_generated_files/adcc.c</itemPath>
-        <itemPath>mcc_generated_files/i2c1_master.c</itemPath>
         <itemPath>mcc_generated_files/device_config.c</itemPath>
         <itemPath>mcc_generated_files/interrupt_manager.c</itemPath>
         <itemPath>mcc_generated_files/uart1.c</itemPath>
@@ -56,12 +59,19 @@
         <itemPath>mcc_generated_files/tmr0.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
         <itemPath>mcc_generated_files/i2c2_master.c</itemPath>
+        <itemPath>mcc_generated_files/tmr4.c</itemPath>
+        <itemPath>mcc_generated_files/tmr6.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>aCapture.c</itemPath>
       <itemPath>time.c</itemPath>
       <itemPath>keyRead.c</itemPath>
       <itemPath>LiquidCrystal_I2C.c</itemPath>
+      <itemPath>menu.c</itemPath>
+      <itemPath>i2c2_mux.c</itemPath>
+      <itemPath>vMeasure.c</itemPath>
+      <itemPath>selftest.c</itemPath>
+      <itemPath>monComm.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -71,8 +81,8 @@
     </logicalFolder>
     <itemPath>cmath.c</itemPath>
     <itemPath>cmath.h</itemPath>
-    <itemPath>vMeasure.h</itemPath>
-    <itemPath>vMeasure.c</itemPath>
+    <itemPath>brate.c</itemPath>
+    <itemPath>brate.h</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>../Lib</Elem>
@@ -86,7 +96,7 @@
         <targetDevice>PIC18F46K42</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.10</languageToolchainVersion>
         <platform>3</platform>
@@ -198,6 +208,48 @@
         <property key="program-the-device-with-default-config-words" value="true"/>
         <property key="remove-unused-sections" value="true"/>
       </HI-TECH-LINK>
+      <PICkit3PlatformTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="Freeze Peripherals" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-ffff"/>
+        <property key="poweroptions.powerenable" value="true"/>
+        <property key="programmertogo.imagename" value=""/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.pgmspeed" value="2"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${programoptions.preservedataflash.ranges}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value="310000-3103ff"/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="programoptions.usehighvoltageonmclr" value="true"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="voltagevalue" value="4.5"/>
+      </PICkit3PlatformTool>
       <PKOBSKDEPlatformTool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>

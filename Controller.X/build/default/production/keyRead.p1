@@ -1,10 +1,12 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [v F16458 `(v ~T0 @X0 0 tf ]
-[v F16536 `(v ~T0 @X0 0 tf ]
-[v F16725 `(v ~T0 @X0 0 tf ]
+[v F16801 `(v ~T0 @X0 0 tf ]
 "46747 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 46747: extern volatile unsigned char PORTD __attribute__((address(0x3FCD)));
 [v _PORTD `Vuc ~T0 @X0 0 e@16333 ]
+"46661
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 46661: extern volatile unsigned char PORTC __attribute__((address(0x3FCC)));
+[v _PORTC `Vuc ~T0 @X0 0 e@16332 ]
 "25 ./time.h
 [; ;./time.h: 25: time_t timeGet(void);
 [v _timeGet `(us ~T0 @X0 0 ef ]
@@ -2243,19 +2245,16 @@ Version 4.0 HI-TECH Software Intermediate Code
 "48384
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 48384: __asm("TOSU equ 03FFFh");
 [; <" TOSU equ 03FFFh ;# ">
-"213 ./mcc_generated_files/i2c1_master.h
-[; ;./mcc_generated_files/i2c1_master.h: 213: void (*I2C1_InterruptHandler)(void);
-[v _I2C1_InterruptHandler `*F16458 ~T0 @X0 1 e ]
 "213 ./mcc_generated_files/i2c2_master.h
 [; ;./mcc_generated_files/i2c2_master.h: 213: void (*I2C2_InterruptHandler)(void);
-[v _I2C2_InterruptHandler `*F16536 ~T0 @X0 1 e ]
+[v _I2C2_InterruptHandler `*F16458 ~T0 @X0 1 e ]
 "477 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
-[v _UART1_TxInterruptHandler `*F16725 ~T0 @X0 1 e ]
-"15 keyRead.c
-[; ;keyRead.c: 15: int8_t keys[6] = {1,2,3,4,5,7};
-[v _keys `c ~T0 @X0 -> 6 `i e ]
-[i _keys
+[v _UART1_TxInterruptHandler `*F16801 ~T0 @X0 1 e ]
+"17 keyRead.c
+[; ;keyRead.c: 17: int8_t keysD[6] = {1,2,3,4,5,7};
+[v _keysD `c ~T0 @X0 -> 6 `i e ]
+[i _keysD
 :U ..
 -> -> 1 `i `c
 -> -> 2 `i `c
@@ -2265,184 +2264,314 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 7 `i `c
 ..
 ]
-"16
-[; ;keyRead.c: 16: int8_t lastkey, lastkeyEC;
+"18
+[; ;keyRead.c: 18: int8_t keysC[5] = {4,5,6,7,2};
+[v _keysC `c ~T0 @X0 -> 5 `i e ]
+[i _keysC
+:U ..
+-> -> 4 `i `c
+-> -> 5 `i `c
+-> -> 6 `i `c
+-> -> 7 `i `c
+-> -> 2 `i `c
+..
+]
+"19
+[; ;keyRead.c: 19: int8_t lastkey, lastkeyEC, keyFilter;
 [v _lastkey `c ~T0 @X0 1 e ]
 [v _lastkeyEC `c ~T0 @X0 1 e ]
-"17
-[; ;keyRead.c: 17: time_t pressMills;
+[v _keyFilter `c ~T0 @X0 1 e ]
+"20
+[; ;keyRead.c: 20: time_t pressMills;
 [v _pressMills `us ~T0 @X0 1 e ]
-"19
-[; ;keyRead.c: 19: uint8_t digitalRead(uint8_t pin){
-[v _digitalRead `(uc ~T0 @X0 1 ef1`uc ]
+"22
+[; ;keyRead.c: 22: uint8_t digitalReadD(uint8_t pin){
+[v _digitalReadD `(uc ~T0 @X0 1 ef1`uc ]
 {
-[e :U _digitalRead ]
+[e :U _digitalReadD ]
 [v _pin `uc ~T0 @X0 1 r1 ]
 [f ]
-"20
-[; ;keyRead.c: 20:     return (PORTD&(1<<pin))!= 0;
+"23
+[; ;keyRead.c: 23:     return (PORTD&(1<<pin))!= 0;
 [e ) -> -> != & -> _PORTD `i << -> 1 `i -> _pin `i -> 0 `i `i `uc ]
 [e $UE 2233  ]
-"21
-[; ;keyRead.c: 21: }
+"24
+[; ;keyRead.c: 24: }
 [e :UE 2233 ]
 }
-"23
-[; ;keyRead.c: 23: void keyReadInit(void){
+"25
+[; ;keyRead.c: 25: uint8_t digitalReadC(uint8_t pin){
+[v _digitalReadC `(uc ~T0 @X0 1 ef1`uc ]
+{
+[e :U _digitalReadC ]
+[v _pin `uc ~T0 @X0 1 r1 ]
+[f ]
+"26
+[; ;keyRead.c: 26:     return (PORTC&(1<<pin))!= 0;
+[e ) -> -> != & -> _PORTC `i << -> 1 `i -> _pin `i -> 0 `i `i `uc ]
+[e $UE 2234  ]
+"27
+[; ;keyRead.c: 27: }
+[e :UE 2234 ]
+}
+"29
+[; ;keyRead.c: 29: void keyReadInit(void){
 [v _keyReadInit `(v ~T0 @X0 1 ef ]
 {
 [e :U _keyReadInit ]
 [f ]
-"24
-[; ;keyRead.c: 24:     pressMills = 0;
-[e = _pressMills -> -> 0 `i `us ]
-"25
-[; ;keyRead.c: 25:     lastkey = -1;
-[e = _lastkey -> -U -> 1 `i `c ]
-"26
-[; ;keyRead.c: 26:     lastkeyEC = -1;
-[e = _lastkeyEC -> -U -> 1 `i `c ]
-"28
-[; ;keyRead.c: 28: };
-[e :UE 2234 ]
-}
 "30
-[; ;keyRead.c: 30: int8_t keyPeek(void) {
+[; ;keyRead.c: 30:     pressMills = 0;
+[e = _pressMills -> -> 0 `i `us ]
+"31
+[; ;keyRead.c: 31:     lastkey = -1;
+[e = _lastkey -> -U -> 1 `i `c ]
+"32
+[; ;keyRead.c: 32:     lastkeyEC = -1;
+[e = _lastkeyEC -> -U -> 1 `i `c ]
+"33
+[; ;keyRead.c: 33:     keyFilter = -1;
+[e = _keyFilter -> -U -> 1 `i `c ]
+"35
+[; ;keyRead.c: 35: };
+[e :UE 2235 ]
+}
+"37
+[; ;keyRead.c: 37: int8_t keyPeek(void) {
 [v _keyPeek `(c ~T0 @X0 1 ef ]
 {
 [e :U _keyPeek ]
 [f ]
-"31
-[; ;keyRead.c: 31:     for (int8_t n = 0; n < 6; n++) {
+"38
+[; ;keyRead.c: 38:     for (int8_t n = 0; n < 6; n++) {
 {
 [v _n `c ~T0 @X0 1 a ]
 [e = _n -> -> 0 `i `c ]
-[e $ < -> _n `i -> 6 `i 2236  ]
-[e $U 2237  ]
-[e :U 2236 ]
+[e $ < -> _n `i -> 6 `i 2237  ]
+[e $U 2238  ]
+[e :U 2237 ]
 {
-"32
-[; ;keyRead.c: 32:         if (digitalRead(keys[n]) != 1) {
-[e $ ! != -> ( _digitalRead (1 -> *U + &U _keys * -> -> _n `uc `ux -> -> # *U &U _keys `ui `ux `uc `i -> 1 `i 2239  ]
+"39
+[; ;keyRead.c: 39:         if (digitalReadD(keysD[n]) != 1) {
+[e $ ! != -> ( _digitalReadD (1 -> *U + &U _keysD * -> -> _n `uc `ux -> -> # *U &U _keysD `ui `ux `uc `i -> 1 `i 2240  ]
 {
-"33
-[; ;keyRead.c: 33:             return n;
+"40
+[; ;keyRead.c: 40:             return n;
 [e ) _n ]
-[e $UE 2235  ]
-"34
-[; ;keyRead.c: 34:         }
+[e $UE 2236  ]
+"41
+[; ;keyRead.c: 41:         }
 }
-[e :U 2239 ]
-"35
-[; ;keyRead.c: 35:     }
+[e :U 2240 ]
+"42
+[; ;keyRead.c: 42:     }
 }
 [e ++ _n -> -> 1 `i `c ]
-[e $ < -> _n `i -> 6 `i 2236  ]
-[e :U 2237 ]
+[e $ < -> _n `i -> 6 `i 2237  ]
+[e :U 2238 ]
 }
-"36
-[; ;keyRead.c: 36:     return -1;
+"43
+[; ;keyRead.c: 43:     for (int8_t n = 0; n < 5; n++) {
+{
+[v _n `c ~T0 @X0 1 a ]
+[e = _n -> -> 0 `i `c ]
+[e $ < -> _n `i -> 5 `i 2241  ]
+[e $U 2242  ]
+[e :U 2241 ]
+{
+"44
+[; ;keyRead.c: 44:         if (digitalReadC(keysC[n]) != 1) {
+[e $ ! != -> ( _digitalReadC (1 -> *U + &U _keysC * -> -> _n `uc `ux -> -> # *U &U _keysC `ui `ux `uc `i -> 1 `i 2244  ]
+{
+"45
+[; ;keyRead.c: 45:             return n+6;
+[e ) -> + -> _n `i -> 6 `i `c ]
+[e $UE 2236  ]
+"46
+[; ;keyRead.c: 46:         }
+}
+[e :U 2244 ]
+"47
+[; ;keyRead.c: 47:     }
+}
+[e ++ _n -> -> 1 `i `c ]
+[e $ < -> _n `i -> 5 `i 2241  ]
+[e :U 2242 ]
+}
+"48
+[; ;keyRead.c: 48:     return -1;
 [e ) -> -U -> 1 `i `c ]
-[e $UE 2235  ]
-"37
-[; ;keyRead.c: 37: }
-[e :UE 2235 ]
+[e $UE 2236  ]
+"49
+[; ;keyRead.c: 49: }
+[e :UE 2236 ]
 }
-"40
-[; ;keyRead.c: 40: int8_t keyReadEC() {
+"52
+[; ;keyRead.c: 52: int8_t keyReadEC() {
 [v _keyReadEC `(c ~T0 @X0 1 ef ]
 {
 [e :U _keyReadEC ]
 [f ]
-"41
-[; ;keyRead.c: 41:     int8_t ch = keyPeek();
+"53
+[; ;keyRead.c: 53:     int8_t ch = keyPeek();
 [v _ch `c ~T0 @X0 1 a ]
 [e = _ch ( _keyPeek ..  ]
-"42
-[; ;keyRead.c: 42:     if (lastkeyEC == -1) {
-[e $ ! == -> _lastkeyEC `i -U -> 1 `i 2241  ]
+"54
+[; ;keyRead.c: 54:     if (lastkeyEC == -1) {
+[e $ ! == -> _lastkeyEC `i -U -> 1 `i 2246  ]
 {
-"43
-[; ;keyRead.c: 43:         lastkeyEC = ch;
+"55
+[; ;keyRead.c: 55:         lastkeyEC = ch;
 [e = _lastkeyEC _ch ]
-"44
-[; ;keyRead.c: 44:         pressMills = timeGet();
+"56
+[; ;keyRead.c: 56:         pressMills = timeGet();
 [e = _pressMills ( _timeGet ..  ]
-"45
-[; ;keyRead.c: 45:     } else if ((ch != -1) && (ch == lastkeyEC)) {
+"57
+[; ;keyRead.c: 57:     } else if ((ch != -1) && (ch == lastkeyEC)) {
 }
-[e $U 2242  ]
-[e :U 2241 ]
-[e $ ! && != -> _ch `i -U -> 1 `i == -> _ch `i -> _lastkeyEC `i 2243  ]
+[e $U 2247  ]
+[e :U 2246 ]
+[e $ ! && != -> _ch `i -U -> 1 `i == -> _ch `i -> _lastkeyEC `i 2248  ]
 {
-"46
-[; ;keyRead.c: 46:         _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
+"58
+[; ;keyRead.c: 58:         _Bool longPress = 2000 && (timeDiff(pressMills,timeGet())>2000);
 [v _longPress `a ~T0 @X0 1 a ]
 [e = _longPress -> -> && != -> 2000 `i -> 0 `i > -> ( _timeDiff (2 , _pressMills ( _timeGet ..  `ui -> -> 2000 `i `ui `i `a ]
-"47
-[; ;keyRead.c: 47:         if (longPress) {
-[e $ ! != -> _longPress `i -> 0 `i 2244  ]
+"59
+[; ;keyRead.c: 59:         if (longPress) {
+[e $ ! != -> _longPress `i -> 0 `i 2249  ]
 {
-"48
-[; ;keyRead.c: 48:             return -100;
+"60
+[; ;keyRead.c: 60:             return -100;
 [e ) -> -U -> 100 `i `c ]
-[e $UE 2240  ]
-"49
-[; ;keyRead.c: 49:         }
+[e $UE 2245  ]
+"61
+[; ;keyRead.c: 61:         }
 }
-[e :U 2244 ]
-"50
-[; ;keyRead.c: 50:     } else if (ch == -1) {
+[e :U 2249 ]
+"62
+[; ;keyRead.c: 62:     } else if (ch == -1) {
 }
-[e $U 2245  ]
-[e :U 2243 ]
-[e $ ! == -> _ch `i -U -> 1 `i 2246  ]
+[e $U 2250  ]
+[e :U 2248 ]
+[e $ ! == -> _ch `i -U -> 1 `i 2251  ]
 {
-"51
-[; ;keyRead.c: 51:         lastkeyEC = -1;
+"63
+[; ;keyRead.c: 63:         lastkeyEC = -1;
 [e = _lastkeyEC -> -U -> 1 `i `c ]
-"52
-[; ;keyRead.c: 52:     }
+"64
+[; ;keyRead.c: 64:     }
 }
-[e :U 2246 ]
-[e :U 2245 ]
-[e :U 2242 ]
-"53
-[; ;keyRead.c: 53:     return -1;
+[e :U 2251 ]
+[e :U 2250 ]
+[e :U 2247 ]
+"65
+[; ;keyRead.c: 65:     return -1;
 [e ) -> -U -> 1 `i `c ]
-[e $UE 2240  ]
-"54
-[; ;keyRead.c: 54: }
-[e :UE 2240 ]
+[e $UE 2245  ]
+"66
+[; ;keyRead.c: 66: }
+[e :UE 2245 ]
 }
-"56
-[; ;keyRead.c: 56: int8_t keyRead() {
+"68
+[; ;keyRead.c: 68: int8_t keyRead() {
 [v _keyRead `(c ~T0 @X0 1 ef ]
 {
 [e :U _keyRead ]
 [f ]
-"57
-[; ;keyRead.c: 57:     int8_t ch = keyPeek();
+"69
+[; ;keyRead.c: 69:     int8_t ch = keyPeek();
 [v _ch `c ~T0 @X0 1 a ]
 [e = _ch ( _keyPeek ..  ]
-"58
-[; ;keyRead.c: 58:     if (ch == lastkey) return -1;
-[e $ ! == -> _ch `i -> _lastkey `i 2248  ]
+"70
+[; ;keyRead.c: 70:     if (ch == lastkey) return -1;
+[e $ ! == -> _ch `i -> _lastkey `i 2253  ]
 [e ) -> -U -> 1 `i `c ]
-[e $UE 2247  ]
-[e :U 2248 ]
-"59
-[; ;keyRead.c: 59:     int tmp = lastkey;
+[e $UE 2252  ]
+[e :U 2253 ]
+"71
+[; ;keyRead.c: 71:     int tmp = lastkey;
 [v _tmp `i ~T0 @X0 1 a ]
 [e = _tmp -> _lastkey `i ]
-"60
-[; ;keyRead.c: 60:     lastkey = ch;
+"72
+[; ;keyRead.c: 72:     lastkey = ch;
 [e = _lastkey _ch ]
-"61
-[; ;keyRead.c: 61:     return tmp;
+"73
+[; ;keyRead.c: 73:     if (tmp == keyFilter) {
+[e $ ! == _tmp -> _keyFilter `i 2254  ]
+{
+"74
+[; ;keyRead.c: 74:         keyFilter = -1;
+[e = _keyFilter -> -U -> 1 `i `c ]
+"75
+[; ;keyRead.c: 75:         return -1;
+[e ) -> -U -> 1 `i `c ]
+[e $UE 2252  ]
+"76
+[; ;keyRead.c: 76:     } else {
+}
+[e $U 2255  ]
+[e :U 2254 ]
+{
+"77
+[; ;keyRead.c: 77:         keyFilter = -1;
+[e = _keyFilter -> -U -> 1 `i `c ]
+"78
+[; ;keyRead.c: 78:         return tmp;
 [e ) -> _tmp `c ]
-[e $UE 2247  ]
-"62
-[; ;keyRead.c: 62: }
-[e :UE 2247 ]
+[e $UE 2252  ]
+"79
+[; ;keyRead.c: 79:     }
+}
+[e :U 2255 ]
+"80
+[; ;keyRead.c: 80: }
+[e :UE 2252 ]
+}
+"82
+[; ;keyRead.c: 82: void keyFlush(uint8_t keyIdx){
+[v _keyFlush `(v ~T0 @X0 1 ef1`uc ]
+{
+[e :U _keyFlush ]
+[v _keyIdx `uc ~T0 @X0 1 r1 ]
+[f ]
+"83
+[; ;keyRead.c: 83:     keyFilter=keyIdx;
+[e = _keyFilter -> _keyIdx `c ]
+"84
+[; ;keyRead.c: 84: }
+[e :UE 2256 ]
+}
+"86
+[; ;keyRead.c: 86: _Bool isKeyPressed(uint8_t keyIdx){
+[v _isKeyPressed `(a ~T0 @X0 1 ef1`uc ]
+{
+[e :U _isKeyPressed ]
+[v _keyIdx `uc ~T0 @X0 1 r1 ]
+[f ]
+"87
+[; ;keyRead.c: 87:     if (keyIdx<6){
+[e $ ! < -> _keyIdx `i -> 6 `i 2258  ]
+{
+"88
+[; ;keyRead.c: 88:         return (digitalReadD(keysD[keyIdx]) != 1);
+[e ) -> -> != -> ( _digitalReadD (1 -> *U + &U _keysD * -> _keyIdx `ux -> -> # *U &U _keysD `ui `ux `uc `i -> 1 `i `i `a ]
+[e $UE 2257  ]
+"89
+[; ;keyRead.c: 89:     } else {
+}
+[e $U 2259  ]
+[e :U 2258 ]
+{
+"90
+[; ;keyRead.c: 90:         return (digitalReadC(keysC[keyIdx-6]) != 1);
+[e ) -> -> != -> ( _digitalReadC (1 -> *U + &U _keysC * -> -> - -> _keyIdx `i -> 6 `i `ui `ux -> -> # *U &U _keysC `ui `ux `uc `i -> 1 `i `i `a ]
+[e $UE 2257  ]
+"91
+[; ;keyRead.c: 91:     }
+}
+[e :U 2259 ]
+"92
+[; ;keyRead.c: 92: }
+[e :UE 2257 ]
 }

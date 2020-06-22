@@ -13,12 +13,12 @@
   @Description
     This source file provides APIs for UART1.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.4.0
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -53,17 +53,17 @@
 /**
   Section: Macro Declarations
 */
-#define UART1_TX_BUFFER_SIZE 245
+#define UART1_TX_BUFFER_SIZE 1200
 #define UART1_RX_BUFFER_SIZE 8
 
 /**
   Section: Global Variables
 */
 
-static volatile uint8_t uart1TxHead = 0;
-static volatile uint8_t uart1TxTail = 0;
+static volatile uint16_t uart1TxHead = 0;
+static volatile uint16_t uart1TxTail = 0;
 static volatile uint8_t uart1TxBuffer[UART1_TX_BUFFER_SIZE];
-volatile uint8_t uart1TxBufferRemaining;
+volatile uint16_t uart1TxBufferRemaining;
 
 static volatile uint8_t uart1RxHead = 0;
 static volatile uint8_t uart1RxTail = 0;
@@ -120,8 +120,8 @@ void UART1_Initialize(void)
     // TXPOL not inverted; FLO off; C0EN Checksum Mode 0; RXPOL not inverted; RUNOVF RX input shifter stops all activity; STP Transmit 1Stop bit, receiver verifies first Stop bit; 
     U1CON2 = 0x00;
 
-    // BRGL 34; 
-    U1BRGL = 0x22;
+    // BRGL 138; 
+    U1BRGL = 0x8A;
 
     // BRGH 0; 
     U1BRGH = 0x00;

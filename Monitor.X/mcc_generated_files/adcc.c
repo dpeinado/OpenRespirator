@@ -13,12 +13,12 @@
   @Description
     This source file provides implementations for driver APIs for ADCC.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.1.4
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -54,6 +54,7 @@
 /**
   Section: ADCC Module Variables
 */
+void (*ADCC_ADI_InterruptHandler)(void);
 
 /**
   Section: ADCC Module APIs
@@ -90,23 +91,29 @@ void ADCC_Initialize(void)
     ADPREL = 0x00;
     // ADPRE 0; 
     ADPREH = 0x00;
-    // ADDSEN enabled; ADGPOL digital_low; ADIPEN disabled; ADPPOL Vss; 
-    ADCON1 = 0x01;
+    // ADDSEN disabled; ADGPOL digital_low; ADIPEN disabled; ADPPOL Vss; 
+    ADCON1 = 0x00;
     // ADCRS 0; ADMD Basic_mode; ADACLR disabled; ADPSIS RES; 
     ADCON2 = 0x00;
     // ADCALC First derivative of Single measurement; ADTMD disabled; ADSOI ADGO not cleared; 
     ADCON3 = 0x00;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+    // ADNREF VSS; ADPREF FVR; 
+    ADREF = 0x03;
     // ADACT disabled; 
     ADACT = 0x00;
-    // ADCS FOSC/16; 
-    ADCLK = 0x07;
-    // ADGO stop; ADFM right; ADON enabled; ADCS FOSC/ADCLK; ADCONT enabled; 
-    ADCON0 = 0xC4;
+    // ADCS FOSC/120; 
+    ADCLK = 0x3B;
+    // ADGO stop; ADFM right; ADON enabled; ADCS FOSC/ADCLK; ADCONT disabled; 
+    ADCON0 = 0x84;
     
+    // Clear the ADC interrupt flag
+    PIR1bits.ADIF = 0;
+    // Enabling ADCC interrupt.
+    PIE1bits.ADIE = 1;
+
+    ADCC_SetADIInterruptHandler(ADCC_DefaultInterruptHandler);
 
 }
 
@@ -122,7 +129,7 @@ void ADCC_StartConversion(adcc_channel_t channel)
     ADCON0bits.ADGO = 1;
 }
 
-bool ADCC_IsConversionDone()
+bool ADCC_IsConversionDone(void)
 {
     // Start the conversion
     return ((unsigned char)(!ADCON0bits.ADGO));
@@ -296,7 +303,23 @@ uint8_t ADCC_GetConversionStageStatus(void)
     return ADSTATbits.ADSTAT;
 }
 
+void ADCC_ISR(void)
+{
+    // Clear the ADCC interrupt flag
+    PIR1bits.ADIF = 0;
 
+    if (ADCC_ADI_InterruptHandler)
+            ADCC_ADI_InterruptHandler();
+}
+
+void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void)){
+    ADCC_ADI_InterruptHandler = InterruptHandler;
+}
+
+void ADCC_DefaultInterruptHandler(void){
+    // add your ADCC interrupt custom code
+    // or set custom function using ADCC_SetADIInterruptHandler() or ADCC_SetADTIInterruptHandler()
+}
 /**
  End of File
 */

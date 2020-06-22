@@ -13,12 +13,12 @@
   @Description
     This header file provides APIs for driver for ADCC.
     Generation Information :
-        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+        Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
         Device            :  PIC18F46K42
         Driver Version    :  2.1.4
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.10 and above
-        MPLAB             :  MPLAB X 5.30
+        MPLAB             :  MPLAB X 5.35
 */
 
 /*
@@ -88,9 +88,9 @@ typedef __uint24 uint24_t;
 
 typedef enum
 {
-    PRS =  0x0,
-    MIC =  0x3,
-    PRSV =  0x4,
+    PRSV =  0x0,
+    MEAS5 =  0x2,
+    PRS =  0x4,
     MEAS12 =  0x5,
     channel_VSS =  0x3B,
     channel_Temp =  0x3C,
@@ -190,7 +190,7 @@ void ADCC_StartConversion(adcc_channel_t channel);
     convertedValue = ADCC_GetConversionResult();
     </code>
  */
-bool ADCC_IsConversionDone();
+bool ADCC_IsConversionDone(void);
 
 /**
   @Summary
@@ -832,7 +832,55 @@ uint8_t ADCC_GetConversionStageStatus(void);
 
 
 
+/**
+  @Summary
+    Implements ISR
 
+  @Description
+    This routine is used to set the callback for the ADI Interrupt.
+
+  @Returns
+    None
+
+  @Param
+    Callback Function to be called
+*/
+void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+
+/**
+  @Summary
+    Implements ISR
+
+  @Description
+    This routine is used to implement the ISR for the interrupt-driven
+    implementations.
+
+  @Returns
+    None
+
+  @Param
+    None
+*/
+void ADCC_ISR(void);
+
+
+/**
+  @Summary
+    Default ADCC Interrupt Handler
+
+  @Description
+    This is the default Interrupt Handler function
+
+  @Preconditions
+    Initialize  the ADCC module with interrupt before calling this isr.
+
+  @Param
+    None
+
+  @Returns
+    None
+*/
+void ADCC_DefaultInterruptHandler(void);
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     }

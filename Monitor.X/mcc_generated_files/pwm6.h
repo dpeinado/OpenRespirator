@@ -13,12 +13,12 @@
    @Description
      This header file provides APIs for driver for PWM6.
      Generation Information :
-         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.80.0
+         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.0
          Device            :  PIC18F46K42
          Driver Version    :  2.01
      The generated drivers are tested against the following:
          Compiler          :  XC8 2.10 and above or later
-         MPLAB             :  MPLAB X 5.30
+         MPLAB             :  MPLAB X 5.35
  */
 
 /*
@@ -64,7 +64,7 @@
    Section: Macro Declarations
  */
 
- #define PWM6_INITIALIZE_DUTY_VALUE    357
+ #define PWM6_INITIALIZE_DUTY_VALUE    499
 
  /**
    Section: PWM Module APIs

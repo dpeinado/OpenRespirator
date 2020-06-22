@@ -1,3 +1,4 @@
+// Author: David Ortiz
 // Analog capture handling.
 // Captures analog data and perform basic processing for direct use by rest of the software.
 
@@ -26,7 +27,7 @@ adcc_channel_t adcGetCh(aSrcTyp sel){
         case MainPSensor:
             return channel_ANE1;
             break;
-        case AuxPSensor:
+        case VolPSensor:
             return channel_ANE2;
             break;
         case VddSensor:
@@ -54,7 +55,7 @@ void adcCaptureIsr(void){
     if (curASrc==ACAPT_N){
         curASrc=0;
     }
-    if (curASrc <= AuxPSensor ){
+    if (curASrc <= VolPSensor ){
         ADCON0bits.ADON = 0;
         // ADNREF VSS; ADPREF VDD; 
         ADREF = 0x00;
@@ -112,11 +113,21 @@ void aCaptureInit(void){
     PIE1bits.ADTIE = 1;
 }
 
-void aCaptureSetOff(aSrcTyp sel, int16_t offVal){
+void aCaptureOffSet(aSrcTyp sel, int16_t offVal){
     if (sel == MainPSensor) {
         mainPSensCal = offVal;
-    } else if (sel == AuxPSensor) {
+    } else if (sel == VolPSensor) {
         auxPSensCal = offVal;
+    } else {
+        ERROR_CONDITION(102);
+    }
+}
+
+int16_t aCaptureOffGet(aSrcTyp sel){
+    if (sel == MainPSensor) {
+        return mainPSensCal;
+    } else if (sel == VolPSensor) {
+        return auxPSensCal;
     } else {
         ERROR_CONDITION(102);
     }
@@ -137,6 +148,9 @@ void aCaptRstFlt(aSrcTyp sel) {
         case Flt0PSensor:
             resultTbl[sel] = resultTbl[MainPSensor]<<2;
             break;
+        default:
+            // ERROR.
+            ERROR_CONDITION(103);
     }
             PIE1bits.ADTIE = 1;
 }
@@ -171,6 +185,9 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
         case Flt0PSensor:
             lclRaw=lclRaw>>2;
             break;
+        default:
+            // Nothing to be done.
+            break;
     }
     
     switch (sel){
@@ -186,7 +203,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
                 *outVal=(lclRaw/PSENS_K);
             }
             return true;
-        case AuxPSensor:
+        case VolPSensor:
             *outVal = (lclRaw - auxPSensCal)/ASENS_K;
             return true;
         case VddSensor:
@@ -194,7 +211,7 @@ bool aCaptGetResult(aSrcTyp sel, int16_t *outVal){
             return true;
         default:
             // ERROR.
-            ERROR_CONDITION(103);
+            ERROR_CONDITION(104);
     }
 }
 
