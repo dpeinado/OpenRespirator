@@ -28636,11 +28636,11 @@ _Bool flowChk(fchk_val flowVal){
 
   switch (flowVal) {
   case FCHK_LOW:
-    LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+    LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
     minFlowL = 250;
     break;
   case FCHK_MED:
-    LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+    LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
     minFlowL = 500;
     break;
   case FCHK_HIGH:

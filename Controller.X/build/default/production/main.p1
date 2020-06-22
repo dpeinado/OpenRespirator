@@ -2870,9 +2870,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! != -> _initInspSubState `i -> 0 `i 2256  ]
 {
 "167
-[; ;main.c: 167:         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 167:         LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
 "168
 [; ;main.c: 168:     }
 }
@@ -3456,9 +3456,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! < -> _tmpVal2 `i -> 500 `i 2305  ]
 {
 "396
-[; ;main.c: 396:                 LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 396:                 LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
 "397
 [; ;main.c: 397:                 rVLowActuationTstamp = timeGet();
 [e = _rVLowActuationTstamp ( _timeGet ..  ]
@@ -3482,9 +3482,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! < >> -> _tmpVal2 `i -> 1 `i -> 500 `i 2307  ]
 {
 "404
-[; ;main.c: 404:                 LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
+[; ;main.c: 404:                 LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
 "405
 [; ;main.c: 405:                 rVMedActuationTstamp = timeGet();
 [e = _rVMedActuationTstamp ( _timeGet ..  ]
@@ -3724,9 +3724,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 509:                                 ((tmpVal2 >> 1) < tmpVal))) {
 {
 "510
-[; ;main.c: 510:                             LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
+[; ;main.c: 510:                             LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
 "511
 [; ;main.c: 511:                             pInspVSet = 2;
 [e = _pInspVSet -> 2 `i ]
@@ -3778,9 +3778,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 2328 ]
 {
 "527
-[; ;main.c: 527:                                 LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 527:                                 LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
 "528
 [; ;main.c: 528:                             }
 }
@@ -4319,9 +4319,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 721:                                          ((intVentMode == VMODE_VOLUME) || (pAdj < (intIP - ((int16_t) ((0.045*4096+2)/5)*2))))) {
 {
 "722
-[; ;main.c: 722:                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 722:                                         LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
 "723
 [; ;main.c: 723:                                         rValveActuationTstamp = timeGet();
 [e = _rValveActuationTstamp ( _timeGet ..  ]
@@ -4391,8 +4391,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! != -> ( _timeElapsedR (2 , &U _printTime -> * -> -> -> 20 `i `us `ui -> -> 1 `i `ui `us `i -> 0 `i 2379  ]
 {
 "747
-[; ;main.c: 747:                     printf ("-: %d %d %d %d\n", timeGet(), (LATCbits.LATC3 ? 1 : 0) + (LATAbits.LATA2 ? 2 : 0) + (LATAbits.LATA3 ? 4 : 0), pInst, pAvgShort, vMeasureGet());
-[e ( _printf , , , , , (. :s 19C -> ( _timeGet ..  `ui + + ? != -> . . _LATCbits 0 3 `i -> 0 `i : -> 1 `i -> 0 `i ? != -> . . _LATAbits 0 2 `i -> 0 `i : -> 2 `i -> 0 `i ? != -> . . _LATAbits 0 3 `i -> 0 `i : -> 4 `i -> 0 `i -> _pInst `i -> _pAvgShort `i -> ( _vMeasureGet ..  `ui ]
+[; ;main.c: 747:                     printf ("-: %d %d %d %d\n", timeGet(), (LATAbits.LATA2 ? 1 : 0) + (LATCbits.LATC3 ? 2 : 0) + (LATAbits.LATA3 ? 4 : 0), pInst, pAvgShort, vMeasureGet());
+[e ( _printf , , , , , (. :s 19C -> ( _timeGet ..  `ui + + ? != -> . . _LATAbits 0 2 `i -> 0 `i : -> 1 `i -> 0 `i ? != -> . . _LATCbits 0 3 `i -> 0 `i : -> 2 `i -> 0 `i ? != -> . . _LATAbits 0 3 `i -> 0 `i : -> 4 `i -> 0 `i -> _pInst `i -> _pAvgShort `i -> ( _vMeasureGet ..  `ui ]
 "752
 [; ;main.c: 752:                 }
 }
@@ -4776,9 +4776,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! < + -> _bdP1 `i >> -> _pQuantaExp `i -> 1 `i - -> _intPEEP `i * -> -> / + * .0.045 -> -> 4096 `i `d -> -> 2 `i `d -> -> 5 `i `d `s `i -> 1 `i 2409  ]
 {
 "900
-[; ;main.c: 900:                                         LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[e = . . _LATCbits 0 3 -> -> 0 `i `uc ]
+[; ;main.c: 900:                                         LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+[e = . . _LATCbits 0 3 -> -> 1 `i `uc ]
 "901
 [; ;main.c: 901:                                         rValveActuationTstamp = timeGet();
 [e = _rValveActuationTstamp ( _timeGet ..  ]
