@@ -2239,124 +2239,124 @@ Version 4.0 HI-TECH Software Intermediate Code
 "477 ./mcc_generated_files/uart1.h
 [; ;./mcc_generated_files/uart1.h: 477: void (*UART1_TxInterruptHandler)(void);
 [v _UART1_TxInterruptHandler `*F16801 ~T0 @X0 1 e ]
-"9 brate.c
-[; ;brate.c: 9: uint8_t eBRate;
+"22 brate.c
+[; ;brate.c: 22: uint8_t eBRate;
 [v _eBRate `uc ~T0 @X0 1 e ]
-"10
-[; ;brate.c: 10: uint24_t bRateHist;
+"23
+[; ;brate.c: 23: uint24_t bRateHist;
 [v _bRateHist `um ~T0 @X0 1 e ]
-"11
-[; ;brate.c: 11: uint24_t bRatePtr;
+"24
+[; ;brate.c: 24: uint24_t bRatePtr;
 [v _bRatePtr `um ~T0 @X0 1 e ]
-"12
-[; ;brate.c: 12: uint8_t bRateCnt;
+"25
+[; ;brate.c: 25: uint8_t bRateCnt;
 [v _bRateCnt `uc ~T0 @X0 1 e ]
-"15
-[; ;brate.c: 15: void bRateInit(void) {
+"28
+[; ;brate.c: 28: void bRateInit(void) {
 [v _bRateInit `(v ~T0 @X0 1 ef ]
 {
 [e :U _bRateInit ]
 [f ]
-"16
-[; ;brate.c: 16:     bRateHist = 0;
+"29
+[; ;brate.c: 29:     bRateHist = 0;
 [e = _bRateHist -> -> -> 0 `i `m `um ]
-"17
-[; ;brate.c: 17:     bRatePtr = 1;
+"30
+[; ;brate.c: 30:     bRatePtr = 1;
 [e = _bRatePtr -> -> -> 1 `i `m `um ]
-"18
-[; ;brate.c: 18:     eBRate = 0;
+"31
+[; ;brate.c: 31:     eBRate = 0;
 [e = _eBRate -> -> 0 `i `uc ]
-"19
-[; ;brate.c: 19:     bRateCnt = 0;
+"32
+[; ;brate.c: 32:     bRateCnt = 0;
 [e = _bRateCnt -> -> 0 `i `uc ]
-"20
-[; ;brate.c: 20: }
+"33
+[; ;brate.c: 33: }
 [e :UE 2233 ]
 }
-"22
-[; ;brate.c: 22: void bRateUpdt(_Bool triggered) {
+"35
+[; ;brate.c: 35: void bRateUpdt(_Bool triggered) {
 [v _bRateUpdt `(v ~T0 @X0 1 ef1`a ]
 {
 [e :U _bRateUpdt ]
 [v _triggered `a ~T0 @X0 1 r1 ]
 [f ]
-"23
-[; ;brate.c: 23:     bRatePtr = bRatePtr << 1;
+"36
+[; ;brate.c: 36:     bRatePtr = bRatePtr << 1;
 [e = _bRatePtr << _bRatePtr -> 1 `i ]
-"24
-[; ;brate.c: 24:     bRateCnt++;
+"37
+[; ;brate.c: 37:     bRateCnt++;
 [e ++ _bRateCnt -> -> 1 `i `uc ]
-"25
-[; ;brate.c: 25:     if (bRateCnt > 20){
+"38
+[; ;brate.c: 38:     if (bRateCnt > 20){
 [e $ ! > -> _bRateCnt `i -> 20 `i 2235  ]
 {
-"26
-[; ;brate.c: 26:         bRateCnt = 20;
+"39
+[; ;brate.c: 39:         bRateCnt = 20;
 [e = _bRateCnt -> -> 20 `i `uc ]
-"27
-[; ;brate.c: 27:     }
+"40
+[; ;brate.c: 40:     }
 }
 [e :U 2235 ]
-"28
-[; ;brate.c: 28:     if (bRatePtr == (0x1L << 20)) {
+"41
+[; ;brate.c: 41:     if (bRatePtr == (0x1L << 20)) {
 [e $ ! == -> _bRatePtr `l << -> 1 `l -> 20 `i 2236  ]
 {
-"29
-[; ;brate.c: 29:         bRatePtr = 1;
+"42
+[; ;brate.c: 42:         bRatePtr = 1;
 [e = _bRatePtr -> -> -> 1 `i `m `um ]
-"30
-[; ;brate.c: 30:     }
+"43
+[; ;brate.c: 43:     }
 }
 [e :U 2236 ]
-"32
-[; ;brate.c: 32:     if (bRateHist & bRatePtr) {
+"45
+[; ;brate.c: 45:     if (bRateHist & bRatePtr) {
 [e $ ! != & _bRateHist _bRatePtr -> -> -> 0 `i `m `um 2237  ]
 {
-"33
-[; ;brate.c: 33:         eBRate -= 5;
+"46
+[; ;brate.c: 46:         eBRate -= 5;
 [e =- _eBRate -> -> 5 `i `uc ]
-"34
-[; ;brate.c: 34:     }
+"47
+[; ;brate.c: 47:     }
 }
 [e :U 2237 ]
-"35
-[; ;brate.c: 35:     if (triggered) {
+"48
+[; ;brate.c: 48:     if (triggered) {
 [e $ ! != -> _triggered `i -> 0 `i 2238  ]
 {
-"36
-[; ;brate.c: 36:         eBRate += 5;
+"49
+[; ;brate.c: 49:         eBRate += 5;
 [e =+ _eBRate -> -> 5 `i `uc ]
-"37
-[; ;brate.c: 37:         bRateHist |= bRatePtr;
+"50
+[; ;brate.c: 50:         bRateHist |= bRatePtr;
 [e =| _bRateHist _bRatePtr ]
-"38
-[; ;brate.c: 38:     } else {
+"51
+[; ;brate.c: 51:     } else {
 }
 [e $U 2239  ]
 [e :U 2238 ]
 {
-"39
-[; ;brate.c: 39:         bRateHist &= ~bRatePtr;
+"52
+[; ;brate.c: 52:         bRateHist &= ~bRatePtr;
 [e =& _bRateHist ~ _bRatePtr ]
-"40
-[; ;brate.c: 40:     }
+"53
+[; ;brate.c: 53:     }
 }
 [e :U 2239 ]
-"41
-[; ;brate.c: 41: }
+"54
+[; ;brate.c: 54: }
 [e :UE 2234 ]
 }
-"43
-[; ;brate.c: 43: uint8_t bRateGet(void) {
+"56
+[; ;brate.c: 56: uint8_t bRateGet(void) {
 [v _bRateGet `(uc ~T0 @X0 1 ef ]
 {
 [e :U _bRateGet ]
 [f ]
-"44
-[; ;brate.c: 44:     return eBRate*20/bRateCnt;
+"57
+[; ;brate.c: 57:     return eBRate*20/bRateCnt;
 [e ) -> / * -> _eBRate `i -> 20 `i -> _bRateCnt `i `uc ]
 [e $UE 2240  ]
-"45
-[; ;brate.c: 45: }
+"58
+[; ;brate.c: 58: }
 [e :UE 2240 ]
 }
