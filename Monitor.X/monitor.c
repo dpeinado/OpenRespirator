@@ -56,7 +56,8 @@ void AdcHandler(void);
 
 void AdcInit(void) {
     currentChannel = 0;
-    ADCC_SetADIInterruptHandler(AdcHandler);
+    ADCC_SetADTIInterruptHandler(AdcHandler);
+    //ADCC_SetADIInterruptHandler(AdcHandler);
     
     ADCON0bits.ADON = 0;
     ADREF = adcChannels[currentChannel].ref;
@@ -162,7 +163,8 @@ int16_t GetTi(void) { return ti*2; } // Time in ms
 int16_t GetTe(void) { return te*2; } // Time in ms
 int16_t GetBp(void) { return bp*2; } // Time in ms
 int16_t GetBpm(void) { return bpm; } // Breaths per minute
-int16_t GetEp(void) { return MAX(MAX(lrpe/5, pLow/5), pe/5); } // 
+//int16_t GetEp(void) { return MAX(MAX(lrpe/5, pLow/5), pe/5); } // 
+int16_t GetEp(void) { return (lrpe+pe)/10; } //
 int16_t GetIp(void) { return MAX(MAX(lrpi/5, pHigh/5), pi/5); } // 
 int16_t GetVolume(void) { return volume; }
 int16_t GetPmax(void) { return pmax/5; }
@@ -305,7 +307,7 @@ void MonitorPressureTask(void) { // Every 2 ms
             printf("=");
             //AdcReStartCycle();
             //AdcInit();)
-            return;
+            //return; // SHOUD I RETURN ? Not sure. May be is better reuse old measures
     }
      
     if (state == STATE_CALIBRATE) {
@@ -315,16 +317,18 @@ void MonitorPressureTask(void) { // Every 2 ms
         adcOffset  = (7*adcOffset + 8*tmp)/8; //
         tmp2 = GetPressureV_pa();
         adcVOffset = (7*adcVOffset + 8*tmp2)/8;
-        AdcReStartCycle();
+        
         cnt++;
         if (cnt==250) { // 500 ms
             //printf("C: %d %d %d %d\r\n", tmp, adcOffset/8, tmp2, adcVOffset/8);
             cnt = 0;
             //DisplayCalibrate(tmp, adcOffset, tmp2, adcVOffset);
+        
+            DisplayCalibrate(tmp, adcOffset/8, tmp2, adcVOffset/8);
         }
-        DisplayCalibrate(tmp, adcOffset/8, tmp2, adcVOffset/8);
         
         // Timer 0 restart conversion cycle
+        AdcReStartCycle();
         
         return;
     } else {
@@ -385,7 +389,9 @@ void MonitorPressureTask(void) { // Every 2 ms
         temp = 0;
         for (int i=0; i<25; i++) temp +=prSlowBuffer[i];
         prSlow = temp/25;
-    }
+    }    
+    count ++;   
+    if (count>=6*25) count =0; // 25*6 time for both filters to go around
    
     // Alarm if no breath in 6s
     if (enableAlarms) {
@@ -406,10 +412,17 @@ void MonitorPressureTask(void) { // Every 2 ms
     // Calculate volume
     
     adcv = GetPressureV_pa();
+    //if (tt%10==0) printf("V:%d\r\n", adcv);
     
     uint16_t v1 = adcv > 0 ? adcv<<4 : 0;
     uint16_t v2 = isqrt(v1); 
     volumeAcc += v2 > 20 ? v2 : 0;
+    /*
+    if (tt%10==0) {
+        int vtmp = (volumeAcc)/55;
+        printf("V:%d %d %d %d\r\n", adcv, v1, v2, vtmp);
+    }
+     */
 
     // Limits of pressure estimations
     if (ttExt>6*500) { // Every 6 s we should have at least one breath
@@ -443,9 +456,7 @@ void MonitorPressureTask(void) { // Every 2 ms
         minPressure = 40*5;
         ttExt=0;
     }
-    
-    count ++;   
-    if (count>=6*25) count =0; // 25*6 time for both filters to go around
+
     
     if (tt>30000) {
         //printf("\r\n No breath detected in 1 min\r\n");
@@ -521,7 +532,7 @@ void MonitorPressureTask(void) { // Every 2 ms
 
             tt1 = tt;  // Start of event
             
-            MonitorDump();
+            //MonitorDump();
             /*
             printf("\r\nNew Breath: TT12: %d TT2: %d TT3: %d TT34: %d TT4: %d TT1: %d ", tt12*2, tt2*2, tt3*2, tt34*2, tt4*2, tt1*2);
             printf("TI: %d TE: %d TDI: %d TDE: %d\r\n", ti*2, te*2, tdi*2,  tde*2);
@@ -538,7 +549,7 @@ void MonitorPressureTask(void) { // Every 2 ms
             tt3=0;
             tt4=0;
             tt34=0;
-            if (tt1<=500) volumeAcc = v2 > 20 ? v2 : 0;;
+            //if (tt1<=500) volumeAcc = v2 > 20 ? v2 : 0;;
             ttAlarm = 0;
         }
         tt12 = tt; // Last event of rising below lolimit
@@ -571,6 +582,9 @@ void MonitorPressureTask(void) { // Every 2 ms
             tt3 = tt; // First sample going down
             down = true;
 //            printf("\r\nTest D34: TT12:%d TT2:%d TT3:%d TT34:%d TT4:%d TI:%d TE:%d TDI: %d TDE:%d\r\n", tt12*2, tt2*2, tt3*2, tt34*2, tt4*2, ti*2, te*2, tdi*2, tde*2);
+            
+            volume = (volumeAcc)/55; // Calibrated constant
+            volumeAcc = 0;
             
         }
         tt34 = tt; // Last sample
@@ -636,8 +650,8 @@ void MonitorPressureTask(void) { // Every 2 ms
             measPe = true;
             rpe = pe;
         }
-        volume = (volumeAcc)/75; // Theory 60 I put 75 to increase 25%
-         volumeAcc = 0;
+        //volume = (volumeAcc)/60; // Theory 60 I put 75 to increase 25%
+         //volumeAcc = 0;
 
 //        printf("\r\nDOWN: %d %d\r\n", tt4, prSlow/5);
     }
@@ -777,9 +791,10 @@ int16_t GetPressure_pa (void) {
     }
     //printf("ADC: %d ", adc);
     int32_t mv = adc - adcOffset/8;
-    mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
+    mv = (mv < 0) ? 0 : mv;
+    mv = ( mv * 625 )/ 512;  // Move from 12 bits to 5V range
     //printf("V: %d mV ", mv);
-    int32_t p32 = (mv*100)/45;
+    int32_t p32 = (mv*20)/9;
     int16_t p = ((int16_t) p32); //  - (state == STATE_CALIBRATE ? 0 : adcOffset/8); 
     if (p<0) p=0;
     return p;
@@ -788,8 +803,9 @@ int16_t GetPressure_pa (void) {
 int16_t SeePressure_pa (void) {
     adc_result_t adc = AdcSeeData(ADC_ID_PRS);
     int32_t mv = adc - adcOffset/8;
-    mv = ( mv * 5000 )/ 4096;
-    int32_t p32 = (mv*100)/45;
+    mv = (mv < 0) ? 0 : mv;
+    mv = ( mv * 625 )/ 512;
+    int32_t p32 = (mv*20)/9;
     int16_t p = ((int16_t) p32);
     if (p<0) p=0;
     return p;
@@ -803,7 +819,8 @@ int16_t GetPressureV_pa (void) {
     }    
     //printf("ADC: %d ", adc);
     int32_t mv = adcv - adcVOffset/8;
-    mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
+    mv = (mv < 0) ? 0 : mv;
+    //mv = ( mv * 5000 )/ 4096;  // Move from 12 bits to 5V range
     //printf("V: %d mV ", mv);
     int16_t p = mv;
     //p = p - 1000  - (state == STATE_CALIBRATE ? 0 : adcVOffset/8); // remove offset of 1V
@@ -814,7 +831,8 @@ int16_t GetPressureV_pa (void) {
 int16_t SeePressureV_pa (void) {
     adc_result_t adcv = AdcSeeData(ADC_ID_VOL);
     int32_t mv = adcv - adcVOffset/8;
-    mv = ( mv * 5000 )/ 4096;
+    mv = (mv < 0) ? 0 : mv;
+    //mv = ( mv * 5000 )/ 4096;
     int16_t p = mv;
     return p;
 }
@@ -822,7 +840,8 @@ int16_t SeePressureV_pa (void) {
 int16_t See5V (void) {
     adc_result_t adc = AdcSeeData(ADC_ID_5V);
     int32_t mv = adc;
-    mv = ( mv*4096) / 4096;
+    
+    //mv = ( mv*4096) / 4096;
     int16_t v12 = mv/2; // Resistor network
     return v12;
 }
@@ -830,7 +849,7 @@ int16_t See5V (void) {
 int16_t Get5V (void) {
     adc_result_t adc = AdcGetData(ADC_ID_5V);
     int32_t mv = adc;
-    mv = ( mv*4096) / 4096;
+    //mv = ( mv*4096) / 4096;
     int16_t v12 = mv/2;
     return v12;
 }
@@ -838,7 +857,7 @@ int16_t Get5V (void) {
 int16_t See12V (void) {
     adc_result_t adc = AdcSeeData(ADC_ID_12V);
     int32_t mv = adc;
-    mv = ( mv*4096) / 4096;
+    //mv = ( mv*4096) / 4096;
     int16_t v12 = (mv*33)/10; // Resistor network
     return v12;
 }
@@ -846,7 +865,7 @@ int16_t See12V (void) {
 int16_t Get12V (void) {
     adc_result_t adc = AdcGetData(ADC_ID_12V);
     int32_t mv = adc;
-    mv = ( mv*4096) / 4096;
+    //mv = ( mv*4096) / 4096;
     int16_t v12 = (mv*33)/10;
     return v12;
 }
