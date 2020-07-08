@@ -7,6 +7,7 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "cmath.c" 2
+# 19 "cmath.c"
 # 1 "./cmath.h" 1
 # 15 "./cmath.h"
 # 1 "./mcc_generated_files/adcc.h" 1
@@ -27196,7 +27197,7 @@ void ADCC_DefaultInterruptHandler(void);
 
 
 uint16_t isqrt(uint16_t x);
-# 1 "cmath.c" 2
+# 19 "cmath.c" 2
 
 
 uint16_t isqrt(uint16_t x)
