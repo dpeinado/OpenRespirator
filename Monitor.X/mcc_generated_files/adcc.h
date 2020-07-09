@@ -837,7 +837,7 @@ uint8_t ADCC_GetConversionStageStatus(void);
     Implements ISR
 
   @Description
-    This routine is used to set the callback for the ADI Interrupt.
+    This routine is used to set the callback for the ADTI Interrupt.
 
   @Returns
     None
@@ -845,7 +845,7 @@ uint8_t ADCC_GetConversionStageStatus(void);
   @Param
     Callback Function to be called
 */
-void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
+void ADCC_SetADTIInterruptHandler(void (* InterruptHandler)(void));
 
 /**
   @Summary
@@ -861,8 +861,7 @@ void ADCC_SetADIInterruptHandler(void (* InterruptHandler)(void));
   @Param
     None
 */
-void ADCC_ISR(void);
-
+void ADCC_ThresholdISR(void);
 
 /**
   @Summary
