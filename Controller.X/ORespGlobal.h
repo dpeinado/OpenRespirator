@@ -43,7 +43,7 @@ extern "C" {
 // Zero volume threshold for aux sensor.
 #define ZVOLTH 20
 
-#define PEEP_COMP   MPRESSURE_MBAR(1.5)
+#define PEEP_COMP   MPRESSURE_MBAR(1.0)
 
     
 // Objective time for inspiration.

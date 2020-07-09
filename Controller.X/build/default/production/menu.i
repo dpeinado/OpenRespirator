@@ -28640,8 +28640,8 @@ void MenuMng(void) {
 
 
 
-                        HighVAlarm += (menuVal - MaxV);
-                        LowVAlarm += (menuVal - MaxV);
+            HighVAlarm = ((HighVAlarm + (menuVal - MaxV) > (1500/10))? (1500/10) : ((HighVAlarm + (menuVal - MaxV) < (100/10))? (100/10) : HighVAlarm + (menuVal - MaxV)));
+          LowVAlarm = ((LowVAlarm + (menuVal - MaxV) > (1500/10))? (1500/10) : ((LowVAlarm + (menuVal - MaxV) < (100/10))? (100/10) : LowVAlarm + (menuVal - MaxV)));
                         MaxV = menuVal;
                         chHighVAlarm = 1;
                         chLowVAlarm = 1;

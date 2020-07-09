@@ -199,8 +199,8 @@ void MenuMng(void) {
                         // Accept change and exit.
                         // Set max and min alarms default values.
                         // Track changes on high and low alarms.
-                        HighVAlarm += (menuVal - MaxV);
-                        LowVAlarm  += (menuVal - MaxV);
+  		        HighVAlarm = VOL_CHK(HighVAlarm + (menuVal - MaxV));
+		        LowVAlarm  = VOL_CHK(LowVAlarm + (menuVal - MaxV));
                         MaxV = menuVal;
                         chHighVAlarm = true;
                         chLowVAlarm = true;

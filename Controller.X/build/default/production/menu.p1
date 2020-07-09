@@ -2923,11 +2923,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $ ! == -> _menuStatus `ui -> . `E16893 5 `ui 2288  ]
 {
 "202
-[; ;menu.c: 202:                         HighVAlarm += (menuVal - MaxV);
-[e =+ _HighVAlarm -> - -> _menuVal `ui -> _MaxV `ui `uc ]
+[; ;menu.c: 202:             HighVAlarm = ((HighVAlarm + (menuVal - MaxV) > (1500/10))? (1500/10) : ((HighVAlarm + (menuVal - MaxV) < (100/10))? (100/10) : HighVAlarm + (menuVal - MaxV)));
+[e = _HighVAlarm -> ? > + -> _HighVAlarm `ui - -> _menuVal `ui -> _MaxV `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < + -> _HighVAlarm `ui - -> _menuVal `ui -> _MaxV `ui -> / -> 100 `i -> 10 `i `ui : -> / -> 100 `i -> 10 `i `ui + -> _HighVAlarm `ui - -> _menuVal `ui -> _MaxV `ui `uc ]
 "203
-[; ;menu.c: 203:                         LowVAlarm += (menuVal - MaxV);
-[e =+ _LowVAlarm -> - -> _menuVal `ui -> _MaxV `ui `uc ]
+[; ;menu.c: 203:           LowVAlarm = ((LowVAlarm + (menuVal - MaxV) > (1500/10))? (1500/10) : ((LowVAlarm + (menuVal - MaxV) < (100/10))? (100/10) : LowVAlarm + (menuVal - MaxV)));
+[e = _LowVAlarm -> ? > + -> _LowVAlarm `ui - -> _menuVal `ui -> _MaxV `ui -> / -> 1500 `i -> 10 `i `ui : -> / -> 1500 `i -> 10 `i `ui ? < + -> _LowVAlarm `ui - -> _menuVal `ui -> _MaxV `ui -> / -> 100 `i -> 10 `i `ui : -> / -> 100 `i -> 10 `i `ui + -> _LowVAlarm `ui - -> _menuVal `ui -> _MaxV `ui `uc ]
 "204
 [; ;menu.c: 204:                         MaxV = menuVal;
 [e = _MaxV -> _menuVal `uc ]
