@@ -559,8 +559,8 @@ void MonitorPressureTask(void) { // Every 2 ms
         lrpe = rpe;
         // Check alarms
         if (enableAlarms) {
-            if (lrpe>(targetLow+15)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
-            if (lrpe<(targetLow-15)) SetEPBelowSetAlarm(); else ClearEPBelowSetAlarm();
+            if (((pe+lrpe)/2)>(targetLow+15)) SetEPAboveSetAlarm(); else ClearEPAboveSetAlarm();
+            if (((pe+lrpe)/2)<(targetLow-15)) SetEPBelowSetAlarm(); else ClearEPBelowSetAlarm();
         } else {
             ClearEPAboveSetAlarm();
             ClearEPBelowSetAlarm();
