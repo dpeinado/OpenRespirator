@@ -84,11 +84,29 @@ LDLIBSOPTIONS=
 # fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
 FIXDEPS=fixDeps
 
+# The following macros may be used in the pre and post step lines
+Device=PIC18F46K42
+ProjectDir=/Users/carlospardo/MPLABXProjects/OpenRespirator/Monitor.X
+ProjectName=Monitor
+ConfName=default
+ImagePath=dist/default/${IMAGE_TYPE}/Monitor.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+ImageDir=dist/default/${IMAGE_TYPE}
+ImageName=Monitor.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IsDebug="true"
+else
+IsDebug="false"
+endif
+
 .build-conf:  ${BUILD_SUBPROJECTS}
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
 	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/Monitor.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	@echo "--------------------------------------"
+	@echo "User defined post-build step: [cp $(ImagePath) /Volumes/XPRESS/]"
+	@cp $(ImagePath) /Volumes/XPRESS/
+	@echo "--------------------------------------"
 
 MP_PROCESSOR_OPTION=18F46K42
 # ------------------------------------------------------------------------------------

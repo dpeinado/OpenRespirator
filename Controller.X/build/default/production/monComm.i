@@ -7,12 +7,7 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "monComm.c" 2
-
-
-
-
-
-
+# 20 "monComm.c"
 # 1 "./monComm.h" 1
 # 14 "./monComm.h"
 # 1 "./mcc_generated_files/mcc.h" 1
@@ -28354,7 +28349,7 @@ void timeDelayMs(time_t delms);
   void MonitorMsgForcedSend (monStateT state);
   void MonitorMsgSend(monStateT state);
   _Bool MonitorMsgSendBlock(monStateT state);
-# 8 "monComm.c" 2
+# 21 "monComm.c" 2
 # 1 "./ORespGlobal.h" 1
 # 14 "./ORespGlobal.h"
 # 1 "./aCapture.h" 1
@@ -28416,7 +28411,7 @@ void aCaptRstFlt(aSrcTyp sel);
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
     extern uint16_t lungC, lungR;
-# 9 "monComm.c" 2
+# 22 "monComm.c" 2
 # 1 "./i2c2_mux.h" 1
 # 18 "./i2c2_mux.h"
 extern uint8_t currentTrfAddr;
@@ -28436,7 +28431,7 @@ i2c2_error_t I2C2_MOpen(void);
 i2c2_error_t I2C2_LOpen(void);
 i2c2_error_t I2C2_MClose(void);
 i2c2_error_t I2C2_LClose(void);
-# 10 "monComm.c" 2
+# 23 "monComm.c" 2
 # 1 "./menu.h" 1
 # 19 "./menu.h"
 extern _Bool lcdPrintTR;
@@ -28471,13 +28466,13 @@ void MenuMng(void);
 void screenInit(void);
 
 void screenMng(void);
-# 11 "monComm.c" 2
+# 24 "monComm.c" 2
 # 1 "./brate.h" 1
 # 16 "./brate.h"
   void bRateInit(void);
   void bRateUpdt(_Bool triggered);
   uint8_t bRateGet(void);
-# 12 "monComm.c" 2
+# 25 "monComm.c" 2
 
 time_t monTstamp;
 i2c2_error_t lastI2CMonTrfResponse;

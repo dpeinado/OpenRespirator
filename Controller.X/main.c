@@ -1,6 +1,21 @@
-/**
- Author: David Ortiz
- */
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//  
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+// MA  02110-1301, USA.
+//
+// Author: David Ortiz
+//  This file is part of project: OpenRespirator
+//
 
 #include "mcc_generated_files/mcc.h"
 #include "ORespGlobal.h"
@@ -93,6 +108,8 @@ time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
 time_t rValveDelayStart, rTimeTmp;
 bool initExpSubState, initInspSubState, sv2DelayCheck, sv3DelayCheck, OSCheck, QuantaCheck;
 bool OSCheckInt;
+// Measurement and compensation of oscillations in PEEP control.
+int16_t pPeepErr, pPeepOsc;
 
 void inspOSMeasure(void) {
     uint16_t tmpUVal;
@@ -327,6 +344,10 @@ void main(void) {
         pQuantaExp = 20;
         lungC = 0;
         lungR = 0;
+        pPeepActual = 0;
+	pPeepErr = 0;
+	pPeepOsc = 0;
+	
         sBreath = false;
         // Flow rate in ml/sec.
         //        effectiveFlowRate=freeFlowRateF;
@@ -334,7 +355,6 @@ void main(void) {
         if (freeFlowRateF > 50) {
             effectiveFlowRateInv = ((uint24_t) 1 << 18) / freeFlowRateF;
         }
-        pPeepActual = 0;
         IDuration = ((uint16_t) 60 * 1000) / (3 * BPM);
         EDuration = ((uint16_t) 60 * 1000 / BPM) - IDuration;
         lastCycleVol = 0;
@@ -356,7 +376,7 @@ void main(void) {
 
             intVentMode = VentMode;
             intMaxP = MPRESSURE_MBAR(MaxP);
-            intPEEP = MPRESSURE_MBAR(PEEP) + PEEP_COMP;
+            intPEEP = MPRESSURE_MBAR(PEEP) + PEEP_COMP + pPeepOsc;
             intBdTrig = MPRESSURE_MBAR(BdTrig);
             intIDuration = TIME_MS(IDuration);
             if (sBreath) {
@@ -374,9 +394,9 @@ void main(void) {
                     intMaxV = 10 * HighVAlarm;
                 }
             } else {
-                // In volume mode --> Target volume implies starting from the setted PEEP. If PEEP is higher --> lower the volume to avoid damage.
-                if (pPeepActual > ((MPRESSURE_MBAR(1) + intPEEP))) {
-                    intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP) * lungC) >> 7);
+                // In volume mode --> Target volume implies starting from the setted PEEP. If PEEP is much higher (over 4mbar difference)--> lower the volume to avoid damage.
+                if (pPeepActual > ((MPRESSURE_MBAR(4) + intPEEP))) {
+		  intMaxV = 10 * ((uint16_t) MaxV) - (((pPeepActual - intPEEP - MPRESSURE_MBAR(4)) * lungC) >> 7);
                 } else {
                     intMaxV = 10 * ((uint16_t) MaxV);
                 }
@@ -386,7 +406,8 @@ void main(void) {
                     intIP = 0;
                 }
             }
-            DEBUG_PRINT(("\nIP. MaxV %d EBRate %d SV2RO %d SV2RC %d PQ %d VQ %d.\n", intMaxV, bRateGet(), rSV2ValveORT, rSV2ValveCRT, DBGPCONVERT(pQuantaInsp), vQuanta));
+            DEBUG_PRINT(("\nIP. MaxV %d EBRate %d SV2RO %d SV2RC %d PQ %d VQ %d.\n",
+			 intMaxV, bRateGet(), rSV2ValveORT, rSV2ValveCRT, DBGPCONVERT(pQuantaInsp), vQuanta));
             // Print debug info of 'static' variables.
 
             // Set valves initial value.
@@ -398,14 +419,13 @@ void main(void) {
                 rVMedActuationTstamp = rCycleTime;
                 rVHighActuationTstamp = rCycleTime;
                 pInspVSet = 1;
-                DEBUG_PRINT(("\nVLow\n"));
-                // } else if (((uint24_t) 1500*intMaxV)/effectiveFlowRate) < INSP_TIME) {
+                DEBUG_PRINT(("\nVLow T %d\n", timeGet()));
             } else if ((tmpVal2 >> 1) < INSP_TIME) {
                 OPEN_SV2MED;
                 rVMedActuationTstamp = timeGet();
                 rVHighActuationTstamp = rCycleTime;
                 pInspVSet = 2;
-                DEBUG_PRINT(("\nVMed\n"));
+                DEBUG_PRINT(("\nVMed T %d\n", timeGet()));
             } else {
                 OPEN_SV2;
                 pInspVSet = 3;
@@ -431,13 +451,13 @@ void main(void) {
                 if (timeElapsedR(&rCycleTime, intIDuration)) {
                     // Goto next.
                     if (initInspSubState) {
-                        // IP not reached.
-                        MonitorErrorSet(MON_IPE);
-                        // It is needed to do estimations at least of LungC.
-                        pPlatInsp = pInst;
-                        pValveActuation = pInst;
-                        pPlatMax = pInst;
-                        inspOSMeasure();
+		      // IP not reached.
+		      MonitorErrorSet(MON_IPE);
+		      // It is needed to do estimations at least of LungC.
+		      pPlatInsp = pInst;
+		      pValveActuation = pInst;
+		      pPlatMax = pInst;
+		      inspOSMeasure();
                     }
                     if (OSCheck) {
                         OSCheck = false;
@@ -451,12 +471,7 @@ void main(void) {
                     initInspSubState = false;
                     break;
                 } else {
-                    //TODO
-                    // When BPM is very high, IP time can be very short. 
-                    // Ensure algorighm is stable in this conditions:
                     // If SV2 is closed before end of IP cycle, and there is time to measure OS, do it.
-                    // Otherwise, ensure OS should not used in those conditions...
-                    // Do the same in case of EP.
                     if (timeElapsed(rCycleTime, BLED_ONTIME)) {
                         // Turn off led. Can be done here because minimum IP time with fixed 1:2 ratio and 30 BPM is 0.66 seconds.
                         BLED_OFF;
@@ -489,7 +504,6 @@ void main(void) {
                         // Pressure estimated at valve close time, including estimated overshoot > IP + Overshoot limit.
                         // Estimated plateu pressure goes above IP.
 
-                        // Pressure prediction computed by presPredict function.
                         aCaptGetResult(Flt1PSensor, &pAvgShort);
                         // Can assign variables here since there is no ongoing actuation.
                         // The lung will have an extra pressure during inspiration which is proportional to the flow rate,
@@ -514,20 +528,21 @@ void main(void) {
                             rVMedActuationTstamp = timeGet();
                             rValveActuationTstamp = rVMedActuationTstamp;
                             pValveActuation = pCtrl;
-                            DEBUG_PRINT(("PI-MED T %d - Pi %d Pc %d Vol %3x OS %d RF %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS3), effectiveFlowRateInv));
+                            DEBUG_PRINT(("PI-MED T %d - Pi %d Pc %d Vol %3x OS %d RF %d\n",
+					 timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS3), effectiveFlowRateInv));
                         } else if ((pInspVSet == 2) &&
                                 (((pCtrl + pInspOS2) > ((7 * intMaxP) >> 3)) ||
                                 ((tmpVal2) < tmpVal))) {
                             //                                    ((((int24_t) 3000*(intMaxV-vValveActuation))/effectiveFlowRate) < tmpVal))) {
                             if (rSV2ValveCRT > rSV2ValveORT) {
                                 CLOSE_SV2;
-                                T4PR = 4 + rSV2ValveCRT - rSV2ValveORT;
+                                T4PR = 10 + rSV2ValveCRT - rSV2ValveORT;
                                 TMR4_Start();
                             } else {
                                 OPEN_SV2LOW;
                             }
                             if (OSCheckInt && (pInspOS3 < intMaxP)) {
-                                // Should not happen.
+                                // Should not happen, increase overshoot.
                                 pInspOS3 = pInspOS3 + MPRESSURE_MBAR(1);
                             }
                             pInspVSet = 1;
@@ -536,7 +551,7 @@ void main(void) {
                             rVLowActuationTstamp = timeGet();
                             rValveActuationTstamp = rVLowActuationTstamp;
                             pValveActuation = pCtrl;
-                            DEBUG_PRINT(("PI-LOW T %d - Pi %d Pc %d Vol %d OS %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS2)));
+                            DEBUG_PRINT(("PI-LOW T %d - Pi %d Pc %d Vol %d OS %d\n", timeGet(), DBGPCONVERT(pInst), DBGPCONVERT(pCtrl), vValveActuation, DBGPCONVERT(pInspOS2)));
                         }
 
                         if (pPlatMax < pCtrl) {
@@ -544,20 +559,20 @@ void main(void) {
                         }
 
                         // Measure overshoot, and also assign overshoot value to use for finishing ihnale.
+			// Overshoot measurement time depend on which valve is opened, overshoot max value delayed in case of SV2LOW is activated WRT SV2MED.
                         if (OSCheckInt) {
-                            if (timeElapsed(rValveActuationTstamp, rSV2ValveCRT + TIME_MS(15))) {
-                                OSCheckInt = false;
-                                if (pInspVSet == 2) {
-                                    // Check pressure overshoot when switching from 3 to 2.
-                                    pInspOS3 = (3 * pInspOS3 + pPlatMax - pValveActuation) >> 2;
-                                } else if (pInspVSet == 1) {
-                                    // Check pressure overshoot when switching from 2 to 1.
-                                    pInspOS2 = (3 * pInspOS2 + pPlatMax - pValveActuation) >> 2;
-                                }
-                            }
-                            // Pressure overshoot already considered for reducing flow, do not consider again to finish inhale.
-                            pInspOSScale = 0;
-                            vInspOSScale = (5 * (1 + pInspVSet) * vInspOS) >> 4;
+			  if ((pInspVSet == 2) && timeElapsed(rValveActuationTstamp, rSV2ValveCRT + TIME_MS(15))) {
+			    OSCheckInt = false;
+			    // Check pressure overshoot when switching from 3 to 2.
+			    pInspOS3 = (3 * pInspOS3 + pPlatMax - pValveActuation) >> 2;
+			  } else if ((pInspVSet == 1) && timeElapsed(rValveActuationTstamp, rSV2ValveCRT + TIME_MS(35))) {
+			    OSCheckInt = false;
+			    // Check pressure overshoot when switching from 2 to 1.
+			    pInspOS2 = (3 * pInspOS2 + pPlatMax - pValveActuation) >> 2;
+			  }
+			  // Pressure overshoot already considered for reducing flow, do not consider again to finish inhale.
+			  pInspOSScale = 0;
+			  vInspOSScale = (5 * (1 + pInspVSet) * vInspOS) >> 4;
                         } else {
                             if (pInspVSet == 3) {
                                 pInspOSScale = pInspOS3;
@@ -619,12 +634,6 @@ void main(void) {
                                 effectiveFlowRateInv = (3 * effectiveFlowRateInv + ((((uint24_t) tmpUVal) << 8) / vValveActuation)) >> 2;
                             }
 
-                            // Avoid too big errors in flow measurement.
-                            //                            if (effectiveFlowRate < 100){
-                            //    effectiveFlowRate = 100;
-                            //} else if (effectiveFlowRate > 2000){
-                            //    effectiveFlowRate = 2000;
-                            //}
                             if (effectiveFlowRateInv > 2621) {
                                 effectiveFlowRateInv = 2621;
                             } else if (effectiveFlowRateInv < 131) {
@@ -690,12 +699,12 @@ void main(void) {
                                         if (tmpVal > VQUANTA_LIMIT) {
                                             tmpVal = VQUANTA_LIMIT;
                                         }
-                                        vQuanta = (3 * tmpVal + vQuanta) / 4;
+                                        vQuanta = (3 * tmpVal + vQuanta)>>2;
                                         tmpVal = (pPlatMax - pValveActuation);
                                         if (tmpVal > PQUANTA_LIMIT) {
                                             tmpVal = PQUANTA_LIMIT;
                                         }
-                                        pQuantaInsp = (3 * tmpVal + pQuantaInsp) / 4;
+                                        pQuantaInsp = (3 * tmpVal + pQuantaInsp)>>2;
                                         if (vQuanta < 0) {
                                             vQuanta = 0;
                                         }
@@ -744,11 +753,14 @@ void main(void) {
                 }
 
                 if (timeElapsedR(&printTime, PRINTTIME)) {
+		  int16_t pAux;
+                    aCaptGetResult(VolPSensor, &pAux);
                     DEBUG_PRINT(("-: %d %d %d %d\n",
                             timeGet(),
                             (SV2MEDISOPEN ? 1 : 0) + (SV2LOWISOPEN ? 2 : 0) + (SV3ISOPEN ? 4 : 0),
-                            pInst,
-                            pAvgShort, vMeasureGet()));
+                            pAvgShort,
+			    vMeasureGet()
+			 ));
                 }
             }
 
@@ -797,14 +809,14 @@ void main(void) {
                     break;
                 } else {
                     aCaptGetResult(MainPSensor, &pInst);
-                    pPeepActual = pInst;
+                    aCaptGetResult(Flt1PSensor, &pAvgShort);
+                    pPeepActual = pAvgShort;
                     if (initExpSubState) {
                         // Exhale.
                         // During exhalation, the pressure that is measured is lower than the pressure once SV3 opens,
                         // and the effect is higher the faster the pressure drops during the exhalation.
                         // To compensate for this, and ensure the system converges to the set value, use 
                         // a filtered version of the pressure, instead of the instantaneous pressure.
-                        aCaptGetResult(Flt1PSensor, &pAvgShort);
                         // Compensation of pre-measured difference between plateu pressure and pressure at closing of valve.
                         // Due to overshoot after OPEN of SV3.
                         // Ensure comparison value is never 0.
@@ -816,11 +828,12 @@ void main(void) {
                             OPEN_SV3;
                             initExpSubState = 0;
                             rValveActuationTstamp = timeGet();
-                            pValveActuation = pInst;
+                            pValveActuation = pAvgShort;
                             OSCheck = true;
-                            DEBUG_PRINT(("PEI end T %d - Pi %d OS %d\n",
+                            DEBUG_PRINT(("PEI end T %d - Pi %d Ps %d OS %d\n",
                                     timeDiff(rCycleTime, rValveActuationTstamp),
                                     DBGPCONVERT(pInst),
+                                    DBGPCONVERT(pAvgShort),
                                     DBGPCONVERT(pExpOS)));
                         }
                         if (sv3DelayCheck) {
@@ -847,22 +860,30 @@ void main(void) {
                         if (SV2ISOPEN && (timeElapsed(rValveActuationTstamp, SV2OTIME) || (pInst > intMaxP))) {
                             CLOSE_SV2;
                             rValveActuationTstamp = timeGet();
-                            aCaptGetResult(MainPSensor, &pInst);
                             DEBUG_PRINT(("PE VC T %d - Pi %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst)));
                         } else {
                             if (OSCheck) {
                                 if (timeElapsed(rValveActuationTstamp, PEPLATEAUMDEL + (rSV2ValveCRT << 1))) {
-                                    // Take averaged pressure measurement as mean value.
+                                    // Take filtered pressure measurement as PEEP value.
                                     aCaptGetResult(Flt0PSensor, &pAvgUShort);
                                     pPlatExp = pAvgUShort;
                                     // Filtered pExpOS.
                                     tmpVal = pPlatExp - pValveActuation;
-                                    pExpOS = (3 * pExpOS + tmpVal) / 4;
+                                    pExpOS = (3 * pExpOS + tmpVal)>>2;
+				    // Measure control oscillation. Do not include differences due to programming, nor effect of oscillation compensation.
+				    pPeepErr = pPlatExp - intPEEP;
+				    tmpVal = (pPeepErr > 0) ? pPeepErr : -pPeepErr;
+				    pPeepOsc = (3*pPeepOsc + tmpVal)>>2;
+				    // Saturate.
+				    if (pPeepOsc > MPRESSURE_MBAR(2)) {
+				      pPeepOsc = MPRESSURE_MBAR(2);
+				    }
                                     // Clear long filters.
                                     aCaptRstFlt(Flt2PSensor);
                                     aCaptRstFlt(Flt3PSensor);
                                     OSCheck = false;
-                                    DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d\n", timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pAvgUShort)));
+                                    DEBUG_PRINT(("PE OSC T %d - Pi %d P0 %d PeepE %d PeepOsc %d\n",
+						 timeDiff(rCycleTime, timeGet()), DBGPCONVERT(pInst), DBGPCONVERT(pAvgUShort), DBGPCONVERT(pPeepErr), DBGPCONVERT(pPeepOsc)));
                                 }
                             } else {
                                 // Breath detection.
@@ -891,7 +912,7 @@ void main(void) {
                                             tmpVal = PQUANTA_LIMIT;
                                         }
 
-                                        pQuantaExp = (3 * tmpVal + pQuantaExp) / 4;
+                                        pQuantaExp = (3 * tmpVal + pQuantaExp)>>2;
                                         if (pQuantaExp < 0) {
                                             pQuantaExp = 0;
                                         }
@@ -901,9 +922,8 @@ void main(void) {
                                         rValveActuationTstamp = timeGet();
                                         QuantaCheck = true;
                                         pValveActuation = pInst;
-                                        DEBUG_PRINT(
-
-                                                ("PE VO T %d - Pi %d\n", timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst), DBGPCONVERT(bdP1)));
+                                        DEBUG_PRINT(("PE VO T %d - Pi %d\n",
+						     timeDiff(rCycleTime, rValveActuationTstamp), DBGPCONVERT(pInst), DBGPCONVERT(bdP1)));
                                     }
                                 }
                             }
@@ -915,16 +935,15 @@ void main(void) {
                 }
 #ifdef DEBUG
                 if (timeElapsedR(&printTime, PRINTTIME)) {
-                    aCaptGetResult(MainPSensor, &pInst);
-                    aCaptGetResult(Flt1PSensor, &pAvgShort);
-                    DEBUG_PRINT(("PE T %d - Pi %d Pd %d. R %d Pep %d POS %d PQ %d\n",
+		  		  int16_t pAux;
+                    aCaptGetResult(VolPSensor, &pAux);
+                    DEBUG_PRINT(("PE T %d - Pi %d R %d Pep %d POS %d PQ %d\n",
                             timeDiff(rCycleTime, timeGet()),
                             DBGPCONVERT(pInst),
-                            DBGPCONVERT(pInst - pAvgShort),
                             rSV3ValveORT,
                             DBGPCONVERT(pPlatExp),
                             DBGPCONVERT(pExpOS),
-                            DBGPCONVERT(pQuantaExp)
+			    DBGPCONVERT(pQuantaExp)
                             ));
 
 #if 0

@@ -7,12 +7,7 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "selftest.c" 2
-
-
-
-
-
-
+# 20 "selftest.c"
 # 1 "./selftest.h" 1
 # 14 "./selftest.h"
 # 1 "./mcc_generated_files/mcc.h" 1
@@ -28306,7 +28301,7 @@ extern uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
 
 
 _Bool SelfTest(_Bool tstScreen);
-# 8 "selftest.c" 2
+# 21 "selftest.c" 2
 # 1 "./ORespGlobal.h" 1
 # 14 "./ORespGlobal.h"
 # 1 "./aCapture.h" 1
@@ -28386,7 +28381,7 @@ void timeDelayMs(time_t delms);
     extern uint16_t sv2_pwmval;
     extern time_t rSV2ValveORT, rSV2ValveCRT, rSV3ValveORT;
     extern uint16_t lungC, lungR;
-# 9 "selftest.c" 2
+# 22 "selftest.c" 2
 
 # 1 "./menu.h" 1
 # 19 "./menu.h"
@@ -28422,7 +28417,7 @@ void MenuMng(void);
 void screenInit(void);
 
 void screenMng(void);
-# 11 "selftest.c" 2
+# 24 "selftest.c" 2
 # 1 "./monComm.h" 1
 # 33 "./monComm.h"
   char monitorMsg[10];
@@ -28461,7 +28456,7 @@ void screenMng(void);
   void MonitorMsgForcedSend (monStateT state);
   void MonitorMsgSend(monStateT state);
   _Bool MonitorMsgSendBlock(monStateT state);
-# 12 "selftest.c" 2
+# 25 "selftest.c" 2
 # 1 "./keyRead.h" 1
 # 20 "./keyRead.h"
 void keyReadInit(void);
@@ -28477,14 +28472,14 @@ void keyFlush(uint8_t keyIdx);
 
 
 _Bool isKeyPressed(uint8_t keyIdx);
-# 13 "selftest.c" 2
+# 26 "selftest.c" 2
 
 # 1 "./vMeasure.h" 1
 # 19 "./vMeasure.h"
 void vMeasureRst(void);
 void vMeasureInit(void);
 uint16_t vMeasureGet(void);
-# 15 "selftest.c" 2
+# 28 "selftest.c" 2
 # 1 "./LiquidCrystal_I2C.h" 1
 # 55 "./LiquidCrystal_I2C.h"
 void LcdI2CInit(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows);
@@ -28517,7 +28512,7 @@ void load_custom_character(uint8_t char_num, uint8_t *rows);
 void printstr(const char[]);
 void printstrblock(const char[]);
 _Bool PrintStrBusy(void);
-# 16 "selftest.c" 2
+# 29 "selftest.c" 2
 
 uint16_t freeFlowRateF, freeFlowRateM, freeFlowRateL;
 int16_t vddValMean;
@@ -28636,11 +28631,11 @@ _Bool flowChk(fchk_val flowVal){
 
   switch (flowVal) {
   case FCHK_LOW:
-    LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
+    LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
     minFlowL = 250;
     break;
   case FCHK_MED:
-    LATAbits.LATA2 = 0;LATCbits.LATC3 = 1;
+    LATAbits.LATA2 = 1;LATCbits.LATC3 = 0;
     minFlowL = 500;
     break;
   case FCHK_HIGH:

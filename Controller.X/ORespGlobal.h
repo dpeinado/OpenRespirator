@@ -43,7 +43,7 @@ extern "C" {
 // Zero volume threshold for aux sensor.
 #define ZVOLTH 20
 
-#define PEEP_COMP   MPRESSURE_MBAR(0.4)
+#define PEEP_COMP   MPRESSURE_MBAR(1.0)
 
     
 // Objective time for inspiration.
@@ -60,10 +60,10 @@ extern "C" {
 #define OPEN_SV2 LATAbits.LATA2 = 1;LATCbits.LATC3 = 1
 #define CLOSE_SV2 LATAbits.LATA2 = 0;LATCbits.LATC3 = 0
 
-#define OPEN_SV2LOW LATAbits.LATA2 = 1;LATCbits.LATC3 = 0
-#define OPEN_SV2MED LATAbits.LATA2 = 0;LATCbits.LATC3 = 1
-#define SV2LOWISOPEN LATAbits.LATA2
-#define SV2MEDISOPEN LATCbits.LATC3
+#define OPEN_SV2LOW LATAbits.LATA2 = 0;LATCbits.LATC3 = 1
+#define OPEN_SV2MED LATAbits.LATA2 = 1;LATCbits.LATC3 = 0
+#define SV2LOWISOPEN LATCbits.LATC3
+#define SV2MEDISOPEN LATAbits.LATA2
 
 //#define SV2ISOPEN (sv2_pwmval!=0)
 //#define OPEN_SV2 sv2_pwmval=100;PWM5_LoadDutyValue(sv2_pwmval)

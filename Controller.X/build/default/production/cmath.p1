@@ -2231,79 +2231,79 @@ Version 4.0 HI-TECH Software Intermediate Code
 "48384
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f46k42.h: 48384: __asm("TOSU equ 03FFFh");
 [; <" TOSU equ 03FFFh ;# ">
-"3 cmath.c
-[; ;cmath.c: 3: uint16_t isqrt(uint16_t x)
+"21 cmath.c
+[; ;cmath.c: 21: uint16_t isqrt(uint16_t x)
 [v _isqrt `(us ~T0 @X0 1 ef1`us ]
-"4
-[; ;cmath.c: 4: {
+"22
+[; ;cmath.c: 22: {
 {
 [e :U _isqrt ]
-"3
-[; ;cmath.c: 3: uint16_t isqrt(uint16_t x)
+"21
+[; ;cmath.c: 21: uint16_t isqrt(uint16_t x)
 [v _x `us ~T0 @X0 1 r1 ]
-"4
-[; ;cmath.c: 4: {
+"22
+[; ;cmath.c: 22: {
 [f ]
-"5
-[; ;cmath.c: 5:     uint16_t op, res, one;
+"23
+[; ;cmath.c: 23:     uint16_t op, res, one;
 [v _op `us ~T0 @X0 1 a ]
 [v _res `us ~T0 @X0 1 a ]
 [v _one `us ~T0 @X0 1 a ]
-"7
-[; ;cmath.c: 7:     op = x;
+"25
+[; ;cmath.c: 25:     op = x;
 [e = _op _x ]
-"8
-[; ;cmath.c: 8:     res = 0;
+"26
+[; ;cmath.c: 26:     res = 0;
 [e = _res -> -> 0 `i `us ]
-"11
-[; ;cmath.c: 11:     one = 1 << 14;
+"29
+[; ;cmath.c: 29:     one = 1 << 14;
 [e = _one -> << -> 1 `i -> 14 `i `us ]
-"12
-[; ;cmath.c: 12:     while (one > op) one >>= 2;
+"30
+[; ;cmath.c: 30:     while (one > op) one >>= 2;
 [e $U 2230  ]
 [e :U 2231 ]
 [e =>> _one -> -> 2 `i `us ]
 [e :U 2230 ]
 [e $ > -> _one `ui -> _op `ui 2231  ]
 [e :U 2232 ]
-"14
-[; ;cmath.c: 14:     while (one != 0) {
+"32
+[; ;cmath.c: 32:     while (one != 0) {
 [e $U 2233  ]
 [e :U 2234 ]
 {
-"15
-[; ;cmath.c: 15:         if (op >= res + one) {
+"33
+[; ;cmath.c: 33:         if (op >= res + one) {
 [e $ ! >= -> _op `ui + -> _res `ui -> _one `ui 2236  ]
 {
-"16
-[; ;cmath.c: 16:             op -= res + one;
+"34
+[; ;cmath.c: 34:             op -= res + one;
 [e =- _op -> + -> _res `ui -> _one `ui `us ]
-"17
-[; ;cmath.c: 17:             res += one << 1;
+"35
+[; ;cmath.c: 35:             res += one << 1;
 [e =+ _res -> << -> _one `ui -> 1 `i `us ]
-"18
-[; ;cmath.c: 18:         }
+"36
+[; ;cmath.c: 36:         }
 }
 [e :U 2236 ]
-"19
-[; ;cmath.c: 19:         res >>= 1;
+"37
+[; ;cmath.c: 37:         res >>= 1;
 [e =>> _res -> -> 1 `i `us ]
-"20
-[; ;cmath.c: 20:         one >>= 2;
+"38
+[; ;cmath.c: 38:         one >>= 2;
 [e =>> _one -> -> 2 `i `us ]
-"21
-[; ;cmath.c: 21:     }
+"39
+[; ;cmath.c: 39:     }
 }
 [e :U 2233 ]
-"14
-[; ;cmath.c: 14:     while (one != 0) {
+"32
+[; ;cmath.c: 32:     while (one != 0) {
 [e $ != -> _one `ui -> -> 0 `i `ui 2234  ]
 [e :U 2235 ]
-"22
-[; ;cmath.c: 22:     return res;
+"40
+[; ;cmath.c: 40:     return res;
 [e ) _res ]
 [e $UE 2229  ]
-"23
-[; ;cmath.c: 23: }
+"41
+[; ;cmath.c: 41: }
 [e :UE 2229 ]
 }

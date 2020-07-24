@@ -7,12 +7,7 @@
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.10\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "brate.c" 2
-
-
-
-
-
-
+# 20 "brate.c"
 # 1 "./brate.h" 1
 # 14 "./brate.h"
 # 1 "./mcc_generated_files/mcc.h" 1
@@ -28304,7 +28299,7 @@ void PMD_Initialize(void);
   void bRateInit(void);
   void bRateUpdt(_Bool triggered);
   uint8_t bRateGet(void);
-# 8 "brate.c" 2
+# 21 "brate.c" 2
 
 uint8_t eBRate;
 uint24_t bRateHist;
